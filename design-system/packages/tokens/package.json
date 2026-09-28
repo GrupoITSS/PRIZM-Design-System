@@ -2,6 +2,7 @@
   "name": "tokens",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "node build.mjs --watch",
     "build": "node build.mjs",
@@ -11,6 +12,5 @@
   "devDependencies": {
     "style-dictionary": "^5.5.3",
     "@tokens-studio/sd-transforms": "^2.0.3"
-
   }
 }

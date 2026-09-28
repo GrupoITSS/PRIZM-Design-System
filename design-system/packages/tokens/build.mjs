@@ -1,297 +1,315 @@
-import { readFile, readdir, mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { readFile, mkdtemp, writeFile, mkdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { watch } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import StyleDictionary from 'style-dictionary';
-import { fileHeader, formattedVariables } from 'style-dictionary/utils';
+import { fileHeader, formattedVariables, getReferences } from 'style-dictionary/utils';
 import { register, expandTypesMap } from '@tokens-studio/sd-transforms';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TOKENS_DIR = path.join(__dirname, 'src/tokens-studio');
+const SOURCE_FILE = path.join(TOKENS_DIR, 'tokens.json');
 const DIST_DIR = path.join(__dirname, 'dist');
 
 register(StyleDictionary);
 
 // ---------------------------------------------------------------------------
-// Preprocessors / formats
+// Theme dimensions
 // ---------------------------------------------------------------------------
 
-// Some color tokens in this project are exported as
-// { colorSpace, components, alpha, hex } instead of a plain string, but with
-// `components`/`alpha` as comma-separated strings rather than the numeric
-// arrays the DTCG color spec expects. Neither Style Dictionary nor
-// sd-transforms can parse that shape, so this preprocessor swaps it for the
-// `hex` field, which is always present and always valid.
-StyleDictionary.registerPreprocessor({
-  name: 'ds/flatten-color-object',
-  preprocessor(dictionary) {
-    const flatten = (node) => {
-      if (!node || typeof node !== 'object') return;
+// The Tokens Studio export defines three independent theme dimensions as
+// $themes groups, meant to be combined (one product + one mode + one
+// platform). If a group is renamed in Figma, update it here.
+const THEME_GROUPS = {
+  product: 'Marca · Produto',
+  mode: 'Mode',
+  platform: 'Plataforma',
+};
 
-      if (
-        node.$type === 'color' &&
-        node.$value &&
-        typeof node.$value === 'object' &&
-        !Array.isArray(node.$value) &&
-        typeof node.$value.hex === 'string'
-      ) {
-        node.$value = node.$value.hex;
-        return;
-      }
+// Mobile/desktop platform values are switched with a media query at this
+// breakpoint token, so the CSS stays responsive without extra attributes.
+const MOBILE_BREAKPOINT_TOKEN = 'breakpoint.md';
 
-      for (const value of Object.values(node)) {
-        flatten(value);
-      }
-    };
+// Composite types that are split into one custom property per field. Shadows
+// are left out on purpose: they read better as a single `box-shadow`
+// shorthand, which is what sd-transforms produces for them.
+const EXPANDED_TYPES = ['typography'];
 
-    flatten(dictionary);
-    return dictionary;
+// References to tokens that don't exist anywhere in tokens.json are logged
+// instead of failing the build; the affected custom properties are left out
+// of the output until the source is fixed. Grep the build log for "which is
+// not defined" to see the current list.
+//
+// Warnings are disabled because the two Style Dictionary emits here are
+// inherent to this layering: "token collisions" (brand sets overriding the
+// foundation palette on purpose) and "filtered out token references" (files
+// pointing at custom properties defined in another file, or at primitives
+// that get resolved). Set warnings to 'warn' and verbosity to 'verbose' to
+// inspect them.
+const LOG_CONFIG = { warnings: 'disabled', errors: { brokenReferences: 'console' } };
+
+// ---------------------------------------------------------------------------
+// Transforms / formats
+// ---------------------------------------------------------------------------
+
+// Figma variables store line heights as unitless pixel numbers ("48"), but in
+// CSS a unitless line-height is a multiplier of the font size, so they need
+// an explicit unit. Percentages are already handled by ts/size/lineheight.
+StyleDictionary.registerTransform({
+  name: 'ds/line-height/px',
+  type: 'value',
+  transitive: true,
+  filter: (token) => ['lineHeight', 'lineHeights'].includes(token.$type ?? token.type),
+  transform: (token) => {
+    const value = token.$value ?? token.value;
+    return /^-?\d+(\.\d+)?$/.test(String(value)) ? `${value}px` : value;
   },
 });
 
-// Maps a token's category (the path segment right after a shared brand
-// namespace, if any — see stripCommonNamespace below) to the Tailwind theme
-// key it should be exposed under. This is a curated list of well-known
-// names; categories not listed here still get included (see
-// resolveTailwindEntry's fallback) so a rename in Figma can't silently drop
-// tokens from the preset, it just needs its own key reviewed/renamed here.
+// Native platforms get sizes in their own units, treating one Figma pixel as
+// one dp/pt: text-related sizes become sp on Android (so they follow the
+// user's font scale), everything else dp; on iOS every size is a CGFloat.
+const SIZE_TYPES = ['dimension', 'fontSize', 'lineHeight', 'letterSpacing'];
+const TEXT_SIZE_TYPES = ['fontSize', 'lineHeight', 'letterSpacing'];
+
+// Expanding a typography token types its font size as a plain `dimension`,
+// so the field name is checked too.
+function isTextSize(token) {
+  return TEXT_SIZE_TYPES.includes(token.$type ?? token.type) || /^font-?size$/i.test(token.path.at(-1));
+}
+
+function sizeTransform(name, toNative) {
+  StyleDictionary.registerTransform({
+    name,
+    type: 'value',
+    transitive: true,
+    filter: (token) => SIZE_TYPES.includes(token.$type ?? token.type),
+    transform: (token) => {
+      const value = token.$value ?? token.value;
+      const number = parseFloat(value);
+      return Number.isNaN(number) ? value : toNative(number, token);
+    },
+  });
+}
+
+sizeTransform('ds/size/android', (number, token) => `${number}${isTextSize(token) ? 'sp' : 'dp'}`);
+sizeTransform('ds/size/swift', (number) => `CGFloat(${number})`);
+
+StyleDictionary.registerTransform({
+  name: 'ds/font-family/swift',
+  type: 'value',
+  filter: (token) => (token.$type ?? token.type) === 'fontFamily',
+  transform: (token) => JSON.stringify(String(token.$value ?? token.value)),
+});
+
+// Every file is scoped by its own selector (and media query, for
+// platforms), with enough specificity that import order never matters:
+// `:root` for defaults, `:root.dark` / `:root[data-product="..."]` for the
+// variants that override them.
+StyleDictionary.registerFormat({
+  name: 'css/scoped-variables',
+  async format({ dictionary, file, options }) {
+    const header = await fileHeader({ file, options });
+    const declarations = formattedVariables({
+      format: 'css',
+      dictionary,
+      outputReferences: options.outputReferences,
+      usesDtcg: options.usesDtcg,
+    });
+    const block = `${file.options.selector} {\n${declarations}\n}\n`;
+    return header + (file.options.media ? `@media ${file.options.media} {\n${block}}\n` : block);
+  },
+});
+
+// Maps a token's category (its first path segment) to the Tailwind theme key
+// it should be exposed under. Categories not listed here still get included
+// (see resolveTailwindEntry's fallback), so a rename in Figma can't silently
+// drop tokens from the preset.
 const CATEGORY_TO_THEME_KEY = {
   color: 'colors',
+  font: 'fontFamily',
   'font-family': 'fontFamily',
   'font-size': 'fontSize',
   'font-weight': 'fontWeight',
   'letter-spacing': 'letterSpacing',
   'line-height': 'lineHeight',
-  corner: 'borderRadius',
-  radii: 'borderRadius',
-  border: 'borderWidth',
+  radius: 'borderRadius',
   'border-width': 'borderWidth',
   opacity: 'opacity',
   blur: 'blur',
-  size: 'spacing',
+  shadow: 'boxShadow',
   spacing: 'spacing',
-  gap: 'gap',
-  padding: 'padding',
-  margin: 'margin',
-  scale: 'scale',
-  ratio: 'aspectRatio',
 };
-
-const MOTION_THEME_KEY = {
-  duration: 'transitionDuration',
-  delay: 'transitionDelay',
-  easing: 'transitionTimingFunction',
-};
-
-function tokenKeyFrom(pathSegments, fallback) {
-  const key = pathSegments.map((segment) => segment.replace(/^\$/, '')).join('-');
-  return key || fallback;
-}
 
 function toCamelCase(value) {
   return value.replace(/[-_](\w)/g, (_, char) => char.toUpperCase());
 }
 
-// If every token in the dictionary shares the same first path segment (a
-// brand/product namespace like "prizm"), it carries no category information
-// on its own, so it's skipped for the purpose of picking a Tailwind key.
-function commonNamespaceOffset(tokens) {
-  const firstSegments = new Set(tokens.map((t) => t.path[0]));
-  return firstSegments.size === 1 ? 1 : 0;
-}
-
-function resolveTailwindEntry(token, offset) {
-  const top = token.path[offset];
-  const second = token.path[offset + 1];
-
-  if (top === 'motion') {
-    const themeKey = MOTION_THEME_KEY[second];
-    if (!themeKey) return null;
-    return { themeKey, tokenKey: tokenKeyFrom(token.path.slice(offset + 2), second) };
-  }
-
+function resolveTailwindEntry(token) {
+  const [top, ...rest] = token.path;
   const themeKey = CATEGORY_TO_THEME_KEY[top] ?? toCamelCase(top);
-  return { themeKey, tokenKey: tokenKeyFrom(token.path.slice(offset + 1), top) };
+  const tokenKey = rest.join('-') || top;
+  return { themeKey, tokenKey };
 }
 
 // Points every token at its CSS custom property instead of a resolved value,
-// so the preset stays valid across themes (color modes swap which CSS file
-// is active, not this file).
+// so the preset stays valid across products, modes and platforms (those swap
+// which custom property values are active, not this file).
 StyleDictionary.registerFormat({
   name: 'tailwind/preset',
   format({ dictionary }) {
     const theme = {};
-    const offset = commonNamespaceOffset(dictionary.allTokens);
-
     for (const token of dictionary.allTokens) {
-      const entry = resolveTailwindEntry(token, offset);
-      if (!entry) continue;
-
-      theme[entry.themeKey] ??= {};
-      theme[entry.themeKey][entry.tokenKey] = `var(--${token.name})`;
+      const { themeKey, tokenKey } = resolveTailwindEntry(token);
+      theme[themeKey] ??= {};
+      theme[themeKey][tokenKey] = `var(--${token.name})`;
     }
-
     return `/**\n * Do not edit directly, this file was auto-generated.\n */\nmodule.exports = {\n  theme: {\n    extend: ${JSON.stringify(theme, null, 2)},\n  },\n};\n`;
   },
 });
 
-// A color mode only carries its own delta (e.g. "bg", "regular", "bold"),
-// never the shared primitives — those live in primitives.css. A mode whose
-// name contains "dark" is wrapped in a prefers-color-scheme query instead of
-// being selector-scoped, so switching themes needs no extra attribute/class.
+// Every exported token as a typed reference to its CSS custom property, for
+// inline styles and CSS-in-JS that should keep following the active product,
+// mode and platform instead of freezing one theme's values.
 StyleDictionary.registerFormat({
-  name: 'css/color-mode',
+  name: 'javascript/css-vars',
   async format({ dictionary, file, options }) {
     const header = await fileHeader({ file, options });
-    const declarations = formattedVariables({ format: 'css', dictionary, usesDtcg: options.usesDtcg });
-    const root = `:root {\n${declarations}\n}\n`;
-    return header + (file.options?.dark ? `@media (prefers-color-scheme: dark) {\n${root}}\n` : root);
+    const lines = dictionary.allTokens.map((token) => `export const ${toCamelCase(token.name)} = 'var(--${token.name})';`);
+    return `${header}${lines.join('\n')}\n`;
+  },
+});
+
+StyleDictionary.registerFormat({
+  name: 'typescript/css-vars-declarations',
+  async format({ dictionary, file, options }) {
+    const header = await fileHeader({ file, options });
+    const lines = dictionary.allTokens.map((token) => `export const ${toCamelCase(token.name)}: 'var(--${token.name})';`);
+    return `${header}${lines.join('\n')}\n`;
   },
 });
 
 // ---------------------------------------------------------------------------
-// Manifest discovery — themes and sets are derived from the Tokens Studio
-// export itself (its embedded $themes[].selectedTokenSets), never hardcoded.
+// Manifest — themes and sets are derived from the Tokens Studio export itself
+// ($themes[].selectedTokenSets), never hardcoded.
 // ---------------------------------------------------------------------------
 
-const BASE_SET_PATTERNS = [
-  ['primitives', /primitives|^0?1[\s._-]/i],
-  ['foundations', /foundations|^0?2[\s._-]/i],
-  ['components', /components?\b|\bcomps?\b|^0?3[\s._-]/i],
-];
-
-// Sets meant only for designers to see inside Figma (never exported to
-// code), by the common Tokens Studio "DESIGN_ONLY" naming convention.
-const EXCLUDED_SET_PATTERN = /design[-_ ]?only/i;
-
-function classifyBaseSet(setKey) {
-  for (const [bucket, pattern] of BASE_SET_PATTERNS) {
-    if (pattern.test(setKey)) return bucket;
-  }
-  // Unrecognized base sets still need a home; foundations is the closest fit.
-  return 'foundations';
+function slugify(value) {
+  return value
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
-function slugify(setKey) {
-  return setKey.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+function isPlainObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
-// The Tokens Studio export can define multiple independent theme
-// *dimensions* as groups (e.g. BRANDS for light/dark, PLATFORM for
-// mobile/desktop, PATTERNS, COMPS...), meant to be combined rather than
-// picked one at a time. This project only treats "BRANDS" as the color-mode
-// dimension that gets its own CSS/JS output. If it's renamed/moved to a
-// different group in Figma, update COLOR_MODE_THEME_GROUP to match.
-const COLOR_MODE_THEME_GROUP = 'BRANDS';
-
-// PATTERNS/COMPS sets (Button, Link, states, backgrounds, foregrounds...)
-// aren't brand-specific themselves, but their tokens reference brand-scoped
-// semantic tokens (e.g. "fg.moderate.default") that only exist once a
-// BRANDS theme is picked. So instead of going into the shared base, each of
-// these is built into *every* color mode, alongside that mode's own delta.
-const THEME_DEPENDENT_SET_PATTERN = /\/PATTERNS\/|\/COMPS\//i;
-
-// PLATFORM sets (Mobile/Desktop) define the same token names with different
-// values, so they collide if both end up in the shared base. Until the
-// project has an actual responsive/platform output dimension, only the
-// desktop set is kept (forced into base, ahead of the PATTERNS/COMPS rule
-// above) and mobile is dropped entirely.
-const PLATFORM_DESKTOP_SET_PATTERN = /\/Forms\/desktop$/i;
-const PLATFORM_MOBILE_SET_PATTERN = /\/Forms\/mobile$/i;
-
-// The current Figma/Tokens Studio export has references that point at
-// tokens which don't exist anywhere in core.json (most likely renamed or
-// deleted variables whose export went stale). By default Style Dictionary
-// treats that as fatal; downgrading it to a warning lets the build finish
-// instead of hard-failing the whole pipeline — the affected custom
-// properties are simply omitted from output until the source is fixed. Grep
-// the build log for "which is not defined" to see the current list.
-const LOG_CONFIG = { errors: { brokenReferences: 'console' } };
-
-async function loadManifest() {
-  const files = (await readdir(TOKENS_DIR)).filter((f) => f.endsWith('.json'));
-  const raw = {};
-  let themes;
-
-  for (const file of files) {
-    const content = JSON.parse(await readFile(path.join(TOKENS_DIR, file), 'utf-8'));
-    if (Array.isArray(content.$themes)) themes = content.$themes;
-    for (const [key, value] of Object.entries(content)) {
-      if (key.startsWith('$')) continue;
-      raw[key] = value;
+function deepMerge(target, source) {
+  for (const [key, value] of Object.entries(source)) {
+    if (isPlainObject(value) && !('$value' in value) && isPlainObject(target[key])) {
+      deepMerge(target[key], value);
+    } else {
+      target[key] = structuredClone(value);
     }
   }
+  return target;
+}
 
-  if (!themes?.length) {
-    throw new Error(`No "$themes" array found in any *.json file under ${TOKENS_DIR}`);
+function readTokenValue(sets, dottedPath) {
+  for (const set of Object.values(sets)) {
+    const node = dottedPath.split('.').reduce((acc, key) => acc?.[key], set);
+    if (node && '$value' in node) return node.$value;
   }
+  return undefined;
+}
 
-  const colorModeThemes = themes.filter((theme) => theme.group === COLOR_MODE_THEME_GROUP);
-  if (colorModeThemes.length === 0) {
+function themesOf(themes, group) {
+  const matches = themes.filter((theme) => theme.group === group);
+  if (matches.length === 0) {
     throw new Error(
-      `No theme with group "${COLOR_MODE_THEME_GROUP}" found in $themes. ` +
-        `Update COLOR_MODE_THEME_GROUP in build.mjs to match the theme group used for color modes.`,
+      `No theme with group "${group}" found in $themes. Update THEME_GROUPS in build.mjs to match the groups defined in Tokens Studio.`,
     );
   }
+  return matches.map((theme) => {
+    const entries = Object.entries(theme.selectedTokenSets ?? {});
+    return {
+      name: theme.name,
+      slug: slugify(theme.name),
+      enabled: entries.filter(([, status]) => status === 'enabled').map(([key]) => key),
+      source: entries.filter(([, status]) => status === 'source').map(([key]) => key),
+    };
+  });
+}
 
-  const perThemeEnabled = colorModeThemes.map((theme) => ({
-    name: theme.name,
-    enabled: Object.entries(theme.selectedTokenSets ?? {})
-      .filter(([, status]) => status === 'enabled')
-      .map(([key]) => key),
-  }));
-  const modeSetKeys = new Set(perThemeEnabled.flatMap((t) => t.enabled));
+async function loadManifest() {
+  const content = JSON.parse(await readFile(SOURCE_FILE, 'utf-8'));
+  const sets = Object.fromEntries(Object.entries(content).filter(([key]) => !key.startsWith('$')));
+  const themes = content.$themes ?? [];
 
-  const candidateBaseKeys = Object.keys(raw).filter(
-    (key) =>
-      !modeSetKeys.has(key) &&
-      !EXCLUDED_SET_PATTERN.test(key) &&
-      !PLATFORM_MOBILE_SET_PATTERN.test(key),
-  );
+  const products = themesOf(themes, THEME_GROUPS.product);
+  const modes = themesOf(themes, THEME_GROUPS.mode);
+  const platforms = themesOf(themes, THEME_GROUPS.platform);
 
-  const isThemeDependent = (key) =>
-    THEME_DEPENDENT_SET_PATTERN.test(key) && !PLATFORM_DESKTOP_SET_PATTERN.test(key);
-  const themeDependentSetKeys = candidateBaseKeys.filter(isThemeDependent);
-  const baseSetKeys = candidateBaseKeys.filter((key) => !isThemeDependent(key));
+  // "source" sets (the primitives) only exist to resolve references; they're
+  // never written to the output, same as in Tokens Studio's own export.
+  const sourceSetKeys = [...new Set([...products, ...modes, ...platforms].flatMap((t) => t.source))];
 
-  const themeManifest = perThemeEnabled.map(({ name, enabled }) => ({
-    name,
-    modeSetKeys: [...enabled, ...themeDependentSetKeys],
-  }));
-
-  const baseBuckets = { primitives: [], foundations: [], components: [] };
-  for (const key of baseSetKeys) {
-    baseBuckets[classifyBaseSet(key)].push(key);
+  // Sets enabled in every product are the shared foundations; everything else
+  // a product enables is its own brand/product layer.
+  const sharedSetKeys = products[0].enabled.filter((key) => products.every((p) => p.enabled.includes(key)));
+  for (const product of products) {
+    product.setKeys = product.enabled.filter((key) => !sharedSetKeys.includes(key));
+  }
+  for (const theme of [...modes, ...platforms]) {
+    theme.setKeys = theme.enabled;
   }
 
-  return { raw, themes: themeManifest, baseSetKeys, baseBuckets };
+  // Modes and platforms reference brand tokens (e.g. palette.primary.light),
+  // whose *values* differ per product but whose *names* are the same. Merging
+  // every product layer into one set gives those references something to
+  // resolve against; the values never reach the output, since references to
+  // exported tokens are written as var(--...) (see referencesExportedOnly).
+  const productUnion = {};
+  for (const product of products) {
+    for (const key of product.setKeys) deepMerge(productUnion, sets[key]);
+  }
+
+  const breakpoint = parseFloat(readTokenValue(sets, MOBILE_BREAKPOINT_TOKEN));
+  if (Number.isNaN(breakpoint)) {
+    throw new Error(`Token "${MOBILE_BREAKPOINT_TOKEN}" (MOBILE_BREAKPOINT_TOKEN in build.mjs) not found or not numeric.`);
+  }
+
+  return { sets, sourceSetKeys, sharedSetKeys, products, modes, platforms, productUnion, breakpoint };
 }
 
 // ---------------------------------------------------------------------------
 // Build
 // ---------------------------------------------------------------------------
 
-// Each set is written to its own temp file, unwrapped from its set-key, so
-// Style Dictionary's normal multi-source merge flattens them into one token
-// tree and tags every token with the originating file — which is how output
-// files are later filtered back down to just their own set(s).
-async function materializeSets(tmpDir, raw, setKeys) {
+const PRODUCT_UNION_FILE = '__product-union.json';
+
+// Each set is written to its own temp file, so Style Dictionary's normal
+// multi-source merge flattens them into one token tree and tags every token
+// with the originating file — which is how output files are later filtered
+// back down to just their own set(s), and how references are classified.
+async function materializeSets(tmpDir, sets, productUnion) {
   const fileForSet = new Map();
-  for (const key of setKeys) {
+  for (const [key, value] of Object.entries(sets)) {
     const fileName = `${slugify(key)}.json`;
-    await writeFile(path.join(tmpDir, fileName), JSON.stringify(raw[key]));
+    await writeFile(path.join(tmpDir, fileName), JSON.stringify(value));
     fileForSet.set(key, fileName);
   }
+  await writeFile(path.join(tmpDir, PRODUCT_UNION_FILE), JSON.stringify(productUnion));
   return fileForSet;
 }
 
-// A token whose reference couldn't be resolved (see LOG_CONFIG above) keeps
-// its literal "{a.b.c}" value instead of a real one, and — because the
-// transform that failed also drives its name — can collapse to a bare,
-// sometimes reserved-word name like "default". Left in, that produces
-// broken CSS values and invalid JS (`export const default = ...`), so every
-// output file filters these out until the source reference is fixed.
+// A token whose reference couldn't be resolved (see LOG_CONFIG) keeps its
+// literal "{a.b.c}" value, which would produce broken CSS, so every output
+// filters these out until the source reference is fixed.
 function isResolved(token) {
   // On a broken reference, resolution never completes: `token.value` is left
   // undefined and only `token.$value` still holds the raw "{a.b.c}" string.
@@ -300,114 +318,195 @@ function isResolved(token) {
   return !/\{[^{}]+\}/.test(raw);
 }
 
-function filterBySets(fileForSet, setKeys) {
-  const fileNames = new Set(setKeys.map((key) => fileForSet.get(key)));
-  return (token) => fileNames.has(path.basename(token.filePath ?? '')) && isResolved(token);
+function fromFiles(fileNames) {
+  const names = new Set(fileNames);
+  return (token) => names.has(path.basename(token.filePath ?? '')) && isResolved(token);
 }
 
-function sourcePaths(tmpDir, fileForSet, setKeys) {
-  return setKeys.map((key) => path.join(tmpDir, fileForSet.get(key)).replace(/\\/g, '/'));
+// A reference is kept as var(--...) only when every token it points at is
+// exported somewhere (so the custom property is guaranteed to exist). Values
+// that point at source-only primitives are resolved instead.
+function referencesExportedOnly(sourceFileNames) {
+  const sourceFiles = new Set(sourceFileNames);
+  return (token, { dictionary, usesDtcg }) => {
+    const original = usesDtcg ? token.original.$value : token.original.value;
+    const refs = getReferences(original, dictionary.unfilteredTokens ?? dictionary.tokens, {
+      usesDtcg,
+      warnImmediately: false,
+    });
+    return refs.length > 0 && refs.every((ref) => !sourceFiles.has(path.basename(ref.filePath ?? '')));
+  };
 }
 
-async function buildBase(tmpDir, fileForSet, baseSetKeys, baseBuckets) {
-  if (baseSetKeys.length === 0) return;
+const isColor = (token) => (token.$type ?? token.type) === 'color';
+const isNotColor = (token) => !isColor(token);
+// Composite values (e.g. shadows) have no single-value equivalent in native
+// resources, so they're left to the web outputs.
+const isScalar = (token) => typeof (token.$value ?? token.value) !== 'object';
 
-  const files = Object.entries(baseBuckets)
-    .filter(([, keys]) => keys.length > 0)
-    .map(([bucket, keys]) => ({
-      destination: `${bucket}.css`,
-      format: 'css/variables',
-      filter: filterBySets(fileForSet, keys),
-    }));
+// Transforms applied to every native platform before its own unit, color and
+// naming transforms. They're the value-level parts of the tokens-studio group,
+// without its CSS-specific ones (quoted font families, px units, rgba()).
+const NATIVE_BASE_TRANSFORMS = [
+  'ts/descriptionToComment',
+  'ts/resolveMath',
+  'ts/opacity',
+  'ts/typography/fontWeight',
+  'ts/color/modifiers',
+];
 
-  if (files.length === 0) return;
+const PLATFORM_CONFIG = {
+  css: { transformGroup: 'tokens-studio', transforms: ['name/kebab', 'ds/line-height/px'] },
+  ts: { transformGroup: 'tokens-studio', transforms: ['name/camel', 'ds/line-height/px'] },
+  android: {
+    transforms: [...NATIVE_BASE_TRANSFORMS, 'ds/size/android', 'color/hex8android', 'name/snake'],
+  },
+  ios: {
+    transforms: [...NATIVE_BASE_TRANSFORMS, 'ds/size/swift', 'ds/font-family/swift', 'color/ColorSwiftUI', 'name/camel'],
+  },
+};
 
-  const sd = new StyleDictionary({
-    source: sourcePaths(tmpDir, fileForSet, baseSetKeys),
-    preprocessors: ['ds/flatten-color-object', 'tokens-studio'],
-    expand: { typesMap: expandTypesMap },
-    log: LOG_CONFIG,
-    platforms: {
-      css: {
-        transformGroup: 'tokens-studio',
-        transforms: ['name/kebab'],
-        buildPath: 'dist/css/',
-        files,
-      },
-    },
-  });
+const ANDROID_RESOURCE_MAP = {
+  color: 'color',
+  dimension: 'dimen',
+  fontSize: 'dimen',
+  lineHeight: 'dimen',
+  letterSpacing: 'dimen',
+  fontWeight: 'integer',
+  fontFamily: 'string',
+};
 
-  await sd.buildAllPlatforms();
-}
+function createBuilder(tmpDir, fileForSet, sourceSetKeys) {
+  const toFiles = (setKeys) => setKeys.map((key) => (key === PRODUCT_UNION_FILE ? key : fileForSet.get(key)));
+  const sourceFileNames = toFiles(sourceSetKeys);
 
-async function buildTheme(tmpDir, fileForSet, baseSetKeys, theme) {
-  const isDark = /dark/i.test(theme.name);
-  const slug = theme.name.toLowerCase();
+  // `platforms` maps a PLATFORM_CONFIG key to the files it writes. Each file
+  // only gets tokens from `outputSetKeys`, further narrowed by its own filter.
+  return async function buildLayer({ setKeys, outputSetKeys, platforms }) {
+    const sourceFiles = toFiles([...sourceSetKeys, ...setKeys]);
+    const baseFilter = fromFiles(toFiles(outputSetKeys));
 
-  const sd = new StyleDictionary({
-    source: sourcePaths(tmpDir, fileForSet, [...baseSetKeys, ...theme.modeSetKeys]),
-    preprocessors: ['ds/flatten-color-object', 'tokens-studio'],
-    expand: { typesMap: expandTypesMap },
-    log: LOG_CONFIG,
-    platforms: {
-      css: {
-        transformGroup: 'tokens-studio',
-        transforms: ['name/kebab'],
-        buildPath: 'dist/css/color-modes/',
-        files: [
+    const sd = new StyleDictionary({
+      source: sourceFiles.map((file) => path.join(tmpDir, file).replace(/\\/g, '/')),
+      preprocessors: ['tokens-studio'],
+      expand: { typesMap: expandTypesMap, include: EXPANDED_TYPES },
+      log: LOG_CONFIG,
+      platforms: Object.fromEntries(
+        Object.entries(platforms).map(([platform, files]) => [
+          platform,
           {
-            destination: `${slug}.css`,
-            format: 'css/color-mode',
-            filter: filterBySets(fileForSet, theme.modeSetKeys),
-            options: { dark: isDark },
+            ...PLATFORM_CONFIG[platform],
+            buildPath: `${DIST_DIR.replace(/\\/g, '/')}/`,
+            options: { outputReferences: platform === 'css' ? referencesExportedOnly(sourceFileNames) : false },
+            files: files.map(({ filter, ...file }) => ({
+              ...file,
+              filter: filter ? (token, options) => baseFilter(token) && filter(token, options) : baseFilter,
+            })),
           },
-        ],
-      },
-      js: {
-        transformGroup: 'tokens-studio',
-        transforms: ['name/camel'],
-        buildPath: 'dist/js/',
-        files: [
-          { destination: `${slug}.js`, format: 'javascript/es6', filter: isResolved },
-          { destination: `${slug}.d.ts`, format: 'typescript/es6-declarations', filter: isResolved },
-        ],
-      },
-    },
-  });
+        ]),
+      ),
+    });
 
-  await sd.buildAllPlatforms();
+    await sd.buildAllPlatforms();
+  };
 }
 
-// Token *names* are shared across color modes by convention (a mode only
-// overrides values, not the set of tokens), so a single representative theme
-// is enough to enumerate every name for the preset. Combining more than one
-// theme's mode set here would merge their conflicting raw values into one
-// source tree for no benefit, which Style Dictionary flags as a collision.
-async function buildTailwindPreset(tmpDir, fileForSet, baseSetKeys, themes) {
-  const [representativeTheme] = themes;
-  const allSetKeys = [...baseSetKeys, ...(representativeTheme?.modeSetKeys ?? [])];
+function cssFile(destination, selector, media) {
+  return { destination, format: 'css/scoped-variables', options: { selector, media } };
+}
 
-  const sd = new StyleDictionary({
-    source: sourcePaths(tmpDir, fileForSet, allSetKeys),
-    preprocessors: ['ds/flatten-color-object', 'tokens-studio'],
-    expand: { typesMap: expandTypesMap },
-    log: LOG_CONFIG,
-    platforms: {
-      tailwind: {
-        transformGroup: 'tokens-studio',
-        transforms: ['name/kebab'],
-        buildPath: 'dist/tailwind/',
-        files: [{ destination: 'preset.cjs', format: 'tailwind/preset', filter: isResolved }],
-      },
-    },
-  });
+function tsFiles(basePath) {
+  return [
+    { destination: `${basePath}.js`, format: 'javascript/es6' },
+    { destination: `${basePath}.d.ts`, format: 'typescript/es6-declarations' },
+  ];
+}
 
-  await sd.buildAllPlatforms();
+function androidFile(destination, filter) {
+  return {
+    destination,
+    format: 'android/resources',
+    filter: (token) => isScalar(token) && (!filter || filter(token)),
+    options: { resourceMap: ANDROID_RESOURCE_MAP },
+  };
+}
+
+function swiftFile(destination, className) {
+  return {
+    destination,
+    format: 'ios-swift/any.swift',
+    filter: isScalar,
+    options: { className, objectType: 'enum', accessControl: 'public', import: ['SwiftUI'] },
+  };
+}
+
+function toPascalCase(slug) {
+  return slug.replace(/(^|-)(\w)/g, (_, __, char) => char.toUpperCase());
+}
+
+// Android switches resources by configuration qualifier, so dark mode maps to
+// values-night and desktop to a minimum-width qualifier at the same breakpoint
+// the CSS uses — the OS picks the right file with no code.
+const ANDROID_MODE_QUALIFIER = { dark: 'night' };
+
+function androidModeDir(mode, isDefault) {
+  if (isDefault) return 'values';
+  const qualifier = ANDROID_MODE_QUALIFIER[mode.slug];
+  if (!qualifier) {
+    throw new Error(`No Android resource qualifier for mode "${mode.name}". Add it to ANDROID_MODE_QUALIFIER in build.mjs.`);
+  }
+  return `values-${qualifier}`;
+}
+
+// Resolved values for one product: one layer per mode (everything the product
+// shows in that mode) and one per platform (just the platform tokens), mirroring
+// how the CSS layers stack.
+function resolvedOutputs({ product, sharedSetKeys, modes, platforms, breakpoint }) {
+  const base = [...sharedSetKeys, ...product.setKeys];
+  const className = toPascalCase(product.slug);
+
+  return [
+    ...modes.map((mode, index) => {
+      const isDefault = index === 0;
+      const valuesDir = `android/${product.slug}/${androidModeDir(mode, isDefault)}`;
+      return {
+        setKeys: [...base, ...mode.setKeys],
+        outputSetKeys: [...base, ...mode.setKeys],
+        platforms: {
+          ts: tsFiles(`ts/${product.slug}/${mode.slug}`),
+          // Non-color tokens are the same in every mode, so only the default
+          // mode writes them; other modes only override colors.
+          android: isDefault
+            ? [androidFile(`${valuesDir}/colors.xml`, isColor), androidFile(`${valuesDir}/tokens.xml`, isNotColor)]
+            : [androidFile(`${valuesDir}/colors.xml`, isColor)],
+          ios: [swiftFile(`ios/${product.slug}/${className}${toPascalCase(mode.slug)}.swift`, `${className}${toPascalCase(mode.slug)}`)],
+        },
+      };
+    }),
+    ...platforms.map((platform) => {
+      const valuesDir = /mobile/i.test(platform.name) ? 'values' : `values-w${breakpoint}dp`;
+      return {
+        setKeys: [...base, ...platform.setKeys],
+        outputSetKeys: platform.setKeys,
+        platforms: {
+          ts: tsFiles(`ts/${product.slug}/${platform.slug}`),
+          android: [androidFile(`android/${product.slug}/${valuesDir}/platform.xml`)],
+          ios: [swiftFile(`ios/${product.slug}/${className}${toPascalCase(platform.slug)}.swift`, `${className}${toPascalCase(platform.slug)}`)],
+        },
+      };
+    }),
+  ];
+}
+
+async function writeGenerated(relativePath, body) {
+  const target = path.join(DIST_DIR, relativePath);
+  await mkdir(path.dirname(target), { recursive: true });
+  await writeFile(target, `/**\n * Do not edit directly, this file was auto-generated.\n */\n${body}`);
 }
 
 async function build() {
-  const { raw, themes, baseSetKeys, baseBuckets } = await loadManifest();
-  const allSetKeys = [...new Set([...baseSetKeys, ...themes.flatMap((t) => t.modeSetKeys)])];
+  const manifest = await loadManifest();
+  const { sets, sourceSetKeys, sharedSetKeys, products, modes, platforms, productUnion, breakpoint } = manifest;
 
   // Cleaned once up front instead of per Style Dictionary instance: the
   // builds below run in parallel and share dist/, so a per-instance
@@ -416,20 +515,75 @@ async function build() {
 
   const tmpDir = await mkdtemp(path.join(tmpdir(), 'ds-tokens-'));
   try {
-    const fileForSet = await materializeSets(tmpDir, raw, allSetKeys);
+    const fileForSet = await materializeSets(tmpDir, sets, productUnion);
+    const buildLayer = createBuilder(tmpDir, fileForSet, sourceSetKeys);
+    const withProducts = [...sharedSetKeys, PRODUCT_UNION_FILE];
 
-    await Promise.all([
-      buildBase(tmpDir, fileForSet, baseSetKeys, baseBuckets),
-      ...themes.map((theme) => buildTheme(tmpDir, fileForSet, baseSetKeys, theme)),
-      buildTailwindPreset(tmpDir, fileForSet, baseSetKeys, themes),
-    ]);
+    const [defaultMode] = modes;
+    const platformMedia = (platform) =>
+      /mobile/i.test(platform.name) ? `(width < ${breakpoint}px)` : `(width >= ${breakpoint}px)`;
+
+    const cssOutputs = [
+      {
+        setKeys: sharedSetKeys,
+        outputSetKeys: sharedSetKeys,
+        platforms: { css: [cssFile('css/foundations.css', ':root')] },
+      },
+      ...products.map((product) => ({
+        setKeys: [...sharedSetKeys, ...product.setKeys],
+        outputSetKeys: product.setKeys,
+        platforms: { css: [cssFile(`css/products/${product.slug}.css`, `:root[data-product="${product.slug}"]`)] },
+      })),
+      ...modes.map((mode) => ({
+        setKeys: [...withProducts, ...mode.setKeys],
+        outputSetKeys: mode.setKeys,
+        platforms: { css: [cssFile(`css/modes/${mode.slug}.css`, mode === defaultMode ? ':root' : `:root.${mode.slug}`)] },
+      })),
+      ...platforms.map((platform) => ({
+        setKeys: [...withProducts, ...platform.setKeys],
+        outputSetKeys: platform.setKeys,
+        platforms: { css: [cssFile(`css/platforms/${platform.slug}.css`, ':root', platformMedia(platform))] },
+      })),
+    ];
+
+    const outputs = [
+      ...cssOutputs,
+      // Token *names* are the same across modes and platforms, so the default
+      // of each is enough to enumerate every name for the preset and vars.
+      {
+        setKeys: [...withProducts, ...defaultMode.setKeys, ...platforms[0].setKeys],
+        outputSetKeys: [...withProducts, ...defaultMode.setKeys, ...platforms[0].setKeys],
+        platforms: {
+          css: [
+            { destination: 'tailwind/preset.cjs', format: 'tailwind/preset' },
+            { destination: 'ts/vars.js', format: 'javascript/css-vars' },
+            { destination: 'ts/vars.d.ts', format: 'typescript/css-vars-declarations' },
+          ],
+        },
+      },
+      ...products.flatMap((product) => resolvedOutputs({ product, sharedSetKeys, modes, platforms, breakpoint })),
+    ];
+
+    await Promise.all(outputs.map(buildLayer));
+
+    const cssFiles = cssOutputs.flatMap((output) => output.platforms.css.map((file) => file.destination.replace(/^css\//, './')));
+    await writeGenerated('css/index.css', `${cssFiles.map((file) => `@import "${file}";`).join('\n')}\n`);
+
+    // One entry point per product: `import { light, desktop } from '.../ts/pas-cockpit'`.
+    const layerSlugs = [...modes, ...platforms].map((layer) => layer.slug);
+    const reExports = `${layerSlugs.map((slug) => `export * as ${toCamelCase(slug)} from './${slug}.js';`).join('\n')}\n`;
+    for (const product of products) {
+      await writeGenerated(`ts/${product.slug}/index.js`, reExports);
+      await writeGenerated(`ts/${product.slug}/index.d.ts`, reExports);
+    }
   } finally {
     await rm(tmpDir, { recursive: true, force: true });
   }
 
   console.log(
-    `[tokens] built base (${Object.entries(baseBuckets).filter(([, k]) => k.length).map(([b]) => b).join(', ')}), ` +
-      `${themes.length} color mode(s) (${themes.map((t) => t.name).join(', ')}), and the tailwind preset`,
+    `[tokens] built foundations, ${products.length} product(s) (${products.map((p) => p.slug).join(', ')}), ` +
+      `${modes.length} mode(s) (${modes.map((m) => m.slug).join(', ')}), ` +
+      `${platforms.length} platform(s) (${platforms.map((p) => p.slug).join(', ')}) for css, tailwind, ts, android and ios`,
   );
 }
 
