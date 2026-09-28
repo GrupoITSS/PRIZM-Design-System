@@ -14,7 +14,13 @@ Os temas são organizados em três dimensões, combinadas entre si:
 | **Mode** | Light, Dark | `global/mode/<modo>` |
 | **Plataforma** | Desktop, Mobile | `global/platform/<plataforma>` |
 
-Os sets `global/primitives/*` são **source**: servem só para resolver referências e não vão para a saída. Um token que aponta para um primitivo sai com o valor já resolvido; um token que aponta para outro token exportado sai como `var(--...)`.
+Os sets `global/primitives/*` são **source** e seguem uma regra: **cada valor tem um único token para ser usado**.
+
+- **Primitivo referenciado por outro token não vai para a saída**; quem o referencia recebe o valor resolvido. Há `--color-primary`, mas não `--color-blue-600`; há `--container-padding-x`, mas não `--spacing-6`. Isso vale também entre primitivos: `min-width.xs` aponta para `container.xs`, então só `--min-width-xs` existe.
+- **Cores cruas nunca vão para a saída**, mesmo as que nenhum token usa. Cor só existe pelos tokens semânticos.
+- **Os demais primitivos vão para `primitives.css`** (tamanhos, tipografia, opacity, sombras... que nenhum token usa), para que também exista token para esses valores.
+
+Por isso, as escalas de `primitives.css` têm lacunas nos valores já cobertos por tokens semânticos (por exemplo, não há `--spacing-6`, porque `24px` é `--container-padding-x`).
 
 ## Comandos
 
@@ -37,6 +43,7 @@ Nas saídas nativas, 1px do Figma = 1dp (Android) = 1pt (iOS). Sombras (valores 
 
 | Arquivo | Seletor | Conteúdo |
 |---|---|---|
+| `css/primitives.css` | `:root` | Primitivos não-cor que nenhum token referencia |
 | `css/foundations.css` | `:root` | Palette, fontes e radius padrão (`global/foundations/*`) |
 | `css/products/<produto>.css` | `:root[data-product="<produto>"]` | O que a marca e o produto sobrescrevem |
 | `css/modes/light.css` | `:root` | Cores semânticas (`--color-*`) do modo claro, padrão |
@@ -50,7 +57,8 @@ O breakpoint das plataformas vem do token `breakpoint.md`. Os seletores têm esp
 
 ### TypeScript (`ts/`)
 
-- `vars.js` — cada token como referência à variável CSS (`colorPrimary = 'var(--color-primary)'`). É o que usar em estilos inline e CSS-in-JS, porque continua seguindo o tema ativo.
+- `vars.js` — cada token como referência à variável CSS (`colorPrimary = 'var(--color-primary)'`, `spacing7 = 'var(--spacing-7)'`). É o que usar em estilos inline e CSS-in-JS, porque continua seguindo o tema ativo.
+- `primitives.js` — primitivos não-cor com valores resolvidos (`spacing7 = '28px'`), iguais para todos os produtos.
 - `<produto>/index.js` — valores resolvidos, separados em camadas como no CSS: `light` e `dark` (tudo o que o produto mostra naquele modo) e `desktop` e `mobile` (só os tokens de plataforma). Útil onde CSS não chega (canvas, gráficos, e-mail).
 
 ```ts
@@ -66,7 +74,7 @@ Copie a pasta do produto para `res/`. O Android escolhe o arquivo sozinho pelos 
 
 | Pasta | Quando vale | Conteúdo |
 |---|---|---|
-| `values/` | Sempre (padrão) | `colors.xml` (modo claro), `tokens.xml` (fontes, radius...), `platform.xml` (mobile) |
+| `values/` | Sempre (padrão) | `colors.xml` (modo claro), `tokens.xml` (fontes, radius...), `platform.xml` (mobile), `primitives.xml` (primitivos não-cor) |
 | `values-night/` | Dark mode do sistema | `colors.xml` do modo escuro |
 | `values-w768dp/` | Largura ≥ breakpoint `md` | `platform.xml` de desktop |
 
@@ -74,7 +82,7 @@ Tamanhos de texto saem em `sp` (seguem o tamanho de fonte do usuário); os demai
 
 ### iOS (`ios/<produto>/`)
 
-Um `public enum` por camada, com `Color` do SwiftUI e `CGFloat`: `PasCockpitLight`, `PasCockpitDark`, `PasCockpitMobile`, `PasCockpitDesktop`.
+Um `public enum` por camada, com `Color` do SwiftUI e `CGFloat`: `PasCockpitLight`, `PasCockpitDark`, `PasCockpitMobile`, `PasCockpitDesktop`. Os primitivos não-cor ficam em `ios/Primitives.swift` (`Primitives.spacing7`), comum a todos os produtos.
 
 ```swift
 Text("Olá")

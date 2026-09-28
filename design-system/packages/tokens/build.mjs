@@ -254,9 +254,10 @@ async function loadManifest() {
   const modes = themesOf(themes, THEME_GROUPS.mode);
   const platforms = themesOf(themes, THEME_GROUPS.platform);
 
-  // "source" sets (the primitives) only exist to resolve references; they're
-  // never written to the output, same as in Tokens Studio's own export.
+  // "source" sets hold the primitives. Which of them reach the output is
+  // decided per token by isExportedToken.
   const sourceSetKeys = [...new Set([...products, ...modes, ...platforms].flatMap((t) => t.source))];
+  const referencedPrimitives = referencedPrimitivePaths(sets, sourceSetKeys);
 
   // Sets enabled in every product are the shared foundations; everything else
   // a product enables is its own brand/product layer.
@@ -283,7 +284,32 @@ async function loadManifest() {
     throw new Error(`Token "${MOBILE_BREAKPOINT_TOKEN}" (MOBILE_BREAKPOINT_TOKEN in build.mjs) not found or not numeric.`);
   }
 
-  return { sets, sourceSetKeys, sharedSetKeys, products, modes, platforms, productUnion, breakpoint };
+  return { sets, sourceSetKeys, referencedPrimitives, sharedSetKeys, products, modes, platforms, productUnion, breakpoint };
+}
+
+function flattenTokens(node, pathSegments = [], out = []) {
+  if (!isPlainObject(node)) return out;
+  if ('$value' in node) {
+    out.push([pathSegments.join('.'), node]);
+    return out;
+  }
+  for (const [key, value] of Object.entries(node)) flattenTokens(value, [...pathSegments, key], out);
+  return out;
+}
+
+// "{a.b.c}" references anywhere in a value, including inside composite values
+// (typography, shadows). Quotes are excluded so object JSON isn't mistaken for
+// a reference.
+function referencesIn(value) {
+  return [...JSON.stringify(value).matchAll(/\{([^{}"]+)\}/g)].map((match) => match[1]);
+}
+
+// Dotted paths of every primitive that some other token references — any
+// token, including another primitive (e.g. min-width.xs -> container.xs).
+function referencedPrimitivePaths(sets, sourceSetKeys) {
+  const primitivePaths = new Set(sourceSetKeys.flatMap((key) => flattenTokens(sets[key]).map(([tokenPath]) => tokenPath)));
+  const references = Object.values(sets).flatMap((set) => flattenTokens(set).flatMap(([, token]) => referencesIn(token.$value)));
+  return new Set(references.filter((ref) => primitivePaths.has(ref)));
 }
 
 // ---------------------------------------------------------------------------
@@ -323,18 +349,34 @@ function fromFiles(fileNames) {
   return (token) => names.has(path.basename(token.filePath ?? '')) && isResolved(token);
 }
 
-// A reference is kept as var(--...) only when every token it points at is
-// exported somewhere (so the custom property is guaranteed to exist). Values
-// that point at source-only primitives are resolved instead.
-function referencesExportedOnly(sourceFileNames) {
+// Which primitives reach the output, so that every value has exactly one
+// token to use and a change in Figma can't leave code on a stale alternative:
+//
+// - A primitive that another token references is left out; the referencing
+//   token carries the resolved value instead (there's --color-primary, not
+//   --color-blue-600; --container-padding-x, not --spacing-6).
+// - Raw colors are left out entirely, so colors are only used through
+//   semantic tokens.
+// - Every other primitive (sizes, type, opacity, shadows... that nothing
+//   references) is exposed, so there's a token for those values too.
+function isExportedToken(sourceFileNames, referencedPrimitives) {
   const sourceFiles = new Set(sourceFileNames);
+  return (token) =>
+    !sourceFiles.has(path.basename(token.filePath ?? '')) ||
+    (!isColor(token) && !referencedPrimitives.has(token.path.join('.')));
+}
+
+// A reference is kept as var(--...) only when every token it points at is
+// exported somewhere (so the custom property is guaranteed to exist); any
+// other value is resolved instead.
+function referencesExportedOnly(isExported) {
   return (token, { dictionary, usesDtcg }) => {
     const original = usesDtcg ? token.original.$value : token.original.value;
     const refs = getReferences(original, dictionary.unfilteredTokens ?? dictionary.tokens, {
       usesDtcg,
       warnImmediately: false,
     });
-    return refs.length > 0 && refs.every((ref) => !sourceFiles.has(path.basename(ref.filePath ?? '')));
+    return refs.length > 0 && refs.every(isExported);
   };
 }
 
@@ -374,11 +416,33 @@ const ANDROID_RESOURCE_MAP = {
   letterSpacing: 'dimen',
   fontWeight: 'integer',
   fontFamily: 'string',
+  number: 'float',
+  opacity: 'float',
 };
 
-function createBuilder(tmpDir, fileForSet, sourceSetKeys) {
+function escapeXml(value) {
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Same shape as Style Dictionary's android/resources, plus decimal values
+// (e.g. opacity), which Android only accepts as a float-formatted <item>.
+StyleDictionary.registerFormat({
+  name: 'android/ds-resources',
+  async format({ dictionary, file, options }) {
+    const header = await fileHeader({ file, options, commentStyle: 'xml' });
+    const resources = dictionary.allTokens.map((token) => {
+      const resource = ANDROID_RESOURCE_MAP[token.$type ?? token.type] ?? 'string';
+      const value = escapeXml(token.$value ?? token.value);
+      return resource === 'float'
+        ? `  <item name="${token.name}" format="float" type="dimen">${value}</item>`
+        : `  <${resource} name="${token.name}">${value}</${resource}>`;
+    });
+    return `<?xml version="1.0" encoding="UTF-8"?>\n${header}<resources>\n${resources.join('\n')}\n</resources>\n`;
+  },
+});
+
+function createBuilder(tmpDir, fileForSet, sourceSetKeys, isExported) {
   const toFiles = (setKeys) => setKeys.map((key) => (key === PRODUCT_UNION_FILE ? key : fileForSet.get(key)));
-  const sourceFileNames = toFiles(sourceSetKeys);
 
   // `platforms` maps a PLATFORM_CONFIG key to the files it writes. Each file
   // only gets tokens from `outputSetKeys`, further narrowed by its own filter.
@@ -397,7 +461,7 @@ function createBuilder(tmpDir, fileForSet, sourceSetKeys) {
           {
             ...PLATFORM_CONFIG[platform],
             buildPath: `${DIST_DIR.replace(/\\/g, '/')}/`,
-            options: { outputReferences: platform === 'css' ? referencesExportedOnly(sourceFileNames) : false },
+            options: { outputReferences: platform === 'css' ? referencesExportedOnly(isExported) : false },
             files: files.map(({ filter, ...file }) => ({
               ...file,
               filter: filter ? (token, options) => baseFilter(token) && filter(token, options) : baseFilter,
@@ -425,17 +489,16 @@ function tsFiles(basePath) {
 function androidFile(destination, filter) {
   return {
     destination,
-    format: 'android/resources',
+    format: 'android/ds-resources',
     filter: (token) => isScalar(token) && (!filter || filter(token)),
-    options: { resourceMap: ANDROID_RESOURCE_MAP },
   };
 }
 
-function swiftFile(destination, className) {
+function swiftFile(destination, className, filter) {
   return {
     destination,
     format: 'ios-swift/any.swift',
-    filter: isScalar,
+    filter: (token) => isScalar(token) && (!filter || filter(token)),
     options: { className, objectType: 'enum', accessControl: 'public', import: ['SwiftUI'] },
   };
 }
@@ -506,17 +569,24 @@ async function writeGenerated(relativePath, body) {
 
 async function build() {
   const manifest = await loadManifest();
-  const { sets, sourceSetKeys, sharedSetKeys, products, modes, platforms, productUnion, breakpoint } = manifest;
+  const { sets, sourceSetKeys, referencedPrimitives, sharedSetKeys, products, modes, platforms, productUnion, breakpoint } =
+    manifest;
 
   // Cleaned once up front instead of per Style Dictionary instance: the
   // builds below run in parallel and share dist/, so a per-instance
   // cleanAllPlatforms() can delete files/dirs another build is writing.
-  await rm(DIST_DIR, { recursive: true, force: true });
+  // Retries cover Windows briefly locking a file that an editor or file
+  // watcher has open (EBUSY/EPERM), which otherwise fails the build at random.
+  await rm(DIST_DIR, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
 
   const tmpDir = await mkdtemp(path.join(tmpdir(), 'ds-tokens-'));
   try {
     const fileForSet = await materializeSets(tmpDir, sets, productUnion);
-    const buildLayer = createBuilder(tmpDir, fileForSet, sourceSetKeys);
+    const isExported = isExportedToken(
+      sourceSetKeys.map((key) => fileForSet.get(key)),
+      referencedPrimitives,
+    );
+    const buildLayer = createBuilder(tmpDir, fileForSet, sourceSetKeys, isExported);
     const withProducts = [...sharedSetKeys, PRODUCT_UNION_FILE];
 
     const [defaultMode] = modes;
@@ -524,6 +594,11 @@ async function build() {
       /mobile/i.test(platform.name) ? `(width < ${breakpoint}px)` : `(width >= ${breakpoint}px)`;
 
     const cssOutputs = [
+      {
+        setKeys: [],
+        outputSetKeys: sourceSetKeys,
+        platforms: { css: [{ ...cssFile('css/primitives.css', ':root'), filter: isExported }] },
+      },
       {
         setKeys: sharedSetKeys,
         outputSetKeys: sharedSetKeys,
@@ -552,13 +627,25 @@ async function build() {
       // of each is enough to enumerate every name for the preset and vars.
       {
         setKeys: [...withProducts, ...defaultMode.setKeys, ...platforms[0].setKeys],
-        outputSetKeys: [...withProducts, ...defaultMode.setKeys, ...platforms[0].setKeys],
+        outputSetKeys: [...sourceSetKeys, ...withProducts, ...defaultMode.setKeys, ...platforms[0].setKeys],
         platforms: {
           css: [
-            { destination: 'tailwind/preset.cjs', format: 'tailwind/preset' },
-            { destination: 'ts/vars.js', format: 'javascript/css-vars' },
-            { destination: 'ts/vars.d.ts', format: 'typescript/css-vars-declarations' },
+            { destination: 'tailwind/preset.cjs', format: 'tailwind/preset', filter: isExported },
+            { destination: 'ts/vars.js', format: 'javascript/css-vars', filter: isExported },
+            { destination: 'ts/vars.d.ts', format: 'typescript/css-vars-declarations', filter: isExported },
           ],
+        },
+      },
+      // Primitives are the same for every product, so TS and Swift get one
+      // shared module; Android gets a copy in each product folder, since that
+      // folder is meant to be dropped into res/ as a whole.
+      {
+        setKeys: [],
+        outputSetKeys: sourceSetKeys,
+        platforms: {
+          ts: tsFiles('ts/primitives').map((file) => ({ ...file, filter: isExported })),
+          android: products.map((product) => androidFile(`android/${product.slug}/values/primitives.xml`, isExported)),
+          ios: [swiftFile('ios/Primitives.swift', 'Primitives', isExported)],
         },
       },
       ...products.flatMap((product) => resolvedOutputs({ product, sharedSetKeys, modes, platforms, breakpoint })),
@@ -581,7 +668,7 @@ async function build() {
   }
 
   console.log(
-    `[tokens] built foundations, ${products.length} product(s) (${products.map((p) => p.slug).join(', ')}), ` +
+    `[tokens] built primitives, foundations, ${products.length} product(s) (${products.map((p) => p.slug).join(', ')}), ` +
       `${modes.length} mode(s) (${modes.map((m) => m.slug).join(', ')}), ` +
       `${platforms.length} platform(s) (${platforms.map((p) => p.slug).join(', ')}) for css, tailwind, ts, android and ios`,
   );
