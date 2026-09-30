@@ -343,6 +343,18 @@ jobs:
                 if [ "$count" -eq 1 ]; then add_fact "Commit" "$list"; else add_fact "Commits" "$list"; fi
               fi
 
+              # Como a PR da design vai entrar na main (mesma regra do
+              # tokens-studio-pr.yml). Num novo sync o diff é só daquele push,
+              # então só dá para afirmar o caso manual.
+              if [ "$PR_HEAD_REF" = "$TOKENS_BRANCH" ] && [ -f tokens-diff.json ]; then
+                vanished=$(jq '.vanished // [] | length' tokens-diff.json)
+                if [ "$vanished" -gt 0 ] && [ "$PR_ACTION" != "closed" ]; then
+                  add_fact "Merge" "Manual: há tokens que deixaram de existir, revise antes do merge"
+                elif [ "$PR_ACTION" = "opened" ] || [ "$PR_ACTION" = "reopened" ]; then
+                  add_fact "Merge" "Automático quando o check \"Validar tokens\" passar"
+                fi
+              fi
+
               if [ "$PR_ACTION" = "opened" ]; then
                 title="PR de tokens aberta"
               elif [ "$PR_ACTION" = "synchronize" ]; then
