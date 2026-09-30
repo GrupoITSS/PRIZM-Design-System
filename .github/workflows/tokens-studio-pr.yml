@@ -132,10 +132,15 @@ jobs:
             gh pr edit "$number" --body-file body.md
             echo "PR #$number atualizada."
           else
+            # O título é a mensagem do sync que abriu a PR (a digitada no
+            # Tokens Studio), para identificar a alteração na lista de PRs e
+            # no card do Teams. Syncs seguintes mantêm o título; as mensagens
+            # deles aparecem no card "PR de tokens atualizada".
+            title="${subject:-tokens: sync do Tokens Studio}"
             url=$(gh pr create \
               --base "$BASE_BRANCH" \
               --head "$HEAD_BRANCH" \
-              --title "tokens: sync do Tokens Studio" \
+              --title "$title" \
               --body-file body.md)
             echo "PR aberta: $url"
 
