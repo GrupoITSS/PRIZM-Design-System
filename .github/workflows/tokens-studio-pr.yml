@@ -132,11 +132,18 @@ jobs:
             gh pr edit "$number" --body-file body.md
             echo "PR #$number atualizada."
           else
-            gh label create "$PR_LABEL" --color 1D76DB --description "Design tokens" 2>/dev/null || true
-            gh pr create \
+            url=$(gh pr create \
               --base "$BASE_BRANCH" \
               --head "$HEAD_BRANCH" \
               --title "tokens: sync do Tokens Studio" \
-              --body-file body.md \
-              --label "$PR_LABEL"
+              --body-file body.md)
+            echo "PR aberta: $url"
+
+            # A label é aplicada depois de a PR existir: se o token não puder
+            # criá-la ou aplicá-la, a PR não deixa de ser aberta. O --force
+            # cria a label ou atualiza a existente.
+            if ! gh label create "$PR_LABEL" --color 1D76DB --description "Design tokens" --force \
+                || ! gh pr edit "$url" --add-label "$PR_LABEL"; then
+              echo "::warning::PR aberta sem a label \"$PR_LABEL\". Confira se o TOKENS_PR_TOKEN tem a permissão Issues: Read and write, ou crie a label em Issues > Labels."
+            fi
           fi
