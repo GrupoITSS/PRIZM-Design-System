@@ -38,13 +38,17 @@
 # workflow tokens-studio-pr.yml.
 #
 # O QUE NOTIFICA:
-# - Push na design: cada sync do Tokens Studio, antes mesmo de abrir a PR.
+# - PR aberta, reaberta, mergeada ou fechada sem merge.
+# - Novo sync numa PR da design já aberta ("PR de tokens atualizada"), com o
+#   resumo só do que mudou naquele sync. Commits em PRs de outras branches não
+#   notificam, para não gerar um card a cada commit.
 # - Push direto na main (sem PR).
-# - PR aberta, reaberta, mergeada ou fechada sem merge. Obs.: o GitHub não
-#   dispara workflows de pull_request enquanto a PR tem conflito; nesse caso
-#   o push na design continua avisando.
 # - Reviews de PR que alteram tokens.
 # - Releases publicadas.
+# O push na design não notifica: o sync já chega ao Teams pela PR (aberta ou
+# atualizada), com o link dela. Obs.: o GitHub não dispara workflows de
+# pull_request enquanto a PR tem conflito; nesse caso não há card até o
+# conflito ser resolvido.
 #
 # NOTIFICAÇÕES DUPLICADAS / RUÍDO:
 # - Push na main que veio de uma PR mergeada é ignorado, porque a PR já gerou
@@ -63,17 +67,17 @@
 name: Design Tokens Notifications
 
 on:
-  # Disparar em push na design (sync do Tokens Studio) e na main (sem PR)
+  # Disparar em push direto na main (sem PR). Syncs na design chegam pela PR.
   push:
     paths:
       - 'design-system/packages/tokens/src/**'
     branches:
       - main
-      - design
 
-  # Disparar quando PR é aberta, reaberta ou fechada (mergeada ou não)
+  # Disparar quando PR é aberta, reaberta, fechada (mergeada ou não) ou recebe
+  # commits (synchronize, filtrado no passo "Verificar relevância")
   pull_request:
-    types: [opened, reopened, closed]
+    types: [opened, reopened, synchronize, closed]
     paths:
       - 'design-system/packages/tokens/src/**'
 
@@ -90,6 +94,7 @@ permissions:
   pull-requests: read
 
 env:
+  TOKENS_BRANCH: design
   TOKENS_PATH: design-system/packages/tokens/src/
   TOKENS_FILE: design-system/packages/tokens/src/tokens-studio/tokens.json
 
@@ -110,11 +115,19 @@ jobs:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           SHA: ${{ github.sha }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_ACTION: ${{ github.event.action }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
           set -euo pipefail
 
           skip=false
           case "$EVENT" in
+            pull_request)
+              if [ "$PR_ACTION" = "synchronize" ] && [ "$PR_HEAD_REF" != "$TOKENS_BRANCH" ]; then
+                echo "Commit na PR #$PR_NUMBER ($PR_HEAD_REF) não é sync do Tokens Studio; ignorado."
+                skip=true
+              fi
+              ;;
             pull_request_review)
               if ! gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/files" --jq '.[].filename' \
                   | grep -q "^$TOKENS_PATH"; then
@@ -206,10 +219,15 @@ jobs:
           BEFORE: ${{ github.event.before }}
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_ACTION: ${{ github.event.action }}
         run: |
           set -euo pipefail
 
-          if [ "$EVENT" = "push" ]; then
+          if [ "$EVENT" = "pull_request" ] && [ "$PR_ACTION" = "synchronize" ] && [ -n "$BEFORE" ]; then
+            # Novo sync numa PR já aberta: só o que mudou neste push.
+            head="$PR_HEAD_SHA"
+            base="$BEFORE"
+          elif [ "$EVENT" = "push" ]; then
             head="$SHA"
             if [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ]; then
               base="$BEFORE"
@@ -302,6 +320,8 @@ jobs:
               add_fact "Autor" "$PR_USER"
               if [ "$PR_ACTION" = "opened" ]; then
                 title="PR de tokens aberta"
+              elif [ "$PR_ACTION" = "synchronize" ]; then
+                title="PR de tokens atualizada"
               elif [ "$PR_ACTION" = "reopened" ]; then
                 title="PR de tokens reaberta"
               elif [ "$PR_MERGED" = "true" ]; then
