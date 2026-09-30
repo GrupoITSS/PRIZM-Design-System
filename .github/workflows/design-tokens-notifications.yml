@@ -32,10 +32,19 @@
 # Em push e PR, o card lista os tokens adicionados, alterados e removidos
 # (comparando o tokens.json antes e depois, token a token, por set) e avisa
 # quando há remoções, que podem quebrar quem usa as variáveis geradas.
+# Também avisa quando o tokens.json chega no formato antigo do Tokens Studio
+# (value/type): o build.mjs só lê W3C DTCG ($value/$type).
+#
+# O QUE NOTIFICA:
+# - Push na design: cada sync do Tokens Studio, antes mesmo de abrir a PR.
+# - Push direto na main (sem PR).
+# - PR aberta, reaberta, mergeada ou fechada sem merge. Obs.: o GitHub não
+#   dispara workflows de pull_request enquanto a PR tem conflito; nesse caso
+#   o push na design continua avisando.
+# - Reviews de PR que alteram tokens.
+# - Releases publicadas.
 #
 # NOTIFICAÇÕES DUPLICADAS / RUÍDO:
-# - Push só notifica na main: os syncs do Tokens Studio na branch "design"
-#   chegam pela PR (aberta, review, mergeada), não a cada sync.
 # - Push na main que veio de uma PR mergeada é ignorado, porque a PR já gerou
 #   a notificação "PR de tokens mergeada".
 # - Reviews só notificam quando a PR altera arquivos em TOKENS_PATH
@@ -52,16 +61,17 @@
 name: Design Tokens Notifications
 
 on:
-  # Disparar em push na main (alterações que não passaram por PR)
+  # Disparar em push na design (sync do Tokens Studio) e na main (sem PR)
   push:
     paths:
       - 'design-system/packages/tokens/src/**'
     branches:
       - main
+      - design
 
-  # Disparar quando PR é aberta ou fechada (mergeada ou não)
+  # Disparar quando PR é aberta, reaberta ou fechada (mergeada ou não)
   pull_request:
-    types: [opened, closed]
+    types: [opened, reopened, closed]
     paths:
       - 'design-system/packages/tokens/src/**'
 
@@ -224,13 +234,24 @@ jobs:
           const base = read('tokens-base.json');
           const head = read('tokens-head.json');
 
+          // Token no formato W3C DTCG ($value/$type) ou no formato antigo do
+          // Tokens Studio (value/type), normalizado para { type, value, legacy }.
+          function asToken(node) {
+            if ('$value' in node) return { type: node.$type, value: node.$value, legacy: false };
+            if ('value' in node && ('type' in node || typeof node.value !== 'object')) {
+              return { type: node.type, value: node.value, legacy: true };
+            }
+            return null;
+          }
+
           // Sets do Tokens Studio: chaves que não começam com "$" ($themes,
           // $metadata). Cada set vira um Map "caminho.do.token" -> token.
           function tokenSets(file) {
             const sets = new Map();
             const walk = (out, node, segments) => {
               if (!node || typeof node !== 'object' || Array.isArray(node)) return;
-              if ('$value' in node) return out.set(segments.join('.'), node);
+              const token = asToken(node);
+              if (token) return out.set(segments.join('.'), token);
               for (const [key, child] of Object.entries(node)) walk(out, child, [...segments, key]);
             };
             for (const [set, tree] of Object.entries(file)) {
@@ -242,7 +263,7 @@ jobs:
             return sets;
           }
 
-          const signature = (token) => JSON.stringify([token.$type, token.$value]);
+          const signature = (token) => JSON.stringify([token.type, token.value]);
           const short = (value) => (typeof value === 'string' && value.length <= 40 ? value : null);
 
           const before = tokenSets(base);
@@ -263,7 +284,7 @@ jobs:
               const key = `${set} › ${tokenPath}`;
               if (!old.has(tokenPath)) { added.push(key); continue; }
               if (signature(old.get(tokenPath)) === signature(token)) continue;
-              const [from, to] = [short(old.get(tokenPath).$value), short(token.$value)];
+              const [from, to] = [short(old.get(tokenPath).value), short(token.value)];
               changed.push(from && to ? `${key}: ${from} → ${to}` : key);
             }
             for (const tokenPath of old.keys()) {
@@ -279,6 +300,10 @@ jobs:
 
           const themesChanged = JSON.stringify(base.$themes ?? null) !== JSON.stringify(head.$themes ?? null);
 
+          // O build.mjs só lê W3C DTCG: tokens no formato antigo quebram o build.
+          const legacyCount = [...after.values()].reduce(
+            (count, tokens) => count + [...tokens.values()].filter((token) => token.legacy).length, 0);
+
           const section = (title, items, color) => items.length === 0 ? [] : [
             { type: 'TextBlock', text: `${title} (${items.length})`, weight: 'Bolder', color, wrap: true, spacing: 'Medium' },
             ...items.slice(0, MAX_ITEMS).map((text) => ({ type: 'TextBlock', text, fontType: 'Monospace', size: 'Small', wrap: true, spacing: 'None' })),
@@ -288,6 +313,9 @@ jobs:
           ];
 
           const blocks = [
+            ...(legacyCount > 0
+              ? [{ type: 'TextBlock', text: `⚠️ tokens.json está no formato antigo do Tokens Studio (value/type) em ${legacyCount} token(s), e o build espera W3C DTCG ($value/$type). No Tokens Studio, converta para W3C DTCG e faça push de novo.`, color: 'Attention', weight: 'Bolder', wrap: true, spacing: 'Medium' }]
+              : []),
             ...(vanished.length > 0
               ? [{ type: 'TextBlock', text: `⚠️ ${vanished.length} token(s) deixaram de existir em todos os sets: isso pode quebrar quem usa as variáveis geradas.`, color: 'Attention', weight: 'Bolder', wrap: true, spacing: 'Medium' }]
               : []),
@@ -308,8 +336,8 @@ jobs:
           }
           const summary = parts.length > 0 ? parts.join(' · ') : 'nenhum valor alterado';
 
-          fs.writeFileSync('tokens-diff.json', JSON.stringify({ summary, themesChanged, blocks }));
-          console.log(summary + (themesChanged ? ' · $themes alterado' : ''));
+          fs.writeFileSync('tokens-diff.json', JSON.stringify({ summary, themesChanged, legacyCount, blocks }));
+          console.log(summary + (themesChanged ? ' · $themes alterado' : '') + (legacyCount ? ` · ${legacyCount} tokens no formato antigo` : ''));
           EOF
 
       # -----------------------------------------------------------------------
@@ -358,7 +386,11 @@ jobs:
 
           case "$EVENT" in
             push)
-              title="Tokens alterados"
+              if [ "$REF_NAME" = "design" ]; then
+                title="Tokens sincronizados na branch design"
+              else
+                title="Tokens alterados na $REF_NAME"
+              fi
               url="${COMMIT_URL:-https://github.com/$REPO}"
               add_fact "Origem" "$ORIGIN ($ORIGIN_DETAIL)"
               add_fact "Branch" "$REF_NAME"
@@ -373,6 +405,8 @@ jobs:
               add_fact "Autor" "$PR_USER"
               if [ "$PR_ACTION" = "opened" ]; then
                 title="PR de tokens aberta"
+              elif [ "$PR_ACTION" = "reopened" ]; then
+                title="PR de tokens reaberta"
               elif [ "$PR_MERGED" = "true" ]; then
                 title="PR de tokens mergeada"; color="Good"
               else
