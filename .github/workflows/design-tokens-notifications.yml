@@ -34,6 +34,8 @@
 # quando há remoções, que podem quebrar quem usa as variáveis geradas.
 # Também avisa quando o tokens.json chega no formato antigo do Tokens Studio
 # (value/type): o build.mjs só lê W3C DTCG ($value/$type).
+# A comparação fica em .github/scripts/tokens-diff.mjs, compartilhada com o
+# workflow tokens-studio-pr.yml.
 #
 # O QUE NOTIFICA:
 # - Push na design: cada sync do Tokens Studio, antes mesmo de abrir a PR.
@@ -186,6 +188,13 @@ jobs:
       # 3. Resumir o que mudou no tokens.json (push e PR)
       # -----------------------------------------------------------------------
       # Se falhar, a notificação segue sem o resumo.
+      - name: Checkout dos scripts
+        if: steps.gate.outputs.skip != 'true' && (github.event_name == 'push' || github.event_name == 'pull_request')
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+
       - name: Resumir alterações nos tokens
         if: steps.gate.outputs.skip != 'true' && (github.event_name == 'push' || github.event_name == 'pull_request')
         continue-on-error: true
@@ -226,119 +235,7 @@ jobs:
           fetch_tokens "$base" tokens-base.json
           fetch_tokens "$head" tokens-head.json
 
-          node - <<'EOF'
-          const fs = require('fs');
-
-          const MAX_ITEMS = 5;
-          const read = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
-          const base = read('tokens-base.json');
-          const head = read('tokens-head.json');
-
-          // Token no formato W3C DTCG ($value/$type) ou no formato antigo do
-          // Tokens Studio (value/type), normalizado para { type, value, legacy }.
-          function asToken(node) {
-            if ('$value' in node) return { type: node.$type, value: node.$value, legacy: false };
-            if ('value' in node && ('type' in node || typeof node.value !== 'object')) {
-              return { type: node.type, value: node.value, legacy: true };
-            }
-            return null;
-          }
-
-          // Sets do Tokens Studio: chaves que não começam com "$" ($themes,
-          // $metadata). Cada set vira um Map "caminho.do.token" -> token.
-          function tokenSets(file) {
-            const sets = new Map();
-            const walk = (out, node, segments) => {
-              if (!node || typeof node !== 'object' || Array.isArray(node)) return;
-              const token = asToken(node);
-              if (token) return out.set(segments.join('.'), token);
-              for (const [key, child] of Object.entries(node)) walk(out, child, [...segments, key]);
-            };
-            for (const [set, tree] of Object.entries(file)) {
-              if (set.startsWith('$')) continue;
-              const tokens = new Map();
-              walk(tokens, tree, []);
-              sets.set(set, tokens);
-            }
-            return sets;
-          }
-
-          const signature = (token) => JSON.stringify([token.type, token.value]);
-          const short = (value) => (typeof value === 'string' && value.length <= 40 ? value : null);
-
-          const before = tokenSets(base);
-          const after = tokenSets(head);
-
-          // Sets criados/apagados (ou renomeados) aparecem como sets, não
-          // token a token.
-          const setsAdded = [...after.keys()].filter((set) => !before.has(set));
-          const setsRemoved = [...before.keys()].filter((set) => !after.has(set));
-
-          const added = [];
-          const removed = [];
-          const changed = [];
-          for (const [set, tokens] of after) {
-            const old = before.get(set);
-            if (!old) continue;
-            for (const [tokenPath, token] of tokens) {
-              const key = `${set} › ${tokenPath}`;
-              if (!old.has(tokenPath)) { added.push(key); continue; }
-              if (signature(old.get(tokenPath)) === signature(token)) continue;
-              const [from, to] = [short(old.get(tokenPath).value), short(token.value)];
-              changed.push(from && to ? `${key}: ${from} → ${to}` : key);
-            }
-            for (const tokenPath of old.keys()) {
-              if (!tokens.has(tokenPath)) removed.push(`${set} › ${tokenPath}`);
-            }
-          }
-
-          // O nome da variável gerada vem do caminho do token, não do set: só
-          // quebra quem consome se o caminho sumir de todos os sets.
-          const pathsIn = (sets) => new Set([...sets.values()].flatMap((tokens) => [...tokens.keys()]));
-          const pathsAfter = pathsIn(after);
-          const vanished = [...pathsIn(before)].filter((tokenPath) => !pathsAfter.has(tokenPath));
-
-          const themesChanged = JSON.stringify(base.$themes ?? null) !== JSON.stringify(head.$themes ?? null);
-
-          // O build.mjs só lê W3C DTCG: tokens no formato antigo quebram o build.
-          const legacyCount = [...after.values()].reduce(
-            (count, tokens) => count + [...tokens.values()].filter((token) => token.legacy).length, 0);
-
-          const section = (title, items, color) => items.length === 0 ? [] : [
-            { type: 'TextBlock', text: `${title} (${items.length})`, weight: 'Bolder', color, wrap: true, spacing: 'Medium' },
-            ...items.slice(0, MAX_ITEMS).map((text) => ({ type: 'TextBlock', text, fontType: 'Monospace', size: 'Small', wrap: true, spacing: 'None' })),
-            ...(items.length > MAX_ITEMS
-              ? [{ type: 'TextBlock', text: `… e mais ${items.length - MAX_ITEMS}`, size: 'Small', isSubtle: true, spacing: 'None' }]
-              : []),
-          ];
-
-          const blocks = [
-            ...(legacyCount > 0
-              ? [{ type: 'TextBlock', text: `⚠️ tokens.json está no formato antigo do Tokens Studio (value/type) em ${legacyCount} token(s), e o build espera W3C DTCG ($value/$type). No Tokens Studio, converta para W3C DTCG e faça push de novo.`, color: 'Attention', weight: 'Bolder', wrap: true, spacing: 'Medium' }]
-              : []),
-            ...(vanished.length > 0
-              ? [{ type: 'TextBlock', text: `⚠️ ${vanished.length} token(s) deixaram de existir em todos os sets: isso pode quebrar quem usa as variáveis geradas.`, color: 'Attention', weight: 'Bolder', wrap: true, spacing: 'Medium' }]
-              : []),
-            ...section('Tokens que deixaram de existir', vanished, 'Attention'),
-            ...section('Sets criados', setsAdded, 'Good'),
-            ...section('Sets removidos', setsRemoved, 'Warning'),
-            ...section('Adicionados', added, 'Good'),
-            ...section('Alterados', changed, 'Accent'),
-            ...section('Removidos', removed, 'Warning'),
-          ];
-
-          const parts = [];
-          if (added.length + changed.length + removed.length > 0) {
-            parts.push(`+${added.length} adicionados · ~${changed.length} alterados · −${removed.length} removidos`);
-          }
-          if (setsAdded.length + setsRemoved.length > 0) {
-            parts.push(`sets: +${setsAdded.length} / −${setsRemoved.length}`);
-          }
-          const summary = parts.length > 0 ? parts.join(' · ') : 'nenhum valor alterado';
-
-          fs.writeFileSync('tokens-diff.json', JSON.stringify({ summary, themesChanged, legacyCount, blocks }));
-          console.log(summary + (themesChanged ? ' · $themes alterado' : '') + (legacyCount ? ` · ${legacyCount} tokens no formato antigo` : ''));
-          EOF
+          node .github/scripts/tokens-diff.mjs tokens-base.json tokens-head.json tokens-diff.json
 
       # -----------------------------------------------------------------------
       # 4. Montar o Adaptive Card e enviar ao Teams

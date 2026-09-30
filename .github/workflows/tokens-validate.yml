@@ -1,0 +1,77 @@
+# =============================================================================
+# Validar tokens
+# =============================================================================
+#
+# Check que protege a main contra tokens que quebram o build:
+# 1. O tokens.json está em W3C DTCG ($value/$type), o formato que o build.mjs
+#    lê (.github/scripts/tokens-check.mjs).
+# 2. O build do Style Dictionary (packages/tokens/build.mjs) termina sem erro
+#    e sem referências quebradas ("which is not defined" no log).
+#
+# Roda em toda PR para a main, sem filtro de paths: um check obrigatório com
+# filtro de paths fica pendente para sempre nas PRs que não mexem em tokens.
+#
+# PARA BLOQUEAR O MERGE:
+# Settings > Branches > regra da main > "Require status checks to pass" e
+# selecione o check "Validar tokens" (ele aparece na lista depois da primeira
+# execução).
+# =============================================================================
+
+name: Validar tokens
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tokens-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validar tokens
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: design-system
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: design-system/package.json
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: design-system/pnpm-lock.yaml
+
+      - name: Instalar dependências do pacote de tokens
+        run: pnpm install --frozen-lockfile --filter tokens
+
+      - name: Verificar formato W3C DTCG
+        run: node ../.github/scripts/tokens-check.mjs packages/tokens/src/tokens-studio/tokens.json
+
+      - name: Build do Style Dictionary
+        run: |
+          set -o pipefail
+          pnpm --filter tokens build 2>&1 | tee build.log
+
+          broken=$(grep -c 'which is not defined' build.log || true)
+          if [ "$broken" -gt 0 ]; then
+            echo "::error::$broken referência(s) quebrada(s) no build de tokens:"
+            grep 'which is not defined' build.log
+            exit 1
+          fi
