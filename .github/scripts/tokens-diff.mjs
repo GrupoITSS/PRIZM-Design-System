@@ -312,6 +312,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     summary,
     themesChanged: diff.themesChanged,
     legacyCount: diff.legacyCount,
+    vanished: diff.vanished,
     blocks: cardBlocks(diff),
     markdown: prMarkdown(diff, head),
   }));
