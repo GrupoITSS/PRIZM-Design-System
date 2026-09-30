@@ -33,13 +33,13 @@ const CATEGORY_BY_TYPE = {
 };
 const CATEGORIES = ['Color', 'Typography', 'Spacing', 'Size', 'Border', 'Shadow', 'Border Radius', 'Breakpoint', 'Opacity', 'Outro'];
 
-// Camadas da arquitetura de tokens, pelo prefixo do set.
+// Camadas da arquitetura de tokens, pelo prefixo do set. Todo set fora de
+// global/ é de marca ou produto (ex.: pas/base/colors, pas/cockpit).
 const LAYERS = [
   ['global/primitives', 'Primitive'],
   ['global/foundations', 'Foundation'],
   ['global/mode', 'Mode'],
   ['global/platform', 'Platform'],
-  ['brand/', 'Marca · Produto'],
 ];
 
 // Token no formato W3C DTCG ($value/$type) ou no formato antigo do Tokens
@@ -169,7 +169,8 @@ export function cardBlocks(diff) {
 const categoryOf = ({ path, token }) =>
   /^breakpoint(\.|$)/.test(path) ? 'Breakpoint' : (CATEGORY_BY_TYPE[token.type] ?? 'Outro');
 
-const layerOf = (set) => LAYERS.find(([prefix]) => set.startsWith(prefix))?.[1] ?? 'Outro';
+const layerOf = (set) =>
+  LAYERS.find(([prefix]) => set.startsWith(prefix))?.[1] ?? (set.startsWith('global/') ? 'Outro' : 'Marca · Produto');
 
 const checkbox = (checked, label) => `- [${checked ? 'x' : ' '}] ${label}`;
 
