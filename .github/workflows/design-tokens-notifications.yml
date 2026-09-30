@@ -1,0 +1,456 @@
+# =============================================================================
+# Design Tokens Notifications Workflow
+# =============================================================================
+#
+# Este workflow monitora alterações nos tokens do Design System PRIZM
+# e envia notificações contextualizadas para o Microsoft Teams com detecção
+# automática de origem (Token Studio vs Manual).
+#
+# ESTRUTURA DO PROJETO:
+# design-system/packages/tokens/src/tokens-studio/tokens.json
+#     Tokens fonte (export único do Tokens Studio, formato W3C DTCG).
+# design-system/packages/tokens/dist/
+#     Saída do Style Dictionary (build.mjs). Não é versionada, por isso não
+#     dispara notificações.
+# Se a pasta de tokens mudar, atualize "on.push.paths",
+# "on.pull_request.paths" e TOKENS_PATH abaixo.
+#
+# SECRETS NECESSÁRIOS:
+# - TEAMS_WEBHOOK_URL: URL do webhook de um fluxo do Workflows (Power Automate)
+#   com o gatilho "Quando uma solicitação de webhook é recebida", que publica
+#   o Adaptive Card recebido em um canal do Teams.
+#
+# DETECÇÃO DE ORIGEM:
+# O Tokens Studio faz commit pela conta GitHub de quem sincroniza, então o
+# autor não diferencia sync de edição manual. A origem é detectada por:
+# 1. Mensagem de commit / título da PR (palavras-chave: "tokens studio",
+#    "sync tokens", "tokens.studio", "dtcg")
+# 2. Nome da branch (design, tokens-studio/*, sync/tokens-studio): "design" é
+#    a branch em que o Tokens Studio sincroniza neste repositório.
+#
+# RESUMO DAS ALTERAÇÕES:
+# Em push e PR, o card lista os tokens adicionados, alterados e removidos
+# (comparando o tokens.json antes e depois, token a token, por set) e avisa
+# quando há remoções, que podem quebrar quem usa as variáveis geradas.
+#
+# NOTIFICAÇÕES DUPLICADAS / RUÍDO:
+# - Push só notifica na main: os syncs do Tokens Studio na branch "design"
+#   chegam pela PR (aberta, review, mergeada), não a cada sync.
+# - Push na main que veio de uma PR mergeada é ignorado, porque a PR já gerou
+#   a notificação "PR de tokens mergeada".
+# - Reviews só notificam quando a PR altera arquivos em TOKENS_PATH
+#   (pull_request_review não aceita filtro de paths).
+#
+# TROUBLESHOOTING:
+# - Se as notificações não chegarem, verifique o secret TEAMS_WEBHOOK_URL
+# - Para debug, cheque os logs do workflow na aba Actions do GitHub
+# - Certifique-se de que o fluxo do Workflows tem permissão para postar no canal
+# - O webhook do Workflows costuma responder 202 (aceito); qualquer outro
+#   código faz este workflow falhar com a mensagem de erro no log
+# =============================================================================
+
+name: Design Tokens Notifications
+
+on:
+  # Disparar em push na main (alterações que não passaram por PR)
+  push:
+    paths:
+      - 'design-system/packages/tokens/src/**'
+    branches:
+      - main
+
+  # Disparar quando PR é aberta ou fechada (mergeada ou não)
+  pull_request:
+    types: [opened, closed]
+    paths:
+      - 'design-system/packages/tokens/src/**'
+
+  # Disparar quando PR recebe review (filtrado no passo "Verificar relevância")
+  pull_request_review:
+    types: [submitted]
+
+  # Disparar quando uma release é publicada
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  TOKENS_PATH: design-system/packages/tokens/src/
+  TOKENS_FILE: design-system/packages/tokens/src/tokens-studio/tokens.json
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      # -----------------------------------------------------------------------
+      # 1. Descartar eventos que não devem notificar
+      # -----------------------------------------------------------------------
+      - name: Verificar relevância
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          REF_NAME: ${{ github.ref_name }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          SHA: ${{ github.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          skip=false
+          case "$EVENT" in
+            pull_request_review)
+              if ! gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/files" --jq '.[].filename' \
+                  | grep -q "^$TOKENS_PATH"; then
+                echo "PR #$PR_NUMBER não altera tokens; review ignorado."
+                skip=true
+              fi
+              ;;
+            push)
+              if [ "$REF_NAME" = "$DEFAULT_BRANCH" ]; then
+                merged=$(gh api "repos/$REPO/commits/$SHA/pulls" --jq 'map(select(.merged_at != null)) | length')
+                if [ "$merged" -gt 0 ]; then
+                  echo "Push em $REF_NAME veio de PR mergeada; já notificado pela PR."
+                  skip=true
+                fi
+              fi
+              ;;
+          esac
+
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+
+      # -----------------------------------------------------------------------
+      # 2. Detectar origem da alteração (Token Studio vs Manual)
+      # -----------------------------------------------------------------------
+      - name: Detectar origem
+        id: origin
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          EVENT: ${{ github.event_name }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -uo pipefail
+
+          # Branch e "mensagem" conforme o tipo de evento
+          case "$EVENT" in
+            pull_request|pull_request_review) branch="$PR_HEAD_REF"; msg="$PR_TITLE" ;;
+            release)                          branch="";              msg="" ;;
+            *)                                branch="$REF_NAME";     msg="$COMMIT_MSG" ;;
+          esac
+
+          msg_lc=$(printf '%s' "$msg" | tr '[:upper:]' '[:lower:]')
+
+          reasons=()
+
+          # 1. Mensagem de commit / título da PR
+          if printf '%s' "$msg_lc" | grep -Eq 'tokens? studio|sync tokens|tokens\.studio|dtcg'; then
+            reasons+=("mensagem")
+          fi
+
+          # 2. Nome da branch
+          case "$branch" in
+            design|tokens-studio/*|sync/tokens-studio) reasons+=("branch") ;;
+          esac
+
+          if [ "${#reasons[@]}" -gt 0 ]; then
+            origin="Token Studio"
+            detail=$(IFS=', '; echo "${reasons[*]}")
+          else
+            origin="Manual"
+            detail="nenhum critério de Token Studio encontrado"
+          fi
+
+          {
+            echo "origin=$origin"
+            echo "detail=$detail"
+          } >> "$GITHUB_OUTPUT"
+
+      # -----------------------------------------------------------------------
+      # 3. Resumir o que mudou no tokens.json (push e PR)
+      # -----------------------------------------------------------------------
+      # Se falhar, a notificação segue sem o resumo.
+      - name: Resumir alterações nos tokens
+        if: steps.gate.outputs.skip != 'true' && (github.event_name == 'push' || github.event_name == 'pull_request')
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          BEFORE: ${{ github.event.before }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT" = "push" ]; then
+            head="$SHA"
+            if [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ]; then
+              base="$BEFORE"
+            else
+              base=$(gh api "repos/$REPO/commits/$SHA" --jq '.parents[0].sha // empty')
+            fi
+          else
+            # Compara com o ponto em que a branch saiu da base, para não
+            # contar alterações que entraram na main depois.
+            head="$PR_HEAD_SHA"
+            base=$(gh api "repos/$REPO/compare/$PR_BASE_SHA...$PR_HEAD_SHA" --jq '.merge_base_commit.sha')
+          fi
+
+          # Baixa o tokens.json em um commit; arquivo inexistente vira "{}".
+          fetch_tokens() {
+            if [ -z "$1" ]; then echo '{}' > "$2"; return; fi
+            if ! gh api -H 'Accept: application/vnd.github.raw+json' \
+                "repos/$REPO/contents/$TOKENS_FILE?ref=$1" > "$2" 2> fetch-error.txt; then
+              grep -q 'Not Found' fetch-error.txt || { cat fetch-error.txt; return 1; }
+              echo '{}' > "$2"
+            fi
+          }
+          fetch_tokens "$base" tokens-base.json
+          fetch_tokens "$head" tokens-head.json
+
+          node - <<'EOF'
+          const fs = require('fs');
+
+          const MAX_ITEMS = 5;
+          const read = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
+          const base = read('tokens-base.json');
+          const head = read('tokens-head.json');
+
+          // Sets do Tokens Studio: chaves que não começam com "$" ($themes,
+          // $metadata). Cada set vira um Map "caminho.do.token" -> token.
+          function tokenSets(file) {
+            const sets = new Map();
+            const walk = (out, node, segments) => {
+              if (!node || typeof node !== 'object' || Array.isArray(node)) return;
+              if ('$value' in node) return out.set(segments.join('.'), node);
+              for (const [key, child] of Object.entries(node)) walk(out, child, [...segments, key]);
+            };
+            for (const [set, tree] of Object.entries(file)) {
+              if (set.startsWith('$')) continue;
+              const tokens = new Map();
+              walk(tokens, tree, []);
+              sets.set(set, tokens);
+            }
+            return sets;
+          }
+
+          const signature = (token) => JSON.stringify([token.$type, token.$value]);
+          const short = (value) => (typeof value === 'string' && value.length <= 40 ? value : null);
+
+          const before = tokenSets(base);
+          const after = tokenSets(head);
+
+          // Sets criados/apagados (ou renomeados) aparecem como sets, não
+          // token a token.
+          const setsAdded = [...after.keys()].filter((set) => !before.has(set));
+          const setsRemoved = [...before.keys()].filter((set) => !after.has(set));
+
+          const added = [];
+          const removed = [];
+          const changed = [];
+          for (const [set, tokens] of after) {
+            const old = before.get(set);
+            if (!old) continue;
+            for (const [tokenPath, token] of tokens) {
+              const key = `${set} › ${tokenPath}`;
+              if (!old.has(tokenPath)) { added.push(key); continue; }
+              if (signature(old.get(tokenPath)) === signature(token)) continue;
+              const [from, to] = [short(old.get(tokenPath).$value), short(token.$value)];
+              changed.push(from && to ? `${key}: ${from} → ${to}` : key);
+            }
+            for (const tokenPath of old.keys()) {
+              if (!tokens.has(tokenPath)) removed.push(`${set} › ${tokenPath}`);
+            }
+          }
+
+          // O nome da variável gerada vem do caminho do token, não do set: só
+          // quebra quem consome se o caminho sumir de todos os sets.
+          const pathsIn = (sets) => new Set([...sets.values()].flatMap((tokens) => [...tokens.keys()]));
+          const pathsAfter = pathsIn(after);
+          const vanished = [...pathsIn(before)].filter((tokenPath) => !pathsAfter.has(tokenPath));
+
+          const themesChanged = JSON.stringify(base.$themes ?? null) !== JSON.stringify(head.$themes ?? null);
+
+          const section = (title, items, color) => items.length === 0 ? [] : [
+            { type: 'TextBlock', text: `${title} (${items.length})`, weight: 'Bolder', color, wrap: true, spacing: 'Medium' },
+            ...items.slice(0, MAX_ITEMS).map((text) => ({ type: 'TextBlock', text, fontType: 'Monospace', size: 'Small', wrap: true, spacing: 'None' })),
+            ...(items.length > MAX_ITEMS
+              ? [{ type: 'TextBlock', text: `… e mais ${items.length - MAX_ITEMS}`, size: 'Small', isSubtle: true, spacing: 'None' }]
+              : []),
+          ];
+
+          const blocks = [
+            ...(vanished.length > 0
+              ? [{ type: 'TextBlock', text: `⚠️ ${vanished.length} token(s) deixaram de existir em todos os sets: isso pode quebrar quem usa as variáveis geradas.`, color: 'Attention', weight: 'Bolder', wrap: true, spacing: 'Medium' }]
+              : []),
+            ...section('Tokens que deixaram de existir', vanished, 'Attention'),
+            ...section('Sets criados', setsAdded, 'Good'),
+            ...section('Sets removidos', setsRemoved, 'Warning'),
+            ...section('Adicionados', added, 'Good'),
+            ...section('Alterados', changed, 'Accent'),
+            ...section('Removidos', removed, 'Warning'),
+          ];
+
+          const parts = [];
+          if (added.length + changed.length + removed.length > 0) {
+            parts.push(`+${added.length} adicionados · ~${changed.length} alterados · −${removed.length} removidos`);
+          }
+          if (setsAdded.length + setsRemoved.length > 0) {
+            parts.push(`sets: +${setsAdded.length} / −${setsRemoved.length}`);
+          }
+          const summary = parts.length > 0 ? parts.join(' · ') : 'nenhum valor alterado';
+
+          fs.writeFileSync('tokens-diff.json', JSON.stringify({ summary, themesChanged, blocks }));
+          console.log(summary + (themesChanged ? ' · $themes alterado' : ''));
+          EOF
+
+      # -----------------------------------------------------------------------
+      # 4. Montar o Adaptive Card e enviar ao Teams
+      # -----------------------------------------------------------------------
+      - name: Enviar notificação ao Teams
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          EVENT: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          ACTOR: ${{ github.actor }}
+          REF_NAME: ${{ github.ref_name }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          COMMIT_URL: ${{ github.event.head_commit.url }}
+          PR_ACTION: ${{ github.event.action }}
+          PR_MERGED: ${{ github.event.pull_request.merged }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_USER: ${{ github.event.pull_request.user.login }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          REVIEW_STATE: ${{ github.event.review.state }}
+          REVIEW_USER: ${{ github.event.review.user.login }}
+          REVIEW_URL: ${{ github.event.review.html_url }}
+          REL_TAG: ${{ github.event.release.tag_name }}
+          REL_NAME: ${{ github.event.release.name }}
+          REL_URL: ${{ github.event.release.html_url }}
+          REL_BODY: ${{ github.event.release.body }}
+          ORIGIN: ${{ steps.origin.outputs.origin }}
+          ORIGIN_DETAIL: ${{ steps.origin.outputs.detail }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${TEAMS_WEBHOOK_URL:-}" ]; then
+            echo "::error::Secret TEAMS_WEBHOOK_URL não configurado (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+
+          facts='[]'
+          add_fact() {
+            facts=$(jq -c --arg t "$1" --arg v "$2" '. + [{title:$t,value:$v}]' <<<"$facts")
+          }
+
+          color="Accent"
+          add_fact "Repositório" "$REPO"
+
+          case "$EVENT" in
+            push)
+              title="Tokens alterados"
+              url="${COMMIT_URL:-https://github.com/$REPO}"
+              add_fact "Origem" "$ORIGIN ($ORIGIN_DETAIL)"
+              add_fact "Branch" "$REF_NAME"
+              add_fact "Autor" "$ACTOR"
+              add_fact "Commit" "$(printf '%s' "$COMMIT_MSG" | head -n1)"
+              ;;
+            pull_request)
+              url="$PR_URL"
+              add_fact "Origem" "$ORIGIN ($ORIGIN_DETAIL)"
+              add_fact "PR" "$PR_TITLE"
+              add_fact "Branch" "$PR_HEAD_REF"
+              add_fact "Autor" "$PR_USER"
+              if [ "$PR_ACTION" = "opened" ]; then
+                title="PR de tokens aberta"
+              elif [ "$PR_MERGED" = "true" ]; then
+                title="PR de tokens mergeada"; color="Good"
+              else
+                title="PR de tokens fechada sem merge"; color="Warning"
+              fi
+              ;;
+            pull_request_review)
+              url="$REVIEW_URL"
+              add_fact "PR" "$PR_TITLE"
+              add_fact "Revisor" "$REVIEW_USER"
+              case "$REVIEW_STATE" in
+                approved)          title="PR de tokens aprovada";                 color="Good" ;;
+                changes_requested) title="Alterações solicitadas na PR de tokens"; color="Attention" ;;
+                *)                 title="Novo comentário na PR de tokens" ;;
+              esac
+              ;;
+            release)
+              title="Nova release publicada"; color="Good"
+              url="$REL_URL"
+              add_fact "Versão" "${REL_NAME:-$REL_TAG}"
+              add_fact "Tag" "$REL_TAG"
+              add_fact "Publicada por" "$ACTOR"
+              ;;
+            *)
+              title="Evento: $EVENT"; url="https://github.com/$REPO"
+              ;;
+          esac
+
+          extra=""
+          if [ "$EVENT" = "release" ] && [ -n "${REL_BODY:-}" ]; then
+            extra=$(printf '%s' "$REL_BODY" | head -c 300)
+          fi
+
+          # Resumo gerado no passo "Resumir alterações nos tokens", se rodou
+          diff_blocks='[]'
+          if [ -f tokens-diff.json ]; then
+            add_fact "Tokens" "$(jq -r '.summary' tokens-diff.json)"
+            if [ "$(jq -r '.themesChanged' tokens-diff.json)" = "true" ]; then
+              add_fact "Temas" "configuração de \$themes alterada"
+            fi
+            diff_blocks=$(jq -c '.blocks' tokens-diff.json)
+          fi
+
+          jq -n \
+            --arg title "$title" \
+            --arg color "$color" \
+            --arg url "$url" \
+            --arg extra "$extra" \
+            --argjson facts "$facts" \
+            --argjson diff "$diff_blocks" '
+            {
+              type: "message",
+              attachments: [{
+                contentType: "application/vnd.microsoft.card.adaptive",
+                contentUrl: null,
+                content: {
+                  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                  type: "AdaptiveCard",
+                  version: "1.4",
+                  body: (
+                    [
+                      {type:"TextBlock", text:("PRIZM Design System - " + $title), weight:"Bolder", size:"Medium", color:$color, wrap:true},
+                      {type:"FactSet", facts:$facts}
+                    ]
+                    + (if $extra != "" then [{type:"TextBlock", text:$extra, wrap:true, isSubtle:true}] else [] end)
+                    + $diff
+                  ),
+                  actions: [{type:"Action.OpenUrl", title:"Abrir no GitHub", url:$url}]
+                }
+              }]
+            }' > payload.json
+
+          status=$(curl -sS -o response.txt -w '%{http_code}' \
+            -H 'Content-Type: application/json' \
+            --data @payload.json \
+            "$TEAMS_WEBHOOK_URL")
+
+          case "$status" in
+            2*) echo "Notificação enviada (HTTP $status)." ;;
+            *)  echo "::error::Falha ao enviar ao Teams (HTTP $status)"; cat response.txt; exit 1 ;;
+          esac
