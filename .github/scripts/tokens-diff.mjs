@@ -140,6 +140,16 @@ const LEGACY_WARNING = (count) =>
 const VANISHED_WARNING = (count) =>
   `${count} token(s) deixaram de existir em todos os sets: isso pode quebrar quem usa as variáveis geradas.`;
 
+// A lista de tokens que deixaram de existir só acrescenta algo quando difere
+// dos removidos (ex.: token removido de um set, mas mantido em outro; ou set
+// inteiro removido). Quando os dois têm os mesmos tokens, fica só "Removidos"
+// e o aviso.
+const vanishedToList = ({ vanished, removed }) => {
+  const removedPaths = new Set(removed.map(({ path }) => path));
+  const sameTokens = vanished.length === removedPaths.size && vanished.every((path) => removedPaths.has(path));
+  return sameTokens ? [] : vanished;
+};
+
 export function cardBlocks(diff) {
   const section = (title, items, color) => items.length === 0 ? [] : [
     { type: 'TextBlock', text: `${title} (${items.length})`, weight: 'Bolder', color, wrap: true, spacing: 'Medium' },
@@ -153,7 +163,7 @@ export function cardBlocks(diff) {
   return [
     ...(diff.legacyCount > 0 ? [warning(LEGACY_WARNING(diff.legacyCount))] : []),
     ...(diff.vanished.length > 0 ? [warning(VANISHED_WARNING(diff.vanished.length))] : []),
-    ...section('Tokens que deixaram de existir', diff.vanished, 'Attention'),
+    ...section('Tokens que deixaram de existir', vanishedToList(diff), 'Attention'),
     ...section('Sets criados', diff.setsAdded, 'Good'),
     ...section('Sets removidos', diff.setsRemoved, 'Warning'),
     ...section('Adicionados', diff.added.map(key), 'Good'),
@@ -267,7 +277,7 @@ export function prMarkdown(diff, head) {
   lines.push('', '### Tokens', '');
 
   lines.push(
-    ...table('Tokens que deixaram de existir em todos os sets', vanished, ['Token'], (path) => [`\`${path}\``]),
+    ...table('Tokens que deixaram de existir em todos os sets', vanishedToList(diff), ['Token'], (path) => [`\`${path}\``]),
     ...table('Sets criados', setsAdded, ['Set'], (set) => [`\`${set}\``]),
     ...table('Sets removidos', setsRemoved, ['Set'], (set) => [`\`${set}\``]),
     ...table('Adicionados', added, ['Token', 'Set', 'Tipo', 'Valor'],
