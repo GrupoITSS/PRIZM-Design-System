@@ -262,6 +262,10 @@ jobs:
         if: steps.gate.outputs.skip != 'true'
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BEFORE: ${{ github.event.before }}
           EVENT: ${{ github.event_name }}
           REPO: ${{ github.repository }}
           ACTOR: ${{ github.actor }}
@@ -318,6 +322,25 @@ jobs:
               add_fact "PR" "$PR_TITLE"
               add_fact "Branch" "$PR_HEAD_REF"
               add_fact "Autor" "$PR_USER"
+
+              # Mensagens de commit (ex.: a mensagem digitada no sync do Tokens
+              # Studio). O evento de PR não as traz, então vêm da API: num novo
+              # sync, só os commits daquele push; nos demais, os da PR inteira.
+              # Se a API falhar, o card segue sem elas.
+              if [ "$PR_ACTION" = "synchronize" ] && [ -n "${BEFORE:-}" ]; then
+                subjects=$(gh api "repos/$REPO/compare/$BEFORE...$PR_HEAD_SHA" \
+                  --jq '.commits[].commit.message | split("\n")[0]' 2>/dev/null || true)
+              else
+                subjects=$(gh api "repos/$REPO/pulls/$PR_NUMBER/commits?per_page=100" \
+                  --jq '.[].commit.message | split("\n")[0]' 2>/dev/null || true)
+              fi
+              if [ -n "$subjects" ]; then
+                count=$(printf '%s\n' "$subjects" | wc -l)
+                list=$(printf '%s\n' "$subjects" | head -n 5 | cut -c1-100 | paste -sd '|' | sed 's/|/ · /g')
+                if [ "$count" -gt 5 ]; then list="$list · (+$((count - 5)))"; fi
+                if [ "$count" -eq 1 ]; then add_fact "Commit" "$list"; else add_fact "Commits" "$list"; fi
+              fi
+
               if [ "$PR_ACTION" = "opened" ]; then
                 title="PR de tokens aberta"
               elif [ "$PR_ACTION" = "synchronize" ]; then
