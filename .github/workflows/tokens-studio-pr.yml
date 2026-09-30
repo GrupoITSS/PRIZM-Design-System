@@ -1,0 +1,142 @@
+# =============================================================================
+# Tokens Studio PR Workflow
+# =============================================================================
+#
+# A cada sync do Tokens Studio na branch "design", abre (ou atualiza) a PR
+# design → main com o template de tokens do PRIZM preenchido a partir do diff
+# do tokens.json.
+#
+# FLUXO:
+# Tokens Studio (Figma) → push na design → este workflow
+#   1. Compara o tokens.json da design com o ponto em que ela saiu da main
+#      (.github/scripts/tokens-diff.mjs).
+#   2. Se não houver PR aberta design → main, cria uma com a label "token".
+#      Se houver, atualiza só a seção gerada do corpo.
+# O check "Validar tokens" (tokens-validate.yml) roda na PR e bloqueia o
+# merge se o formato ou o build estiverem quebrados.
+#
+# CORPO DA PR:
+# - Seção gerada (entre <!-- tokens-auto:start --> e <!-- tokens-auto:end -->):
+#   resumo, tipo, categoria, escopo e camada inferidos, e tabelas de tokens.
+#   É reescrita a cada sync.
+# - Resto do corpo (.github/scripts/tokens-pr-template.md): contexto,
+#   motivação, acessibilidade, checklist. Preenchido por pessoas e preservado
+#   entre syncs.
+#
+# SECRETS NECESSÁRIOS:
+# - TOKENS_PR_TOKEN: token pessoal (fine-grained) com acesso a este
+#   repositório e permissões Pull requests: Read and write, Issues: Read and
+#   write (para criar a label) e Contents: Read. Um token pessoal é usado em vez
+#   do GITHUB_TOKEN porque PRs abertas pelo GITHUB_TOKEN não disparam outros
+#   workflows (notificação "PR aberta" e o check "Validar tokens").
+#
+# TROUBLESHOOTING:
+# - "TOKENS_PR_TOKEN não configurado": crie o secret em Settings > Secrets and
+#   variables > Actions.
+# - 403 ao criar a PR: confira as permissões e a validade do token.
+# - Para regerar o corpo sem novo sync: Actions > Tokens Studio PR > Run
+#   workflow.
+# =============================================================================
+
+name: Tokens Studio PR
+
+on:
+  push:
+    branches:
+      - design
+    paths:
+      - 'design-system/packages/tokens/src/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Syncs seguidos atualizam a mesma PR, um de cada vez
+concurrency:
+  group: tokens-studio-pr
+  cancel-in-progress: false
+
+env:
+  HEAD_BRANCH: design
+  BASE_BRANCH: main
+  PR_LABEL: token
+  TOKENS_FILE: design-system/packages/tokens/src/tokens-studio/tokens.json
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar token
+        env:
+          TOKENS_PR_TOKEN: ${{ secrets.TOKENS_PR_TOKEN }}
+        run: |
+          if [ -z "${TOKENS_PR_TOKEN:-}" ]; then
+            echo "::error::Secret TOKENS_PR_TOKEN não configurado (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_BRANCH }}
+          fetch-depth: 0
+
+      # -----------------------------------------------------------------------
+      # 1. Resumir o que a design muda em relação à main
+      # -----------------------------------------------------------------------
+      - name: Resumir alterações nos tokens
+        id: diff
+        run: |
+          set -euo pipefail
+
+          ahead=$(git rev-list --count "origin/$BASE_BRANCH..HEAD")
+          echo "ahead=$ahead" >> "$GITHUB_OUTPUT"
+          if [ "$ahead" -eq 0 ]; then
+            echo "A $HEAD_BRANCH não tem commits à frente da $BASE_BRANCH; nada a fazer."
+            exit 0
+          fi
+
+          base=$(git merge-base "origin/$BASE_BRANCH" HEAD)
+          git show "$base:$TOKENS_FILE" > tokens-base.json 2>/dev/null || echo '{}' > tokens-base.json
+          git show "HEAD:$TOKENS_FILE" > tokens-head.json
+          node .github/scripts/tokens-diff.mjs tokens-base.json tokens-head.json tokens-diff.json
+
+      # -----------------------------------------------------------------------
+      # 2. Abrir ou atualizar a PR
+      # -----------------------------------------------------------------------
+      - name: Abrir ou atualizar PR
+        if: steps.diff.outputs.ahead != '0'
+        env:
+          GH_TOKEN: ${{ secrets.TOKENS_PR_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          sha=$(git rev-parse HEAD)
+          subject=$(git log -1 --format=%s HEAD)
+          context="**Último sync:** [\`${sha::7}\`](https://github.com/$REPO/commit/$sha) — $subject"
+
+          number=$(gh pr list --head "$HEAD_BRANCH" --base "$BASE_BRANCH" --state open \
+            --json number --jq '.[0].number // empty')
+
+          if [ -n "$number" ]; then
+            gh pr view "$number" --json body --jq '.body' > current-body.md
+          else
+            : > current-body.md
+          fi
+
+          node .github/scripts/tokens-pr-body.mjs tokens-diff.json \
+            .github/scripts/tokens-pr-template.md current-body.md "$context" > body.md
+
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --body-file body.md
+            echo "PR #$number atualizada."
+          else
+            gh label create "$PR_LABEL" --color 1D76DB --description "Design tokens" 2>/dev/null || true
+            gh pr create \
+              --base "$BASE_BRANCH" \
+              --head "$HEAD_BRANCH" \
+              --title "tokens: sync do Tokens Studio" \
+              --body-file body.md \
+              --label "$PR_LABEL"
+          fi
