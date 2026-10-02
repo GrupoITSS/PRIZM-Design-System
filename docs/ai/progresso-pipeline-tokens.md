@@ -3,7 +3,7 @@
 > Documento de passagem entre sessões do Claude Code. Para retomar em outra máquina:
 > `git pull` e, no Claude Code, peça: *"Leia `docs/ai/progresso-pipeline-tokens.md` e continue de onde paramos."*
 >
-> Última atualização: 30/09/2026 (pipeline concluída).
+> Última atualização: 02/10/2026 (repositório migrado para `GrupoITSS/PRIZM-Design-System`).
 
 ## Onde estamos
 
@@ -16,15 +16,20 @@
 | Check de validação | `.github/workflows/tokens-validate.yml` | Funcionando e **obrigatório na `main`** desde 30/09 (proteção de branch: "Validar tokens" do GitHub Actions; não exige a branch atualizada com a `main`; admins podem ignorar). Job **"Validar tokens"**: formato W3C DTCG + build do Style Dictionary sem referências quebradas. |
 | Scripts compartilhados | `.github/scripts/` | `tokens-diff.mjs` (diff e resumo), `tokens-check.mjs` (formato), `tokens-pr-body.mjs` + `tokens-pr-template.md` (corpo da PR). |
 | Permissões do Claude Code | `.claude/settings.json` | Regras de git (fetch, pull, switch, branch, add, commit, merge, rebase, commit-tree, push) versionadas. |
-| GitHub CLI | `gh` 2.102 | Instalado e autenticado nesta máquina (conta `lucsgrcia`). No Git Bash, se o terminal não achar o `gh`, use `"/c/Program Files/GitHub CLI/gh.exe"` ou reinicie o VS Code. Na outra máquina, instale (`winget install GitHub.cli`) e rode `gh auth login`. |
+| GitHub CLI | `gh` 2.102 | Instalado no notebook (autenticado com a conta `lucsgrcia`, que perdeu o acesso na migração: rode `gh auth login` com a conta profissional `lucas-docnix`). Não instalado no desktop (`winget install GitHub.cli` + `gh auth login`). No Git Bash, se o terminal não achar o `gh`, use `"/c/Program Files/GitHub CLI/gh.exe"` ou reinicie o VS Code. |
 
-Secrets configurados no repositório: `TEAMS_WEBHOOK_URL` e `TOKENS_PR_TOKEN` (regravado em 30/09; fine-grained, só `prizm-ds`, com Pull requests, Issues e Contents: Read and write; Contents precisa de escrita para o merge automático). **Quando o token expirar, a PR automática falha com `HTTP 401: Bad credentials`**: gere um novo e grave com `gh secret set TOKENS_PR_TOKEN`.
+Secrets configurados no repositório: `TEAMS_WEBHOOK_URL` e `TOKENS_PR_TOKEN`. Desde a migração (02/10), o `TOKENS_PR_TOKEN` é um token **da conta da empresa (`GrupoITSS`)**: fine-grained, resource owner `GrupoITSS`, só o repositório `PRIZM-Design-System`, com Pull requests, Issues e **Contents: Read and write** (Contents precisa de escrita para o merge automático). Secrets só podem ser alterados pela conta `GrupoITSS` (dona do repositório). **Quando o token expirar, a PR automática falha com `HTTP 401: Bad credentials`**: gere um novo na conta da empresa e regrave o secret.
+
+Tokens Studio no Figma: **cada pessoa usa um token da própria conta profissional** (classic, escopo `repo`, porque colaboradores de um repositório de conta de usuário não conseguem criar token fine-grained para ele). Ninguém compartilha token; os commits de sync ficam com o nome de quem sincronizou.
 
 Label `token` criada no repositório.
 
 ### Pendente
 
-Nada pendente na pipeline. Testada de ponta a ponta em 30/09: PR #31 aberta sozinha com a label `token`, um card por evento (aberta, atualizada e mergeada) e check "Validar tokens" verde.
+1. **Testar a pipeline depois da migração** (o `TOKENS_PR_TOKEN` da conta da empresa ainda não foi usado): alterar um token no Figma e fazer push na `design` com a conta profissional. Esperado: PR aberta sozinha, card "PR de tokens aberta", check "Validar tokens" verde e merge automático. Se a PR automática falhar, ver o log em Actions > Tokens Studio PR (401 = token inválido ou expirado; 403 = permissão faltando no token).
+2. **Recriar a proteção da `main`** (logado como `GrupoITSS`): a regra **não veio na transferência** (conferido em 02/10 pela API: `main` sem proteção e sem rulesets). Settings > Branches > Add classic branch protection rule > padrão `main` > "Require status checks to pass before merging" > check **Validar tokens** (GitHub Actions), sem "Require branches to be up to date" e sem impedir bypass de admins. **Urgente:** sem check obrigatório, o `gh pr merge --auto` da PR automática mergeia na hora, sem esperar a validação. Conferir também "Allow auto-merge" em Settings > General.
+
+Antes da migração, a pipeline foi testada de ponta a ponta em 30/09: PR #31 aberta sozinha com a label `token`, um card por evento (aberta, atualizada e mergeada) e check "Validar tokens" verde.
 
 Rotina: **só é preciso avançar a `design` quando a `main` recebe mudanças na PR automática** (`.github/workflows/tokens-studio-pr.yml` ou os scripts que ela usa em `.github/scripts/`): `git push origin origin/main:refs/heads/design` (fast-forward). Ela é disparada por push na `design` e, em push, o GitHub usa a versão da própria branch. As notificações e a validação são disparadas pela PR e usam a versão da `main`, então mudanças só nelas não exigem avançar a `design`. Depois de merges de tokens também não: a `design` fica "atrás" da `main` só pelo commit de merge, sem conteúdo diferente, e a próxima PR funciona normalmente.
 
@@ -46,7 +51,8 @@ Agente de governança de issues (Teams → issue no template, com Claude). A esp
 
 - Tokens Studio configurado com caminho absoluto do Windows (`C:\Users\...`) criou arquivos inválidos na raiz; removidos. O caminho correto é relativo, com `/`.
 - PRs #20 e #21 levaram o formato antigo e nomes antigos de sets para a `main` e quebraram o build; o `tokens.json` foi restaurado (`f4362a0`) e depois a PR #22 trouxe o arquivo já em DTCG.
-- O repositório foi renomeado de `jellyfish` para `prizm-ds`; o remote local já aponta para o nome novo.
+- O repositório foi renomeado de `jellyfish` para `prizm-ds` e, em 02/10, transferido para a conta da empresa como **`GrupoITSS/PRIZM-Design-System`** (conta de usuário, repositório público). O Lucas trabalha nele como colaborador com a conta profissional `lucas-docnix`. Em cada máquina: `git remote set-url origin https://github.com/GrupoITSS/PRIZM-Design-System.git` (o desktop já foi atualizado).
+- O botão "Convert to W3C DTCG" do Tokens Studio cria a branch `w3c-dtcg-conversion` e abre uma PR própria (PRs #22, #24 e #40). Com o arquivo já em DTCG, o commit vem vazio; pode ser mergeado ou fechado. Essa branch não dispara a PR automática, que só reage à `design`.
 - O GitHub não dispara workflows de `pull_request` enquanto a PR tem conflito. Até 30/09 o card de push na `design` cobria esse caso; ele foi removido para acabar com os cards repetidos.
 - A PR automática falhou em todos os syncs de 30/09 de manhã com `HTTP 401: Bad credentials`: o valor salvo em `TOKENS_PR_TOKEN` não era um token válido (ajustar permissões não resolveu; foi preciso regravar o secret). O primeiro diagnóstico, sem acesso aos logs, apontou a label `token`; ele estava errado, mas a correção feita (criar a PR antes de aplicar a label) foi mantida.
 - Cada alteração de tokens gerava 3 cards no Teams (push na `design`, PR aberta, merge); o card do push na `design` foi removido.
