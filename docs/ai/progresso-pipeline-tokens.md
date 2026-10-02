@@ -27,7 +27,7 @@ Label `token` criada no repositório.
 ### Pendente
 
 1. **Testar a pipeline depois da migração** (o `TOKENS_PR_TOKEN` da conta da empresa ainda não foi usado): alterar um token no Figma e fazer push na `design` com a conta profissional. Esperado: PR aberta sozinha, card "PR de tokens aberta", check "Validar tokens" verde e merge automático. Se a PR automática falhar, ver o log em Actions > Tokens Studio PR (401 = token inválido ou expirado; 403 = permissão faltando no token).
-2. **Conferir nas configurações do repositório** (logado como `GrupoITSS`) se a migração manteve: "Allow auto-merge" ligado (Settings > General) e a proteção da `main` com o check "Validar tokens" obrigatório (Settings > Branches).
+2. **Recriar a proteção da `main`** (logado como `GrupoITSS`): a regra **não veio na transferência** (conferido em 02/10 pela API: `main` sem proteção e sem rulesets). Settings > Branches > Add classic branch protection rule > padrão `main` > "Require status checks to pass before merging" > check **Validar tokens** (GitHub Actions), sem "Require branches to be up to date" e sem impedir bypass de admins. **Urgente:** sem check obrigatório, o `gh pr merge --auto` da PR automática mergeia na hora, sem esperar a validação. Conferir também "Allow auto-merge" em Settings > General.
 
 Antes da migração, a pipeline foi testada de ponta a ponta em 30/09: PR #31 aberta sozinha com a label `token`, um card por evento (aberta, atualizada e mergeada) e check "Validar tokens" verde.
 
