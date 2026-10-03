@@ -117,6 +117,7 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_ACTION: ${{ github.event.action }}
           PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
 
@@ -125,6 +126,12 @@ jobs:
             pull_request)
               if [ "$PR_ACTION" = "synchronize" ] && [ "$PR_HEAD_REF" != "$TOKENS_BRANCH" ]; then
                 echo "Commit na PR #$PR_NUMBER ($PR_HEAD_REF) não é sync do Tokens Studio; ignorado."
+                skip=true
+              elif [ "$PR_ACTION" = "synchronize" ] && ! gh api -H 'Accept: application/vnd.github.raw+json' \
+                  "repos/$REPO/contents/$TOKENS_FILE?ref=$PR_HEAD_SHA" 2>/dev/null | grep -q '"\$value"'; then
+                # O tokens-studio-pr.yml converte o sync para W3C DTCG e o
+                # regrava na design; o card sai no sync convertido.
+                echo "Sync no formato antigo do Tokens Studio; o card sai depois da conversão automática para W3C DTCG."
                 skip=true
               fi
               ;;
@@ -224,9 +231,12 @@ jobs:
           set -euo pipefail
 
           if [ "$EVENT" = "pull_request" ] && [ "$PR_ACTION" = "synchronize" ] && [ -n "$BEFORE" ]; then
-            # Novo sync numa PR já aberta: só o que mudou neste push.
+            # Novo sync numa PR já aberta: só o que mudou neste push. A base é
+            # o ponto em comum com o push anterior, que normalmente é o próprio
+            # push anterior; quando o sync foi regravado em W3C DTCG pela
+            # conversão automática, é o commit de antes dele.
             head="$PR_HEAD_SHA"
-            base="$BEFORE"
+            base=$(gh api "repos/$REPO/compare/$BEFORE...$PR_HEAD_SHA" --jq '.merge_base_commit.sha')
           elif [ "$EVENT" = "push" ]; then
             head="$SHA"
             if [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ]; then
