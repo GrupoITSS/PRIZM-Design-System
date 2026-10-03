@@ -8,11 +8,17 @@
 #
 # FLUXO:
 # Tokens Studio (Figma) → push na design → este workflow
-#   1. Compara o tokens.json da design com o ponto em que ela saiu da main
+#   1. Se o sync chegou no formato antigo do Tokens Studio (value/type),
+#      converte o tokens.json para W3C DTCG (.github/scripts/tokens-to-dtcg.mjs),
+#      regrava o commit do sync na design e termina; o push dispara uma nova
+#      execução, que segue para os passos abaixo. Assim não é preciso usar o
+#      "Convert to W3C DTCG" do plugin: a conversão só renomeia as chaves e não
+#      muda nenhum valor, então segue a mesma regra de merge automático.
+#   2. Compara o tokens.json da design com o ponto em que ela saiu da main
 #      (.github/scripts/tokens-diff.mjs).
-#   2. Se não houver PR aberta design → main, cria uma com a label "token".
+#   3. Se não houver PR aberta design → main, cria uma com a label "token".
 #      Se houver, atualiza só a seção gerada do corpo.
-#   3. Ativa o merge automático da PR, que acontece assim que o check
+#   4. Ativa o merge automático da PR, que acontece assim que o check
 #      obrigatório "Validar tokens" (tokens-validate.yml) passar. Se o formato
 #      ou o build estiverem quebrados, o check falha e nada é mergeado.
 #
@@ -34,7 +40,8 @@
 # - TOKENS_PR_TOKEN: token pessoal (fine-grained) com acesso a este
 #   repositório e permissões Pull requests: Read and write, Issues: Read and
 #   write (para criar a label) e Contents: Read and write (para o merge
-#   automático). Um token pessoal é usado em vez
+#   automático e para regravar na design o sync convertido para W3C DTCG).
+#   Um token pessoal é usado em vez
 #   do GITHUB_TOKEN porque PRs abertas pelo GITHUB_TOKEN não disparam outros
 #   workflows (notificação "PR aberta" e o check "Validar tokens").
 #
@@ -83,17 +90,56 @@ jobs:
             exit 1
           fi
 
+      # O checkout usa o TOKENS_PR_TOKEN para que o push da conversão (passo 1)
+      # dispare de novo este workflow e os checks da PR; um push feito com o
+      # GITHUB_TOKEN não dispara outros workflows.
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ env.HEAD_BRANCH }}
           fetch-depth: 0
+          token: ${{ secrets.TOKENS_PR_TOKEN }}
 
       # -----------------------------------------------------------------------
-      # 1. Resumir o que a design muda em relação à main
+      # 1. Converter para W3C DTCG, se o sync chegou no formato antigo
+      # -----------------------------------------------------------------------
+      # O commit do sync é regravado no lugar (mesma mensagem e autoria, só o
+      # formato muda) e enviado de volta para a design. Esse push dispara este
+      # workflow de novo, e é essa nova execução que abre ou atualiza a PR; esta
+      # termina aqui. O --force-with-lease só substitui o commit se a design
+      # ainda estiver nele: se chegou outro sync no meio, nada é sobrescrito e
+      # a execução desse sync converte.
+      - name: Converter para W3C DTCG
+        id: convert
+        run: |
+          set -euo pipefail
+
+          converted=$(node .github/scripts/tokens-to-dtcg.mjs "$TOKENS_FILE")
+          echo "converted=$converted" >> "$GITHUB_OUTPUT"
+          if [ "$converted" -eq 0 ]; then
+            echo "tokens.json já está em W3C DTCG."
+            exit 0
+          fi
+
+          synced=$(git rev-parse HEAD)
+          git add "$TOKENS_FILE"
+          GIT_COMMITTER_NAME="github-actions[bot]" \
+          GIT_COMMITTER_EMAIL="41898282+github-actions[bot]@users.noreply.github.com" \
+            git commit --amend --no-edit --no-verify \
+              --trailer "Tokens-Converted: W3C DTCG (automático, $converted tokens)"
+
+          if git push --force-with-lease="$HEAD_BRANCH:$synced" origin "HEAD:$HEAD_BRANCH"; then
+            echo "::notice::Sync ${synced::7} chegou no formato antigo do Tokens Studio: $converted tokens convertidos para W3C DTCG e regravados na $HEAD_BRANCH. A PR é aberta ou atualizada pela próxima execução."
+          else
+            echo "::warning::A $HEAD_BRANCH mudou durante a conversão; nada foi sobrescrito. A execução do sync mais recente faz a conversão."
+          fi
+
+      # -----------------------------------------------------------------------
+      # 2. Resumir o que a design muda em relação à main
       # -----------------------------------------------------------------------
       - name: Resumir alterações nos tokens
         id: diff
+        if: steps.convert.outputs.converted == '0'
         run: |
           set -euo pipefail
 
@@ -110,10 +156,10 @@ jobs:
           node .github/scripts/tokens-diff.mjs tokens-base.json tokens-head.json tokens-diff.json
 
       # -----------------------------------------------------------------------
-      # 2. Abrir ou atualizar a PR
+      # 3. Abrir ou atualizar a PR
       # -----------------------------------------------------------------------
       - name: Abrir ou atualizar PR
-        if: steps.diff.outputs.ahead != '0'
+        if: steps.convert.outputs.converted == '0' && steps.diff.outputs.ahead != '0'
         env:
           GH_TOKEN: ${{ secrets.TOKENS_PR_TOKEN }}
           REPO: ${{ github.repository }}
