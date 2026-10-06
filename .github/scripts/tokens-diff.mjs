@@ -33,13 +33,14 @@ const CATEGORY_BY_TYPE = {
 };
 const CATEGORIES = ['Color', 'Typography', 'Spacing', 'Size', 'Border', 'Shadow', 'Border Radius', 'Breakpoint', 'Opacity', 'Outro'];
 
-// Camadas da arquitetura de tokens, pelo prefixo do set. Todo set fora de
-// global/ é de marca ou produto (ex.: pas/base/colors, pas/cockpit).
+// Camadas da árvore de tokens (arquitetura.md), pelo prefixo do set. Todo set
+// fora de global/, themes/ e platforms/ é de marca ou produto (ex.: pas/base,
+// pas/cms).
 const LAYERS = [
   ['global/primitives', 'Primitive'],
   ['global/foundations', 'Foundation'],
-  ['global/mode', 'Mode'],
-  ['global/platform', 'Platform'],
+  ['themes/', 'Mode'],
+  ['platforms/', 'Platform'],
 ];
 
 // Token no formato W3C DTCG ($value/$type) ou no formato antigo do Tokens
