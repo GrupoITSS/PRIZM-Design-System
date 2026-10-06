@@ -64,14 +64,23 @@ jobs:
       - name: Verificar formato W3C DTCG
         run: node ../.github/scripts/tokens-check.mjs packages/tokens/src/tokens-studio/tokens.json
 
+      # O Style Dictionary só registra referências quebradas no log (o build
+      # continua); "could not be found" é a mensagem atual e "which is not
+      # defined" a de versões anteriores e do modo verbose.
       - name: Build do Style Dictionary
         run: |
           set -o pipefail
           pnpm --filter tokens build 2>&1 | tee build.log
 
-          broken=$(grep -c 'which is not defined' build.log || true)
-          if [ "$broken" -gt 0 ]; then
-            echo "::error::$broken referência(s) quebrada(s) no build de tokens:"
-            grep 'which is not defined' build.log
+          if grep -qE 'could not be found|which is not defined' build.log; then
+            echo "::error::Referência(s) quebrada(s) no build de tokens:"
+            grep -E 'could not be found|which is not defined' build.log
             exit 1
           fi
+
+      # Teste de aceite do arquitetura.md: cada combinação marca · produto ×
+      # modo × plataforma, aplicando as camadas do dist/css em cascata, tem de
+      # bater com o export achatado do Tokens Studio; e nenhum produto pode
+      # repetir um valor da base.
+      - name: Teste das camadas
+        run: pnpm --filter tokens exec node --test build.test.mjs
