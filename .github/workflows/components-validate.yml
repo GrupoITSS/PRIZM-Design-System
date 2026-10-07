@@ -1,0 +1,65 @@
+# =============================================================================
+# Validar componentes
+# =============================================================================
+#
+# Check que protege a main contra componentes e stories que quebram:
+# lint, checagem de tipos e build do @prizm/ui e do Storybook (apps/docs).
+# O build do Storybook depende do build dos tokens (turbo.json, ^build), então
+# o CSS dos tokens também é gerado aqui.
+#
+# Roda em toda PR para a main, sem filtro de paths: um check obrigatório com
+# filtro de paths fica pendente para sempre nas PRs que não mexem em
+# componentes (ver tokens-validate.yml).
+#
+# PARA BLOQUEAR O MERGE:
+# Settings > Branches > regra da main > "Require status checks to pass" e
+# selecione o check "Validar componentes" (ele aparece na lista depois da
+# primeira execução).
+# =============================================================================
+
+name: Validar componentes
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: components-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validar componentes
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: design-system
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: design-system/package.json
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: design-system/pnpm-lock.yaml
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint, tipos e build
+        run: pnpm turbo run lint typecheck build --filter=@prizm/ui --filter=docs

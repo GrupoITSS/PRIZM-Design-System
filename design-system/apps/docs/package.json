@@ -8,10 +8,11 @@
     "build": "storybook build --docs",
     "preview-storybook": "serve storybook-static",
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint ./stories/*.stories.tsx --max-warnings 0"
+    "lint": "eslint ./stories/*.stories.tsx --max-warnings 0",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@acme/ui": "workspace:*",
+    "@prizm/ui": "workspace:*",
     "lucide-react": "^1.52.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -20,7 +21,7 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@storybook/addon-actions": "^8.6.18",
+    "@storybook/addon-a11y": "^8.6.18",
     "@storybook/addon-essentials": "^8.6.18",
     "@storybook/addon-links": "^8.6.18",
     "@storybook/addon-mcp": "0.0.8",

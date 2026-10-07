@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ArrowRight, Circle, Plus, Trash2 } from "lucide-react";
-import { Button, type ButtonProps } from "@acme/ui/button";
+import { Button, type ButtonProps } from "@prizm/ui/button";
 
 type Variant = NonNullable<ButtonProps["variant"]>;
 type Size = NonNullable<ButtonProps["size"]>;

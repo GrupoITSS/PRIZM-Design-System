@@ -1,6 +1,6 @@
 {
   "extends": "@repo/typescript-config/react-app.json",
-  "include": ["."],
+  "include": [".", ".storybook/**/*"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
     "strictNullChecks": true

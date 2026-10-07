@@ -1,0 +1,78 @@
+# =============================================================================
+# Storybook no GitHub Pages
+# =============================================================================
+#
+# A cada push na main que mexe no design system, gera o Storybook estático
+# (apps/docs, com os tokens e o @prizm/ui) e publica no GitHub Pages:
+# https://grupoitss.github.io/PRIZM-Design-System/
+#
+# PARA FUNCIONAR (uma vez, com a conta dona do repositório):
+# Settings > Pages > Build and deployment > Source: "GitHub Actions".
+# =============================================================================
+
+name: Storybook no GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - design-system/**
+      - .github/workflows/storybook-pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Um deploy por vez; um push novo não cancela o deploy em andamento.
+concurrency:
+  group: storybook-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build do Storybook
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: design-system
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: design-system/package.json
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: design-system/pnpm-lock.yaml
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm turbo run build --filter=docs
+
+      - name: Enviar o Storybook estático
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: design-system/apps/docs/storybook-static
+
+  deploy:
+    name: Publicar no GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

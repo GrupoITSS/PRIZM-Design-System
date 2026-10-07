@@ -2,6 +2,8 @@
 
 Monorepo do design system: tokens gerados a partir do Figma, componentes React e documentação em Storybook.
 
+Storybook publicado: https://grupoitss.github.io/PRIZM-Design-System/ (atualizado a cada merge na `main`).
+
 Ferramentas:
 
 - [Turborepo](https://turborepo.dev) — orquestra build, dev e lint entre os pacotes, com cache
@@ -16,7 +18,7 @@ Ferramentas:
 | Caminho | Pacote | Descrição |
 |---|---|---|
 | `packages/tokens` | `tokens` | Design tokens (ver [README](packages/tokens/README.md)) |
-| `packages/ui` | `@acme/ui` | Componentes React |
+| `packages/ui` | `@prizm/ui` | Componentes React |
 | `apps/docs` | `docs` | Storybook |
 | `packages/eslint-config` | `@repo/eslint-config` | Configurações de ESLint compartilhadas |
 | `packages/typescript-config` | `@repo/typescript-config` | `tsconfig`s compartilhados |
@@ -26,9 +28,11 @@ Ferramentas:
 Rode na pasta `design-system/`:
 
 - `pnpm install` — instala as dependências
-- `pnpm dev` — tokens e componentes em watch + Storybook em `localhost:6006`
+- `pnpm dev` — gera tokens e componentes uma vez, deixa os dois em watch e abre o Storybook em `localhost:6006` (funciona também num clone novo)
 - `pnpm build` — build de todos os pacotes, incluindo o Storybook estático
 - `pnpm lint` — lint de todos os pacotes
+- `pnpm typecheck` — checagem de tipos do `@prizm/ui` e das stories
+- `pnpm test` — teste de aceite dos tokens (`packages/tokens/build.test.mjs`)
 - `pnpm preview-storybook` — serve o Storybook estático gerado pelo build
 - `pnpm changeset` — registra uma mudança para o próximo versionamento
 - `pnpm clean` — apaga `node_modules`, `dist` e caches
