@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "@acme/ui": "workspace:*",
+    "lucide-react": "^1.52.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tokens": "workspace:*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -24,10 +26,12 @@
     "@storybook/addon-mcp": "0.0.8",
     "@storybook/react": "^8.6.18",
     "@storybook/react-vite": "^8.6.18",
+    "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.57.0",
     "serve": "^14.2.1",
     "storybook": "^8.6.18",
+    "tailwindcss": "^4.3.3",
     "typescript": "5.5.4",
     "vite": "^5.1.4"
   }
