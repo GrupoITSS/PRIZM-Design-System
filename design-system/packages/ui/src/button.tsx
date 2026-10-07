@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import type { ComponentProps } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { LoaderCircle } from "lucide-react";
 import { cn } from "./lib/cn";
@@ -49,35 +49,34 @@ export const buttonVariants = cva(
   },
 );
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+// ComponentProps<"button"> includes `ref` (a regular prop since React 19).
+export interface ButtonProps extends ComponentProps<"button">, VariantProps<typeof buttonVariants> {
   /** Disables the button and shows a spinner (in place of the icon, on icon sizes). */
   loading?: boolean;
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { className, variant, size, loading = false, disabled, type = "button", children, ...other },
-    ref,
-  ) => {
-    const iconOnly = size?.startsWith("icon") ?? false;
+export function Button({
+  className,
+  variant,
+  size,
+  loading = false,
+  disabled,
+  type = "button",
+  children,
+  ...other
+}: ButtonProps) {
+  const iconOnly = size?.startsWith("icon") ?? false;
 
-    return (
-      <button
-        aria-busy={loading || undefined}
-        className={cn(buttonVariants({ variant, size }), className)}
-        disabled={disabled || loading}
-        ref={ref}
-        // eslint-disable-next-line react/button-has-type -- defaults to "button", overridable by the caller
-        type={type}
-        {...other}
-      >
-        {loading ? <LoaderCircle aria-hidden="true" className="animate-spin" /> : null}
-        {loading && iconOnly ? null : children}
-      </button>
-    );
-  },
-);
-
-Button.displayName = "Button";
+  return (
+    <button
+      aria-busy={loading || undefined}
+      className={cn(buttonVariants({ variant, size }), className)}
+      disabled={disabled || loading}
+      type={type}
+      {...other}
+    >
+      {loading ? <LoaderCircle aria-hidden="true" className="animate-spin" /> : null}
+      {loading && iconOnly ? null : children}
+    </button>
+  );
+}

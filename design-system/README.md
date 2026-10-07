@@ -9,7 +9,7 @@ Ferramentas:
 - [Turborepo](https://turborepo.dev) — orquestra build, dev e lint entre os pacotes, com cache
 - [pnpm workspaces](https://pnpm.io/workspaces) — instala e liga os pacotes entre si (`workspace:*`)
 - [Style Dictionary](https://styledictionary.com) + [Tokens Studio](https://tokens.studio) — transforma os tokens do Figma em CSS, JS e preset Tailwind
-- [tsup](https://tsup.egoist.dev) — compila os componentes React
+- [tsdown](https://tsdown.dev) — compila os componentes React
 - [Storybook](https://storybook.js.org) — documentação e playground dos componentes
 - [Changesets](https://github.com/changesets/changesets) — versionamento e changelog
 
@@ -42,14 +42,14 @@ Para rodar a tarefa de um pacote só: `pnpm turbo run build --filter=tokens`.
 ## Adicionando um componente
 
 1. Crie o arquivo em `packages/ui/src/` (ex.: `input.tsx`).
-2. Adicione-o em `entryPoints` no `packages/ui/tsup.config.ts`.
+2. Adicione-o em `entry` no `packages/ui/tsdown.config.ts`.
 3. Exporte-o em `exports` no `packages/ui/package.json`:
 
    ```json
    "./input": {
      "types": "./src/input.tsx",
      "import": "./dist/input.mjs",
-     "require": "./dist/input.js"
+     "require": "./dist/input.cjs"
    }
    ```
 
