@@ -9,6 +9,7 @@ const config = {
   addons: [
     getAbsolutePath("@storybook/addon-links"),
     getAbsolutePath("@storybook/addon-essentials"),
+    getAbsolutePath("@storybook/addon-a11y"),
     {
       name: getAbsolutePath("@storybook/addon-mcp"),
       options: {

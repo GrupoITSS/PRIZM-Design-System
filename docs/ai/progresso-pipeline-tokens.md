@@ -3,7 +3,7 @@
 > Documento de passagem entre sessões do Claude Code. Para retomar em outra máquina:
 > `git pull` e, no Claude Code, peça: *"Leia `docs/ai/progresso-pipeline-tokens.md` e continue de onde paramos."*
 >
-> Última atualização: 06/10/2026 (tokens migrados para a árvore de herança do `arquitetura.md`; build em camadas com teste de aceite).
+> Última atualização: 07/10/2026 (Button, Storybook e check de componentes).
 
 ## Onde estamos
 
@@ -40,6 +40,15 @@ Depois da migração de repositório (02/10):
 Se a PR automática falhar, ver o log em Actions > Tokens Studio PR (401 = token inválido ou expirado; 403 = permissão faltando no token).
 
 Rotina: **só é preciso avançar a `design` quando a `main` recebe mudanças na PR automática** (`.github/workflows/tokens-studio-pr.yml` ou os scripts que ela usa em `.github/scripts/`): `git push origin origin/main:refs/heads/design` (fast-forward). Ela é disparada por push na `design` e, em push, o GitHub usa a versão da própria branch. **Avance a `design` logo depois do merge e antes do próximo sync do Figma**: em 03/10, um sync feito um minuto depois do merge da conversão automática (PR #44) rodou com o workflow antigo, levou o formato legado para a PR #45 e o check barrou. Se isso acontecer e a `design` já tiver um commit novo (o fast-forward não funciona), reaplique-o sobre a `main` e regrave a `design`: `git switch -c design-fix origin/design && git rebase origin/main && git push --force-with-lease=design:<sha antigo da design> origin HEAD:design`; o push dispara a PR automática já com a versão nova. As notificações e a validação são disparadas pela PR e usam a versão da `main`, então mudanças só nelas não exigem avançar a `design`. Depois de merges de tokens também não: a `design` fica "atrás" da `main` só pelo commit de merge, sem conteúdo diferente, e a próxima PR funciona normalmente.
+
+### Componentes e Storybook
+
+- **Button** (`@prizm/ui`, PR #52, mergeada em 07/10): feito a partir do frame "Button · matrix" do Figma, com cores, alturas, raio, fonte e sombra ligados aos tokens. Decisões em que o código difere do Figma estão na descrição da PR #52.
+- **Storybook:** barra de ferramentas de Marca · Produto, Mode e Plataforma (`apps/docs/.storybook/preview.tsx`; marca nova no Tokens Studio precisa ser acrescentada ali), Tailwind v4 com o preset dos tokens e addon de acessibilidade.
+- **Check "Validar componentes"** (`.github/workflows/components-validate.yml`): lint, tipos e build do `@prizm/ui` e do Storybook em toda PR para a `main`. Depois da primeira execução, a conta `GrupoITSS` precisa marcá-lo como obrigatório na regra da `main`, como o "Validar tokens".
+- **Storybook no GitHub Pages** (`.github/workflows/storybook-pages.yml`): publica a cada push na `main` em https://grupoitss.github.io/PRIZM-Design-System/. Depende de a conta `GrupoITSS` escolher Settings > Pages > Source: "GitHub Actions".
+- **Changesets mantido**, sem publicação configurada: falta decidir como os apps vão consumir o design system (npm ou GitHub Packages). O escopo `@prizm` já existe no npm e não é da empresa; para publicar com esse nome, é preciso conseguir o escopo ou trocar (no GitHub Packages o escopo tem de ser `@grupoitss`).
+- Pendências: fonte de reserva no `--font-sans` (Effra/Motiva caem para serifada) e preset do Tailwind sem `control-height` nem sombras compostas.
 
 ### Próxima etapa (ainda não iniciada)
 
