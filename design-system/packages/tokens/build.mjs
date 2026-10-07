@@ -82,6 +82,22 @@ StyleDictionary.registerTransform({
   },
 });
 
+// Figma font variables hold a single family ('Effra Trial'). On the web, a
+// family the browser doesn't have falls back to its default, a serif font,
+// so each one gets a generic fallback stack (monospace for mono families).
+// Families that already list a fallback are left as they are.
+StyleDictionary.registerTransform({
+  name: 'ds/font-family/fallback',
+  type: 'value',
+  filter: (token) => ['fontFamily', 'fontFamilies'].includes(token.$type ?? token.type),
+  transform: (token) => {
+    const value = String(token.$value ?? token.value);
+    if (value.includes(',')) return value;
+    const isMono = token.path.some((segment) => /mono/i.test(segment));
+    return `${value}, ${isMono ? 'ui-monospace, monospace' : 'ui-sans-serif, system-ui, sans-serif'}`;
+  },
+});
+
 // Native platforms get sizes in their own units, treating one Figma pixel as
 // one dp/pt: text-related sizes become sp on Android (so they follow the
 // user's font scale), everything else dp; on iOS every size is a CGFloat.
@@ -204,8 +220,18 @@ const CATEGORY_TO_THEME_KEY = {
   'border-width': 'borderWidth',
   opacity: 'opacity',
   blur: 'blur',
-  shadow: 'boxShadow',
+  // The atoms of the composite shadows (shadow.<size>.<layer>.<field>) only
+  // feed style.shadow.*; as box-shadow utilities they'd be invalid.
+  shadow: 'shadowAtoms',
   spacing: 'spacing',
+};
+
+// Composite shadows from Tokens Studio (style.<kind>.<size>) become Tailwind's
+// shadow utilities: shadow-xs, inset-shadow-sm… style.drop-shadow.* is left
+// out: its values carry a spread, which the drop-shadow() filter doesn't take.
+const STYLE_TO_THEME_KEY = {
+  shadow: 'boxShadow',
+  'inset-shadow': 'insetShadow',
 };
 
 function toCamelCase(value) {
@@ -214,6 +240,14 @@ function toCamelCase(value) {
 
 function resolveTailwindEntry(token) {
   const [top, ...rest] = token.path;
+  if (top === 'style' && STYLE_TO_THEME_KEY[rest[0]]) {
+    return { themeKey: STYLE_TO_THEME_KEY[rest[0]], tokenKey: rest.slice(1).join('-') };
+  }
+  // Control heights size buttons, inputs and selects, through every sizing
+  // utility: h-control-height-md, size-control-height-sm, min-h-…
+  if (top === 'control-height') {
+    return { themeKey: 'spacing', tokenKey: token.path.join('-') };
+  }
   const themeKey = CATEGORY_TO_THEME_KEY[top] ?? toCamelCase(top);
   const tokenKey = rest.join('-') || top;
   return { themeKey, tokenKey };
@@ -464,8 +498,8 @@ const NATIVE_BASE_TRANSFORMS = [
 ];
 
 export const PLATFORM_CONFIG = {
-  css: { transformGroup: 'tokens-studio', transforms: ['name/kebab', 'ds/line-height/px'] },
-  ts: { transformGroup: 'tokens-studio', transforms: ['name/camel', 'ds/line-height/px'] },
+  css: { transformGroup: 'tokens-studio', transforms: ['name/kebab', 'ds/line-height/px', 'ds/font-family/fallback'] },
+  ts: { transformGroup: 'tokens-studio', transforms: ['name/camel', 'ds/line-height/px', 'ds/font-family/fallback'] },
   android: {
     transforms: [...NATIVE_BASE_TRANSFORMS, 'ds/size/android', 'color/hex8android', 'name/snake'],
   },
