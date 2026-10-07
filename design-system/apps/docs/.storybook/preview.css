@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* Design tokens: one layer per Tokens Studio set, switched by the data-*
+   attributes the theme decorator (preview.tsx) puts around each story. */
+@import "tokens/dist/css/index.css";
+
+/* Tailwind utilities that point at the tokens (bg-primary, rounded-md, font-sans…). */
+@config "../../../packages/tokens/dist/tailwind/preset.cjs";
+
+/* The components live in another package, outside Tailwind's automatic scan. */
+@source "../../../packages/ui/src";
