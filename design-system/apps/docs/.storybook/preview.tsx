@@ -1,4 +1,4 @@
-import type { Decorator, Preview } from "@storybook/react";
+import type { Decorator, Preview } from "@storybook/react-vite";
 import "./preview.css";
 
 // The Tokens Studio themes ($themes in tokens.json, group "Marca · Produto").
@@ -32,6 +32,8 @@ const withTheme: Decorator = (Story, { globals, viewMode }) => {
 };
 
 const preview: Preview = {
+  // A "Docs" page (props table, stories) for every component.
+  tags: ["autodocs"],
   decorators: [withTheme],
   globalTypes: {
     brand: {

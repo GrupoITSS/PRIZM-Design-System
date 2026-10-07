@@ -1,45 +1,14 @@
-const { resolve } = require("node:path");
-
-const project = resolve(process.cwd(), "tsconfig.json");
+import { defineConfig } from "eslint/config";
+import storybook from "eslint-plugin-storybook";
+import react from "./react.js";
 
 /*
- * This is a custom ESLint configuration for use with
- * typescript packages.
+ * Shared ESLint config (flat config) for the Storybook app: the React config
+ * plus the Storybook rules for stories and .storybook/.
  *
- * This config extends the Vercel Engineering Style Guide.
- * For more information, see https://github.com/vercel/style-guide
+ * Usage, in the app's eslint.config.js:
  *
+ *   import storybook from "@repo/eslint-config/storybook";
+ *   export default storybook;
  */
-
-module.exports = {
-  extends: [
-    "plugin:storybook/recommended",
-    "plugin:mdx/recommended",
-    ...[
-      "@vercel/style-guide/eslint/node",
-      "@vercel/style-guide/eslint/typescript",
-      "@vercel/style-guide/eslint/browser",
-      "@vercel/style-guide/eslint/react",
-    ].map(require.resolve),
-  ],
-  parserOptions: {
-    project,
-  },
-  plugins: ["only-warn"],
-  globals: {
-    React: true,
-    JSX: true,
-  },
-  settings: {
-    "import/resolver": {
-      typescript: {
-        project,
-      },
-    },
-  },
-  ignorePatterns: ["node_modules/", "dist/"],
-  // add rules configurations here
-  rules: {
-    "import/no-default-export": "off",
-  },
-};
+export default defineConfig(react, storybook.configs["flat/recommended"]);

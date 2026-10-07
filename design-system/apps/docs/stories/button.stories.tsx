@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ArrowRight, Circle, Plus, Trash2 } from "lucide-react";
 import { Button, type ButtonProps } from "@prizm/ui/button";
 
@@ -13,6 +13,7 @@ const FIGMA_URL =
   "https://www.figma.com/design/DKxVyaDsRPJGk3lvL630yS/-TESTE-LUCAS--Design-Tokens---Core?node-id=345-2093";
 
 const meta: Meta<typeof Button> = {
+  title: "Button",
   component: Button,
   parameters: {
     docs: {
