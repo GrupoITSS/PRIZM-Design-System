@@ -37,10 +37,13 @@ const BASE_LAYER = 'base';
 
 // The $themes groups that combine into one theme (one brand/product + one
 // mode + one platform). If a group is renamed in Tokens Studio, update it here.
+// Each dimension accepts the English name (naming rule of 01/10) and the
+// Portuguese one still in tokens.json, so the rename in Figma/Tokens Studio
+// can land in any order; drop the Portuguese names once it has.
 const THEME_GROUPS = {
-  product: 'Marca · Produto',
-  mode: 'Mode',
-  platform: 'Plataforma',
+  product: ['Theme', 'Marca · Produto'],
+  mode: ['Mode'],
+  platform: ['Platform', 'Plataforma'],
 };
 
 // Android has no attribute to switch platforms, so desktop values go to a
@@ -336,11 +339,11 @@ function brandLayer(setKey) {
   return { brand: slugify(parts[0]), layer: slugify(parts[1]) };
 }
 
-function themesOf(themes, group, setOrder) {
-  const matches = themes.filter((theme) => theme.group === group);
+function themesOf(themes, groups, setOrder) {
+  const matches = themes.filter((theme) => groups.includes(theme.group));
   if (matches.length === 0) {
     throw new Error(
-      `No theme with group "${group}" found in $themes. Update THEME_GROUPS in build.mjs to match the groups defined in Tokens Studio.`,
+      `No theme with group ${groups.map((group) => `"${group}"`).join(' or ')} found in $themes. Update THEME_GROUPS in build.mjs to match the groups defined in Tokens Studio.`,
     );
   }
   const byOrder = (a, b) => setOrder.indexOf(a) - setOrder.indexOf(b);
