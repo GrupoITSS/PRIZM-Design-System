@@ -115,7 +115,9 @@ export const Matrix: Story = {
     <table className="border-collapse text-sm">
       <thead>
         <tr>
-          <th />
+          <th>
+            <span className="sr-only">Variante</span>
+          </th>
           {[...TEXT_SIZES, ...ICON_SIZES].map((size) => (
             <th className="px-4 pb-3 font-medium text-muted-foreground" key={size}>
               {size}

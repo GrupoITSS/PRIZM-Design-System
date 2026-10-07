@@ -27,19 +27,19 @@ export const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-input-background text-foreground shadow-(--style-shadow-xs) hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-input-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground",
         ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         warning: "bg-warning text-warning-foreground hover:bg-warning/90",
       },
       // Icon buttons are square at the same control height as text buttons.
       size: {
-        default: "h-(--control-height-md) px-4",
-        sm: "h-(--control-height-sm) px-3 text-xs",
-        lg: "h-(--control-height-lg) px-6",
-        icon: "size-(--control-height-md)",
-        "icon-sm": "size-(--control-height-sm)",
-        "icon-lg": "size-(--control-height-lg)",
+        default: "h-control-height-md px-4",
+        sm: "h-control-height-sm px-3 text-xs",
+        lg: "h-control-height-lg px-6",
+        icon: "size-control-height-md",
+        "icon-sm": "size-control-height-sm",
+        "icon-lg": "size-control-height-lg",
       },
     },
     defaultVariants: {
