@@ -22,7 +22,7 @@ Marcas e produtos hoje:
 - `docnix/base` (os produtos não sobrescrevem nada, então não têm set);
 - `tchello/base` herda o `pas/base` até ter dados próprios (o tema Tchello habilita `pas/base` e `tchello/base`).
 
-Os temas do Tokens Studio (`$themes`) combinam três grupos: **Marca · Produto** (PAS, PAS · CMS, Tchello, Docnix, ITSS · AFIPE, ITSS · Digitrol), **Mode** (Light, Dark) e **Plataforma** (Desktop, Mobile). O build lê marcas, produtos, modos e plataformas dos nomes dos sets e dos temas, sem nada fixo no código.
+Os temas do Tokens Studio (`$themes`) combinam três grupos: **Theme** (PAS, PAS · CMS, Tchello, Docnix, ITSS · AFIPE, ITSS · Digitrol), **Mode** (Light, Dark) e **Platform** (Desktop, Mobile). Até 07/10 os grupos se chamavam Marca · Produto e Plataforma; o build ainda aceita os dois nomes. O build lê marcas, produtos, modos e plataformas dos nomes dos sets e dos temas, sem nada fixo no código.
 
 Sombras e tipografias compostas (que o Figma não exporta como variáveis) são tokens do Tokens Studio, junto dos seus átomos: `style.shadow.*` nos sets de marca e `style.heading.*` nos de plataforma.
 
