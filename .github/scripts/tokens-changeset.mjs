@@ -44,8 +44,16 @@ if (pending) {
   process.exit(0);
 }
 
-const base = JSON.parse(git('show', `${tag}:${TOKENS_FILE}`));
-const head = JSON.parse(readFileSync(TOKENS_FILE, 'utf8'));
+// Primitivos nunca vão para a saída (só resolvem valores): renomear ou apagar
+// um primitivo não quebra quem consome. Ficam fora do diff; se a troca mudar
+// um valor emitido, isso aparece no token que o referencia.
+const PRIMITIVES_SET = 'global/primitives';
+const withoutPrimitives = (file) => {
+  const { [PRIMITIVES_SET]: _primitives, ...rest } = file;
+  return rest;
+};
+const base = withoutPrimitives(JSON.parse(git('show', `${tag}:${TOKENS_FILE}`)));
+const head = withoutPrimitives(JSON.parse(readFileSync(TOKENS_FILE, 'utf8')));
 const diff = diffTokens(base, head);
 
 const hasChanges =
