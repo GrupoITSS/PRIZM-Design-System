@@ -12,11 +12,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@prizm/ui": "workspace:*",
+    "@grupoitss/prizm-ui": "workspace:*",
     "lucide-react": "^1.52.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "tokens": "workspace:*"
+    "@grupoitss/prizm-tokens": "workspace:*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

@@ -17,8 +17,8 @@ Ferramentas:
 
 | Caminho | Pacote | Descrição |
 |---|---|---|
-| `packages/tokens` | `tokens` | Design tokens (ver [README](packages/tokens/README.md)) |
-| `packages/ui` | `@prizm/ui` | Componentes React |
+| `packages/tokens` | `@grupoitss/prizm-tokens` | Design tokens (ver [README](packages/tokens/README.md)) |
+| `packages/ui` | `@grupoitss/prizm-ui` | Componentes React (ver [README](packages/ui/README.md)) |
 | `apps/docs` | `docs` | Storybook |
 | `packages/eslint-config` | `@repo/eslint-config` | Configurações de ESLint compartilhadas |
 | `packages/typescript-config` | `@repo/typescript-config` | `tsconfig`s compartilhados |
@@ -31,13 +31,13 @@ Rode na pasta `design-system/`:
 - `pnpm dev` — gera tokens e componentes uma vez, deixa os dois em watch e abre o Storybook em `localhost:6006` (funciona também num clone novo)
 - `pnpm build` — build de todos os pacotes, incluindo o Storybook estático
 - `pnpm lint` — lint de todos os pacotes
-- `pnpm typecheck` — checagem de tipos do `@prizm/ui` e das stories
+- `pnpm typecheck` — checagem de tipos do `@grupoitss/prizm-ui` e das stories
 - `pnpm test` — teste de aceite dos tokens (`packages/tokens/build.test.mjs`)
 - `pnpm preview-storybook` — serve o Storybook estático gerado pelo build
 - `pnpm changeset` — registra uma mudança para o próximo versionamento
 - `pnpm clean` — apaga `node_modules`, `dist` e caches
 
-Para rodar a tarefa de um pacote só: `pnpm turbo run build --filter=tokens`.
+Para rodar a tarefa de um pacote só: `pnpm turbo run build --filter=@grupoitss/prizm-tokens`.
 
 ## Adicionando um componente
 
@@ -47,10 +47,19 @@ Para rodar a tarefa de um pacote só: `pnpm turbo run build --filter=tokens`.
 
    ```json
    "./input": {
-     "types": "./src/input.tsx",
-     "import": "./dist/input.mjs",
-     "require": "./dist/input.cjs"
+     "import": { "types": "./dist/input.d.mts", "default": "./dist/input.mjs" },
+     "require": { "types": "./dist/input.d.cts", "default": "./dist/input.cjs" }
    }
    ```
 
 4. Crie a story em `apps/docs/stories/` (ex.: `input.stories.tsx`).
+5. Rode `pnpm changeset`, escolha `@grupoitss/prizm-ui` e `minor`, e descreva o componente novo. O arquivo gerado em `.changeset/` vai junto na PR.
+
+## Publicação
+
+`@grupoitss/prizm-tokens` e `@grupoitss/prizm-ui` são publicados no GitHub Packages pelo workflow **Publicar pacotes** (`.github/workflows/release.yml`):
+
+1. A cada merge na `main`, os changesets pendentes viram (ou atualizam) a PR **"chore: versão dos pacotes"**, com as versões novas e o CHANGELOG. Mudanças de tokens vindas do Figma ganham changeset automático (major se um token sumiu, minor se entrou token, patch se só mudaram valores); mudanças nos componentes precisam de `pnpm changeset` na PR.
+2. Ao mergear essa PR, os pacotes são publicados e cada um ganha um GitHub Release. O release dos tokens leva os zips de Android e iOS.
+
+Como instalar nos apps: ver os READMEs de [`tokens`](packages/tokens/README.md#instalação) e [`ui`](packages/ui/README.md#instalação).

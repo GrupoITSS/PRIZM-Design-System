@@ -3,7 +3,7 @@
 # =============================================================================
 #
 # Check que protege a main contra componentes e stories que quebram:
-# lint, checagem de tipos e build do @prizm/ui e do Storybook (apps/docs).
+# lint, checagem de tipos e build do @grupoitss/prizm-ui e do Storybook (apps/docs).
 # O build do Storybook depende do build dos tokens (turbo.json, ^build), então
 # o CSS dos tokens também é gerado aqui.
 #
@@ -62,4 +62,4 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint, tipos e build
-        run: pnpm turbo run lint typecheck build --filter=@prizm/ui --filter=docs
+        run: pnpm turbo run lint typecheck build --filter=@grupoitss/prizm-ui --filter=docs

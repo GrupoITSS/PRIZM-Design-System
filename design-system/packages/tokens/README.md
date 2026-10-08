@@ -1,6 +1,29 @@
-# `tokens`
+# `@grupoitss/prizm-tokens`
 
 Design tokens do design system, gerados com [Style Dictionary](https://styledictionary.com) a partir do export do Tokens Studio (Figma). A arquitetura está descrita em [`arquitetura.md`](../../../arquitetura.md), na raiz do repositório.
+
+## Instalação
+
+**Web:** o pacote é publicado no GitHub Packages. Mesmo com o repositório público, instalar exige um token do GitHub com a permissão `read:packages` (Settings > Developer settings > Personal access tokens). No projeto que consome, crie um `.npmrc`:
+
+```
+@grupoitss:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+```
+
+e instale com `npm install @grupoitss/prizm-tokens` (com a variável `GITHUB_TOKEN` definida).
+
+**Android e iOS:** cada versão publicada tem um [GitHub Release](https://github.com/GrupoITSS/PRIZM-Design-System/releases) com `prizm-tokens-android-<versão>.zip` e `prizm-tokens-ios-<versão>.zip`. Dentro, uma pasta por tema (ex.: `android/docnix/`). Veja [Android](#android-androidtema) e [iOS](#ios-iostema).
+
+**Versões:** a cada sync do Figma que entra na `main`, a versão sobe sozinha: **major** se algum token deixou de existir, **minor** se entrou token novo, **patch** se só mudaram valores. A publicação acontece quando a PR "versão dos pacotes" é mergeada.
+
+| Import | O que é |
+|---|---|
+| `@grupoitss/prizm-tokens/css` | Todas as camadas de CSS (`dist/css/index.css`) |
+| `@grupoitss/prizm-tokens/css/<arquivo>` | Uma camada só (ex.: `css/foundations.css`) |
+| `@grupoitss/prizm-tokens/tailwind` | Preset do Tailwind |
+| `@grupoitss/prizm-tokens/ts/vars` | Tokens como `var(--...)` |
+| `@grupoitss/prizm-tokens/ts/<tema>` | Valores resolvidos de um tema (ex.: `ts/docnix`) |
 
 ## Fonte
 
@@ -66,15 +89,15 @@ Referências viram `var(--...)`, exceto as que apontam para primitivos (saem res
 - `<tema>/index.js` — valores resolvidos de um tema de marca (`pas`, `pas-cms`, `tchello`, `docnix`, `itss-afipe`, `itss-digitrol`), separados em camadas: `light` e `dark` (tudo o que o tema mostra naquele modo) e `desktop` e `mobile` (só os tokens de plataforma). Útil onde CSS não chega (canvas, gráficos, e-mail).
 
 ```ts
-import { colorPrimary } from 'tokens/dist/ts/vars.js';
-import { light, desktop } from 'tokens/dist/ts/pas-cms/index.js';
+import { colorPrimary } from '@grupoitss/prizm-tokens/ts/vars';
+import { light, desktop } from '@grupoitss/prizm-tokens/ts/pas-cms';
 
 const theme = { ...light, ...desktop };
 ```
 
 ### Android (`android/<tema>/`)
 
-Copie a pasta do tema para `res/`. O Android escolhe o arquivo sozinho pelos qualificadores:
+Baixe o `prizm-tokens-android-<versão>.zip` do release e copie a pasta do tema (ex.: `android/docnix/`) para `res/`. O Android escolhe o arquivo sozinho pelos qualificadores:
 
 | Pasta | Quando vale | Conteúdo |
 |---|---|---|
@@ -86,7 +109,7 @@ Tamanhos de texto saem em `sp` (seguem o tamanho de fonte do usuário); os demai
 
 ### iOS (`ios/<tema>/`)
 
-Um `public enum` por camada, com `Color` do SwiftUI e `CGFloat`: `PasCmsLight`, `PasCmsDark`, `PasCmsMobile`, `PasCmsDesktop`.
+Baixe o `prizm-tokens-ios-<versão>.zip` do release e adicione os arquivos da pasta do tema (ex.: `ios/docnix/`) ao projeto. Um `public enum` por camada, com `Color` do SwiftUI e `CGFloat`: `PasCmsLight`, `PasCmsDark`, `PasCmsMobile`, `PasCmsDesktop`.
 
 ```swift
 Text("Olá")
