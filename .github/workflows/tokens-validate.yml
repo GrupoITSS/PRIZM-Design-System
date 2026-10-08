@@ -59,7 +59,7 @@ jobs:
           cache-dependency-path: design-system/pnpm-lock.yaml
 
       - name: Instalar dependências do pacote de tokens
-        run: pnpm install --frozen-lockfile --filter tokens
+        run: pnpm install --frozen-lockfile --filter ./packages/tokens
 
       - name: Verificar formato W3C DTCG
         run: node ../.github/scripts/tokens-check.mjs packages/tokens/src/tokens-studio/tokens.json
@@ -70,7 +70,7 @@ jobs:
       - name: Build do Style Dictionary
         run: |
           set -o pipefail
-          pnpm --filter tokens build 2>&1 | tee build.log
+          pnpm --filter ./packages/tokens build 2>&1 | tee build.log
 
           if grep -qE 'could not be found|which is not defined' build.log; then
             echo "::error::Referência(s) quebrada(s) no build de tokens:"
@@ -83,4 +83,4 @@ jobs:
       # bater com o export achatado do Tokens Studio; e nenhum produto pode
       # repetir um valor da base.
       - name: Teste das camadas
-        run: pnpm --filter tokens exec node --test build.test.mjs
+        run: pnpm --filter ./packages/tokens exec node --test build.test.mjs

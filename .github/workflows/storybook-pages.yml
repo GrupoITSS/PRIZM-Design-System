@@ -3,7 +3,7 @@
 # =============================================================================
 #
 # A cada push na main que mexe no design system, gera o Storybook estático
-# (apps/docs, com os tokens e o @prizm/ui) e publica no GitHub Pages:
+# (apps/docs, com os tokens e o @grupoitss/prizm-ui) e publica no GitHub Pages:
 # https://grupoitss.github.io/PRIZM-Design-System/
 #
 # PARA FUNCIONAR (uma vez, com a conta dona do repositório):

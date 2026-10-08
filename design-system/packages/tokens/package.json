@@ -1,8 +1,34 @@
 {
-  "name": "tokens",
+  "name": "@grupoitss/prizm-tokens",
   "version": "0.0.0",
-  "private": true,
+  "description": "Design tokens do PRIZM (Tokens Studio → Style Dictionary): CSS, preset do Tailwind, TypeScript, Android e iOS.",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GrupoITSS/PRIZM-Design-System.git",
+    "directory": "design-system/packages/tokens"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./css": "./dist/css/index.css",
+    "./css/*": "./dist/css/*",
+    "./tailwind": "./dist/tailwind/preset.cjs",
+    "./ts/vars": {
+      "types": "./dist/ts/vars.d.ts",
+      "default": "./dist/ts/vars.js"
+    },
+    "./ts/*": {
+      "types": "./dist/ts/*/index.d.ts",
+      "default": "./dist/ts/*/index.js"
+    },
+    "./android/*": "./dist/android/*",
+    "./ios/*": "./dist/ios/*"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "dev": "node build.mjs --watch",
     "build": "node build.mjs",

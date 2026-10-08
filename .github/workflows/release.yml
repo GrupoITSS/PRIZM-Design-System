@@ -1,0 +1,116 @@
+# =============================================================================
+# Publicar pacotes
+# =============================================================================
+#
+# Versiona e publica @grupoitss/prizm-tokens e @grupoitss/prizm-ui no GitHub
+# Packages, com Changesets:
+#
+# 1. A cada push na main, os changesets pendentes (design-system/.changeset)
+#    viram a PR "Versão dos pacotes": versões novas + CHANGELOG. Os syncs do
+#    Figma não criam changesets; o tokens-changeset.mjs gera o dos tokens a
+#    partir do diff com a última versão publicada (major se um token sumiu,
+#    minor se entrou token, patch se só mudaram valores).
+# 2. Quando essa PR é mergeada, este workflow publica os pacotes, cria um
+#    GitHub Release por pacote e anexa ao release dos tokens os zips de
+#    Android e iOS.
+#
+# A PR de versão é aberta com o TOKENS_PR_TOKEN (não o GITHUB_TOKEN) para que
+# os checks obrigatórios rodem nela. A publicação usa o GITHUB_TOKEN, com
+# permissão packages: write.
+# =============================================================================
+
+name: Publicar pacotes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - design-system/**
+      - .github/workflows/release.yml
+      - .github/scripts/tokens-changeset.mjs
+      - .github/scripts/tokens-diff.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+
+# Uma execução por vez, sem cancelar a anterior: uma publicação interrompida
+# deixaria tags e pacotes pela metade.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Versionar e publicar
+    runs-on: ubuntu-latest
+    steps:
+      # Histórico e tags completos: o tokens-changeset.mjs compara com a tag
+      # da última versão publicada.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.TOKENS_PR_TOKEN }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: design-system/package.json
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: design-system/pnpm-lock.yaml
+
+      - name: Instalar dependências
+        working-directory: design-system
+        run: pnpm install --frozen-lockfile
+
+      - name: Gerar o changeset dos tokens
+        run: node .github/scripts/tokens-changeset.mjs
+
+      # Fora do repositório, para não entrar no commit da PR de versão.
+      - name: Autenticar no GitHub Packages
+        run: |
+          cat << 'EOF' > "$HOME/.npmrc"
+          @grupoitss:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+          EOF
+
+      - name: PR de versão ou publicação
+        id: changesets
+        uses: changesets/action@v1.9.0
+        with:
+          cwd: design-system
+          version: pnpm version-packages
+          publish: pnpm release
+          title: "chore: versão dos pacotes"
+          commit: "chore: versão dos pacotes"
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKENS_PR_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Apps nativos (hoje, o Docnix) baixam os tokens pelo release, não pelo npm.
+      - name: Anexar Android e iOS ao release dos tokens
+        if: steps.changesets.outputs.published == 'true'
+        working-directory: design-system/packages/tokens/dist
+        env:
+          GH_TOKEN: ${{ secrets.TOKENS_PR_TOKEN }}
+          PUBLISHED: ${{ steps.changesets.outputs.publishedPackages }}
+        run: |
+          version=$(jq -r '.[] | select(.name == "@grupoitss/prizm-tokens") | .version' <<< "$PUBLISHED")
+          if [ -z "$version" ]; then
+            echo "Tokens não publicados nesta execução."
+            exit 0
+          fi
+          zip -qr "prizm-tokens-android-$version.zip" android
+          zip -qr "prizm-tokens-ios-$version.zip" ios
+          gh release upload "@grupoitss/prizm-tokens@$version" \
+            "prizm-tokens-android-$version.zip" "prizm-tokens-ios-$version.zip" \
+            --repo "$GITHUB_REPOSITORY"
