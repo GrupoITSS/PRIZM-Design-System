@@ -730,7 +730,11 @@ async function writeGenerated(relativePath, body) {
   await writeFile(target, `/**\n * Do not edit directly, this file was auto-generated.\n */\n${body}`);
 }
 
-export async function build() {
+// `clean: false` (watch mode) overwrites dist/ in place instead of deleting it
+// first: a running Storybook would otherwise import the CSS while it's gone
+// and stay stuck loading. A full build still cleans, so files of a renamed
+// brand or product don't linger in dist/.
+export async function build({ clean = true } = {}) {
   const manifest = await loadManifest();
   const { sets, products, modes, platforms, brandUnion } = manifest;
 
@@ -744,7 +748,7 @@ export async function build() {
   // cleanAllPlatforms() can delete files/dirs another build is writing.
   // Retries cover Windows briefly locking a file that an editor or file
   // watcher has open (EBUSY/EPERM), which otherwise fails the build at random.
-  await rm(DIST_DIR, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+  if (clean) await rm(DIST_DIR, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
 
   const tmpDir = await mkdtemp(path.join(tmpdir(), 'ds-tokens-'));
   try {
@@ -806,14 +810,15 @@ export async function build() {
 }
 
 async function main() {
-  await build();
+  const watchMode = process.argv.includes('--watch');
+  await build({ clean: !watchMode });
 
-  if (process.argv.includes('--watch')) {
+  if (watchMode) {
     console.log('[tokens] watching src/tokens-studio for changes...');
     watch(TOKENS_DIR, { recursive: true }, async (_event, filename) => {
       try {
         console.log(`[tokens] ${filename} changed, rebuilding...`);
-        await build();
+        await build({ clean: false });
       } catch (error) {
         console.error('[tokens] build failed:', error);
       }
