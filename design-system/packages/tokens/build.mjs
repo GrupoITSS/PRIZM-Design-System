@@ -40,7 +40,10 @@ const BASE_LAYER = 'base';
 // Each dimension accepts the English name (naming rule of 01/10) and the
 // Portuguese one still in tokens.json, so the rename in Figma/Tokens Studio
 // can land in any order; drop the Portuguese names once it has.
-const THEME_GROUPS = {
+// Other groups in $themes (Primitives, Foundations) only exist so the Tokens
+// Studio export to Figma creates a variable collection for those sets, which
+// the brand collection then aliases; the build ignores them.
+export const THEME_GROUPS = {
   product: ['Theme', 'Marca · Produto'],
   mode: ['Mode'],
   platform: ['Platform', 'Plataforma'],
@@ -372,14 +375,16 @@ export async function loadManifest(sourceFile = SOURCE_FILE) {
   const modes = themesOf(themes, THEME_GROUPS.mode, setOrder);
   const platforms = themesOf(themes, THEME_GROUPS.platform, setOrder);
 
-  // Each brand theme enables the foundations plus its brand chain: one or more
+  // Each brand theme uses the foundations plus its brand chain: one or more
   // bases (a brand that inherits another, e.g. pas/base → tchello/base) and at
-  // most one product. The last base names the brand.
+  // most one product. The last base names the brand. The foundations may be
+  // "enabled" or "source" (source keeps them in their own Figma collection,
+  // aliased by the brand one); the build always applies them first.
   const brands = new Map();
   const productLayers = new Map();
   for (const theme of products) {
-    if (!theme.enabled.includes(FOUNDATIONS_SET)) {
-      throw new Error(`Theme "${theme.name}" doesn't enable "${FOUNDATIONS_SET}".`);
+    if (!theme.enabled.includes(FOUNDATIONS_SET) && !theme.source.includes(FOUNDATIONS_SET)) {
+      throw new Error(`Theme "${theme.name}" doesn't use "${FOUNDATIONS_SET}" (enabled or source).`);
     }
     const chain = theme.enabled.filter((key) => key !== FOUNDATIONS_SET);
     const bases = chain.filter((key) => brandLayer(key).layer === BASE_LAYER);

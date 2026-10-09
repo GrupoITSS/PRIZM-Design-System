@@ -15,7 +15,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import StyleDictionary from 'style-dictionary';
 import { permutateThemes } from '@tokens-studio/sd-transforms';
-import { loadManifest, cssLayers, slugify, PLATFORM_CONFIG, STYLE_DICTIONARY_OPTIONS } from './build.mjs';
+import { loadManifest, cssLayers, slugify, PLATFORM_CONFIG, STYLE_DICTIONARY_OPTIONS, THEME_GROUPS } from './build.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.join(__dirname, 'dist');
@@ -87,7 +87,13 @@ async function flattenedReference(sets, setKeys, tmpDir) {
 const manifest = await loadManifest();
 const layers = cssLayers(manifest);
 const content = JSON.parse(await readFile(path.join(__dirname, 'src/tokens-studio/tokens.json'), 'utf-8'));
-const combinations = permutateThemes(content.$themes, { separator: SEPARATOR });
+// Only the brand/product, mode and platform groups combine; the Primitives and
+// Foundations groups exist just for the Figma export.
+const themeGroups = Object.values(THEME_GROUPS).flat();
+const combinations = permutateThemes(
+  content.$themes.filter((theme) => themeGroups.includes(theme.group)),
+  { separator: SEPARATOR },
+);
 
 test('every theme combination matches the flattened Tokens Studio export', async (t) => {
   const tmpDir = await mkdtemp(path.join(tmpdir(), 'ds-tokens-test-'));
