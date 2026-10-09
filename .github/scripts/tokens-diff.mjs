@@ -225,6 +225,12 @@ function scope(head, changedSets) {
     groups.get(theme.group).push({ name: theme.name, uses });
   }
   for (const [group, themes] of groups) {
+    // Grupos com um tema só (Primitives, Foundations: existem para o export
+    // de variáveis do Figma) não dizem nada sobre o escopo da mudança.
+    if (themes.length < 2) {
+      groups.delete(group);
+      continue;
+    }
     const independent = changedSets.size > 0 && !themes.some(({ uses }) => uses);
     groups.set(group, { independent, themes: themes.map((theme) => ({ ...theme, uses: theme.uses || independent })) });
   }
