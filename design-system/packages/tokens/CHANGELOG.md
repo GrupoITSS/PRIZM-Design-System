@@ -1,5 +1,13 @@
 # @grupoitss/prizm-tokens
 
+## 0.3.0
+
+### Minor Changes
+
+- Tokens sincronizados do Figma desde 0.2.0: sets: +11 / −0.
+
+  Temas ($themes) alterados.
+
 ## 0.2.0
 
 ### Minor Changes
