@@ -3,7 +3,7 @@
 > Documento de passagem entre sessões do Claude Code. Para retomar em outra máquina:
 > `git pull` e, no Claude Code, peça: *"Leia `docs/ai/progresso-pipeline-tokens.md` e continue de onde paramos."*
 >
-> Última atualização: 13/10/2026 (`brand-color` na árvore, ruleset da `main` e pendências atuais).
+> Última atualização: 13/10/2026 (`tokens.json` substituído pelo arquivo das variáveis do Figma, ruleset da `main` e pendências atuais).
 
 ## Onde estamos
 
@@ -28,14 +28,16 @@ Label `token` criada no repositório.
 ### Pendente
 
 Em aberto (13/10):
-1. **Fonte de título por marca:** `heading.*.font-family` não existe na árvore; o `style.heading.*` usa `{font.sans}` direto, que é a fonte base combinada (decisão do Lucas, 13/10: manter assim). Quando uma marca precisar de fonte de título própria, criar `font.heading` por marca (ou `heading.*.font-family` nas plataformas, como o Leo tem no Figma) e ligar os títulos a ele.
-2. **Sidebar do AFIPE:** o import de 13/10 trazia diferenças em `palette.sidebar*`; decisão do Lucas: manter como está na árvore.
+1. **Primitivo `font.serif 2`** ("Effra Trial") veio no arquivo do Figma de 13/10 com espaço no nome; não é usado por nenhum token. Confirmar com o Leo se fica (e renomear sem espaço) ou sai.
+2. **Rotina após substituir o `tokens.json` pelo do Figma:** depois do merge, avançar a `design` até a `main` (`git push origin origin/main:refs/heads/design`) e fazer **Pull da `design`** no Tokens Studio.
 3. **Contraste (design):** ver "Componentes e Storybook".
 4. **Fonte da verdade Figma ↔ Git:** hoje é o Git/Tokens Studio; falta confirmar por escrito com o Leo (GIES-1825).
 5. **GIES-1827** (primária do Assistant e `--ring` do `@pas/ui`): em outro repositório.
 6. **Rotina após qualquer import de variáveis:** ele cria sets achatados (`Theme/PAS`, `Mode/Light`, `Primitives/Default`…) que nenhum tema usa e dobram o arquivo. Foram removidos em 13/10; se voltarem, apagar de novo e **fazer Pull da `design`** em vez de reimportar.
 
-Concluído em 13/10: a escala `color.alpha-*` ficou **direta**, como no Figma (`alpha-5 → white|black-alpha.5`, `alpha-90 → …90`; a árvore tinha a escala invertida) e o primitivo `color.white-alpha.5` (`#ffffff0d`) foi acrescentado; o `palette.brand-color` e o `color.accent → brand-color` (mudança do Lucas no Figma) entraram na árvore (`pas/base`, `pas/cms`, `docnix/base`, `itss/afipe`, `itss/digitrol`; `themes/light|dark`) e os 11 sets duplicados da PR #65 foram removidos (o `brand-color` dessa PR estava só neles e não chegava ao `dist/`; a 0.3.0 saiu com conteúdo idêntico à 0.2.0).
+Concluído em 13/10 (branch `feat/tokens-figma-13-10`): o `tokens.json` foi **substituído pelo arquivo gerado das variáveis do Figma** (já na árvore, com os grupos Primitives/Foundations/Theme/Mode/Platform e os IDs do Figma); o `build.mjs` não precisou de mudança. Mudanças: `color.accent` **voltou a ser neutro** (`{palette.neutral.100}` / `{palette.neutral.800}`, decisão de 13/10 no Figma: "não é cor de marca"; o `brand-color` continua existindo); `heading.*.font-family = {font.sans}` nas plataformas, com `style.heading.*` apontando para ele (resolve a antiga pendência de fonte de título por marca: basta sobrescrever `heading.*.font-family`); novos `destructive|warning|success|info-weak/strong`, `sidebar-muted-foreground` e `color.<marca>.*`; foregrounds de status, `success`/`info` claros, `muted-foreground` claro, secundária do CMS, sidebar escura do AFIPE e primária da Digitrol ajustados; **`warning-moderate` removido** (não era usado em componentes). Teste de aceite 26/26.
+
+Antes, também em 13/10: a escala `color.alpha-*` ficou **direta**, como no Figma (`alpha-5 → white|black-alpha.5`, `alpha-90 → …90`; a árvore tinha a escala invertida) e o primitivo `color.white-alpha.5` (`#ffffff0d`) foi acrescentado; o `palette.brand-color` e o `color.accent → brand-color` (mudança do Lucas no Figma) entraram na árvore (`pas/base`, `pas/cms`, `docnix/base`, `itss/afipe`, `itss/digitrol`; `themes/light|dark`) e os 11 sets duplicados da PR #65 foram removidos (o `brand-color` dessa PR estava só neles e não chegava ao `dist/`; a 0.3.0 saiu com conteúdo idêntico à 0.2.0).
 
 Depois da migração de repositório (02/10):
 - **Proteção da `main`:** a regra clássica criada em 02/10 deixou de valer (a PR #65 foi mergeada em 7 s, antes do check terminar). Em 13/10 foi recriada como **branch ruleset** `main` (ativo; verificável pela API pública em `/rules/branches/main`): checks obrigatórios **Validar tokens** e **Validar componentes** (GitHub Actions), sem exigir branch atualizada, sem exigir PR e sem lista de bypass. Não vem na transferência de repositório. Sem check obrigatório, o `gh pr merge --auto` da PR automática mergeia na hora, sem esperar a validação; se o merge de um sync levar poucos segundos, a regra não está pegando.
