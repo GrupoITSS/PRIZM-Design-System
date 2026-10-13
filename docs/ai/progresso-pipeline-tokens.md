@@ -28,15 +28,14 @@ Label `token` criada no repositório.
 ### Pendente
 
 Em aberto (13/10):
-1. **Alpha (decisão do Lucas/Leo):** o import de variáveis do Figma de 13/10 (PR #65) trouxe `color.alpha-5…70` com mapeamento direto (`alpha-5 → white-alpha.5`, `alpha-70 → white-alpha.70`), enquanto a árvore tem a escala invertida (`alpha-5 → white-alpha.95`, `alpha-70 → white-alpha.30`). Não foi levado para a árvore. Confirmar qual é o certo e corrigir no Tokens Studio.
-2. **`heading/*/font-family`:** o import trouxe `heading.xl|lg|md|sm.font-family = {font.sans}` nos sets de plataforma; não está na árvore. Ainda a decidir com o Leo (sugestão: token de marca `font.heading`, para uma marca ter fonte de título própria).
-3. **Sidebar do AFIPE:** o import de 13/10 traz diferenças em `palette.sidebar*` do AFIPE em relação à árvore; não analisado.
-4. **Contraste (design):** ver "Componentes e Storybook".
-5. **Fonte da verdade Figma ↔ Git:** hoje é o Git/Tokens Studio; falta confirmar por escrito com o Leo (GIES-1825).
-6. **GIES-1827** (primária do Assistant e `--ring` do `@pas/ui`): em outro repositório.
-7. **Rotina após qualquer import de variáveis:** ele cria sets achatados (`Theme/PAS`, `Mode/Light`, `Primitives/Default`…) que nenhum tema usa e dobram o arquivo. Foram removidos em 13/10; se voltarem, apagar de novo e **fazer Pull da `design`** em vez de reimportar.
+1. **Fonte de título por marca:** `heading.*.font-family` não existe na árvore; o `style.heading.*` usa `{font.sans}` direto, que é a fonte base combinada (decisão do Lucas, 13/10: manter assim). Quando uma marca precisar de fonte de título própria, criar `font.heading` por marca (ou `heading.*.font-family` nas plataformas, como o Leo tem no Figma) e ligar os títulos a ele.
+2. **Sidebar do AFIPE:** o import de 13/10 trazia diferenças em `palette.sidebar*`; decisão do Lucas: manter como está na árvore.
+3. **Contraste (design):** ver "Componentes e Storybook".
+4. **Fonte da verdade Figma ↔ Git:** hoje é o Git/Tokens Studio; falta confirmar por escrito com o Leo (GIES-1825).
+5. **GIES-1827** (primária do Assistant e `--ring` do `@pas/ui`): em outro repositório.
+6. **Rotina após qualquer import de variáveis:** ele cria sets achatados (`Theme/PAS`, `Mode/Light`, `Primitives/Default`…) que nenhum tema usa e dobram o arquivo. Foram removidos em 13/10; se voltarem, apagar de novo e **fazer Pull da `design`** em vez de reimportar.
 
-Concluído em 13/10: o `palette.brand-color` e o `color.accent → brand-color` (mudança do Lucas no Figma) entraram na árvore (`pas/base`, `pas/cms`, `docnix/base`, `itss/afipe`, `itss/digitrol`; `themes/light|dark`) e os 11 sets duplicados da PR #65 foram removidos (o `brand-color` dessa PR estava só neles e não chegava ao `dist/`; a 0.3.0 saiu com conteúdo idêntico à 0.2.0).
+Concluído em 13/10: a escala `color.alpha-*` ficou **direta**, como no Figma (`alpha-5 → white|black-alpha.5`, `alpha-90 → …90`; a árvore tinha a escala invertida) e o primitivo `color.white-alpha.5` (`#ffffff0d`) foi acrescentado; o `palette.brand-color` e o `color.accent → brand-color` (mudança do Lucas no Figma) entraram na árvore (`pas/base`, `pas/cms`, `docnix/base`, `itss/afipe`, `itss/digitrol`; `themes/light|dark`) e os 11 sets duplicados da PR #65 foram removidos (o `brand-color` dessa PR estava só neles e não chegava ao `dist/`; a 0.3.0 saiu com conteúdo idêntico à 0.2.0).
 
 Depois da migração de repositório (02/10):
 - **Proteção da `main`:** a regra clássica criada em 02/10 deixou de valer (a PR #65 foi mergeada em 7 s, antes do check terminar). Em 13/10 foi recriada como **branch ruleset** `main` (ativo; verificável pela API pública em `/rules/branches/main`): checks obrigatórios **Validar tokens** e **Validar componentes** (GitHub Actions), sem exigir branch atualizada, sem exigir PR e sem lista de bypass. Não vem na transferência de repositório. Sem check obrigatório, o `gh pr merge --auto` da PR automática mergeia na hora, sem esperar a validação; se o merge de um sync levar poucos segundos, a regra não está pegando.
