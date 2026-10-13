@@ -3,7 +3,7 @@
 > Documento de passagem entre sessões do Claude Code. Para retomar em outra máquina:
 > `git pull` e, no Claude Code, peça: *"Leia `docs/ai/progresso-pipeline-tokens.md` e continue de onde paramos."*
 >
-> Última atualização: 07/10/2026 (Button, Storybook e check de componentes).
+> Última atualização: 13/10/2026 (`brand-color` na árvore, ruleset da `main` e pendências atuais).
 
 ## Onde estamos
 
@@ -27,14 +27,19 @@ Label `token` criada no repositório.
 
 ### Pendente
 
-Arquitetura em árvore (06/10), depois do merge da PR `feat/arquitetura-arvore`:
-1. Avançar a `design` até a `main` (a PR mexe em `.github/scripts/tokens-diff.mjs`, usado pela PR automática).
-2. No Tokens Studio: **Pull da `design`** para o plugin passar a ter os sets da árvore, os 10 temas e os compostos. Não reimportar as variáveis do Figma (ver "Decisões"). Conferir se as coleções e modos de variáveis do Figma continuam ligados aos temas.
-3. **Leo validar as 12 sombras recriadas da v3** em `global/foundations` (`style.shadow.2xs/xl/2xl`, `style.drop-shadow.xs…2xl`, `style.inset-shadow.2xs/xs/sm`; valores da v3, sem estilo de efeito no Figma). Se não forem necessárias, excluir de novo (decisão do Lucas). As `drop-shadow` saem no formato de `box-shadow`, com `spread`; para `filter: drop-shadow()` precisariam de outro formato.
-4. Avisar o Leo: a v3 foi substituída pela árvore derivada da branch dele (ela pode ser apagada); as correções `border-width.7` e `violet.950` já estão na `main`; e, pelo combinado da fase de arquitetura, os pushes do Tokens Studio ficam com o Lucas (a PR #49 veio de um push dele na `design`).
+Em aberto (13/10):
+1. **Alpha (decisão do Lucas/Leo):** o import de variáveis do Figma de 13/10 (PR #65) trouxe `color.alpha-5…70` com mapeamento direto (`alpha-5 → white-alpha.5`, `alpha-70 → white-alpha.70`), enquanto a árvore tem a escala invertida (`alpha-5 → white-alpha.95`, `alpha-70 → white-alpha.30`). Não foi levado para a árvore. Confirmar qual é o certo e corrigir no Tokens Studio.
+2. **`heading/*/font-family`:** o import trouxe `heading.xl|lg|md|sm.font-family = {font.sans}` nos sets de plataforma; não está na árvore. Ainda a decidir com o Leo (sugestão: token de marca `font.heading`, para uma marca ter fonte de título própria).
+3. **Sidebar do AFIPE:** o import de 13/10 traz diferenças em `palette.sidebar*` do AFIPE em relação à árvore; não analisado.
+4. **Contraste (design):** ver "Componentes e Storybook".
+5. **Fonte da verdade Figma ↔ Git:** hoje é o Git/Tokens Studio; falta confirmar por escrito com o Leo (GIES-1825).
+6. **GIES-1827** (primária do Assistant e `--ring` do `@pas/ui`): em outro repositório.
+7. **Rotina após qualquer import de variáveis:** ele cria sets achatados (`Theme/PAS`, `Mode/Light`, `Primitives/Default`…) que nenhum tema usa e dobram o arquivo. Foram removidos em 13/10; se voltarem, apagar de novo e **fazer Pull da `design`** em vez de reimportar.
+
+Concluído em 13/10: o `palette.brand-color` e o `color.accent → brand-color` (mudança do Lucas no Figma) entraram na árvore (`pas/base`, `pas/cms`, `docnix/base`, `itss/afipe`, `itss/digitrol`; `themes/light|dark`) e os 11 sets duplicados da PR #65 foram removidos (o `brand-color` dessa PR estava só neles e não chegava ao `dist/`; a 0.3.0 saiu com conteúdo idêntico à 0.2.0).
 
 Depois da migração de repositório (02/10):
-- A proteção da `main` foi recriada à mão (**não vem na transferência de repositório**): classic branch protection rule em `main`, check obrigatório **Validar tokens** (GitHub Actions), sem exigir branch atualizada e com bypass de admins permitido. Sem check obrigatório, o `gh pr merge --auto` da PR automática mergeia na hora, sem esperar a validação; se o repositório mudar de dono de novo, recriar a regra antes do próximo sync.
+- **Proteção da `main`:** a regra clássica criada em 02/10 deixou de valer (a PR #65 foi mergeada em 7 s, antes do check terminar). Em 13/10 foi recriada como **branch ruleset** `main` (ativo; verificável pela API pública em `/rules/branches/main`): checks obrigatórios **Validar tokens** e **Validar componentes** (GitHub Actions), sem exigir branch atualizada, sem exigir PR e sem lista de bypass. Não vem na transferência de repositório. Sem check obrigatório, o `gh pr merge --auto` da PR automática mergeia na hora, sem esperar a validação; se o merge de um sync levar poucos segundos, a regra não está pegando.
 - Pipeline testada de ponta a ponta: PR #42 (token alterado) aberta sozinha pela conta `GrupoITSS` com a label `token` e mergeada automaticamente depois do check verde; PR #43 (token apagado) com o merge automático desligado, mergeada manualmente pela `lucas-docnix`.
 
 Se a PR automática falhar, ver o log em Actions > Tokens Studio PR (401 = token inválido ou expirado; 403 = permissão faltando no token).
