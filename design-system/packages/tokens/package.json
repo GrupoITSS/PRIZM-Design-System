@@ -1,6 +1,6 @@
 {
   "name": "@grupoitss/prizm-tokens",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Design tokens do PRIZM (Tokens Studio → Style Dictionary): CSS, preset do Tailwind, TypeScript, Android e iOS.",
   "type": "module",
   "repository": {
