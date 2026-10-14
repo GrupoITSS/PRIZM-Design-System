@@ -81,11 +81,13 @@ A saída espelha a árvore: cada arquivo tem só os tokens do seu set.
 | `css/index.css` | `@import` de todos, na ordem da cadeia |
 | `tailwind/preset.cjs` | Preset do Tailwind apontando para as variáveis CSS |
 
-Referências viram `var(--...)`, exceto as que apontam para primitivos (saem resolvidas). Sombras são escritas campo a campo (`var(--shadow-xs-1-offset-x) var(--shadow-xs-1-offset-y) …`), para continuarem certas quando uma camada sobrescreve um átomo.
+Referências viram `var(--...)`, exceto as que apontam para primitivos (saem resolvidas). Sombras são escritas campo a campo (`var(--prizm-shadow-xs-1-offset-x) var(--prizm-shadow-xs-1-offset-y) …`), para continuarem certas quando uma camada sobrescreve um átomo.
+
+**Prefixo `--prizm-`:** toda variável CSS começa com `--prizm-` (`--prizm-color-primary`, `--prizm-radius-md`, `--prizm-control-height-md`). Sem ele, os nomes colidiriam com os do próprio Tailwind (`--font-sans`, `--radius-md`…) e com os de temas e bibliotecas do app, e uma colisão não dá erro: só troca o valor em silêncio. O nome no Figma não muda (`color/primary` → `--prizm-color-primary`). Quem usa Tailwind não escreve o prefixo, porque `bg-primary` e `rounded-md` já apontam para ele pelo preset. O prefixo vale só para o CSS (e o `ts/vars`): os valores por tema em TypeScript e os arquivos de Android e iOS mantêm os nomes simples. Para trocá-lo, altere `CSS_PREFIX` no `build.mjs` (é uma versão major).
 
 ### TypeScript (`ts/`)
 
-- `vars.js` — cada token como referência à variável CSS (`colorPrimary = 'var(--color-primary)'`). É o que usar em estilos inline e CSS-in-JS, porque continua seguindo o tema ativo.
+- `vars.js` — cada token como referência à variável CSS (`colorPrimary = 'var(--prizm-color-primary)'`). É o que usar em estilos inline e CSS-in-JS, porque continua seguindo o tema ativo.
 - `<tema>/index.js` — valores resolvidos de um tema de marca (`pas`, `pas-cms`, `tchello`, `docnix`, `itss-afipe`, `itss-digitrol`), separados em camadas: `light` e `dark` (tudo o que o tema mostra naquele modo) e `desktop` e `mobile` (só os tokens de plataforma). Útil onde CSS não chega (canvas, gráficos, e-mail).
 
 ```ts

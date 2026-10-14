@@ -36,6 +36,8 @@ No CSS de entrada do app (o que importa o Tailwind):
 
 Os caminhos de `@config` e `@source` são relativos ao arquivo CSS; ajuste conforme a pasta dele.
 
+As variáveis dos tokens têm o prefixo `--prizm-` (`var(--prizm-color-primary)`). Nas classes do Tailwind (`bg-primary`, `rounded-md`) o prefixo não aparece.
+
 No `<html>`, a marca, o produto, o modo e a plataforma:
 
 ```html
