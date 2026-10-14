@@ -277,7 +277,7 @@ StyleDictionary.registerFormat({
 // inline styles and CSS-in-JS that should keep following the active brand,
 // product, mode and platform instead of freezing one theme's values. The
 // export keeps the plain name (colorPrimary); only the variable has the prefix.
-const exportName = (token) => toCamelCase(token.name.slice(`${CSS_PREFIX}-`.length));
+const exportName = (token) => toCamelCase(token.name.slice(`${PREFIX}-`.length));
 
 StyleDictionary.registerFormat({
   name: 'javascript/css-vars',
@@ -506,22 +506,30 @@ const NATIVE_BASE_TRANSFORMS = [
   'ts/color/modifiers',
 ];
 
-// Every CSS custom property starts with this prefix (--prizm-color-primary), so
-// the tokens never collide with the consumer's own variables or with the ones
-// Tailwind and other libraries define (--color-*, --font-sans, --radius-md…).
-// It applies to the css platform only: that covers the CSS files, the Tailwind
-// preset and ts/vars.js. TS theme values and the native outputs keep plain names
-// (Android resources and Swift enums are namespaced differently).
-export const CSS_PREFIX = 'prizm';
+// The prefix goes where a name lives in a space shared with the whole app, so
+// the tokens never collide with the consumer's own names or with other libraries':
+// - CSS custom properties (--prizm-color-primary) share the page with Tailwind's
+//   (--font-sans, --radius-md…) and the app's. Covers the CSS files, the Tailwind
+//   preset and ts/vars.js (whose export names stay plain: colorPrimary);
+// - Android resources (prizm_color_primary) share one namespace per app, and the
+//   files are named prizm_colors.xml etc. so copying them into res/ can't
+//   overwrite the app's own colors.xml;
+// - Swift enums (PrizmDocnixLight) are types of the app's module; their
+//   properties (colorPrimary) are already scoped by the enum.
+// Not prefixed on purpose: the TS theme values (ts/<theme>) live in the module
+// the consumer imports, and the Tailwind utility names (bg-primary) are what keeps
+// the components compatible with shadcn.
+export const PREFIX = 'prizm';
 
 export const PLATFORM_CONFIG = {
   css: {
-    prefix: CSS_PREFIX,
+    prefix: PREFIX,
     transformGroup: 'tokens-studio',
     transforms: ['name/kebab', 'ds/line-height/px', 'ds/font-family/fallback'],
   },
   ts: { transformGroup: 'tokens-studio', transforms: ['name/camel', 'ds/line-height/px', 'ds/font-family/fallback'] },
   android: {
+    prefix: PREFIX,
     transforms: [...NATIVE_BASE_TRANSFORMS, 'ds/size/android', 'color/hex8android', 'name/snake'],
   },
   ios: {
@@ -612,6 +620,10 @@ function tsFiles(basePath) {
   ];
 }
 
+// Resource files are named prizm_<name>.xml: Android merges values/ files by
+// resource name, but copying a colors.xml into res/ would replace the app's own.
+const androidResource = (dir, name) => `${dir}/${PREFIX}_${name}.xml`;
+
 function androidFile(destination, filter) {
   return {
     destination,
@@ -652,7 +664,7 @@ function androidModeDir(mode, isDefault) {
 // that mode) and one per platform (just the platform tokens).
 function resolvedOutputs({ theme, modes, platforms, breakpoint }) {
   const base = [FOUNDATIONS_SET, ...theme.setKeys];
-  const className = toPascalCase(theme.slug);
+  const className = `${toPascalCase(PREFIX)}${toPascalCase(theme.slug)}`;
 
   return [
     ...modes.map((mode, index) => {
@@ -666,8 +678,8 @@ function resolvedOutputs({ theme, modes, platforms, breakpoint }) {
           // Non-color tokens are the same in every mode, so only the default
           // mode writes them; other modes only override colors.
           android: isDefault
-            ? [androidFile(`${valuesDir}/colors.xml`, isColor), androidFile(`${valuesDir}/tokens.xml`, isNotColor)]
-            : [androidFile(`${valuesDir}/colors.xml`, isColor)],
+            ? [androidFile(androidResource(valuesDir, 'colors'), isColor), androidFile(androidResource(valuesDir, 'tokens'), isNotColor)]
+            : [androidFile(androidResource(valuesDir, 'colors'), isColor)],
           ios: [swiftFile(`ios/${theme.slug}/${className}${toPascalCase(mode.slug)}.swift`, `${className}${toPascalCase(mode.slug)}`)],
         },
       };
@@ -679,7 +691,7 @@ function resolvedOutputs({ theme, modes, platforms, breakpoint }) {
         outputSetKeys: platform.setKeys,
         platforms: {
           ts: tsFiles(`ts/${theme.slug}/${platform.slug}`),
-          android: [androidFile(`android/${theme.slug}/${valuesDir}/platform.xml`)],
+          android: [androidFile(androidResource(`android/${theme.slug}/${valuesDir}`, 'platform'))],
           ios: [swiftFile(`ios/${theme.slug}/${className}${toPascalCase(platform.slug)}.swift`, `${className}${toPascalCase(platform.slug)}`)],
         },
       };

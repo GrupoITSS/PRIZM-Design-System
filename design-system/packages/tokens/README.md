@@ -83,7 +83,17 @@ A saída espelha a árvore: cada arquivo tem só os tokens do seu set.
 
 Referências viram `var(--...)`, exceto as que apontam para primitivos (saem resolvidas). Sombras são escritas campo a campo (`var(--prizm-shadow-xs-1-offset-x) var(--prizm-shadow-xs-1-offset-y) …`), para continuarem certas quando uma camada sobrescreve um átomo.
 
-**Prefixo `--prizm-`:** toda variável CSS começa com `--prizm-` (`--prizm-color-primary`, `--prizm-radius-md`, `--prizm-control-height-md`). Sem ele, os nomes colidiriam com os do próprio Tailwind (`--font-sans`, `--radius-md`…) e com os de temas e bibliotecas do app, e uma colisão não dá erro: só troca o valor em silêncio. O nome no Figma não muda (`color/primary` → `--prizm-color-primary`). Quem usa Tailwind não escreve o prefixo, porque `bg-primary` e `rounded-md` já apontam para ele pelo preset. O prefixo vale só para o CSS (e o `ts/vars`): os valores por tema em TypeScript e os arquivos de Android e iOS mantêm os nomes simples. Para trocá-lo, altere `CSS_PREFIX` no `build.mjs` (é uma versão major).
+**Prefixo `prizm`:** vai onde o nome é compartilhado com o app inteiro, para os tokens nunca colidirem com os nomes do app, do Tailwind ou de outras bibliotecas (uma colisão de variável CSS não dá erro: só troca o valor em silêncio).
+
+| Saída | Com prefixo | Sem prefixo |
+|---|---|---|
+| CSS | `--prizm-color-primary` | |
+| Android | `prizm_color_primary`, nos arquivos `prizm_colors.xml`, `prizm_tokens.xml`, `prizm_platform.xml` | |
+| iOS | os enums: `PrizmDocnixLight` | as propriedades: `colorPrimary` (já isoladas pelo enum) |
+| TypeScript | | tudo: `colorPrimary`, `ts/<tema>`; `ts/vars` só tem o prefixo no valor (`var(--prizm-color-primary)`) |
+| Tailwind | | as classes (`bg-primary`, `rounded-md`): é o que mantém os componentes compatíveis com o shadcn |
+
+O nome no Figma não muda (`color/primary` → `--prizm-color-primary`, `prizm_color_primary`). Quem usa Tailwind não escreve o prefixo, porque o preset já aponta para ele. Para trocá-lo, altere `PREFIX` no `build.mjs` (é uma versão major).
 
 ### TypeScript (`ts/`)
 
@@ -99,24 +109,24 @@ const theme = { ...light, ...desktop };
 
 ### Android (`android/<tema>/`)
 
-Baixe o `prizm-tokens-android-<versão>.zip` do release e copie a pasta do tema (ex.: `android/docnix/`) para `res/`. O Android escolhe o arquivo sozinho pelos qualificadores:
+Baixe o `prizm-tokens-android-<versão>.zip` do release e copie a pasta do tema (ex.: `android/docnix/`) para `res/`. Os arquivos têm o prefixo `prizm_`, então não sobrescrevem o `colors.xml` do app. O Android escolhe o arquivo sozinho pelos qualificadores:
 
 | Pasta | Quando vale | Conteúdo |
 |---|---|---|
-| `values/` | Sempre (padrão) | `colors.xml` (modo claro), `tokens.xml` (fontes, radius...), `platform.xml` (mobile) |
-| `values-night/` | Dark mode do sistema | `colors.xml` do modo escuro |
-| `values-w768dp/` | Largura ≥ breakpoint `md` | `platform.xml` de desktop |
+| `values/` | Sempre (padrão) | `prizm_colors.xml` (modo claro), `prizm_tokens.xml` (fontes, radius...), `prizm_platform.xml` (mobile) |
+| `values-night/` | Dark mode do sistema | `prizm_colors.xml` do modo escuro |
+| `values-w768dp/` | Largura ≥ breakpoint `md` | `prizm_platform.xml` de desktop |
 
-Tamanhos de texto saem em `sp` (seguem o tamanho de fonte do usuário); os demais, em `dp`. Uso: `@color/color_primary`, `@dimen/radius_md`. O breakpoint vem do token `breakpoint.md`.
+Tamanhos de texto saem em `sp` (seguem o tamanho de fonte do usuário); os demais, em `dp`. Uso: `@color/prizm_color_primary`, `@dimen/prizm_radius_md`. O breakpoint vem do token `breakpoint.md`.
 
 ### iOS (`ios/<tema>/`)
 
-Baixe o `prizm-tokens-ios-<versão>.zip` do release e adicione os arquivos da pasta do tema (ex.: `ios/docnix/`) ao projeto. Um `public enum` por camada, com `Color` do SwiftUI e `CGFloat`: `PasCmsLight`, `PasCmsDark`, `PasCmsMobile`, `PasCmsDesktop`.
+Baixe o `prizm-tokens-ios-<versão>.zip` do release e adicione os arquivos da pasta do tema (ex.: `ios/docnix/`) ao projeto. Um `public enum` por camada, com `Color` do SwiftUI e `CGFloat`: `PrizmPasCmsLight`, `PrizmPasCmsDark`, `PrizmPasCmsMobile`, `PrizmPasCmsDesktop`.
 
 ```swift
 Text("Olá")
-    .foregroundStyle(colorScheme == .dark ? PasCmsDark.colorPrimary : PasCmsLight.colorPrimary)
-    .padding(PasCmsMobile.containerPaddingX)
+    .foregroundStyle(colorScheme == .dark ? PrizmPasCmsDark.colorPrimary : PrizmPasCmsLight.colorPrimary)
+    .padding(PrizmPasCmsMobile.containerPaddingX)
 ```
 
 ## Uso na web
