@@ -275,12 +275,15 @@ StyleDictionary.registerFormat({
 
 // Every exported token as a typed reference to its CSS custom property, for
 // inline styles and CSS-in-JS that should keep following the active brand,
-// product, mode and platform instead of freezing one theme's values.
+// product, mode and platform instead of freezing one theme's values. The
+// export keeps the plain name (colorPrimary); only the variable has the prefix.
+const exportName = (token) => toCamelCase(token.name.slice(`${CSS_PREFIX}-`.length));
+
 StyleDictionary.registerFormat({
   name: 'javascript/css-vars',
   async format({ dictionary, file, options }) {
     const header = await fileHeader({ file, options });
-    const lines = dictionary.allTokens.map((token) => `export const ${toCamelCase(token.name)} = 'var(--${token.name})';`);
+    const lines = dictionary.allTokens.map((token) => `export const ${exportName(token)} = 'var(--${token.name})';`);
     return `${header}${lines.join('\n')}\n`;
   },
 });
@@ -289,7 +292,7 @@ StyleDictionary.registerFormat({
   name: 'typescript/css-vars-declarations',
   async format({ dictionary, file, options }) {
     const header = await fileHeader({ file, options });
-    const lines = dictionary.allTokens.map((token) => `export const ${toCamelCase(token.name)}: 'var(--${token.name})';`);
+    const lines = dictionary.allTokens.map((token) => `export const ${exportName(token)}: 'var(--${token.name})';`);
     return `${header}${lines.join('\n')}\n`;
   },
 });
@@ -503,8 +506,20 @@ const NATIVE_BASE_TRANSFORMS = [
   'ts/color/modifiers',
 ];
 
+// Every CSS custom property starts with this prefix (--prizm-color-primary), so
+// the tokens never collide with the consumer's own variables or with the ones
+// Tailwind and other libraries define (--color-*, --font-sans, --radius-md…).
+// It applies to the css platform only: that covers the CSS files, the Tailwind
+// preset and ts/vars.js. TS theme values and the native outputs keep plain names
+// (Android resources and Swift enums are namespaced differently).
+export const CSS_PREFIX = 'prizm';
+
 export const PLATFORM_CONFIG = {
-  css: { transformGroup: 'tokens-studio', transforms: ['name/kebab', 'ds/line-height/px', 'ds/font-family/fallback'] },
+  css: {
+    prefix: CSS_PREFIX,
+    transformGroup: 'tokens-studio',
+    transforms: ['name/kebab', 'ds/line-height/px', 'ds/font-family/fallback'],
+  },
   ts: { transformGroup: 'tokens-studio', transforms: ['name/camel', 'ds/line-height/px', 'ds/font-family/fallback'] },
   android: {
     transforms: [...NATIVE_BASE_TRANSFORMS, 'ds/size/android', 'color/hex8android', 'name/snake'],
