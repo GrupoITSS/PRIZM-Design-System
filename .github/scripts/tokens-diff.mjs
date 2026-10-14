@@ -181,7 +181,7 @@ const categoryOf = ({ path, token }) =>
   /^breakpoint(\.|$)/.test(path) ? 'Breakpoint' : (CATEGORY_BY_TYPE[token.type] ?? 'Outro');
 
 const layerOf = (set) =>
-  LAYERS.find(([prefix]) => set.startsWith(prefix))?.[1] ?? (set.startsWith('global/') ? 'Outro' : 'Marca · Produto');
+  LAYERS.find(([prefix]) => set.startsWith(prefix))?.[1] ?? (set.startsWith('global/') ? 'Outro' : 'Theme');
 
 const checkbox = (checked, label) => `- [${checked ? 'x' : ' '}] ${label}`;
 
@@ -211,7 +211,7 @@ function table(title, rows, header, toRow) {
   ];
 }
 
-// Temas (Marca · Produto, Mode, Plataforma) que usam algum dos sets
+// Temas (Theme, Mode, Platform) que usam algum dos sets
 // alterados, conforme o $themes do export. As dimensões são combinadas entre
 // si: se nenhum tema de um grupo usa os sets alterados (ex.: uma mudança só
 // em global/mode/dark não aparece nos temas de marca), a mudança vale para
