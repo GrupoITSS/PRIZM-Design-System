@@ -36,17 +36,15 @@ const FOUNDATIONS_SET = 'global/foundations';
 const BASE_LAYER = 'base';
 
 // The $themes groups that combine into one theme (one brand/product + one
-// mode + one platform). If a group is renamed in Tokens Studio, update it here.
-// Each dimension accepts the English name (naming rule of 01/10) and the
-// Portuguese one still in tokens.json, so the rename in Figma/Tokens Studio
-// can land in any order; drop the Portuguese names once it has.
+// mode + one platform). If a group is renamed in Tokens Studio, update it here;
+// each dimension takes a list so a rename can accept both names for a while.
 // Other groups in $themes (Primitives, Foundations) only exist so the Tokens
 // Studio export to Figma creates a variable collection for those sets, which
 // the brand collection then aliases; the build ignores them.
 export const THEME_GROUPS = {
-  product: ['Theme', 'Marca · Produto'],
+  product: ['Theme'],
   mode: ['Mode'],
-  platform: ['Platform', 'Plataforma'],
+  platform: ['Platform'],
 };
 
 // Android has no attribute to switch platforms, so desktop values go to a
