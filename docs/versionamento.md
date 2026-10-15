@@ -26,18 +26,29 @@ Seguimos o [versionamento semântico](https://semver.org/lang/pt-BR/): `MAJOR.MI
 | Um token **deixa de existir** em todos os sets | **major** |
 | **Renomear** uma variável CSS, um recurso Android, um enum Swift ou o prefixo (ex.: `--color-primary` → `--prizm-color-primary`) | **major** |
 | Remover um tema (marca ou produto) ou um arquivo/caminho publicado (`exports` do pacote) | **major** |
+| Um valor muda de **tipo**, de **forma** (simples × composto) ou de **unidade** (ex.: `sizing` → `fontSizes`, `16px` → `1rem`) | **major** |
 | Token, set ou tema **novo** (inclui marca ou produto novos) | **minor** |
 | Tema (`$themes`) criado ou alterado | **minor** |
-| Só **valores** alterados (inclui cores, tamanhos, fontes, e o valor de um primitivo) | **patch** |
+| **Mudança visual intencional e perceptível**: nova cor de marca, troca de escala, nova fonte | **minor** (changeset manual) |
+| Só **valores** alterados: ajuste ou correção de cor, tamanho, raio, fonte (inclui o valor de um primitivo) | **patch** |
 | Correção no build que não muda a saída | **patch** |
 | Renomear, criar ou apagar um **primitivo** (`global/primitives`) | não muda a saída: primitivos não saem. Se a troca mudar referências em outros tokens, o script gera um **patch**, o que é inofensivo |
 
-**Mudança de valor é patch**, mesmo em cores. É a regra de hoje e pode ser revista: trocar a cor principal de uma marca é uma mudança visual grande, que o patch não destaca.
+### Mudança de valor: patch, minor ou major?
+
+Num pacote de tokens, o que o app usa no código são os **nomes** (`--prizm-color-primary`, `prizm_color_primary`, `PrizmDocnixLight`). Trocar o valor não quebra nada: o app compila e roda igual, só muda a aparência. Por isso:
+
+- **Patch é o padrão.** É o que o script gera para qualquer valor alterado, e é o que chega sozinho aos apps que instalam com `^4.0.0`, junto com as correções.
+- **Minor quando a mudança visual é intencional e grande** (nova cor de marca, troca de escala, nova fonte). Assim ela aparece no `CHANGELOG` como novidade, com uma nota "mudança visual: o que muda e em quais temas", em vez de passar como correção. O script não distingue um ajuste fino de um redesign, então esse changeset é escrito à mão (ver abaixo).
+- **Major só quando o valor muda de natureza**: outro tipo, simples virando composto (ou o contrário), outra unidade. Aí quebra de verdade: o Android e o iOS geram saída tipada (`dp` × `sp`, `CGFloat` × `Color`) e leem só o número (`1rem` viraria `1dp`). O script detecta esses casos e gera major.
+
+Major para toda mudança de valor seria pior: cada ajuste no Figma viraria uma versão major, quem usa aprenderia a ignorá-las e os apps deixariam de receber as correções automaticamente.
 
 ### Como a versão dos tokens é decidida
 
-- **Automática, para os syncs do Figma.** A cada merge na `main`, o script `.github/scripts/tokens-changeset.mjs` compara o `tokens.json` com o da **última versão publicada** e gera o changeset conforme a tabela acima. O resumo (`+113 adicionados · ~34 alterados · −10 removidos`) vai para o `CHANGELOG`.
-- **Manual, para o que o script não enxerga.** Ele só compara o `tokens.json`. Renomeação de variáveis, remoção de um tema, mudança no build e mudança nos caminhos publicados exigem `pnpm changeset` na própria PR, escolhendo o tipo de versão. Enquanto houver um changeset pendente dos tokens, o script não gera o dele: **escreva o resumo no seu changeset**.
+- **Automática, para os syncs do Figma.** A cada merge na `main`, o script `.github/scripts/tokens-changeset.mjs` compara o `tokens.json` com o da **última versão publicada** e gera o changeset conforme a tabela acima: major se um token sumiu ou mudou de tipo/unidade, minor se entrou token, set ou tema, patch nos demais casos. O resumo (`+113 adicionados · ~34 alterados · −10 removidos`) vai para o `CHANGELOG`.
+- **Manual, para o que o script não enxerga.** Ele só compara o `tokens.json`. Mudança visual intencional, renomeação de variáveis, remoção de um tema, mudança no build e mudança nos caminhos publicados exigem `pnpm changeset`, escolhendo o tipo de versão. Enquanto houver um changeset pendente dos tokens, o script não gera o dele: **escreva o resumo no seu changeset** e escolha o maior tipo que se aplica (se o mesmo sync também apaga um token, é major).
+- **Mudança visual num sync do Figma.** A PR `design → main` entra sozinha assim que o check passa, então o changeset manual precisa chegar à branch `design` **antes do push do Tokens Studio**: rode `pnpm changeset` (pacote `@grupoitss/prizm-tokens`, tipo `minor`), descreva a mudança visual ("o que muda e em quais temas"), faça commit e push na `design` e só então faça o push no Tokens Studio. O commit do changeset sozinho não dispara a PR (o workflow só olha `packages/tokens/src/`); o sync seguinte leva os dois para a `main`, e o script respeita o changeset manual.
 
 ## `@grupoitss/prizm-ui`
 

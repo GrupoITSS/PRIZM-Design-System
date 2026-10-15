@@ -4,11 +4,17 @@
 //
 // Uso (na raiz do repositório, antes do changesets/action): node .github/scripts/tokens-changeset.mjs
 //
-// O tipo da versão vem do diff (tokens-diff.mjs):
-// - major: algum token deixou de existir em todos os sets (quebra quem usa a variável);
+// O tipo da versão vem do diff (tokens-diff.mjs) e segue docs/versionamento.md:
+// - major: algum token deixou de existir em todos os sets (quebra quem usa a
+//   variável), ou um valor mudou de tipo, de forma (simples × composto) ou de
+//   unidade (px → rem);
 // - minor: token, set ou tema novo;
 // - patch: só valores alterados (inclui o valor de um primitivo, de onde vêm as
 //   cores das marcas).
+//
+// Mudança visual intencional e grande (cor de marca, escala, fonte) é minor,
+// mas o script não sabe distinguir isso de um ajuste: quem sincroniza escreve
+// o changeset à mão na branch design (ver "Não gera nada quando" abaixo).
 //
 // Primitivos não vão para a saída, então renomear ou apagar um não conta; só a
 // mudança de valor de um primitivo conta.
@@ -22,7 +28,7 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { diffTokens, summarize } from './tokens-diff.mjs';
+import { diffTokens, retypedChanges, summarize } from './tokens-diff.mjs';
 
 const PACKAGE = '@grupoitss/prizm-tokens';
 const TOKENS_FILE = 'design-system/packages/tokens/src/tokens-studio/tokens.json';
@@ -71,11 +77,19 @@ if (!hasChanges) {
   process.exit(0);
 }
 
+const retyped = retypedChanges(diff.changed);
 const bump =
-  diff.vanished.length > 0 ? 'major' : diff.added.length + diff.setsAdded.length > 0 || diff.themesChanged ? 'minor' : 'patch';
+  diff.vanished.length + retyped.length > 0
+    ? 'major'
+    : diff.added.length + diff.setsAdded.length > 0 || diff.themesChanged
+      ? 'minor'
+      : 'patch';
 const summary = summarize(diff);
+const describeRetyped = ({ set, path: tokenPath, token, old }) =>
+  `${set} › ${tokenPath} (${old.type} ${JSON.stringify(old.value)} → ${token.type} ${JSON.stringify(token.value)})`;
 const notes = [
   diff.vanished.length > 0 ? `Tokens que deixaram de existir: ${diff.vanished.join(', ')}.` : null,
+  retyped.length > 0 ? `Tokens que mudaram de tipo ou unidade: ${retyped.map(describeRetyped).join(', ')}.` : null,
   diff.themesChanged ? 'Temas ($themes) alterados.' : null,
 ].filter(Boolean);
 

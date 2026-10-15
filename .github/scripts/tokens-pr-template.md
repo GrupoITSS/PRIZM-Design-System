@@ -23,6 +23,7 @@
 - [ ] Combinações de tema conferidas (marca · produto, light/dark, desktop/mobile)
 - [ ] Componentes afetados revisados
 - [ ] Documentação atualizada (Storybook)
+- [ ] Mudança visual intencional e grande (cor de marca, escala, fonte)? Changeset `minor` escrito à mão na branch `design` antes do merge ([política de versionamento](https://github.com/GrupoITSS/PRIZM-Design-System/blob/main/docs/versionamento.md))
 
 ## Governança
 
