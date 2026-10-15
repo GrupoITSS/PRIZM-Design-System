@@ -18,8 +18,8 @@ register(StyleDictionary);
 // Token tree
 // ---------------------------------------------------------------------------
 
-// The Tokens Studio sets form an inheritance tree (see arquitetura.md at the
-// repository root). Later layers override earlier ones:
+// The Tokens Studio sets form an inheritance tree (see arquitetura.md in this
+// package). Later layers override earlier ones:
 //
 //   global/primitives  → never emitted; only resolves values
 //   global/foundations → defaults shared by every brand

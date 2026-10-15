@@ -1,6 +1,6 @@
 # `@grupoitss/prizm-tokens`
 
-Design tokens do design system, gerados com [Style Dictionary](https://styledictionary.com) a partir do export do Tokens Studio (Figma). A arquitetura está descrita em [`arquitetura.md`](../../../arquitetura.md), na raiz do repositório.
+Design tokens do design system, gerados com [Style Dictionary](https://styledictionary.com) a partir do export do Tokens Studio (Figma). A arquitetura (árvore de herança dos sets) está descrita em [`arquitetura.md`](arquitetura.md), nesta pasta.
 
 ## Instalação
 

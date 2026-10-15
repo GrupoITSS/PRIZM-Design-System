@@ -33,7 +33,7 @@ const CATEGORY_BY_TYPE = {
 };
 const CATEGORIES = ['Color', 'Typography', 'Spacing', 'Size', 'Border', 'Shadow', 'Border Radius', 'Breakpoint', 'Opacity', 'Outro'];
 
-// Camadas da árvore de tokens (arquitetura.md), pelo prefixo do set. Todo set
+// Camadas da árvore de tokens (design-system/packages/tokens/arquitetura.md), pelo prefixo do set. Todo set
 // fora de global/, themes/ e platforms/ é de marca ou produto (ex.: pas/base,
 // pas/cms).
 const LAYERS = [
