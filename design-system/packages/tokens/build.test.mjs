@@ -1,5 +1,5 @@
-// Acceptance test for the layered build (arquitetura.md at the repository
-// root). Run after the build (`pnpm test` does both):
+// Acceptance test for the layered build (arquitetura.md, in this package).
+// Run after the build (`pnpm test` does both):
 //
 // 1. For every theme combination from $themes (brand/product × mode ×
 //    platform), the CSS layers in dist/css, applied in cascade order with every

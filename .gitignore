@@ -1,0 +1,17 @@
+# Dependências e caches
+node_modules
+.turbo
+
+# Saídas de build (geradas por pnpm build / pnpm dev)
+dist
+storybook-static/
+*.tsbuildinfo
+
+# Ambiente e arquivos locais
+.env
+*.local
+.claude/settings.local.json
+
+# Sistema e logs
+.DS_Store
+*.log

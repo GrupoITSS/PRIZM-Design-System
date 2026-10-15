@@ -78,7 +78,7 @@ jobs:
             exit 1
           fi
 
-      # Teste de aceite do arquitetura.md: cada combinação marca · produto ×
+      # Teste de aceite do packages/tokens/arquitetura.md: cada combinação marca · produto ×
       # modo × plataforma, aplicando as camadas do dist/css em cascata, tem de
       # bater com o export achatado do Tokens Studio; e nenhum produto pode
       # repetir um valor da base.

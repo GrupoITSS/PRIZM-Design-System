@@ -22,15 +22,6 @@
   Tokens que deixaram de existir: foundations.warning-moderate.light, foundations.warning-moderate.dark, palette.warning-moderate.light, palette.warning-moderate.dark, color.warning-moderate.
   Temas ($themes) alterados.
 
-## 2.0.0
-
-### Major Changes
-
-- Tokens sincronizados do Figma desde 1.0.0: +113 adicionados · ~34 alterados · −10 removidos.
-
-  Tokens que deixaram de existir: foundations.warning-moderate.light, foundations.warning-moderate.dark, palette.warning-moderate.light, palette.warning-moderate.dark, color.warning-moderate.
-  Temas ($themes) alterados.
-
 ## 1.0.0
 
 ### Major Changes
