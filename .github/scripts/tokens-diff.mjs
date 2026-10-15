@@ -113,6 +113,57 @@ export function diffTokens(base, head) {
 }
 
 // ---------------------------------------------------------------------------
+// Troca de tipo (para a versão dos tokens)
+// ---------------------------------------------------------------------------
+
+// Tipos que geram a mesma saída (o sd-transforms traduz os nomes do Tokens
+// Studio para os do DTCG). Trocar dentro de um grupo não muda nada para quem
+// usa; trocar de grupo muda o que sai: a unidade no Android (dp × sp), o tipo
+// no iOS (CGFloat × Color × String) ou a forma do valor (simples × composto).
+const TYPE_KIND = {
+  color: 'color',
+  sizing: 'dimension',
+  spacing: 'dimension',
+  borderRadius: 'dimension',
+  borderWidth: 'dimension',
+  dimension: 'dimension',
+  fontSizes: 'text-size',
+  fontSize: 'text-size',
+  lineHeights: 'text-size',
+  lineHeight: 'text-size',
+  letterSpacing: 'text-size',
+  fontWeights: 'font-weight',
+  fontWeight: 'font-weight',
+  fontFamilies: 'font-family',
+  fontFamily: 'font-family',
+  boxShadow: 'shadow',
+  shadow: 'shadow',
+  typography: 'typography',
+  opacity: 'number',
+  number: 'number',
+};
+
+const kindOf = (token) => TYPE_KIND[token.type] ?? token.type;
+const isComposite = (value) => value !== null && typeof value === 'object';
+
+// Unidade explícita de um valor literal ("16px" → "px", "1.5rem" → "rem").
+// Referências ("{spacing.4}") e números sem unidade não têm.
+const unitOf = (value) => (typeof value === 'string' ? /^-?\d*\.?\d+([a-z%]+)$/i.exec(value.trim())?.[1]?.toLowerCase() : undefined);
+
+// Alterações em que o valor muda de natureza, e não só de valor: outro tipo,
+// valor simples virando composto (ou o contrário) ou outra unidade explícita
+// (px → rem: o Android e o iOS leem só o número e trocariam 16px por 1dp).
+// Essas quebram quem usa e contam como major; as demais alterações são patch.
+export function retypedChanges(changed) {
+  return changed.filter(({ token, old }) => {
+    if (kindOf(old) !== kindOf(token)) return true;
+    if (isComposite(old.value) !== isComposite(token.value)) return true;
+    const [before, after] = [unitOf(old.value), unitOf(token.value)];
+    return before !== undefined && after !== undefined && before !== after;
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Resumo e card do Teams
 // ---------------------------------------------------------------------------
 
