@@ -53,8 +53,9 @@ Seguimos o [versionamento semântico](https://semver.org/lang/pt-BR/): `MAJOR.MI
 | Só documentação, stories ou testes | nenhuma |
 
 - Toda mudança em componente precisa de um changeset: `pnpm changeset`, escolhendo `@grupoitss/prizm-ui` e o tipo.
-- Se um componente passar a depender de um **token novo**, a nota do changeset diz a versão mínima do `prizm-tokens` necessária, porque o `prizm-ui` não declara essa dependência.
-- **Enquanto o `prizm-ui` estiver em `0.x`:** valem as mesmas regras da tabela. **A definir:** o critério para a `1.0.0`, e se, até lá, o que seria major entra como minor. O Changesets leva uma mudança major de `0.x` direto para a `1.0.0`.
+- **Compatibilidade com os tokens.** Os componentes usam classes do Tailwind (como `bg-primary` e `h-control-height-md`) que só funcionam se o `prizm-tokens` instalado no app tiver o token correspondente, e o `prizm-ui` não declara o `prizm-tokens` como dependência (o npm não avisa de incompatibilidade). Por isso, se um componente passar a usar um token que **só existe numa versão recente dos tokens**, a nota do changeset diz a **versão mínima dos tokens**. Exemplo ilustrativo: "Requer `@grupoitss/prizm-tokens` 4.1.0 ou superior (token `success`)". Sem esse aviso, o app que atualiza só o `prizm-ui` fica com o componente sem a cor, e nada acusa erro.
+- **Critério para a `1.0.0`:** a biblioteca só é considerada completa quando **todos os componentes do shadcn/ui estiverem no Storybook**. A lista de referência é a da documentação do shadcn/ui: https://ui.shadcn.com/docs/components.
+- **Até a `1.0.0`**, uma mudança que seria major (ver a tabela acima) entra como **minor** (`0.2.0`, `0.3.0`…), sempre com a nota de migração. Isso evita que o Changesets, que leva uma mudança major de `0.x` direto para a `1.0.0`, publique a `1.0.0` antes de a biblioteca estar completa. A `1.0.0` é publicada de propósito, com um changeset major escrito para isso.
 
 ## Como uma versão sai
 
