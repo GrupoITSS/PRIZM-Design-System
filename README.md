@@ -107,6 +107,7 @@ Caminhos a partir de `design-system/`:
 
 4. Crie a story em `apps/docs/stories/` (ex.: `input.stories.tsx`).
 5. Rode `pnpm changeset`, escolha `@grupoitss/prizm-ui` e `minor`, e descreva o componente novo. O arquivo gerado em `.changeset/` vai junto na PR.
+   Se o componente usa um token que **só existe numa versão recente dos tokens**, escreva na nota a versão mínima de `@grupoitss/prizm-tokens` necessária (o `prizm-ui` não declara essa dependência, então o npm não avisa). Detalhes e exemplo na [política de versionamento](docs/versionamento.md).
 
 ## Publicação
 
