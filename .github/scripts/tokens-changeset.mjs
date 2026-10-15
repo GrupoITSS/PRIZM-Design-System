@@ -7,7 +7,11 @@
 // O tipo da versão vem do diff (tokens-diff.mjs):
 // - major: algum token deixou de existir em todos os sets (quebra quem usa a variável);
 // - minor: token, set ou tema novo;
-// - patch: só valores alterados.
+// - patch: só valores alterados (inclui o valor de um primitivo, de onde vêm as
+//   cores das marcas).
+//
+// Primitivos não vão para a saída, então renomear ou apagar um não conta; só a
+// mudança de valor de um primitivo conta.
 //
 // Não gera nada quando:
 // - a versão atual do package.json ainda não foi publicada (a PR de versão
@@ -45,16 +49,19 @@ if (pending) {
 }
 
 // Primitivos nunca vão para a saída (só resolvem valores): renomear ou apagar
-// um primitivo não quebra quem consome. Ficam fora do diff; se a troca mudar
-// um valor emitido, isso aparece no token que o referencia.
+// um primitivo não quebra quem consome. Ficam fora do diff (se a troca mudar uma
+// referência, isso aparece no token que a usa). Mas o VALOR de um primitivo
+// que existe nas duas versões muda o que sai (as cores das marcas vêm deles),
+// então essas mudanças voltam como "alterados".
 const PRIMITIVES_SET = 'global/primitives';
 const withoutPrimitives = (file) => {
   const { [PRIMITIVES_SET]: _primitives, ...rest } = file;
   return rest;
 };
-const base = withoutPrimitives(JSON.parse(git('show', `${tag}:${TOKENS_FILE}`)));
-const head = withoutPrimitives(JSON.parse(readFileSync(TOKENS_FILE, 'utf8')));
-const diff = diffTokens(base, head);
+const baseFile = JSON.parse(git('show', `${tag}:${TOKENS_FILE}`));
+const headFile = JSON.parse(readFileSync(TOKENS_FILE, 'utf8'));
+const diff = diffTokens(withoutPrimitives(baseFile), withoutPrimitives(headFile));
+diff.changed.push(...diffTokens(baseFile, headFile).changed.filter(({ set }) => set === PRIMITIVES_SET));
 
 const hasChanges =
   diff.added.length + diff.changed.length + diff.removed.length + diff.setsAdded.length + diff.setsRemoved.length > 0 ||

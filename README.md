@@ -25,7 +25,9 @@ Design system multimarca: tokens gerados a partir do Figma, componentes React e 
 │                               # versão automática dos tokens e corpo da PR de tokens
 ├── .claude/settings.json       # permissões compartilhadas do Claude Code
 ├── CLAUDE.md                   # instruções do projeto para o Claude Code
-├── docs/ai/                    # registro de decisões e de andamento do projeto
+├── docs/
+│   ├── versionamento.md        # política de versionamento (semver) e nota de migração
+│   └── ai/                     # registro de decisões e de andamento do projeto
 └── design-system/              # o monorepo (pnpm + Turborepo): rode os comandos aqui
     ├── apps/
     │   └── docs/               # Storybook
@@ -114,5 +116,7 @@ Caminhos a partir de `design-system/`:
 2. Ao mergear essa PR, os pacotes são publicados e cada um ganha um GitHub Release. O release dos tokens leva os zips de Android e iOS.
 
 **Depois de mergear uma PR na `main`, espere a PR de versão ser atualizada (1 a 2 minutos) antes de mergeá-la.** Se ela for mergeada antes, sai uma versão sem a mudança.
+
+O que é patch, minor e major em cada pacote, e como escrever a nota de migração de uma breaking change: [política de versionamento](docs/versionamento.md).
 
 Como instalar nos apps: ver os READMEs de [`tokens`](design-system/packages/tokens/README.md#instalação) e [`ui`](design-system/packages/ui/README.md#instalação).

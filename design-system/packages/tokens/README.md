@@ -15,7 +15,7 @@ e instale com `npm install @grupoitss/prizm-tokens` (com a variável `GITHUB_TOK
 
 **Android e iOS:** cada versão publicada tem um [GitHub Release](https://github.com/GrupoITSS/PRIZM-Design-System/releases) com `prizm-tokens-android-<versão>.zip` e `prizm-tokens-ios-<versão>.zip`. Dentro, uma pasta por tema (ex.: `android/docnix/`). Veja [Android](#android-androidtema) e [iOS](#ios-iostema).
 
-**Versões:** a cada sync do Figma que entra na `main`, a versão sobe sozinha: **major** se algum token deixou de existir, **minor** se entrou token novo, **patch** se só mudaram valores. A publicação acontece quando a PR "versão dos pacotes" é mergeada.
+**Versões:** a cada sync do Figma que entra na `main`, a versão sobe sozinha: **major** se algum token deixou de existir, **minor** se entrou token novo, **patch** se só mudaram valores. Política completa: [versionamento](../../../docs/versionamento.md). A publicação acontece quando a PR "versão dos pacotes" é mergeada.
 
 | Import | O que é |
 |---|---|
