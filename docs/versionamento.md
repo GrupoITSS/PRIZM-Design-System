@@ -78,6 +78,15 @@ Regras:
 - **Depois de mergear uma PR na `main`, espere a PR de versão ser atualizada** (1 a 2 minutos) antes de mergeá-la. Se ela for mergeada antes, sai uma versão sem a mudança, ou pula um número (a `2.0.0` dos tokens nunca foi publicada por isso).
 - **Não edite a versão no `package.json` à mão**: ela só muda pela PR de versão.
 
+### Quando lançar
+
+Enquanto o PRIZM está em fase de testes, a PR **"chore: versão dos pacotes" fica aberta** e só é mergeada quando o time decide lançar uma versão. Mergear um sync ou uma correção na `main` não obriga a publicar.
+
+- **A PR se atualiza sozinha** a cada merge na `main`. O script dos tokens compara o `tokens.json` com o da **última versão publicada**, não com o sync anterior: três syncs que apagam tokens viram **um único** major (por exemplo, `5.0.0` → `6.0.0`), e o `CHANGELOG` resume tudo desde a última versão.
+- **Nada chega aos apps** enquanto a PR estiver aberta. As mudanças ficam na `main`, mas o pacote, a tag e o release só saem com o merge. Quando algum app já depender de uma correção, lance antes.
+- **Changeset manual pendente trava o automático.** Se houver um changeset dos tokens escrito à mão (por exemplo, um minor de mudança visual), o script não gera o dele. Se depois um sync apagar um token, edite esse changeset para **major** antes de mergear a PR de versão; senão a versão sai como minor e quebra quem usa.
+- **Na hora de lançar**, confira na PR o tipo de versão e o `CHANGELOG`, escreva a nota de migração se for major (ver abaixo) e só então faça o merge, respeitando a espera de 1 a 2 minutos depois do último merge na `main`.
+
 ## Nota de migração (breaking change)
 
 **Toda versão major leva uma nota de migração**, escrita no próprio changeset: ela vira o `CHANGELOG` e as notas do release. Modelo:
@@ -124,6 +133,7 @@ Exemplo real, a `4.0.0` dos tokens:
 | tokens `3.0.0` | 14/10/2026 | major | Prefixo `--prizm-` no CSS; tokens `warning-moderate` removidos |
 | ui `0.1.1` | 14/10/2026 | patch | Hover do Button a 80% |
 | tokens `4.0.0` | 14/10/2026 | major | Prefixo `prizm` no Android e no iOS |
+| tokens `5.0.0` | 16/10/2026 | major | `tertiary`, `tertiary-foreground` e `palette.brand-color` removidos; `primary-weak` e `primary-strong` criados (DS-55) |
 
 A `2.0.0` dos tokens nunca foi publicada.
 
