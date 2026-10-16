@@ -1,5 +1,14 @@
 # @grupoitss/prizm-tokens
 
+## 5.0.0
+
+### Major Changes
+
+- 583adaa: Tokens sincronizados do Figma desde 4.0.0: +24 adicionados · ~12 alterados · −30 removidos.
+
+  Tokens que deixaram de existir: foundations.tertiary.light, foundations.tertiary.dark, foundations.tertiary-foreground.light, foundations.tertiary-foreground.dark, palette.tertiary.light, palette.tertiary.dark, palette.tertiary-foreground.light, palette.tertiary-foreground.dark, palette.brand-color.light, palette.brand-color.dark, color.tertiary, color.tertiary-foreground.
+  Temas ($themes) alterados.
+
 ## 4.0.0
 
 ### Major Changes
