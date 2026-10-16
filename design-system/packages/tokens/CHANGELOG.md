@@ -1,5 +1,13 @@
 # @grupoitss/prizm-tokens
 
+## 5.1.0
+
+### Minor Changes
+
+- 583adaa: Tokens sincronizados do Figma desde 5.0.0: +0 adicionados · ~1 alterados · −0 removidos.
+
+  Temas ($themes) alterados.
+
 ## 5.0.0
 
 ### Major Changes
