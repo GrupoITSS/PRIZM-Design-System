@@ -12,11 +12,17 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@grupoitss/prizm-tokens": "workspace:*",
     "@grupoitss/prizm-ui": "workspace:*",
+    "@tanstack/react-table": "^8.21.3",
+    "date-fns": "^4.4.0",
+    "input-otp": "^1.5.0",
     "lucide-react": "^1.52.0",
     "react": "^19.3.0",
+    "react-day-picker": "^9.14.0",
     "react-dom": "^19.3.0",
-    "@grupoitss/prizm-tokens": "workspace:*"
+    "recharts": "2.15.4",
+    "sonner": "^1.7.4"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

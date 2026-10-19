@@ -18,6 +18,20 @@ const BRANDS = [
 const withTheme: Decorator = (Story, { globals, viewMode }) => {
   const { brand, product } = BRANDS.find(({ value }) => value === globals.brand) ?? BRANDS[0];
 
+  // Dialogs, menus, popovers and toasts render in a portal at the end of
+  // <body>, outside the div below, so <html> gets the same attributes.
+  const root = document.documentElement;
+  const attributes = {
+    brand,
+    mode: globals.mode as string | undefined,
+    platform: globals.platform as string | undefined,
+    product,
+  };
+  for (const [name, value] of Object.entries(attributes)) {
+    if (value) root.setAttribute(`data-${name}`, value);
+    else root.removeAttribute(`data-${name}`);
+  }
+
   return (
     <div
       className={`bg-background p-6 font-sans text-foreground ${viewMode === "story" ? "min-h-screen" : ""}`}
