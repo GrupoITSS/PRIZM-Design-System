@@ -1,7 +1,8 @@
 import type { ComponentProps } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { LoaderCircle } from "lucide-react";
-import { cn } from "./lib/cn";
+import { Slot } from "radix-ui";
+import { cn } from "../../lib/cn";
 
 // Colors, heights, radius, font and shadow come from the design tokens (CSS
 // custom properties), so the same button follows the active brand, product
@@ -31,13 +32,20 @@ export const buttonVariants = cva(
         ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         warning: "bg-warning text-warning-foreground hover:bg-warning/80",
+        // From @pas/ui: destructive action shown as text (e.g. "Excluir" in a
+        // table row), with a ghost hover in the destructive color.
+        text: "text-destructive hover:bg-destructive/10",
       },
       // Icon buttons are square at the same control height as text buttons.
       size: {
         default: "h-control-height-md px-4",
+        // xs and icon-xs come from @pas/ui. There's no control-height token
+        // below sm (32px), so 24px is Tailwind's h-6.
+        xs: "h-6 gap-1 px-2 text-xs [&_svg]:size-3",
         sm: "h-control-height-sm px-3 text-xs",
         lg: "h-control-height-lg px-6",
         icon: "size-control-height-md",
+        "icon-xs": "size-6 [&_svg]:size-3",
         "icon-sm": "size-control-height-sm",
         "icon-lg": "size-control-height-lg",
       },
@@ -53,6 +61,11 @@ export const buttonVariants = cva(
 export interface ButtonProps extends ComponentProps<"button">, VariantProps<typeof buttonVariants> {
   /** Disables the button and shows a spinner (in place of the icon, on icon sizes). */
   loading?: boolean;
+  /**
+   * Renders the single child element (e.g. a link) with the button's styles
+   * instead of a `<button>`. `loading` doesn't add the spinner in this case.
+   */
+  asChild?: boolean;
 }
 
 export function Button({
@@ -62,15 +75,30 @@ export function Button({
   loading = false,
   disabled,
   type = "button",
+  asChild = false,
   children,
   ...other
 }: ButtonProps) {
   const iconOnly = size?.startsWith("icon") ?? false;
 
+  if (asChild) {
+    return (
+      <Slot.Root
+        aria-busy={loading || undefined}
+        className={cn(buttonVariants({ variant, size }), className)}
+        data-slot="button"
+        {...other}
+      >
+        {children}
+      </Slot.Root>
+    );
+  }
+
   return (
     <button
       aria-busy={loading || undefined}
       className={cn(buttonVariants({ variant, size }), className)}
+      data-slot="button"
       disabled={disabled || loading}
       type={type}
       {...other}

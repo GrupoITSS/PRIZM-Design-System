@@ -1,0 +1,44 @@
+/*
+ * What the @grupoitss/prizm-ui components need besides Tailwind and the
+ * tokens. In the app's CSS, after Tailwind and @grupoitss/prizm-tokens:
+ *
+ *   @import "@grupoitss/prizm-ui/styles.css";
+ */
+
+/* animate-in/out, accordion, collapsible and caret-blink animations. */
+@import "tw-animate-css";
+
+/* The component classes, so Tailwind generates them (it reads this folder). */
+@source "./";
+
+@layer base {
+  /* Components use `border` without a color: it's the border token. */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--prizm-color-border);
+  }
+}
+
+/* Thin scrollbar of sheets, drawers, dialogs, menus and textarea. */
+@utility custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--prizm-color-muted-foreground) transparent;
+
+  &::-webkit-scrollbar {
+    width: 0.375rem;
+    height: 0.375rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 1.875rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--prizm-color-muted-foreground);
+    border-radius: 1.875rem;
+  }
+}
