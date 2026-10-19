@@ -5,9 +5,9 @@ import { Button, type ButtonProps } from "@grupoitss/prizm-ui/button";
 type Variant = NonNullable<ButtonProps["variant"]>;
 type Size = NonNullable<ButtonProps["size"]>;
 
-const VARIANTS: Variant[] = ["default", "secondary", "destructive", "outline", "ghost", "link", "warning"];
-const TEXT_SIZES: Size[] = ["default", "sm", "lg"];
-const ICON_SIZES: Size[] = ["icon", "icon-sm", "icon-lg"];
+const VARIANTS: Variant[] = ["default", "secondary", "destructive", "outline", "ghost", "link", "text"];
+const TEXT_SIZES: Size[] = ["xs", "sm", "default", "lg"];
+const ICON_SIZES: Size[] = ["icon-xs", "icon-sm", "icon", "icon-lg"];
 
 const FIGMA_URL =
   "https://www.figma.com/design/DKxVyaDsRPJGk3lvL630yS/-TESTE-LUCAS--Design-Tokens---Core?node-id=345-2093";

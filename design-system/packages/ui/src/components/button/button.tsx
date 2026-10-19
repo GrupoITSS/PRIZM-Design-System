@@ -30,22 +30,24 @@ export const buttonVariants = cva(
         outline:
           "border border-input bg-input-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground",
         ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        warning: "bg-warning text-warning-foreground hover:bg-warning/80",
+        // primary-strong, not primary: brand text on the background has to
+        // pass 4.5:1 in dark mode too, and primary doesn't in any brand.
+        link: "text-primary-strong underline-offset-4 hover:underline",
         // From @pas/ui: destructive action shown as text (e.g. "Excluir" in a
-        // table row), with a ghost hover in the destructive color.
-        text: "text-destructive hover:bg-destructive/10",
+        // table row), with a ghost hover in the destructive color. Text in a
+        // tone's color on the background is the -strong step, as in link.
+        text: "text-destructive-strong hover:bg-destructive/10",
       },
       // Icon buttons are square at the same control height as text buttons.
       size: {
         default: "h-control-height-md px-4",
-        // xs and icon-xs come from @pas/ui. There's no control-height token
-        // below sm (32px), so 24px is Tailwind's h-6.
-        xs: "h-6 gap-1 px-2 text-xs [&_svg]:size-3",
+        // xs and icon-xs come from @pas/ui. control-height-xs is 24px in every
+        // brand (the WCAG 2.2 minimum target), Digitrol included.
+        xs: "h-control-height-xs gap-1 px-2 text-xs [&_svg]:size-3",
         sm: "h-control-height-sm px-3 text-xs",
         lg: "h-control-height-lg px-6",
         icon: "size-control-height-md",
-        "icon-xs": "size-6 [&_svg]:size-3",
+        "icon-xs": "size-control-height-xs [&_svg]:size-3",
         "icon-sm": "size-control-height-sm",
         "icon-lg": "size-control-height-lg",
       },
