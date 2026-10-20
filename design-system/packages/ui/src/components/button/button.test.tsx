@@ -62,6 +62,13 @@ describe("Button (PRIZM)", () => {
     expect(screen.getByRole("button", { name: "Ver mais" })).toHaveClass("underline");
   });
 
+  it("hover do secondary sobrepõe o foreground a 10%", () => {
+    render(<Button variant="secondary">Cancelar</Button>);
+    expect(screen.getByRole("button", { name: "Cancelar" })).toHaveClass(
+      "hover:bg-[color-mix(in_oklab,var(--prizm-color-secondary),var(--prizm-color-foreground)_10%)]",
+    );
+  });
+
   it("anel de foco com espaço de 2px na cor do fundo", () => {
     render(<Button>Salvar</Button>);
     expect(screen.getByRole("button", { name: "Salvar" })).toHaveClass(

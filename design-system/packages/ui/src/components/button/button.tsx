@@ -30,7 +30,11 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        // Hover overlays foreground at 10%, not secondary/80: secondary is a
+        // near-background gray, and at 80% it changed only 1.02–1.09:1. The
+        // overlay darkens in light mode and lightens in dark (1.24–1.36:1).
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklab,var(--prizm-color-secondary),var(--prizm-color-foreground)_10%)]",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline:
           "border border-input bg-input-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground",
