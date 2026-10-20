@@ -69,6 +69,14 @@ describe("Button (PRIZM)", () => {
     );
   });
 
+  it("hover do text usa o fundo destructive-weak", () => {
+    render(<Button variant="text">Excluir</Button>);
+    expect(screen.getByRole("button", { name: "Excluir" })).toHaveClass(
+      "text-destructive-strong",
+      "hover:bg-destructive-weak",
+    );
+  });
+
   it("anel de foco com espaço de 2px na cor do fundo", () => {
     render(<Button>Salvar</Button>);
     expect(screen.getByRole("button", { name: "Salvar" })).toHaveClass(

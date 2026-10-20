@@ -45,9 +45,10 @@ export const buttonVariants = cva(
         // alone doesn't set it apart (WCAG 1.4.1). Hover thickens the line.
         link: "text-primary-strong underline underline-offset-4 hover:decoration-2",
         // From @pas/ui: destructive action shown as text (e.g. "Excluir" in a
-        // table row), with a ghost hover in the destructive color. Text in a
-        // tone's color on the background is the -strong step, as in link.
-        text: "text-destructive-strong hover:bg-destructive/10",
+        // table row). Text in a tone's color on the background is the -strong
+        // step, as in link; its hover is the tone's -weak surface, which
+        // -strong is made to sit on (6.80–8.51:1).
+        text: "text-destructive-strong hover:bg-destructive-weak",
       },
       // Icon buttons are square at the same control height as text buttons.
       size: {
