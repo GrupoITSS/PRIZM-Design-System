@@ -9,8 +9,13 @@ const VARIANTS: Variant[] = ["default", "secondary", "destructive", "outline", "
 const TEXT_SIZES: Size[] = ["xs", "sm", "default", "lg"];
 const ICON_SIZES: Size[] = ["icon-xs", "icon-sm", "icon", "icon-lg"];
 
-const FIGMA_URL =
-  "https://www.figma.com/design/DKxVyaDsRPJGk3lvL630yS/-TESTE-LUCAS--Design-Tokens---Core?node-id=345-2093";
+// Traceability: the component set in [PRIZM] Componentes, its documentation
+// frame and the CMS article. The token map lives next to the component
+// (button.tokens.json) and is checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25003-8948";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25019-4489";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=978a4aa8-4d01-484f-a0bb-93d10c59c219&version=v1";
 
 const meta: Meta<typeof Button> = {
   title: "Button",
@@ -18,7 +23,7 @@ const meta: Meta<typeof Button> = {
   parameters: {
     docs: {
       description: {
-        component: `Botão do shadcn com as cores, alturas, raio, fonte e sombra ligados aos design tokens. Marca, produto, modo e plataforma vêm da barra de ferramentas (atributos \`data-*\`), não de props. [Ver no Figma](${FIGMA_URL}).`,
+        component: `Botão do shadcn com as cores, alturas, raio, fonte e sombra ligados aos design tokens. Marca, produto, modo e plataforma vêm da barra de ferramentas (atributos \`data-*\`), não de props. [Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
