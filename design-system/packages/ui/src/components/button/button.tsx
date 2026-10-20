@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import { isValidElement, useEffect, type ComponentProps, type ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { LoaderCircle } from "lucide-react";
 import { Slot } from "radix-ui";
@@ -16,9 +16,14 @@ export const buttonVariants = cva(
   [
     "inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md font-sans text-sm font-medium outline-none",
     "transition-[color,background-color,box-shadow,opacity]",
-    "focus-visible:ring-[3px] focus-visible:ring-ring",
+    // The 2px offset in the background color keeps the ring apart from the
+    // button: ring is the primary color in every brand, so without the gap it
+    // merged with the default variant (1:1) and read as a slightly bigger button.
+    "focus-visible:ring-[3px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset",
     "active:opacity-60",
-    "disabled:pointer-events-none disabled:opacity-50",
+    // aria-disabled is the loading state: it keeps focus on the button, which
+    // the disabled attribute drops to <body> (see Button below).
+    "disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
     "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   ],
   {
@@ -32,7 +37,9 @@ export const buttonVariants = cva(
         ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
         // primary-strong, not primary: brand text on the background has to
         // pass 4.5:1 in dark mode too, and primary doesn't in any brand.
-        link: "text-primary-strong underline-offset-4 hover:underline",
+        // Always underlined: against body text it's 1.39–2.72:1, so color
+        // alone doesn't set it apart (WCAG 1.4.1). Hover thickens the line.
+        link: "text-primary-strong underline underline-offset-4 hover:decoration-2",
         // From @pas/ui: destructive action shown as text (e.g. "Excluir" in a
         // table row), with a ghost hover in the destructive color. Text in a
         // tone's color on the background is the -strong step, as in link.
@@ -61,13 +68,27 @@ export const buttonVariants = cva(
 
 // ComponentProps<"button"> includes `ref` (a regular prop since React 19).
 export interface ButtonProps extends ComponentProps<"button">, VariantProps<typeof buttonVariants> {
-  /** Disables the button and shows a spinner (in place of the icon, on icon sizes). */
+  /**
+   * Blocks the button (aria-disabled, keeping focus) and shows a spinner (in
+   * place of the icon, on icon sizes).
+   */
   loading?: boolean;
   /**
    * Renders the single child element (e.g. a link) with the button's styles
    * instead of a `<button>`. `loading` doesn't add the spinner in this case.
    */
   asChild?: boolean;
+}
+
+// A string or number child, or an sr-only element, names an icon button.
+function hasTextContent(children: ReactNode): boolean {
+  if (Array.isArray(children)) return children.some((child: ReactNode) => hasTextContent(child));
+  return (
+    (typeof children === "string" && children.trim() !== "") ||
+    typeof children === "number" ||
+    (isValidElement<{ className?: string }>(children) &&
+      (children.props.className?.includes("sr-only") ?? false))
+  );
 }
 
 export function Button({
@@ -79,9 +100,22 @@ export function Button({
   type = "button",
   asChild = false,
   children,
+  onClick,
   ...other
 }: ButtonProps) {
   const iconOnly = size?.startsWith("icon") ?? false;
+  const named =
+    !iconOnly ||
+    Boolean(other["aria-label"] ?? other["aria-labelledby"] ?? other.title) ||
+    hasTextContent(children);
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production" && !named) {
+      console.warn(
+        `Button: botão de ícone (size="${size}") sem nome acessível. Passe aria-label, aria-labelledby ou um texto sr-only.`,
+      );
+    }
+  }, [named, size]);
 
   if (asChild) {
     return (
@@ -89,6 +123,7 @@ export function Button({
         aria-busy={loading || undefined}
         className={cn(buttonVariants({ variant, size }), className)}
         data-slot="button"
+        onClick={onClick}
         {...other}
       >
         {children}
@@ -96,12 +131,24 @@ export function Button({
     );
   }
 
+  // Loading uses aria-disabled, not disabled: the disabled attribute drops
+  // focus to <body> (and it doesn't come back), so a keyboard user who
+  // pressed "Salvar" would lose their place. Clicks are blocked here instead,
+  // which also stops a submit button from sending the form twice.
   return (
     <button
       aria-busy={loading || undefined}
+      aria-disabled={loading || undefined}
       className={cn(buttonVariants({ variant, size }), className)}
       data-slot="button"
-      disabled={disabled || loading}
+      disabled={disabled}
+      onClick={(event) => {
+        if (loading) {
+          event.preventDefault();
+          return;
+        }
+        onClick?.(event);
+      }}
       type={type}
       {...other}
     >
