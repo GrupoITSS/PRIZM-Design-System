@@ -1,0 +1,93 @@
+{
+  "component": "Button",
+  "description": "Mapa de tokens do Button: o que cada variante e cada tamanho usa do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 20/10/2026 e conferido contra button.tsx pelo teste button.tokens.test.ts. Nomes no formato do Figma (color/primary); no código viram classes Tailwind (bg-primary).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25003-8948",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25019-4489",
+    "code": "design-system/packages/ui/src/components/button/button.tsx",
+    "story": "design-system/apps/docs/stories/button.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=978a4aa8-4d01-484f-a0bb-93d10c59c219&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/97",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/98",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/99"
+    ],
+    "jira": ["GIES-1725"]
+  },
+  "variants": {
+    "default": {
+      "background": "color/primary",
+      "text": "color/primary-foreground",
+      "border": null,
+      "hover": { "rule": "cor de tom a 80%", "background": "color/primary", "opacity": 0.8 }
+    },
+    "secondary": {
+      "background": "color/secondary",
+      "text": "color/secondary-foreground",
+      "border": null,
+      "hover": { "rule": "sobreposição de foreground a 10%", "background": "color/secondary", "overlay": "color/foreground", "overlayOpacity": 0.1 }
+    },
+    "destructive": {
+      "background": "color/destructive",
+      "text": "color/destructive-foreground",
+      "border": null,
+      "hover": { "rule": "cor de tom a 80%", "background": "color/destructive", "opacity": 0.8 }
+    },
+    "outline": {
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "border": "color/input",
+      "shadow": "style/shadow/xs",
+      "hover": { "rule": "sem fundo: accent", "background": "color/accent", "text": "color/accent-foreground" }
+    },
+    "ghost": {
+      "background": null,
+      "text": "color/foreground",
+      "border": null,
+      "hover": { "rule": "sem fundo: accent", "background": "color/accent", "text": "color/accent-foreground" }
+    },
+    "link": {
+      "background": null,
+      "text": "color/primary-strong",
+      "border": null,
+      "underline": true,
+      "hover": { "rule": "sublinhado de 2px", "underlineThickness": 2 }
+    },
+    "text": {
+      "background": null,
+      "text": "color/destructive-strong",
+      "border": null,
+      "hover": { "rule": "texto em tom: -weak do tom", "background": "color/destructive-weak" }
+    }
+  },
+  "states": {
+    "focus": { "ring": "color/ring", "ringWidth": 3, "ringOffset": "color/ring-offset", "ringOffsetWidth": 2 },
+    "pressed": { "opacity": 0.6 },
+    "disabled": { "opacity": 0.5, "attribute": "disabled" },
+    "loading": { "opacity": 0.5, "attribute": "aria-disabled" }
+  },
+  "sizes": {
+    "xs": { "height": "control-height/xs", "paddingX": "spacing/2", "gap": "spacing/1", "radius": "radius/md", "fontSize": "text/xs" },
+    "sm": { "height": "control-height/sm", "paddingX": "spacing/3", "gap": "spacing/2", "radius": "radius/md", "fontSize": "text/xs" },
+    "default": { "height": "control-height/md", "paddingX": "spacing/4", "gap": "spacing/2", "radius": "radius/md", "fontSize": "text/sm" },
+    "lg": { "height": "control-height/lg", "paddingX": "spacing/6", "gap": "spacing/2", "radius": "radius/md", "fontSize": "text/sm" },
+    "icon-xs": { "height": "control-height/xs", "width": "control-height/xs", "radius": "radius/md" },
+    "icon-sm": { "height": "control-height/sm", "width": "control-height/sm", "radius": "radius/md" },
+    "icon": { "height": "control-height/md", "width": "control-height/md", "radius": "radius/md" },
+    "icon-lg": { "height": "control-height/lg", "width": "control-height/lg", "radius": "radius/md" }
+  },
+  "divergences": [
+    {
+      "where": "Figma · Destructive e Text, estado Focus",
+      "figma": "anel em base/destructive (nome fora do padrão do Core, sobra do kit)",
+      "code": "anel em color/ring, como as outras variantes",
+      "status": "aberta"
+    },
+    {
+      "where": "Figma · Outline, estado Focus",
+      "figma": "borda muda para color/ring",
+      "code": "borda continua color/input",
+      "status": "aberta"
+    }
+  ]
+}
