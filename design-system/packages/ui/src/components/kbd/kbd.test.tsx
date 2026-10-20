@@ -35,6 +35,16 @@ describe("Kbd (PRIZM / shadcn)", () => {
     expect(kbd).toHaveClass("bg-muted", "text-muted-foreground", "rounded-sm");
   });
 
+  it("herda a cor do pai dentro de button e tooltip", () => {
+    render(<Kbd>K</Kbd>);
+    expect(screen.getByText("K")).toHaveClass(
+      "[[data-slot=button]_&]:bg-current/20",
+      "[[data-slot=button]_&]:text-current",
+      "[[data-slot=tooltip-content]_&]:bg-current/20",
+      "[[data-slot=tooltip-content]_&]:text-current",
+    );
+  });
+
   it("aplica className no modo single key", () => {
     render(
       <Kbd className="custom-kbd" data-testid="single">
