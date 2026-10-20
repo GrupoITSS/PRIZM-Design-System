@@ -76,18 +76,5 @@
     "icon": { "height": "control-height/md", "width": "control-height/md", "radius": "radius/md" },
     "icon-lg": { "height": "control-height/lg", "width": "control-height/lg", "radius": "radius/md" }
   },
-  "divergences": [
-    {
-      "where": "Figma · Destructive e Text, estado Focus",
-      "figma": "anel em base/destructive (nome fora do padrão do Core, sobra do kit)",
-      "code": "anel em color/ring, como as outras variantes",
-      "status": "aberta"
-    },
-    {
-      "where": "Figma · Outline, estado Focus",
-      "figma": "borda muda para color/ring",
-      "code": "borda continua color/input",
-      "status": "aberta"
-    }
-  ]
+  "divergences": []
 }
