@@ -142,6 +142,7 @@ function ComboboxTrigger({ className, children, ...props }: ComboboxPrimitive.Tr
 function ComboboxClear({ className, ...props }: ComboboxPrimitive.Clear.Props) {
   return (
     <ComboboxPrimitive.Clear
+      aria-label="Limpar"
       data-slot="combobox-clear"
       className={cn(className)}
       {...props}
@@ -173,6 +174,7 @@ function ComboboxInput({
           <ComboboxPrimitive.Trigger
             render={
               <InputGroupButton
+                aria-label="Abrir opções"
                 size="icon-xs"
                 variant="ghost"
                 data-slot="input-group-button"
@@ -329,6 +331,7 @@ function ComboboxChip({
       {children}
       {showRemove && (
         <ComboboxPrimitive.ChipRemove
+          aria-label="Remover"
           className="-ml-1 opacity-50 hover:opacity-100"
           data-slot="combobox-chip-remove"
           render={
