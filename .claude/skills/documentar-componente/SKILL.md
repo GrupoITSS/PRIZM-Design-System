@@ -106,6 +106,8 @@ Cada uma custou horas no piloto. Leia antes da etapa 2.
 
 **Opacidade de paint ligado a variável não grava de forma confiável pelo plugin.** `setBoundVariableForPaint` zera a opacidade, e `{...paint, opacity: 0.8}` lê 0.8 na sessão mas não chega ao arquivo. O que grava, com **um** fill: o paint como objeto literal com `boundVariables` explícito: `{type:'SOLID', visible:true, opacity:0.8, blendMode:'NORMAL', color:{r,g,b}, boundVariables:{color:{type:'VARIABLE_ALIAS', id}}}`. Mesmo assim falha às vezes (21 de 22 hovers gravaram na primeira). Com **dois** fills, o segundo vira 100%: nunca tente. Para sobreposição use uma camada à parte com **opacidade de camada** (`node.opacity`), que grava sempre (a "Hover overlay" do Secondary), ou faça à mão no Figma: copiar as linhas de Fill de uma variante certa (Cmd+C no painel) e colar nas outras; Paste properties leva padding e layout junto.
 
+**No paint literal, o render do servidor usa o `color` do paint, não a variável.** Um paint criado com `color:{r:0,g:0,b:0}` e `boundVariables` lê certo no plugin, mas o `get_screenshot` mostra preto: no Input, a borda de erro saiu preta. Grave sempre a cor resolvida: `const r = variable.resolveForConsumer(node).value` e `color:{r:r.r, g:r.g, b:r.b}`. O alfa da variável também é ignorado: `color/transparent` com `opacity: 1` sai branco. Para borda transparente, use `opacity: 0` no paint. O `rebind-core.js` já grava a cor resolvida.
+
 **Confira sempre pelo `get_screenshot`, lendo pixels, nunca pelo `node.screenshot()` do plugin.** O plugin mostra o estado da sessão, não o do arquivo. Override em instância aninhada (id `I…;…`) aparece certo nas leituras e no `node.screenshot()`, e não existe no arquivo. Depois de cada gravação de cor ou opacidade, exporte a variante com `get_screenshot`, baixe o PNG e leia o pixel com `python3 -I scripts/px.py arquivo.png x y`. Override aninhado que não grava: corrigir à mão no Figma.
 
 **Depois de publicar o Core, as ligações ficam presas à versão antiga.** "Aceitar atualização da biblioteca" não move nada: a variável remota tem id `VariableID:<key>/<versão>` e os nós continuam na cópia antiga, com o valor velho no render (o mesmo vale para modos explícitos de coleção). Rode `scripts/upgrade-core.js` passando em `__ONLY__` **só as variáveis cujo valor mudou**: a variável da coleção Theme (`palette/…`) e a da coleção Mode que aponta para ela (`color/…`). Religar tudo regrava todos os paints e perde as opacidades que custaram para gravar. O script deixa de fora nós com dois fills e instâncias aninhadas e os lista em `manual`. Os arquivos que consomem o Core são o `[PRIZM] Componentes` (só as páginas já religadas) e o Workshop (`mT2EFkoROfOi5ohgYlckp5`); rode uma página por chamada, em paralelo.
@@ -125,10 +127,12 @@ Cada uma custou horas no piloto. Leia antes da etapa 2.
 Outras, menores:
 
 - `packages/tokens/dist/` é ignorado pelo git: o `dist` do checkout pode ser de outro dia. Gere de `origin/main` antes de medir contraste.
-- `pnpm install` falha com outra versão de pnpm que não a do `packageManager` (ver `references/codigo.md`).
+- `pnpm install` falha com outra versão de pnpm que não a do `packageManager` (ver `references/codigo.md`). O pnpm 12 pelo corepack também falha ("Cannot find module …/bin/pnpm.cjs"); `npx -y pnpm@<versão>` funciona.
 - Rótulos do component set com constraint SCALE esticam quando o pai é redimensionado: use `resizeWithoutConstraints`.
 - Variante com proporção travada aceita só uma ligação entre width e height: `unlockAspectRatio()` antes.
-- `clone()` de variante cai na página, não no set: `set.appendChild(clone)`.
+- `clone()` de variante cai na página, não no set: `set.appendChild(clone)`. O clone também perde as `componentPropertyReferences` (texto, booleana, troca de instância): religue nos clones. Ao religar texto, não ligue os textos que não estavam ligados (no Input, o "No file chosen" do File virou "Placeholder").
+- Ligar o `mainComponent` de uma instância a uma propriedade INSTANCE_SWAP desfaz o override de cor do ícone. Recolora depois de ligar.
+- `set.description` grava o `&` de uma URL como `&amp;`, e o link quebra. Use `set.descriptionMarkdown` com `[texto](url)` (ver `references/figma.md`, etapa 8).
 - Contraste com token de alfa (`input-background` no escuro) exige misturar contra o fundo; o `contraste.mjs` já faz.
 - `get_screenshot` exporta em 1x; `maxDimension` não amplia.
 - Upload de imagem no CMS responde com `url` em localhost (bug): use o `file:<id>`.

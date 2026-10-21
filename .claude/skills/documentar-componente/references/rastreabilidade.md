@@ -27,7 +27,12 @@ Campos, na ordem do modelo:
 | `sizes` | Por tamanho: `height`, `width` (nos quadrados), `paddingX`, `gap`, `radius`, `fontSize` |
 | `divergences` | Lista de `{ where, figma, code, status: "aberta" }` para cada diferença Figma × código |
 
-Nomes de token no formato do Figma (`color/primary`, `control-height/md`). Componente sem variantes de cor (ex.: Input) usa só as chaves que fazem sentido; não invente variante.
+Nomes de token no formato do Figma (`color/primary`, `control-height/md`). Componente sem variantes de cor (ex.: Input) usa só as chaves que fazem sentido; não invente variante. O modelo desse caso é o `input.tokens.json` (PR #104):
+- `states`: `default`, `focus`, `error`, `errorFocus` e `disabled`, cada um com fundo, texto, borda e anel.
+- `parts`: as peças internas, como ícone inicial, botão de senha e botão do File.
+- `sizes`: com `paddingY`.
+
+O teste confere também o peso e o padding (`file:font-normal`, `px-3`, `py-2`).
 
 Opacidade de hover **não sai da leitura do plugin**: ela lê 100% em hovers que o render mostra a 80%. Use a regra de hover conferida pelo render (`get_screenshot` + `px.py`), e escreva a opacidade da regra.
 

@@ -83,8 +83,11 @@ Só com o ok de quem decide e depois do artigo existir no CMS. Link do artigo no
 
 ```js
 const set = await figma.getNodeByIdAsync('<id do set>');
-set.description = '<uma frase do que faz>. Doc: <link do artigo>';
+// descriptionMarkdown, não description: a description grava o & da URL como &amp; e o link quebra
+set.descriptionMarkdown = '<uma frase do que faz>.\n\nCódigo: @grupoitss/prizm-ui/<nome> — <props principais>.\n\nDoc: [artigo <Componente> no CMS](<link do artigo>)';
 set.documentationLinks = [{ uri: '<link do artigo no CMS>' }]; // aceita um link só
 ```
+
+Confira lendo `set.descriptionMarkdown` de volta: o link tem de sair com `&version=v1`, sem `&amp;`. No cabeçalho do frame de doc, troque o link "Artigo no CMS · em breve" pelo do artigo (`hyperlink` do texto).
 
 Se o set apontava para o shadcn, o shadcn passa a ficar só na seção Rastreabilidade do artigo. Dev resources (links no Dev Mode) não se criam pelo plugin.
