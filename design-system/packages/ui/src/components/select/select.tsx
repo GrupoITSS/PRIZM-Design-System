@@ -20,8 +20,7 @@ import type { SelectProps } from "./select.types";
 const SELECT_SKELETON_HEIGHT: Record<NonNullable<SelectTriggerVariantProps["size"]>, string> = {
   sm: "h-control-height-sm",
   md: "h-control-height-md",
-  default: "h-control-height-lg",
-  lg: "h-12",
+  lg: "h-control-height-lg",
 };
 
 function SelectLoadingSkeleton({

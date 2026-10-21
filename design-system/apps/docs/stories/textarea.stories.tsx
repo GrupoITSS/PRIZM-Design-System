@@ -25,13 +25,13 @@ const meta: Meta<typeof Textarea> = {
   },
   args: {
     placeholder: "Digite sua mensagem...",
-    size: "default",
+    size: "md",
     disabled: false,
   },
   argTypes: {
     size: {
       control: "select",
-      options: ["sm", "default", "lg"],
+      options: ["sm", "md", "lg"],
     },
     disabled: {
       control: "boolean",
@@ -60,7 +60,7 @@ export const Sizes: Story = {
   render: (args) => (
     <div className="flex flex-col gap-3">
       <Textarea {...args} size="sm" placeholder="Pequeno (sm)" />
-      <Textarea {...args} size="default" placeholder="Padrão (default)" />
+      <Textarea {...args} size="md" placeholder="Padrão (md)" />
       <Textarea {...args} size="lg" placeholder="Grande (lg)" />
     </div>
   ),

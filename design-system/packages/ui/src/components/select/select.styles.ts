@@ -4,19 +4,21 @@ import { cva, type VariantProps } from "class-variance-authority";
  * PRIZM Select — estilos base usando tokens de `@grupoitss/prizm-tokens`.
  * Compatível com tema claro/escuro via variáveis CSS.
  *
+ * Tamanhos, foco e disabled iguais aos do Input (decisões de 21/10/2026): sm, md e lg em
+ * `control-height`; anel de 2px em `ring` com a borda transparente; disabled em `bg-muted`.
+ *
  * Baseado no componente Select do shadcn/ui (Radix).
  */
 const selectTriggerBase =
-  "flex w-full items-center gap-2 justify-between rounded-md border border-input bg-input-background px-3 py-2 text-left text-sm font-normal text-foreground ring-offset-background data-[placeholder]:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:min-w-0 [&>span]:flex-1 [&>span]:truncate [&>span]:text-left data-[state=open]:ring-[3px] data-[state=open]:ring-ring/50";
+  "flex w-full items-center gap-2 justify-between rounded-md border border-input bg-input-background px-3 py-2 text-left font-normal text-foreground shadow-xs ring-offset-background data-[placeholder]:text-muted-foreground hover:bg-input-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-transparent data-[state=open]:bg-input-background data-[state=open]:shadow-xs data-[state=open]:ring-[3px] data-[state=open]:ring-ring/50 disabled:cursor-not-allowed disabled:border-transparent disabled:shadow-none disabled:bg-muted disabled:text-muted-foreground [&>span]:min-w-0 [&>span]:flex-1 [&>span]:truncate [&>span]:text-left";
 
 export const selectTriggerVariants = cva(selectTriggerBase, {
   variants: {
     size: {
-      sm: "h-control-height-sm text-xs hover:bg-accent",
-      /** Altura intermediária (h-control-height-md) — sheets/forms do Cockpit (PAS-2115 / PAS-2346). */
-      md: "h-control-height-md text-sm border-input bg-input-background text-foreground font-normal data-[placeholder]:text-muted-foreground shadow-xs hover:bg-input-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-transparent data-[state=open]:bg-input-background data-[state=open]:shadow-xs disabled:border-transparent disabled:shadow-none disabled:bg-muted disabled:text-foreground disabled:opacity-100",
-      default: "h-control-height-lg text-base md:text-sm hover:bg-accent",
-      lg: "h-12 text-base hover:bg-accent",
+      sm: "h-control-height-sm text-xs",
+      /** Cockpit sheets/forms (PAS-2115 / PAS-2346). */
+      md: "h-control-height-md text-sm",
+      lg: "h-control-height-lg text-base md:text-sm",
     },
   },
   defaultVariants: {

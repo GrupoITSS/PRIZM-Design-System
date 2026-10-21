@@ -7,8 +7,7 @@ export const INPUT_GROUP_BASE_CLASSES =
   "transition-[color,box-shadow,border-color,background-color] " +
   // Altura padrão alinhada ao Input sm (textarea força altura automática)
   "h-control-height-sm has-[>textarea]:h-auto " +
-  "has-[[data-size=default]]:h-control-height-lg has-[[data-size=lg]]:h-12 " +
-  "has-[[data-size=sm]]:h-control-height-sm has-[[data-size=md]]:h-control-height-md " +
+  "has-[[data-size=sm]]:h-control-height-sm has-[[data-size=md]]:h-control-height-md has-[[data-size=lg]]:h-control-height-lg " +
   // Espaçamento interno quando há addons inline
   "has-[>[data-align=inline-start]]:[&>input]:pl-2 " +
   "has-[>[data-align=inline-end]]:[&>input]:pr-2 " +

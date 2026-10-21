@@ -7,7 +7,7 @@ type NativeTextareaProps = Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement
  * Props do componente Textarea do design system PRIZM.
  *
  * Extende os atributos nativos de `<textarea />`, adicionando as variantes
- * tipadas em `textarea.styles.ts` (`"sm" | "default" | "lg"`), além da prop
+ * tipadas em `textarea.styles.ts` (`"sm" | "md" | "lg"`), além da prop
  * controlada pelo design system para resize.
  */
 export interface TextareaProps extends NativeTextareaProps, TextareaVariantProps {
