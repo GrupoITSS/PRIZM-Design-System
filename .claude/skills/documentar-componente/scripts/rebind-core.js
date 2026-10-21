@@ -25,7 +25,12 @@ const localById = {};
 for (const v of await figma.variables.getLocalVariablesAsync()) localById[v.id] = v;
 // null = não é variável local (ignorar); undefined = local sem mapa (reportar)
 const target = async id => { const lv = localById[id]; if (!lv) return null; const c = MAP[lv.name]; return c && keys[c] ? core(c) : undefined; };
-const literal = (p, v, op) => ({ type: 'SOLID', visible: p.visible !== false, opacity: op ?? p.opacity ?? 1, blendMode: p.blendMode || 'NORMAL', color: p.color, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: v.id } } });
+// O render do servidor usa o `color` do paint, não a variável: grava a cor resolvida no nó.
+// O alfa da variável também é ignorado; variável translúcida (ex.: color/transparent) vira opacidade do paint.
+const literal = (p, v, op, n) => {
+  const r = v.resolveForConsumer(n).value;
+  return { type: 'SOLID', visible: p.visible !== false, opacity: op ?? (r.a < 1 ? r.a : p.opacity ?? 1), blendMode: p.blendMode || 'NORMAL', color: { r: r.r, g: r.g, b: r.b }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: v.id } } };
+};
 const stats = { nodeBind: 0, paintBind: 0, textDetached: 0, unmapped: {}, manual: [], errors: [] };
 for (const rid of ROOTS) {
   const rootNode = await figma.getNodeByIdAsync(rid);
@@ -57,7 +62,7 @@ for (const rid of ROOTS) {
         }
         if (!alvos.some(Boolean)) continue;
         if (n[key].length > 1 || n.id.startsWith('I')) { stats.manual.push(`${n.id} ${n.name} (${key})`); continue; }
-        if (!DRY) n[key] = n[key].map((p, i) => (alvos[i] ? literal(p, alvos[i].v, alvos[i].op) : p));
+        if (!DRY) n[key] = n[key].map((p, i) => (alvos[i] ? literal(p, alvos[i].v, alvos[i].op, n) : p));
         stats.paintBind++;
       }
     } catch (e) { stats.errors.push(n.id + ' ' + n.name + ': ' + e.message); }

@@ -18,7 +18,7 @@ git worktree add ../PRIZM-wt-<nome>-<assunto> -b feat/<nome>-<assunto> origin/ma
 cd ../PRIZM-wt-<nome>-<assunto>/design-system && pnpm install --frozen-lockfile
 ```
 
-O repositório fixa o pnpm no `packageManager` do `design-system/package.json`. Com outra versão, o install falha ("Failed to switch pnpm" ou "lockfile is broken"). Instale a versão pedida (`corepack enable` e `corepack prepare pnpm@<versão> --activate`). Se não der, para só compilar e testar os tokens dá para apontar `packages/tokens/node_modules` para o de outro checkout já instalado (link simbólico) e rodar `node build.mjs` e `node --test build.test.mjs` direto; apague o link antes do commit.
+O repositório fixa o pnpm no `packageManager` do `design-system/package.json`. Com outra versão, o install falha ("Failed to switch pnpm" ou "lockfile is broken"). Instale a versão pedida (`corepack enable` e `corepack prepare pnpm@<versão> --activate`). Com o pnpm 12, o corepack falha ("Cannot find module …/bin/pnpm.cjs", porque o pacote traz um binário nativo); use `npx -y pnpm@<versão> install --frozen-lockfile` e `npx -y pnpm@<versão> --filter … test` no lugar de `pnpm`. Se não der, para só compilar e testar os tokens dá para apontar `packages/tokens/node_modules` para o de outro checkout já instalado (link simbólico) e rodar `node build.mjs` e `node --test build.test.mjs` direto; apague o link antes do commit.
 
 Ao terminar, depois do merge, apague o worktree e a branch (`git worktree remove`, `git branch -D`).
 
