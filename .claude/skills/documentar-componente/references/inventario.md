@@ -59,6 +59,32 @@ Os números de uso contam só o repositório do DS. Valor do código "sem uso li
 
 A paridade compara nomes normalizados (minúsculas, sem o `#id` do Figma). O estado do Figma (`State`) é comparado com as classes de estado do CSS: `Hover` com `hover:`, `Focus` com `focus-visible:`, `Pressed` com `active:`, `Disabled` com `disabled:`, `Loading` com `aria-busy`. Propriedades booleanas, de texto e de troca de instância do Figma saem como "conferir à mão": compare com as props pelo papel, não pelo nome (no Figma, "Show Icon"; no código, `startIcon`).
 
+## Família
+
+O inventário de um componente sozinho não mostra quando ele diverge dos irmãos. Antes de fechar a etapa, liste as stories do Storybook publicado:
+
+```bash
+curl -sfL https://grupoitss.github.io/PRIZM-Design-System/index.json | jq -r '.entries[] | .title' | sort -u
+```
+
+Escolha os componentes que dividem o papel com o que está sendo documentado e rode o `inventario-uso.mjs` para cada um, sem `--figma`.
+
+| Família | Componentes |
+| --- | --- |
+| Campo | Input, InputGroup, Select, Textarea, DatePicker, MaskedInput, InputOTP, Combobox, Field |
+| Ação | Button, ButtonGroup, Toggle, ToggleGroup |
+| Camada | Dialog, AlertDialog, Sheet, Drawer, Popover |
+
+Compare, numa tabela por componente:
+
+- **Escala de tamanhos:** os nomes (`default` × `md`) e a altura de cada um (`control-height` ou valor fixo, como `h-12`).
+- **Regras de foco, disabled e erro:** se estão na base ou só num tamanho, e com qual anel.
+- **Props de papel comum:** rótulo, obrigatório, loading, ícone. O Select tem `label` e `required` por prop; o Input depende do Field.
+- **Componente que depende do tamanho de outro:** o contêiner do InputGroup lê o `data-size` do Input interno.
+- **Componente citado em story ou JSDoc que não existe no pacote:** a story do Field recomenda um `TextField` que não existe.
+
+As diferenças entram no resumo da etapa como mais uma pergunta para o dono do DS: a decisão vale só para este componente ou para a família? Se vale para a família, entra no mesmo PR ou num PR seguinte já combinado, não fica só registrada.
+
 ## Fechar a etapa
 
 Mostre a quem pediu, em poucas linhas:
@@ -70,5 +96,6 @@ Mostre a quem pediu, em poucas linhas:
    - **No Figma e fora do código:** é uma decisão de design ainda não implementada (vai para o código, etapa 5) ou sobra do kit shadcn (sai do Figma)?
    - **Nome diferente** (mesmo papel): qual nome fica? Se for o do Figma, o código migra.
 4. Controles do Storybook incompletos: corrigir a story entra na etapa 7, junto com os links.
+5. O que diverge na família (seção Família): a decisão vale só para este componente ou para todos?
 
 **⏸ O dono do DS decide.** A documentação segue o Figma com as decisões; o inventário entra como checagem de que nada em uso ficou sem destino.
