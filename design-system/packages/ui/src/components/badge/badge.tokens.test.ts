@@ -7,15 +7,17 @@ import map from "./badge.tokens.json";
 const color = (token: string) => token.replace(/^color\//, "");
 const step = (token: string) => token.split("/")[1].replace("-", ".");
 
-const classesOf = (variant: string, shape = "default") =>
-  badgeVariants({ variant: variant as never, shape: shape as never }).split(" ");
+const classesOf = (variant: string, shape = "default", size = "sm") =>
+  badgeVariants({ variant: variant as never, shape: shape as never, size: size as never }).split(
+    " ",
+  );
 
 describe("Badge × mapa de tokens (badge.tokens.json)", () => {
   it("cobre todas as variantes, tamanhos e formas do código", () => {
     expect(Object.keys(map.variants).sort()).toEqual(
-      ["default", "secondary", "outline", "destructive", "success", "verified"].sort(),
+      ["default", "secondary", "outline", "destructive", "success", "verified", "warning"].sort(),
     );
-    expect(Object.keys(map.sizes)).toEqual(["default"]);
+    expect(Object.keys(map.sizes)).toEqual(["sm", "md", "lg"]);
     expect(Object.keys(map.shapes)).toEqual(["number"]);
   });
 
@@ -41,17 +43,19 @@ describe("Badge × mapa de tokens (badge.tokens.json)", () => {
     });
   }
 
-  it("tamanho default: altura, padding, gap, raio e texto do mapa estão nas classes", () => {
-    const classes = classesOf("default");
-    const s = map.sizes.default;
-    expect(classes).toContain(`h-${step(s.height)}`);
-    expect(classes).toContain(`px-${step(s.paddingX)}`);
-    expect(classes).toContain(`py-${step(s.paddingY)}`);
-    expect(classes).toContain(`gap-${step(s.gap)}`);
-    expect(classes).toContain(`rounded-${step(s.radius)}`);
-    expect(classes).toContain(`text-${step(s.fontSize)}`);
-    expect(classes).toContain(`font-${step(s.fontWeight)}`);
-  });
+  for (const [size, s] of Object.entries(map.sizes)) {
+    it(`${size}: altura, padding, gap, ícone, raio e texto do mapa estão nas classes`, () => {
+      const classes = classesOf("default", "default", size);
+      expect(classes).toContain(`h-${step(s.height)}`);
+      expect(classes).toContain(`px-${step(s.paddingX)}`);
+      expect(classes).toContain(`py-${step(s.paddingY)}`);
+      expect(classes).toContain(`gap-${step(s.gap)}`);
+      expect(classes.some((c) => c.endsWith(`]:size-${step(s.icon)}`))).toBe(true);
+      expect(classes).toContain(`rounded-${step(s.radius)}`);
+      expect(classes).toContain(`text-${step(s.fontSize)}`);
+      expect(classes).toContain(`font-${step(s.fontWeight)}`);
+    });
+  }
 
   it("forma number: largura mínima, padding e raio do mapa estão nas classes", () => {
     const classes = classesOf("default", "number");

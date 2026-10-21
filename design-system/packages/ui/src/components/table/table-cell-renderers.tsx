@@ -16,26 +16,7 @@ import {
 import { formatTableText, resolveLinkTemplate, toSide } from "./table-cell-renderers.utils";
 import { toText } from "../../lib/to-text";
 
-/**
- * The Badge has only the Figma variants (default, secondary, outline, destructive, verified,
- * success), so the warning chip of the table takes its colors from the tokens via `className`.
- */
-type StatusTone = "secondary" | "destructive" | "success" | "warning";
-
-const STATUS_TONE_BADGE: Record<
-  StatusTone,
-  { variant: "default" | "secondary" | "destructive" | "success"; className?: string }
-> = {
-  secondary: { variant: "secondary" },
-  destructive: { variant: "destructive" },
-  success: { variant: "success" },
-  warning: {
-    variant: "default",
-    className: "bg-warning text-warning-foreground hover:bg-warning/80",
-  },
-};
-
-const STATUS_VARIANT: Record<string, StatusTone> = {
+const STATUS_VARIANT: Record<string, React.ComponentProps<typeof Badge>["variant"]> = {
   PENDING: "secondary",
   IN_PROGRESS: "warning",
   WAITING: "secondary",
@@ -46,11 +27,6 @@ const STATUS_VARIANT: Record<string, StatusTone> = {
   ACTIVE: "success",
   INACTIVE: "secondary",
 };
-
-function statusBadgeProps(tone: StatusTone, className?: string) {
-  const { variant, className: toneClassName } = STATUS_TONE_BADGE[tone];
-  return { variant, className: cn(toneClassName, className) };
-}
 
 /** Fallback labels when apps do not pass `statusLabels` on DataTable (English). */
 const DEFAULT_PROCESSING_STATUS_LABELS: Record<string, string> = {
@@ -80,7 +56,9 @@ function resolveStatusLabel(
   return merged[key] ?? rawStatus;
 }
 
-function resolveStatusTone(rawStatus: string | undefined): StatusTone {
+function resolveStatusBadgeVariant(
+  rawStatus: string | undefined,
+): React.ComponentProps<typeof Badge>["variant"] {
   const key = normalizeStatusKey(rawStatus);
   return STATUS_VARIANT[key] ?? "secondary";
 }
@@ -107,8 +85,12 @@ function StatusCell({
     statusLabels?.[key] ??
     DEFAULT_PROCESSING_STATUS_LABELS[key] ??
     String(status);
-  const tone = resolveStatusTone(String(status));
-  return <Badge {...statusBadgeProps(tone)}>{label}</Badge>;
+  const variant = resolveStatusBadgeVariant(String(status));
+  return (
+    <Badge variant={variant} size="sm">
+      {label}
+    </Badge>
+  );
 }
 
 function TextCell({
@@ -229,6 +211,7 @@ function toBadgeTags(value: unknown): Tag[] {
 
 const NEUTRAL_BADGE = {
   variant: "outline",
+  size: "sm",
 } as const;
 
 function stopRowClick(event: React.SyntheticEvent) {
@@ -303,7 +286,9 @@ function BadgeCell({ tags, maxVisible = 2 }: { tags: unknown; maxVisible?: numbe
   );
 }
 
-function deriveStatusSummaryTone(items: Array<{ status?: string }>): StatusTone {
+function deriveStatusSummaryBadgeVariant(
+  items: Array<{ status?: string }>,
+): React.ComponentProps<typeof Badge>["variant"] {
   if (items.length === 0) return "success";
   const normalized = items.map((i) => (i.status ?? "").toUpperCase());
   const all = (s: string) => normalized.every((x) => x === s);
@@ -332,7 +317,7 @@ function StatusSummaryWithPopoverCell({
   };
 }) {
   const statusItems = value.statusItems ?? [];
-  const summaryTone = deriveStatusSummaryTone(statusItems);
+  const summaryVariant = deriveStatusSummaryBadgeVariant(statusItems);
   const headers = columnHeaders ?? {
     type: "Type",
     item: "Item",
@@ -364,7 +349,9 @@ function StatusSummaryWithPopoverCell({
               </span>
               <div className="flex min-w-0 items-center justify-start">
                 <Badge
-                  {...statusBadgeProps(resolveStatusTone(item.status), "max-w-full truncate")}
+                  variant={resolveStatusBadgeVariant(item.status)}
+                  size="sm"
+                  className="max-w-full truncate"
                   title={resolveStatusLabel(item.status, statusLabels)}
                 >
                   {resolveStatusLabel(item.status, statusLabels)}
@@ -389,7 +376,9 @@ function StatusSummaryWithPopoverCell({
             className="inline-flex max-w-full cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             aria-haspopup="dialog"
           >
-            <Badge {...statusBadgeProps(summaryTone, "max-w-full truncate")}>{value.summary}</Badge>
+            <Badge variant={summaryVariant} size="sm" className="max-w-full truncate">
+              {value.summary}
+            </Badge>
           </button>
         }
         content={content}

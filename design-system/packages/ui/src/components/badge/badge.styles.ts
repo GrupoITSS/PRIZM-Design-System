@@ -4,9 +4,9 @@ import { cva, type VariantProps } from "class-variance-authority";
  * PRIZM Badge — styles use the @grupoitss/prizm-tokens colors (`bg-primary`).
  *
  * The variants are the ones in the Figma component (`[PRIZM] Componentes`, Badge): `default`,
- * `secondary`, `outline`, `destructive`, `verified` and `success`. `outline` follows the Figma Button outline
- * (`input-background`, `input` border, `shadow-xs`, hover on `accent`). Other colors come from
- * `className`, as in shadcn's "Custom Colors" (e.g. `bg-success text-success-foreground`).
+ * `secondary`, `outline`, `destructive`, `verified`, `success` and `warning`. `outline` follows the
+ * Figma Button outline (`input-background`, `input` border, `shadow-xs`, hover on `accent`). Other
+ * colors come from `className`, as in shadcn's "Custom Colors" (e.g. `bg-info-weak text-info-strong`).
  *
  * @see https://ui.shadcn.com/docs/components/radix/badge
  */
@@ -33,10 +33,13 @@ export const badgeVariants = cva(
         // Figma "Verified": the info tone (`color/info`), used with a check icon.
         verified: "border-transparent bg-info text-info-foreground hover:bg-info/80",
         success: "border-transparent bg-success text-success-foreground hover:bg-success/80",
+        warning: "border-transparent bg-warning text-warning-foreground hover:bg-warning/80",
       },
-      // The Figma component has a single size for now (20px high, from padding + line).
+      // Same sizes in Figma (Size = sm, md, lg): height/5, height/6 and height/7.
       size: {
-        default: "h-5 gap-1 text-xs [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-5 gap-1 text-xs [&_svg:not([class*='size-'])]:size-3",
+        md: "h-6 gap-1.5 text-xs [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-7 gap-2 text-sm [&_svg:not([class*='size-'])]:size-4",
       },
       // `number` is the Figma "Badge Number": a round counter (min 20px wide) for digits.
       shape: {
@@ -46,7 +49,7 @@ export const badgeVariants = cva(
     },
     defaultVariants: {
       variant: "default",
-      size: "default",
+      size: "sm",
       shape: "default",
     },
   },

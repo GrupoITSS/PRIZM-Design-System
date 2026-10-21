@@ -51,6 +51,32 @@ describe("Badge (PRIZM / Figma)", () => {
     );
   });
 
+  it("warning usa bg-warning e o texto warning-foreground", () => {
+    render(<Badge variant="warning">Warning</Badge>);
+    expect(screen.getByText("Warning")).toHaveClass(
+      "bg-warning",
+      "text-warning-foreground",
+      "hover:bg-warning/80",
+    );
+  });
+
+  it("tamanhos sm (padrão), md e lg, como no Figma", () => {
+    const { rerender } = render(<Badge variant="default">Tamanho</Badge>);
+    expect(screen.getByText("Tamanho")).toHaveClass("h-5", "gap-1", "text-xs");
+    rerender(
+      <Badge variant="default" size="md">
+        Tamanho
+      </Badge>,
+    );
+    expect(screen.getByText("Tamanho")).toHaveClass("h-6", "gap-1.5", "text-xs");
+    rerender(
+      <Badge variant="default" size="lg">
+        Tamanho
+      </Badge>,
+    );
+    expect(screen.getByText("Tamanho")).toHaveClass("h-7", "gap-2", "text-sm");
+  });
+
   it("segue o Figma: raio md, peso semibold, padding de 8px e 20px de altura", () => {
     render(<Badge variant="default">Figma</Badge>);
     expect(screen.getByText("Figma")).toHaveClass(
@@ -76,12 +102,12 @@ describe("Badge (PRIZM / Figma)", () => {
 
   it("cores fora do Figma entram por className", () => {
     render(
-      <Badge variant="default" className="bg-warning text-warning-foreground">
+      <Badge variant="default" className="bg-info-weak text-info-strong">
         Custom
       </Badge>,
     );
     const badge = screen.getByText("Custom");
-    expect(badge).toHaveClass("bg-warning", "text-warning-foreground");
+    expect(badge).toHaveClass("bg-info-weak", "text-info-strong");
     expect(badge).not.toHaveClass("bg-primary");
   });
 

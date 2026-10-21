@@ -1,6 +1,6 @@
 {
   "component": "Badge",
-  "description": "Mapa de tokens do Badge: o que cada variante e cada forma usa do [PRIZM] Design Tokens_Core. Extraído das ligações dos component sets Badge e Badge Number no Figma em 21/10/2026 e conferido contra badge.styles.ts pelo teste badge.tokens.test.ts. Nomes no formato do Figma (color/primary); no código viram classes Tailwind (bg-primary).",
+  "description": "Mapa de tokens do Badge: o que cada variante, tamanho e forma usa do [PRIZM] Design Tokens_Core. Extraído das ligações dos component sets Badge e Badge Number no Figma em 21/10/2026 e conferido contra badge.styles.ts pelo teste badge.tokens.test.ts. Nomes no formato do Figma (color/primary); no código viram classes Tailwind (bg-primary).",
   "sources": {
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26-169",
     "figmaComponentNumber": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=17100-10130",
@@ -73,6 +73,16 @@
         "background": "color/info",
         "opacity": 0.8
       }
+    },
+    "warning": {
+      "background": "color/warning",
+      "text": "color/warning-foreground",
+      "border": null,
+      "hover": {
+        "rule": "cor de tom a 80%",
+        "background": "color/warning",
+        "opacity": 0.8
+      }
     }
   },
   "states": {
@@ -83,17 +93,41 @@
       "ringOffsetSpread": 2,
       "code": null
     },
-    "loading": { "opacity": 0.8, "attribute": "aria-busy" }
+    "loading": {
+      "opacity": 0.8,
+      "attribute": "aria-busy"
+    }
   },
   "sizes": {
-    "default": {
+    "sm": {
       "height": "height/5",
       "paddingX": "spacing/2",
       "paddingY": "spacing/0-5",
-      "gap": "spacing/1",
       "radius": "radius/md",
-      "fontSize": "text/xs",
-      "fontWeight": "font-weight/semibold"
+      "fontWeight": "font-weight/semibold",
+      "gap": "spacing/1",
+      "icon": "height/3",
+      "fontSize": "text/xs"
+    },
+    "md": {
+      "height": "height/6",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/0-5",
+      "radius": "radius/md",
+      "fontWeight": "font-weight/semibold",
+      "gap": "spacing/1-5",
+      "icon": "height/3-5",
+      "fontSize": "text/xs"
+    },
+    "lg": {
+      "height": "height/7",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/0-5",
+      "radius": "radius/md",
+      "fontWeight": "font-weight/semibold",
+      "gap": "spacing/2",
+      "icon": "height/4",
+      "fontSize": "text/sm"
     }
   },
   "shapes": {
@@ -105,12 +139,6 @@
     }
   },
   "divergences": [
-    {
-      "where": "Altura do Badge",
-      "figma": "sem token: 2px de padding + 16px de linha + 2px (20px); só o Badge Number liga height/5",
-      "code": "h-5",
-      "status": "aberta"
-    },
     {
       "where": "State = Focus",
       "figma": "anel do Button: color/ring (spread 5) sobre color/ring-offset (spread 2)",
@@ -133,6 +161,12 @@
       "where": "Cor dos ícones aninhados",
       "figma": "base/primary-foreground, base/secondary-foreground, base/foreground, base/destructive-foreground e tailwind colors/base/white, sobras do kit",
       "code": "o ícone herda a cor do texto (currentColor)",
+      "status": "aberta"
+    },
+    {
+      "where": "Badge Number · tamanhos",
+      "figma": "só Size = sm",
+      "code": "shape=\"number\" aceita sm, md e lg",
       "status": "aberta"
     }
   ]
