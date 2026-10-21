@@ -1,6 +1,6 @@
 ---
 name: documentar-componente
-description: Documenta um componente do design system Prizm (Grupo ITSS) de ponta a ponta, no processo do piloto do Button (19–20/10/2026) — lê código e Figma, confere a ligação ao [PRIZM] Design Tokens_Core, monta o frame de documentação no Figma, aplica o checklist de acessibilidade WCAG 2.2 AA com contraste medido nos tokens, abre PR com as correções aprovadas, escreve o artigo no CMS (prizm_design_system) como rascunho e liga as pontas (mapa de tokens em arquivo com teste, links na story, seção Rastreabilidade no artigo, link no Figma). Use SEMPRE que o usuário pedir "documentar o componente X", "doc do X", "doc do X no CMS", "montar a página do X", "página de documentação do X no Figma", "artigo do X", "fazer o X como fizemos o Button", "levar o X pelo mesmo fluxo do Button", "auditar a acessibilidade do X", "mapa de tokens do X", "rastreabilidade do X" ou variação sobre documentar, religar ao Core ou publicar a doc de um componente do Prizm (Input, Badge, Select, Dialog…), mesmo citando só uma etapa.
+description: Documenta um componente do design system Prizm (Grupo ITSS) de ponta a ponta, no processo do piloto do Button (19–20/10/2026) — lê código e Figma, levanta pelo repositório e pelo Storybook as variantes, tamanhos e estados que o time usa hoje (vindos do @pas/ui) e a paridade com o Figma, confere a ligação ao [PRIZM] Design Tokens_Core, monta o frame de documentação no Figma, aplica o checklist de acessibilidade WCAG 2.2 AA com contraste medido nos tokens, abre PR com as correções aprovadas, escreve o artigo no CMS (prizm_design_system) como rascunho e liga as pontas (mapa de tokens em arquivo com teste, links na story, seção Rastreabilidade no artigo, link no Figma). Use SEMPRE que o usuário pedir "documentar o componente X", "doc do X", "doc do X no CMS", "montar a página do X", "página de documentação do X no Figma", "artigo do X", "fazer o X como fizemos o Button", "levar o X pelo mesmo fluxo do Button", "auditar a acessibilidade do X", "mapa de tokens do X", "rastreabilidade do X", "inventário do X", "quais variantes e tamanhos o X tem", "paridade Figma × código do X" ou variação sobre documentar, religar ao Core ou publicar a doc de um componente do Prizm (Input, Badge, Select, Dialog…), mesmo citando só uma etapa.
 ---
 
 # Documentar um componente do Prizm
@@ -41,17 +41,18 @@ Tudo que o time vai ler (Figma, artigo, PR, changeset, mensagens) é em portugu�
 
 Abra o plano de tarefas com as 8 etapas e avance uma por vez. Guarde ids encontrados (página, set, frame de doc, seções, artigo) num `<nome>-doc-state.json` no scratchpad, para retomar sem procurar de novo.
 
-### 1. Fontes
+### 1. Fontes e inventário de uso
 
-Leia, nesta ordem:
+A referência do componente é o shadcn e o `[PRIZM] Componentes`, com as decisões de variante, estado e tamanho já tomadas pelo dono do DS. Antes de documentar, levante também o que o time de desenvolvimento usa hoje: os componentes do `@grupoitss/prizm-ui` vieram do `@pas/ui` (Azure), e o repositório e o Storybook mostram as variantes, tamanhos, combinações, props e estados em uso. Esse inventário é contexto, não fonte da verdade: ele mostra o que o shadcn e o Figma ainda não cobrem e o que uma decisão vai obrigar a migrar. No Badge, o uso tinha a prop `appearance` e as variantes `primary`, `info` e `violet`, que o Figma não tinha; a decisão (PR #103, 21/10/2026) foi ficar com o Figma, e a coluna de status da tabela, que usava `appearance="text"`, foi migrada. Leia, nesta ordem:
 
-1. **Código, sempre de `origin/main`**: `git fetch origin` na raiz do checkout e leia com `git show origin/main:design-system/packages/ui/src/components/<nome>/<arquivo>`. O checkout local pode estar dias atrás ou em outra branch (no piloto estava em 14/10, com o arquivo em outro caminho). Nunca use o `@pas/ui` do pas-web: é uma versão antiga, com outros padrões.
-   Anote: variantes e tamanhos do `cva`, props, classes de cada estado (hover, foco, active, disabled), atributos ARIA, dependências (outros componentes, ícones).
-2. **Stories**: `design-system/apps/docs/stories/<nome>.stories.tsx` (também de `origin/main`). Mostram os usos previstos e servem de exemplos para o artigo.
-3. **Figma**: no `[PRIZM] Componentes` (fileKey `7NPb3iuxjitMdpudp4yHTl`), ache a página do componente e o component set com `get_metadata`. Leia `componentPropertyDefinitions` e as variantes.
-4. **CMS**: `search` pelo nome, para saber se já existe artigo.
+1. **Código, sempre de `origin/main`**: `git fetch origin` na raiz do checkout e leia com `git show origin/main:design-system/packages/ui/src/components/<nome>/<arquivo>`. O checkout local pode estar dias atrás ou em outra branch (no piloto estava em 14/10, com o arquivo em outro caminho). Não leia o `@pas/ui` do Azure nem o do pas-web: são versões antigas, com outros padrões, e o que valia de lá já está no `prizm-ui`.
+   Anote: variantes e tamanhos do `cva` (também os `compoundVariants`), props, classes de cada estado (hover, foco, active, disabled), atributos ARIA, dependências (outros componentes, ícones).
+2. **Inventário de uso**: rode `scripts/inventario-uso.mjs <nome>`. Ele cruza o código, as stories, os usos em JSX no repositório (stories de outros componentes e composições dentro do `prizm-ui`) e o Storybook publicado (https://grupoitss.github.io/PRIZM-Design-System/). Os controles das stories costumam estar incompletos: para saber o que é usado, valem o `cva` e as props. Como rodar, como ler e o que fazer com cada diferença em `references/inventario.md`.
+3. **Stories**: `design-system/apps/docs/stories/<nome>.stories.tsx` (também de `origin/main`). Mostram os usos previstos e servem de exemplos para o artigo; o inventário traz os links publicados de cada uma.
+4. **Figma**: no `[PRIZM] Componentes` (fileKey `7NPb3iuxjitMdpudp4yHTl`), ache a página do componente e o component set com `get_metadata`. Leia as propriedades com `scripts/propriedades-figma.js` e rode o inventário de novo com `--figma`, para a tabela de paridade.
+5. **CMS**: `search` pelo nome, para saber se já existe artigo.
 
-Feche a etapa com um resumo curto: o que existe, o que diverge entre Figma e código (paridade de variantes, tamanhos, props) e se já há doc.
+Feche a etapa com um resumo curto: o que o Figma e o shadcn definem, o que está em uso (inventário), a paridade em três grupos (em uso e fora do Figma, no Figma e fora do código, nome diferente) e se já há doc. **⏸ O dono do DS decide** cada diferença: entra no Figma, ou sai do código com migração dos usos. A documentação segue o Figma com essas decisões; o inventário aponta o que conferir e o que migrar.
 
 ### 2. Figma ligado ao Core
 
@@ -61,7 +62,7 @@ Se não estiver: levante as ligações, monte o mapa local → Core, **⏸ valid
 
 ### 3. Doc no Figma
 
-Monte o frame "<Componente> — Documentação Prizm" com as 11 seções do template do Button: cabeçalho, playground por tema (5 marcas × claro/escuro, com modo explícito), variantes, quando usar (hierarquia, faça/evite), API (gerada de `componentPropertyDefinitions` e conferida com o código), anatomia, tamanhos (gerado das ligações + `control-height` por marca), tokens por variante (gerado), estados, acessibilidade e changelog. Como montar cada uma, a regra de hover, a regra de foco e as regras de token em `references/figma.md`.
+Monte o frame "<Componente> — Documentação Prizm" com as 11 seções do template do Button. Variantes, tamanhos, props e estados seguem o component set com as decisões da etapa 1; o que está em uso e ainda não tem decisão entra em "Propostas para decidir". As seções: cabeçalho, playground por tema (5 marcas × claro/escuro, com modo explícito), variantes, quando usar (hierarquia, faça/evite), API (gerada de `componentPropertyDefinitions` e conferida com o código), anatomia, tamanhos (gerado das ligações + `control-height` por marca), tokens por variante (gerado), estados, acessibilidade e changelog. Como montar cada uma, a regra de hover, a regra de foco e as regras de token em `references/figma.md`.
 
 Divergências que pedem decisão (variante que só existe de um lado, token que falha, regra que o kit não segue) vão para uma seção "Propostas para decidir". **⏸ O dono do DS valida o frame e decide as propostas.**
 
@@ -79,7 +80,7 @@ Se a correção muda um token, ela vale para o Core no Figma também: aplique no
 
 ### 6. Artigo no CMS
 
-Escreva o artigo no workspace `prizm_design_system` pelo MCP `prizm-cms`, na pasta Componentes, no formato do shadcn + seções Prizm. O artigo "Button" é o modelo: leia com `fetch` o id `978a4aa8-4d01-484f-a0bb-93d10c59c219` antes de escrever. Imagens exportadas com `get_screenshot` e subidas por `POST /cms/api/mcp/images` (`scripts/subir-imagem.sh`). Sempre como rascunho. Estrutura, ids e passo a passo em `references/artigo-cms.md`.
+Escreva o artigo no workspace `prizm_design_system` pelo MCP `prizm-cms`, na pasta Componentes, no formato do shadcn + seções Prizm. A API segue o código já alinhado às decisões, conferida com o inventário (nenhuma variante em uso fica sem menção: ou está documentada, ou consta como removida, com a migração). Use os links das stories publicadas. O artigo "Button" é o modelo: leia com `fetch` o id `978a4aa8-4d01-484f-a0bb-93d10c59c219` antes de escrever. Imagens exportadas com `get_screenshot` e subidas por `POST /cms/api/mcp/images` (`scripts/subir-imagem.sh`). Sempre como rascunho. Estrutura, ids e passo a passo em `references/artigo-cms.md`.
 
 **⏸ O dono do DS revisa o rascunho.** Publicar só com pedido explícito, com essas palavras.
 
@@ -89,10 +90,10 @@ Ligue as pontas, para que cada uma leve às outras e um teste avise quando Figma
 
 1. **Mapa de tokens** em `packages/ui/src/components/<nome>/<nome>.tokens.json`, extraído das ligações do component set (`scripts/extrair-mapa-tokens.js`), nunca digitado: `sources`, `variants`, `states`, `sizes` e `divergences`.
 2. **Teste** `<nome>.tokens.test.ts` que confere o mapa contra as classes do `cva`.
-3. **Story** com os links do component set, do frame de doc e do artigo em `parameters.docs.description.component`. Confira o link antigo de cada story.
+3. **Story** com os links do component set, do frame de doc e do artigo em `parameters.docs.description.component`. Confira o link antigo de cada story. Complete os controles que o inventário apontou como incompletos (valor do `cva` fora do `options`, prop sem controle).
 4. **Artigo**: seção final "Rastreabilidade" (tabela Ponta | Onde | Leva a, nota sobre o Code Connect, divergências abertas).
 
-Os arquivos de código vão em worktree e PR, como na etapa 5. Divergências que o mapa achar (nome fora do padrão do Core, estado diferente do código) **⏸ vão para o dono do DS decidir**: corrigir o Figma, o código, ou deixar registrada como aberta.
+Os arquivos de código vão em worktree e PR, como na etapa 5. Divergências que o mapa achar (nome fora do padrão do Core, estado diferente do código) e as da paridade do inventário que seguirem abertas **⏸ vão para o dono do DS decidir**: corrigir o Figma, o código, ou deixar registrada como aberta.
 
 ### 8. Figma → link
 
@@ -120,6 +121,8 @@ Cada uma custou horas no piloto. Leia antes da etapa 2.
 
 **Code Connect não está disponível.** O plano do Figma é Professional, e `add_code_connect_map` responde "Code connections can only be made in libraries that are in Organization or Enterprise plans". Não tente; cite no artigo. Dev resources (links no Dev Mode) também não funcionam pelo plugin (`getDevResourcesAsync` não é API suportada): quem quiser adiciona à mão.
 
+**Os controles do Storybook não dizem o que está em uso.** Os `argTypes` foram escritos à mão: no Badge, antes do PR #103, o controle `variant` não listava `violet` e não havia controle de `appearance`. Para saber o uso, valem o `cva` e as props de `origin/main`; o `scripts/inventario-uso.mjs` aponta as diferenças. Valor sem uso no repositório pode estar em uso nos produtos: ao decidir remover, considere a migração deles.
+
 **Na extração do mapa, a opacidade lida pelo plugin não vale.** Ele leu 100% em hovers que o render mostra a 80%. A opacidade de hover vem da regra conferida pelo render, não da leitura.
 
 **Lint e `tsc` do app `docs` dão erros de tipo locais**, porque `@grupoitss/prizm-ui` não está compilado. Antes de concluir que a mudança quebrou algo, rode o mesmo comando no arquivo da main e compare.
@@ -142,11 +145,14 @@ Outras, menores:
 
 | Arquivo | Para quê |
 | --- | --- |
+| `references/inventario.md` | Etapa 1: inventário de uso pelo código, stories e Storybook, e paridade com o Figma |
 | `references/figma.md` | Etapas 2, 3 e 8: mapa local → Core, seções do frame, regras de hover e foco, link no set |
 | `references/acessibilidade.md` | Etapa 4: checklist, pares a medir, teste de foco e teclado, formato das pendências |
 | `references/codigo.md` | Etapa 5: worktree, pnpm, testes, changeset, PR |
 | `references/artigo-cms.md` | Etapa 6: ids do CMS, estrutura do artigo, imagens |
 | `references/rastreabilidade.md` | Etapa 7: mapa de tokens, teste, story, seção no artigo |
+| `scripts/inventario-uso.mjs` | Node: variantes, combinações, props, estados, stories e usos do componente; paridade com `--figma` |
+| `scripts/propriedades-figma.js` | use_figma, leitura: `componentPropertyDefinitions` do set, para o `--figma` do inventário |
 | `scripts/extrair-mapa-tokens.js` | use_figma, leitura: ligações de cada variante, para o `<nome>.tokens.json` |
 | `scripts/inventario-ligacoes.js` | use_figma, leitura: o que está ligado ao Core e o que não está |
 | `scripts/rebind-core.js` | use_figma: religa variáveis locais ao Core pelo mapa aprovado |
@@ -155,4 +161,4 @@ Outras, menores:
 | `scripts/px.py` | Cor de um pixel de PNG, para conferir o render do servidor |
 | `scripts/subir-imagem.sh` | Sobe PNGs para o CMS e devolve `file:<id>` |
 
-Os scripts `use_figma` têm placeholders (`__ROOTS__`, `__MAP__`…): leia o arquivo, troque os valores e envie o texto. Rode primeiro com `__DRY__ = true`.
+Os scripts `use_figma` têm placeholders (`__ROOTS__`, `__MAP__`, `__SET__`…): leia o arquivo, troque os valores e envie o texto. Rode primeiro com `__DRY__ = true`.

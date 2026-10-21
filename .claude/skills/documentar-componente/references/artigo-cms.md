@@ -32,7 +32,7 @@ Confira com `get_content_tree` e `search` se algo não bater: a árvore pode ter
 ## Instalação        (npm install @grupoitss/prizm-ui)
 ## Uso               (import de @grupoitss/prizm-ui/<nome>, exemplo mínimo; marca/produto/modo vêm de data-brand, data-product, data-mode)
 ## Exemplos          (### por variante, tamanho, composição; imagem + bloco tsx)
-## API               (tabela Prop | Tipo | Padrão | Descrição, conferida com o .tsx; ### Figma × código)
+## API               (tabela Prop | Tipo | Padrão | Descrição, conferida com o .tsx e o inventário; variante removida por decisão: diga como migrar; ### Figma × código)
 ---
 ## Quando usar       (hierarquia, Faça, Evite)
 ## Estados           (tabela Estado | Visual | Código; regra de hover se couber)
