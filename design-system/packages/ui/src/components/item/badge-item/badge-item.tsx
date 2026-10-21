@@ -27,7 +27,6 @@ const ItemBadges = ({
         <Badge
           key={badge.id}
           variant={badge.variant ?? "secondary"}
-          size="sm"
           className={cn(badgeClassName)}
           endIcon={
             badgesRemovable ? (

@@ -6,8 +6,8 @@ import type { BadgeProps } from "./badge.types";
 /**
  * Badge — small label for statuses, counters or metadata.
  *
- * - `variant`: semantic color (`primary`, `success`, …)
- * - `appearance`: `contained` | `outlined` | `text`
+ * - `variant`: `default` | `secondary` | `outline` | `destructive` | `verified` (as in Figma)
+ * - `shape`: `default` | `number` (round counter for digits)
  * - `startIcon` / `endIcon`: icons with data-icon="inline-start" / "inline-end"
  *
  * @see https://ui.shadcn.com/docs/components/radix/badge
@@ -15,8 +15,8 @@ import type { BadgeProps } from "./badge.types";
 const Badge = ({
   className,
   variant,
-  appearance = "contained",
   size,
+  shape,
   loading,
   startIcon,
   endIcon,
@@ -29,11 +29,10 @@ const Badge = ({
       ref={ref}
       data-slot="badge"
       data-variant={variant}
-      data-appearance={appearance}
       data-loading={loading ? "" : undefined}
       aria-busy={loading || undefined}
       className={cn(
-        badgeVariants({ variant, appearance, size }),
+        badgeVariants({ variant, size, shape }),
         loading && "opacity-80",
         className,
       )}

@@ -210,8 +210,7 @@ function toBadgeTags(value: unknown): Tag[] {
 }
 
 const NEUTRAL_BADGE = {
-  variant: "default",
-  appearance: "outlined",
+  variant: "outline",
   size: "sm",
 } as const;
 

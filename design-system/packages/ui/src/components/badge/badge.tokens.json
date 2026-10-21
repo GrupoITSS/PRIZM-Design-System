@@ -1,0 +1,115 @@
+{
+  "component": "Badge",
+  "description": "Mapa de tokens do Badge: o que cada variante, tamanho e forma usa do [PRIZM] Design Tokens_Core. Extraído das ligações dos component sets Badge e Badge Number no Figma em 21/10/2026 e conferido contra badge.styles.ts pelo teste badge.tokens.test.ts. Nomes no formato do Figma (color/primary); no código viram classes Tailwind (bg-primary).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26-169",
+    "figmaComponentNumber": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=17100-10130",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25145-2040",
+    "code": "design-system/packages/ui/src/components/badge/badge.tsx",
+    "story": "design-system/apps/docs/stories/badge.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=f8204506-f907-446c-af39-cef645a878e1&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/103"],
+    "jira": []
+  },
+  "variants": {
+    "default": {
+      "background": "color/primary",
+      "text": "color/primary-foreground",
+      "border": null
+    },
+    "secondary": {
+      "background": "color/secondary",
+      "text": "color/secondary-foreground",
+      "border": null
+    },
+    "outline": {
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "border": "color/input",
+      "shadow": "style/shadow/xs"
+    },
+    "destructive": {
+      "background": "color/destructive",
+      "text": "color/destructive-foreground",
+      "border": null
+    },
+    "success": {
+      "background": "color/success",
+      "text": "color/success-foreground",
+      "border": null
+    },
+    "verified": {
+      "background": "color/info",
+      "text": "color/info-foreground",
+      "border": null
+    },
+    "warning": {
+      "background": "color/warning",
+      "text": "color/warning-foreground",
+      "border": null
+    }
+  },
+  "states": {
+    "hover": null,
+    "focus": null,
+    "loading": {
+      "opacity": 0.8,
+      "attribute": "aria-busy"
+    },
+    "note": "O Badge é estático: só o estado padrão, no Figma e no código (decisão de 21/10/2026)."
+  },
+  "sizes": {
+    "sm": {
+      "height": "height/5",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/0-5",
+      "radius": "radius/md",
+      "fontWeight": "font-weight/semibold",
+      "gap": "spacing/1",
+      "icon": "height/3",
+      "fontSize": "text/xs"
+    },
+    "md": {
+      "height": "height/6",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/0-5",
+      "radius": "radius/md",
+      "fontWeight": "font-weight/semibold",
+      "gap": "spacing/1-5",
+      "icon": "height/3-5",
+      "fontSize": "text/xs"
+    },
+    "lg": {
+      "height": "height/7",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/0-5",
+      "radius": "radius/md",
+      "fontWeight": "font-weight/semibold",
+      "gap": "spacing/2",
+      "icon": "height/4",
+      "fontSize": "text/sm"
+    }
+  },
+  "shapes": {
+    "number": {
+      "height": "height/5",
+      "minWidth": "width/5",
+      "paddingX": "spacing/1",
+      "radius": "radius/full"
+    }
+  },
+  "divergences": [
+    {
+      "where": "Cor dos ícones aninhados",
+      "figma": "base/primary-foreground, base/secondary-foreground, base/foreground, base/destructive-foreground e tailwind colors/base/white, sobras do kit",
+      "code": "o ícone herda a cor do texto (currentColor)",
+      "status": "aberta"
+    },
+    {
+      "where": "Badge Number · tamanhos",
+      "figma": "só Size = sm",
+      "code": "shape=\"number\" aceita sm, md e lg",
+      "status": "aberta"
+    }
+  ]
+}

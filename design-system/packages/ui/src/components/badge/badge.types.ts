@@ -3,14 +3,14 @@ import type { BadgeVariantProps } from "./badge.styles";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, BadgeVariantProps {
   /**
-   * Semantic color. Required.
+   * Semantic color, as in the Figma component. Required.
    */
   variant: NonNullable<BadgeVariantProps["variant"]>;
   /**
-   * Surface: solid fill, tinted outline, or icon-only color with theme text.
-   * @default "contained"
+   * `number` renders a round counter (min 20px wide) for digits, as in the Figma "Badge Number".
+   * @default "default"
    */
-  appearance?: NonNullable<BadgeVariantProps["appearance"]>;
+  shape?: NonNullable<BadgeVariantProps["shape"]>;
   /**
    * When true, marks the badge as loading (a11y only).
    * Visual spinners should be provided via `startIcon`/`endIcon`.

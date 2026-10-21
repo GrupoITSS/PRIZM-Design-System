@@ -87,8 +87,8 @@ describe("Item (PRIZM / shadcn)", () => {
 
 describe("Item Badges", () => {
   const badges: ItemBadge[] = [
-    { id: "react", label: "React", variant: "info" },
-    { id: "ts", label: "TypeScript", variant: "primary" },
+    { id: "react", label: "React", variant: "verified" },
+    { id: "ts", label: "TypeScript", variant: "default" },
   ];
 
   it("renderiza badges quando fornecidos", () => {
@@ -129,10 +129,10 @@ describe("Item Badges", () => {
     fireEvent.click(screen.getByLabelText("Remove React"));
 
     expect(onBadgesChange).toHaveBeenCalledWith([
-      { id: "ts", label: "TypeScript", variant: "primary" },
+      { id: "ts", label: "TypeScript", variant: "default" },
     ]);
-    expect(onBadgeRemove).toHaveBeenCalledWith({ id: "react", label: "React", variant: "info" }, [
-      { id: "ts", label: "TypeScript", variant: "primary" },
+    expect(onBadgeRemove).toHaveBeenCalledWith({ id: "react", label: "React", variant: "verified" }, [
+      { id: "ts", label: "TypeScript", variant: "default" },
     ]);
   });
 

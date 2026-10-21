@@ -25,8 +25,8 @@ export default meta;
 type Story = StoryObj<typeof Item>;
 
 const defaultBadges: ItemBadge[] = [
-  { id: "react", label: "React", variant: "info" },
-  { id: "ts", label: "TypeScript", variant: "primary" },
+  { id: "react", label: "React", variant: "verified" },
+  { id: "ts", label: "TypeScript", variant: "default" },
   { id: "node", label: "Node.js", variant: "success" },
 ];
 
@@ -122,7 +122,7 @@ export const BadgesReadonly: Story = {
         badges={[
           { id: "design", label: "Design", variant: "secondary" },
           { id: "ux", label: "UX", variant: "secondary" },
-          { id: "a11y", label: "Accessibility", variant: "warning" },
+          { id: "a11y", label: "Accessibility", variant: "outline" },
         ]}
         badgesRemovable={false}
       />
@@ -146,11 +146,9 @@ export const BadgesVariants: Story = {
         description="Each badge uses a different variant for semantic meaning."
         badges={[
           { id: "1", label: "Default", variant: "default" },
-          { id: "2", label: "Primary", variant: "primary" },
           { id: "3", label: "Secondary", variant: "secondary" },
           { id: "4", label: "Success", variant: "success" },
-          { id: "5", label: "Warning", variant: "warning" },
-          { id: "6", label: "Info", variant: "info" },
+          { id: "6", label: "Verified", variant: "verified" },
           { id: "7", label: "Destructive", variant: "destructive" },
           { id: "8", label: "Outline", variant: "outline" },
         ]}
