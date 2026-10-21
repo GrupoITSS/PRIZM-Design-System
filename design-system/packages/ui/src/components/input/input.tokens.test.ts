@@ -49,9 +49,18 @@ describe("Input × mapa de tokens (input.tokens.json)", () => {
     expect(classes.some((c) => c.startsWith("disabled:opacity-"))).toBe(false);
   });
 
+  it("File: peso do texto do botão interno do mapa está nas classes", () => {
+    const weight = map.parts.fileButton.fontWeight.replace(/^font-weight\//, "");
+    expect(classesOf()).toContain(`file:font-${weight}`);
+  });
+
   for (const [size, tokens] of Object.entries(map.sizes)) {
-    it(`${size}: altura do mapa está nas classes`, () => {
-      expect(classesOf(size)).toContain(`h-${scale(tokens.height)}`);
+    it(`${size}: altura e padding do mapa estão nas classes`, () => {
+      const classes = classesOf(size);
+      expect(classes).toContain(`h-${scale(tokens.height)}`);
+      // spacing/N → px-N / py-N (escala do Tailwind).
+      expect(classes).toContain(`px-${tokens.paddingX.replace(/^spacing\//, "")}`);
+      expect(classes).toContain(`py-${tokens.paddingY.replace(/^spacing\//, "")}`);
     });
   }
 });

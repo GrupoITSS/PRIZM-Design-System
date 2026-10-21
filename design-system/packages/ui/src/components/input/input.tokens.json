@@ -7,8 +7,12 @@
     "code": "design-system/packages/ui/src/components/input/input.tsx",
     "story": "design-system/apps/docs/stories/input.stories.tsx",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=e01cbbac-8a47-44ab-a16f-a9975c9d7cb5&version=v1",
-    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/104"],
-    "jira": ["GIES-1725"]
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/104"
+    ],
+    "jira": [
+      "GIES-1725"
+    ]
   },
   "states": {
     "default": {
@@ -43,28 +47,47 @@
     }
   },
   "parts": {
-    "startIcon": { "size": 16, "color": "color/muted-foreground" },
-    "passwordToggle": { "size": 24, "iconSize": 16, "color": "color/muted-foreground" },
-    "fileButton": { "text": "color/foreground", "fontWeight": "font-weight/medium" }
+    "startIcon": {
+      "size": 16,
+      "color": "color/muted-foreground"
+    },
+    "passwordToggle": {
+      "size": 24,
+      "iconSize": 16,
+      "color": "color/muted-foreground"
+    },
+    "fileButton": {
+      "text": "color/foreground",
+      "fontWeight": "font-weight/normal"
+    }
   },
   "sizes": {
-    "sm": { "height": "control-height/sm", "paddingX": "spacing/3", "gap": "spacing/2", "radius": "radius/md", "fontSize": "text/xs" },
-    "md": { "height": "control-height/md", "paddingX": "spacing/3", "gap": "spacing/2", "radius": "radius/md", "fontSize": "text/sm" },
-    "lg": { "height": "control-height/lg", "paddingX": "spacing/3", "gap": "spacing/2", "radius": "radius/md", "fontSize": "text/sm" }
+    "sm": {
+      "height": "control-height/sm",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/xs"
+    },
+    "md": {
+      "height": "control-height/md",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    },
+    "lg": {
+      "height": "control-height/lg",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    }
   },
   "divergences": [
-    {
-      "where": "File · texto do botão interno",
-      "figma": "font-weight/medium",
-      "code": "file:font-normal",
-      "status": "aberta"
-    },
-    {
-      "where": "Padding vertical",
-      "figma": "spacing/1 (4px)",
-      "code": "py-2 (8px); a altura é fixa em control-height, então não muda o tamanho",
-      "status": "aberta"
-    },
     {
       "where": "lg · tamanho do texto",
       "figma": "text/sm",
