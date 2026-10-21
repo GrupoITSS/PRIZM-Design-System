@@ -11,11 +11,28 @@ export type StatusColumnComponentProps = {
   appearance?: StatusColumnAppearance;
 };
 
-const STATUS_TO_BADGE = {
-  active: "success",
-  inactive: "secondary",
-  error: "destructive",
-  default: "default",
+// The Badge has only the Figma variants, so the success tone and the neutral chip take their
+// colors from the tokens via `className`. `indicator` keeps the surface off and colors the icon.
+const CHIP_BADGE = {
+  active: { variant: "default", className: "bg-success text-success-foreground hover:bg-success/80" },
+  inactive: { variant: "secondary", className: undefined },
+  error: { variant: "destructive", className: undefined },
+  default: { variant: "default", className: "bg-foreground text-background hover:bg-foreground/80" },
+} as const;
+
+const INDICATOR_SURFACE = "bg-transparent text-foreground hover:bg-transparent";
+
+const INDICATOR_BADGE = {
+  active: { variant: "default", className: `${INDICATOR_SURFACE} [&_[data-icon]]:text-success` },
+  inactive: {
+    variant: "secondary",
+    className: `${INDICATOR_SURFACE} [&_[data-icon]]:text-muted-foreground`,
+  },
+  error: {
+    variant: "destructive",
+    className: `${INDICATOR_SURFACE} [&_[data-icon]]:text-destructive`,
+  },
+  default: { variant: "default", className: `${INDICATOR_SURFACE} [&_[data-icon]]:text-foreground` },
 } as const;
 
 const glyphClassName = "size-3 shrink-0";
@@ -41,9 +58,7 @@ const StatusColumnComponent = ({
 
   return (
     <Badge
-      variant={STATUS_TO_BADGE[config.variant]}
-      appearance={appearance === "indicator" ? "text" : "contained"}
-      size="sm"
+      {...(appearance === "indicator" ? INDICATOR_BADGE : CHIP_BADGE)[config.variant]}
       startIcon={<StatusGlyph variant={config.variant} />}
     >
       {displayLabel}

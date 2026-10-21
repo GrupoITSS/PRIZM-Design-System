@@ -3,38 +3,54 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Badge } from "./badge";
 
-describe("Badge (PRIZM / shadcn)", () => {
+describe("Badge (PRIZM / Figma)", () => {
   it("renderiza o conteúdo passado em children", () => {
     render(<Badge variant="default">New</Badge>);
     expect(screen.getByText("New")).toBeInTheDocument();
   });
 
-  it("aplica variant default corretamente", () => {
+  it("aplica variant default em color/primary, como no Figma", () => {
     render(<Badge variant="default">Default</Badge>);
-    const badge = screen.getByText("Default");
-    expect(badge).toHaveClass("bg-primary", "text-primary-foreground");
+    expect(screen.getByText("Default")).toHaveClass("bg-primary", "text-primary-foreground");
   });
 
-  it("segue o Figma: raio md, peso semibold e padding de 8px", () => {
+  it("aplica as variants secondary e destructive", () => {
+    const { rerender } = render(<Badge variant="secondary">Secondary</Badge>);
+    expect(screen.getByText("Secondary")).toHaveClass("bg-secondary", "text-secondary-foreground");
+
+    rerender(<Badge variant="destructive">Destructive</Badge>);
+    expect(screen.getByText("Destructive")).toHaveClass(
+      "bg-destructive",
+      "text-destructive-foreground",
+    );
+  });
+
+  it("outline usa os mesmos tokens do outline do Button", () => {
+    render(<Badge variant="outline">Outline</Badge>);
+    expect(screen.getByText("Outline")).toHaveClass(
+      "border-input",
+      "bg-input-background",
+      "text-foreground",
+      "shadow-xs",
+      "hover:bg-accent",
+      "hover:text-accent-foreground",
+    );
+  });
+
+  it("verified usa o tom info", () => {
+    render(<Badge variant="verified">Verified</Badge>);
+    expect(screen.getByText("Verified")).toHaveClass("bg-info", "text-info-foreground");
+  });
+
+  it("segue o Figma: raio md, peso semibold, padding de 8px e 20px de altura", () => {
     render(<Badge variant="default">Figma</Badge>);
     expect(screen.getByText("Figma")).toHaveClass(
       "rounded-md",
       "font-semibold",
       "px-2",
       "py-0.5",
+      "h-5",
     );
-  });
-
-  it("aplica variant verified (tom info) em cada appearance", () => {
-    const { rerender } = render(<Badge variant="verified">Verified</Badge>);
-    expect(screen.getByText("Verified")).toHaveClass("bg-info", "text-info-foreground");
-
-    rerender(
-      <Badge variant="verified" appearance="outlined">
-        Verified
-      </Badge>,
-    );
-    expect(screen.getByText("Verified")).toHaveClass("bg-info-weak", "text-info-strong");
   });
 
   it("shape number vira contador redondo de 20px no mínimo", () => {
@@ -49,65 +65,15 @@ describe("Badge (PRIZM / shadcn)", () => {
     expect(badge).not.toHaveClass("px-2");
   });
 
-  it("aplica variant primary corretamente", () => {
-    render(<Badge variant="primary">Primary</Badge>);
-    const badge = screen.getByText("Primary");
-    expect(badge).toHaveClass("bg-primary");
-  });
-
-  it("aplica variant success corretamente", () => {
-    render(<Badge variant="success">Success</Badge>);
-    const badge = screen.getByText("Success");
-    expect(badge).toHaveClass("bg-success");
-  });
-
-  it("aplica variant warning corretamente", () => {
-    render(<Badge variant="warning">Warning</Badge>);
-    const badge = screen.getByText("Warning");
-    expect(badge).toHaveClass("bg-warning");
-  });
-
-  it("aplica variant info corretamente", () => {
-    render(<Badge variant="info">Info</Badge>);
-    const badge = screen.getByText("Info");
-    expect(badge).toHaveClass("bg-info");
-  });
-
-  it("aplica outras variants corretamente", () => {
-    const { rerender } = render(<Badge variant="secondary">Secondary</Badge>);
-    expect(screen.getByText("Secondary")).toHaveClass("bg-secondary");
-
-    rerender(<Badge variant="destructive">Destructive</Badge>);
-    expect(screen.getByText("Destructive")).toHaveClass("bg-destructive");
-
-    rerender(
-      <Badge variant="violet" appearance="outlined">
-        Personalizado
+  it("cores fora do Figma entram por className", () => {
+    render(
+      <Badge variant="default" className="bg-success text-success-foreground">
+        Custom
       </Badge>,
     );
-    expect(screen.getByText("Personalizado")).toHaveClass(
-      "bg-violet-600/10",
-      "text-violet-600",
-      "border-violet-600/40",
-    );
-  });
-
-  it("aplica tamanhos diferentes via prop size", () => {
-    const { rerender } = render(
-      <Badge variant="default" size="sm">
-        Small
-      </Badge>,
-    );
-    let badge = screen.getByText("Small");
-    expect(badge).toHaveClass("h-5", "gap-1", "text-xs");
-
-    rerender(
-      <Badge variant="default" size="lg">
-        Large
-      </Badge>,
-    );
-    badge = screen.getByText("Large");
-    expect(badge).toHaveClass("h-7", "gap-2", "text-sm");
+    const badge = screen.getByText("Custom");
+    expect(badge).toHaveClass("bg-success", "text-success-foreground");
+    expect(badge).not.toHaveClass("bg-primary");
   });
 
   it("renderiza startIcon e endIcon com data-icon corretos", () => {
