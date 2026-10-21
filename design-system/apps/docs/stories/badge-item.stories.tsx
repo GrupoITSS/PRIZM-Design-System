@@ -27,7 +27,7 @@ type Story = StoryObj<typeof Item>;
 const defaultBadges: ItemBadge[] = [
   { id: "react", label: "React", variant: "verified" },
   { id: "ts", label: "TypeScript", variant: "default" },
-  { id: "node", label: "Node.js", variant: "outline" },
+  { id: "node", label: "Node.js", variant: "success" },
 ];
 
 function BadgesInteractive({ actions }: { actions?: ReactNode }) {
@@ -147,6 +147,7 @@ export const BadgesVariants: Story = {
         badges={[
           { id: "1", label: "Default", variant: "default" },
           { id: "3", label: "Secondary", variant: "secondary" },
+          { id: "4", label: "Success", variant: "success" },
           { id: "6", label: "Verified", variant: "verified" },
           { id: "7", label: "Destructive", variant: "destructive" },
           { id: "8", label: "Outline", variant: "outline" },

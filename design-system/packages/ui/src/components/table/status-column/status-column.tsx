@@ -11,10 +11,10 @@ export type StatusColumnComponentProps = {
   appearance?: StatusColumnAppearance;
 };
 
-// The Badge has only the Figma variants, so the success tone and the neutral chip take their
-// colors from the tokens via `className`. `indicator` keeps the surface off and colors the icon.
+// The Badge has only the Figma variants, so the neutral chip takes its colors from the tokens via
+// `className`. `indicator` keeps the surface off and colors the icon.
 const CHIP_BADGE = {
-  active: { variant: "default", className: "bg-success text-success-foreground hover:bg-success/80" },
+  active: { variant: "success", className: undefined },
   inactive: { variant: "secondary", className: undefined },
   error: { variant: "destructive", className: undefined },
   default: { variant: "default", className: "bg-foreground text-background hover:bg-foreground/80" },
@@ -23,7 +23,7 @@ const CHIP_BADGE = {
 const INDICATOR_SURFACE = "bg-transparent text-foreground hover:bg-transparent";
 
 const INDICATOR_BADGE = {
-  active: { variant: "default", className: `${INDICATOR_SURFACE} [&_[data-icon]]:text-success` },
+  active: { variant: "success", className: `${INDICATOR_SURFACE} [&_[data-icon]]:text-success` },
   inactive: {
     variant: "secondary",
     className: `${INDICATOR_SURFACE} [&_[data-icon]]:text-muted-foreground`,

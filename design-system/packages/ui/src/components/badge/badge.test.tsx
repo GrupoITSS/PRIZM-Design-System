@@ -42,6 +42,15 @@ describe("Badge (PRIZM / Figma)", () => {
     expect(screen.getByText("Verified")).toHaveClass("bg-info", "text-info-foreground");
   });
 
+  it("success usa bg-success e o texto success-foreground", () => {
+    render(<Badge variant="success">Success</Badge>);
+    expect(screen.getByText("Success")).toHaveClass(
+      "bg-success",
+      "text-success-foreground",
+      "hover:bg-success/80",
+    );
+  });
+
   it("segue o Figma: raio md, peso semibold, padding de 8px e 20px de altura", () => {
     render(<Badge variant="default">Figma</Badge>);
     expect(screen.getByText("Figma")).toHaveClass(
@@ -67,12 +76,12 @@ describe("Badge (PRIZM / Figma)", () => {
 
   it("cores fora do Figma entram por className", () => {
     render(
-      <Badge variant="default" className="bg-success text-success-foreground">
+      <Badge variant="default" className="bg-warning text-warning-foreground">
         Custom
       </Badge>,
     );
     const badge = screen.getByText("Custom");
-    expect(badge).toHaveClass("bg-success", "text-success-foreground");
+    expect(badge).toHaveClass("bg-warning", "text-warning-foreground");
     expect(badge).not.toHaveClass("bg-primary");
   });
 

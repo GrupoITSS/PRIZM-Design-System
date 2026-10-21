@@ -17,21 +17,18 @@ import { formatTableText, resolveLinkTemplate, toSide } from "./table-cell-rende
 import { toText } from "../../lib/to-text";
 
 /**
- * The Badge has only the Figma variants (default, secondary, outline, destructive, verified), so
- * the success and warning chips of the table take their colors from the tokens via `className`.
+ * The Badge has only the Figma variants (default, secondary, outline, destructive, verified,
+ * success), so the warning chip of the table takes its colors from the tokens via `className`.
  */
 type StatusTone = "secondary" | "destructive" | "success" | "warning";
 
 const STATUS_TONE_BADGE: Record<
   StatusTone,
-  { variant: "default" | "secondary" | "destructive"; className?: string }
+  { variant: "default" | "secondary" | "destructive" | "success"; className?: string }
 > = {
   secondary: { variant: "secondary" },
   destructive: { variant: "destructive" },
-  success: {
-    variant: "default",
-    className: "bg-success text-success-foreground hover:bg-success/80",
-  },
+  success: { variant: "success" },
   warning: {
     variant: "default",
     className: "bg-warning text-warning-foreground hover:bg-warning/80",

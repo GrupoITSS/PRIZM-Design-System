@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
  * PRIZM Badge — styles use the @grupoitss/prizm-tokens colors (`bg-primary`).
  *
  * The variants are the ones in the Figma component (`[PRIZM] Componentes`, Badge): `default`,
- * `secondary`, `outline`, `destructive` and `verified`. `outline` follows the Figma Button outline
+ * `secondary`, `outline`, `destructive`, `verified` and `success`. `outline` follows the Figma Button outline
  * (`input-background`, `input` border, `shadow-xs`, hover on `accent`). Other colors come from
  * `className`, as in shadcn's "Custom Colors" (e.g. `bg-success text-success-foreground`).
  *
@@ -31,6 +31,7 @@ export const badgeVariants = cva(
           "border-input bg-input-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground",
         // Figma "Verified": the info tone (`color/info`), used with a check icon.
         verified: "border-transparent bg-info text-info-foreground hover:bg-info/80",
+        success: "border-transparent bg-success text-success-foreground hover:bg-success/80",
       },
       // The Figma component has a single size for now (20px high, from padding + line).
       size: {

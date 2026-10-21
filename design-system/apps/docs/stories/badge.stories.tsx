@@ -12,14 +12,14 @@ const meta: Meta<typeof Badge> = {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Badge do design system PRIZM. Pequeno rótulo para status, contadores ou metadados.\n\nAs variantes são as do componente no Figma: `default`, `secondary`, `outline`, `destructive` e `verified`. `shape="number"` é o "Badge Number" do Figma.\n\n- `startIcon` / `endIcon` para ícones alinhados com `data-icon="inline-start"` / `"inline-end"`\n\nPara outras cores, use `className` com os tokens, como no exemplo "Custom Colors" da doc do shadcn.\n\n**Documentação base:** <a href="https://ui.shadcn.com/docs/components/radix/badge" target="_blank" rel="noopener noreferrer">Badge — shadcn/ui</a>',
+          'Badge do design system PRIZM. Pequeno rótulo para status, contadores ou metadados.\n\nAs variantes são as do componente no Figma: `default`, `secondary`, `outline`, `destructive`, `verified` e `success`. `shape="number"` é o "Badge Number" do Figma.\n\n- `startIcon` / `endIcon` para ícones alinhados com `data-icon="inline-start"` / `"inline-end"`\n\nPara outras cores, use `className` com os tokens, como no exemplo "Custom Colors" da doc do shadcn.\n\n**Documentação base:** <a href="https://ui.shadcn.com/docs/components/radix/badge" target="_blank" rel="noopener noreferrer">Badge — shadcn/ui</a>',
       },
     },
   },
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "secondary", "outline", "destructive", "verified"],
+      options: ["default", "secondary", "outline", "destructive", "verified", "success"],
     },
     shape: {
       control: "select",
@@ -51,6 +51,7 @@ export const Variants: Story = {
       <Badge variant="secondary">Secondary</Badge>
       <Badge variant="outline">Outline</Badge>
       <Badge variant="destructive">Destructive</Badge>
+      <Badge variant="success">Success</Badge>
       <Badge variant="verified" startIcon={<CheckCircle />}>
         Verified
       </Badge>
@@ -112,9 +113,6 @@ export const Loading: Story = {
 export const CustomColorsWithClassName: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge variant="default" className="bg-success text-success-foreground hover:bg-success/80">
-        Success
-      </Badge>
       <Badge variant="default" className="bg-warning text-warning-foreground hover:bg-warning/80">
         Warning
       </Badge>
