@@ -9,6 +9,7 @@ O Figma é a fonte da verdade: o Badge passa a ter só o que o componente do Fig
 - **Visual:** `rounded-md` (`radius/md`), `font-semibold` e padding `px-2 py-0.5` (`spacing/2` e `spacing/0-5`), como no Figma. Antes era `rounded-full`, `font-normal` e `px-1.5`.
 - **`variant="default"`** usa `color/primary` (`bg-primary text-primary-foreground`, hover a 80%). Antes usava `bg-foreground`.
 - **`variant="outline"`** usa os mesmos tokens do outline do Button: `bg-input-background`, `border-input`, `shadow-xs` e hover em `accent`.
+- **Hover do `secondary`:** sobreposição de `foreground` a 10% (`color-mix`), como no Button. Antes era `secondary/80`, que quase não mudava.
 - **Novo `variant="verified"`**, no tom `info` (`bg-info text-info-foreground`). O ícone de check entra por `startIcon`.
 - **Novo `variant="success"`** (`bg-success text-success-foreground`, hover a 80%), criado no Figma em 21/10/2026.
 - **Nova prop `shape`** (`default` | `number`). `number` é o "Badge Number" do Figma: contador redondo, mínimo de 20px (`min-w-5 rounded-full px-1`), com `tabular-nums`.

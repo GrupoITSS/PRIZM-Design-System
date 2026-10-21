@@ -1,0 +1,139 @@
+{
+  "component": "Badge",
+  "description": "Mapa de tokens do Badge: o que cada variante e cada forma usa do [PRIZM] Design Tokens_Core. Extraído das ligações dos component sets Badge e Badge Number no Figma em 21/10/2026 e conferido contra badge.styles.ts pelo teste badge.tokens.test.ts. Nomes no formato do Figma (color/primary); no código viram classes Tailwind (bg-primary).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26-169",
+    "figmaComponentNumber": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=17100-10130",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25145-2040",
+    "code": "design-system/packages/ui/src/components/badge/badge.tsx",
+    "story": "design-system/apps/docs/stories/badge.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=f8204506-f907-446c-af39-cef645a878e1&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/103"],
+    "jira": []
+  },
+  "variants": {
+    "default": {
+      "background": "color/primary",
+      "text": "color/primary-foreground",
+      "border": null,
+      "hover": {
+        "rule": "cor de tom a 80%",
+        "background": "color/primary",
+        "opacity": 0.8
+      }
+    },
+    "secondary": {
+      "background": "color/secondary",
+      "text": "color/secondary-foreground",
+      "border": null,
+      "hover": {
+        "rule": "sobreposição de foreground a 10%",
+        "background": "color/secondary",
+        "overlay": "color/foreground",
+        "overlayOpacity": 0.1
+      }
+    },
+    "outline": {
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "border": "color/input",
+      "shadow": "style/shadow/xs",
+      "hover": {
+        "rule": "sem fundo: accent",
+        "background": "color/accent",
+        "text": "color/accent-foreground"
+      }
+    },
+    "destructive": {
+      "background": "color/destructive",
+      "text": "color/destructive-foreground",
+      "border": null,
+      "hover": {
+        "rule": "cor de tom a 80%",
+        "background": "color/destructive",
+        "opacity": 0.8
+      }
+    },
+    "success": {
+      "background": "color/success",
+      "text": "color/success-foreground",
+      "border": null,
+      "hover": {
+        "rule": "cor de tom a 80%",
+        "background": "color/success",
+        "opacity": 0.8
+      }
+    },
+    "verified": {
+      "background": "color/info",
+      "text": "color/info-foreground",
+      "border": null,
+      "hover": {
+        "rule": "cor de tom a 80%",
+        "background": "color/info",
+        "opacity": 0.8
+      }
+    }
+  },
+  "states": {
+    "focus": {
+      "ring": "color/ring",
+      "ringSpread": 5,
+      "ringOffset": "color/ring-offset",
+      "ringOffsetSpread": 2,
+      "code": null
+    },
+    "loading": { "opacity": 0.8, "attribute": "aria-busy" }
+  },
+  "sizes": {
+    "default": {
+      "height": "height/5",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/0-5",
+      "gap": "spacing/1",
+      "radius": "radius/md",
+      "fontSize": "text/xs",
+      "fontWeight": "font-weight/semibold"
+    }
+  },
+  "shapes": {
+    "number": {
+      "height": "height/5",
+      "minWidth": "width/5",
+      "paddingX": "spacing/1",
+      "radius": "radius/full"
+    }
+  },
+  "divergences": [
+    {
+      "where": "Altura do Badge",
+      "figma": "sem token: 2px de padding + 16px de linha + 2px (20px); só o Badge Number liga height/5",
+      "code": "h-5",
+      "status": "aberta"
+    },
+    {
+      "where": "State = Focus",
+      "figma": "anel do Button: color/ring (spread 5) sobre color/ring-offset (spread 2)",
+      "code": "sem foco: o Badge é uma div; a base tem focus-visible:outline-none",
+      "status": "aceita em 21/10/2026"
+    },
+    {
+      "where": "Secondary · Hover",
+      "figma": "não existe",
+      "code": "color-mix(secondary, foreground 10%)",
+      "status": "aberta"
+    },
+    {
+      "where": "Hover a 80% nas instâncias",
+      "figma": "a opacidade do paint ligado a variável aparece na variante principal, mas não nas instâncias (vale também para o Button)",
+      "code": "hover:bg-<tom>/80",
+      "status": "aberta"
+    },
+    {
+      "where": "Cor dos ícones aninhados",
+      "figma": "base/primary-foreground, base/secondary-foreground, base/foreground, base/destructive-foreground e tailwind colors/base/white, sobras do kit",
+      "code": "o ícone herda a cor do texto (currentColor)",
+      "status": "aberta"
+    }
+  ]
+}

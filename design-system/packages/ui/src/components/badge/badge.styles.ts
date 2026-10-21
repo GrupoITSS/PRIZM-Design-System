@@ -22,8 +22,10 @@ export const badgeVariants = cva(
       variant: {
         // Figma "Default" is bound to `color/primary`.
         default: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        // Hover overlays foreground at 10%, as in the Button: secondary is close to the page
+        // background, and at 80% it barely changed.
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "border-transparent bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklab,var(--prizm-color-secondary),var(--prizm-color-foreground)_10%)]",
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         // Same tokens as the Figma Button outline.
