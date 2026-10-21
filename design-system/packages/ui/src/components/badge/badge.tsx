@@ -8,6 +8,7 @@ import type { BadgeProps } from "./badge.types";
  *
  * - `variant`: semantic color (`primary`, `success`, …)
  * - `appearance`: `contained` | `outlined` | `text`
+ * - `shape`: `default` | `number` (round counter for digits)
  * - `startIcon` / `endIcon`: icons with data-icon="inline-start" / "inline-end"
  *
  * @see https://ui.shadcn.com/docs/components/radix/badge
@@ -17,6 +18,7 @@ const Badge = ({
   variant,
   appearance = "contained",
   size,
+  shape,
   loading,
   startIcon,
   endIcon,
@@ -33,7 +35,7 @@ const Badge = ({
       data-loading={loading ? "" : undefined}
       aria-busy={loading || undefined}
       className={cn(
-        badgeVariants({ variant, appearance, size }),
+        badgeVariants({ variant, appearance, size, shape }),
         loading && "opacity-80",
         className,
       )}

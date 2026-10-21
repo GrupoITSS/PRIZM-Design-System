@@ -10,8 +10,8 @@ import { cva, type VariantProps } from "class-variance-authority";
  */
 export const badgeVariants = cva(
   [
-    "inline-flex w-fit items-center whitespace-nowrap rounded-full border font-normal leading-none",
-    "px-1.5 transition-colors",
+    "inline-flex w-fit items-center whitespace-nowrap rounded-md border font-semibold leading-none",
+    "px-2 py-0.5 transition-colors",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0",
     "focus-visible:outline-none",
   ].join(" "),
@@ -24,6 +24,7 @@ export const badgeVariants = cva(
         success: "",
         warning: "",
         info: "",
+        verified: "",
         violet: "",
         destructive: "",
         outline: "",
@@ -38,13 +39,18 @@ export const badgeVariants = cva(
         md: "h-6 gap-1.5 text-xs [&_svg:not([class*='size-'])]:size-3.5",
         lg: "h-7 gap-2 text-sm [&_svg:not([class*='size-'])]:size-4",
       },
+      // `number` is the Figma "Badge Number": a round counter (min 20px wide) for digits.
+      shape: {
+        default: "",
+        number: "min-w-5 justify-center rounded-full px-1 tabular-nums",
+      },
     },
     compoundVariants: [
       {
         appearance: "contained",
         variant: "default",
-        // @pas/ui "default" = contrast color (near-black in light, near-white in dark).
-        class: "border-transparent bg-foreground text-background hover:bg-foreground/80",
+        // Figma "Default" is bound to `color/primary` (the old @pas/ui contrast color was wrong).
+        class: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
       },
       {
         appearance: "contained",
@@ -70,6 +76,22 @@ export const badgeVariants = cva(
         appearance: "contained",
         variant: "info",
         class: "border-transparent bg-info text-info-foreground hover:bg-info/80",
+      },
+      {
+        // Figma "Verified": the info tone (`color/info`), used with a check icon.
+        appearance: "contained",
+        variant: "verified",
+        class: "border-transparent bg-info text-info-foreground hover:bg-info/80",
+      },
+      {
+        appearance: "outlined",
+        variant: "verified",
+        class: "border-info/40 bg-info-weak text-info-strong",
+      },
+      {
+        appearance: "text",
+        variant: "verified",
+        class: "border-transparent bg-transparent text-foreground [&_[data-icon]]:text-info",
       },
       {
         appearance: "contained",
@@ -174,6 +196,7 @@ export const badgeVariants = cva(
       variant: "default",
       appearance: "contained",
       size: "sm",
+      shape: "default",
     },
   },
 );

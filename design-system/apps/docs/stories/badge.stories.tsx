@@ -26,13 +26,23 @@ const meta: Meta<typeof Badge> = {
         "success",
         "warning",
         "info",
+        "verified",
+        "violet",
         "destructive",
         "outline",
       ],
     },
+    appearance: {
+      control: "select",
+      options: ["contained", "outlined", "text"],
+    },
     size: {
       control: "select",
       options: ["sm", "md", "lg"],
+    },
+    shape: {
+      control: "select",
+      options: ["default", "number"],
     },
     loading: {
       control: "boolean",
@@ -63,8 +73,69 @@ export const Variants: Story = {
       <Badge variant="success">Success</Badge>
       <Badge variant="warning">Warning</Badge>
       <Badge variant="info">Info</Badge>
+      <Badge variant="violet">Violet</Badge>
       <Badge variant="destructive">Destructive</Badge>
       <Badge variant="outline">Outline</Badge>
+    </div>
+  ),
+};
+
+// "Verified" in Figma: the info tone with a check icon.
+export const Verified: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-2">
+      <Badge variant="verified" startIcon={<CheckCircle />}>
+        Verified
+      </Badge>
+      <Badge variant="verified" appearance="outlined" startIcon={<CheckCircle />}>
+        Verified
+      </Badge>
+      <Badge variant="verified" appearance="text" startIcon={<CheckCircle />}>
+        Verified
+      </Badge>
+    </div>
+  ),
+};
+
+// "Badge Number" in Figma: a round counter for digits.
+export const NumberBadge: Story = {
+  render: () => (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge variant="default" shape="number">
+        8
+      </Badge>
+      <Badge variant="secondary" shape="number">
+        99
+      </Badge>
+      <Badge variant="outline" shape="number">
+        20+
+      </Badge>
+      <Badge variant="destructive" shape="number">
+        3
+      </Badge>
+    </div>
+  ),
+};
+
+export const Appearances: Story = {
+  render: () => (
+    <div className="flex flex-col gap-2">
+      {(["contained", "outlined", "text"] as const).map((appearance) => (
+        <div key={appearance} className="flex flex-wrap gap-2">
+          <Badge variant="primary" appearance={appearance}>
+            Primary
+          </Badge>
+          <Badge variant="success" appearance={appearance}>
+            Success
+          </Badge>
+          <Badge variant="warning" appearance={appearance}>
+            Warning
+          </Badge>
+          <Badge variant="destructive" appearance={appearance}>
+            Destructive
+          </Badge>
+        </div>
+      ))}
     </div>
   ),
 };
