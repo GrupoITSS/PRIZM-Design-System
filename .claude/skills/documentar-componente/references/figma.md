@@ -49,13 +49,13 @@ Crie o frame "<Componente> — Documentação Prizm" na página do componente, a
 | --- | --- | --- |
 | 01 | Cabeçalho | Nome, uma frase do que faz, versão, base (shadcn/ui), links Figma/código/CMS. |
 | 02 | Playground por tema | Grade 5 marcas (PAS, PAS · CMS, Docnix, ITSS · AFIPE, ITSS · Digitrol) × claro/escuro. Cada célula é um frame com **modo explícito** nas coleções Theme e Mode do Core (`setExplicitVariableModeForCollection`), fundo `color/background`. Não troque cor à mão: só o modo. |
-| 03 | Variantes | Uma instância de cada variante, tamanho padrão, rótulo com o nome do código. |
+| 03 | Variantes | Uma instância de cada variante do component set, com as decisões da etapa 1, tamanho padrão, rótulo com o nome do código. Com mais de um eixo, uma grade com as combinações. |
 | 04 | Quando usar | Hierarquia (quando o componente tem ênfases) e cards Faça / Evite, com instâncias reais. |
-| 05 | API | Gerada de `componentPropertyDefinitions` do set: propriedade Figma, tipo, valores, padrão. Confira com as props do `.tsx` e marque o que só existe de um lado (paridade). |
+| 05 | API | Gerada de `componentPropertyDefinitions` do set: propriedade Figma, tipo, valores, padrão. Confira com as props do código e marque o que só existe de um lado (a tabela de paridade da etapa 1). |
 | 06 | Anatomia | Instância com marcadores numerados nas partes (ícone, rótulo, atalho…). |
 | 07 | Tamanhos | Gerado das ligações: altura (`control-height/*`), padding, gap, ícone, texto. Tabela de `control-height` por marca (Digitrol é um degrau abaixo). |
 | 08 | Tokens por variante | Gerado: para cada variante, a variável ligada a fundo, texto, borda, sombra, e o hover. |
-| 09 | Estados | Default, hover, foco, pressed, disabled, loading (os que existirem) e a regra de hover que se aplica. |
+| 09 | Estados | Os estados do component set (hover, foco, pressed, disabled, loading, erro…), conferidos com o que o código trata, e a regra de hover que se aplica. |
 | 10 | Acessibilidade | Resultado da etapa 4: tabela de contraste por marca·modo e os 4 blocos. |
 | 11 | Changelog | Versão, data, mudança. Junte dependências aqui, se houver. |
 

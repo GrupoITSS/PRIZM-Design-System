@@ -25,7 +25,7 @@ Campos, na ordem do modelo:
 | `variants` | Por variante: `background`, `text`, `border` (`null` quando não há), `shadow` se houver, `hover` com `rule` (a regra por tipo de fundo, em texto) e os tokens e opacidades da regra |
 | `states` | `focus` (`ring`, `ringWidth`, `ringOffset`, `ringOffsetWidth`), `pressed`, `disabled`, `loading` (opacidade e atributo) |
 | `sizes` | Por tamanho: `height`, `width` (nos quadrados), `paddingX`, `gap`, `radius`, `fontSize` |
-| `divergences` | Lista de `{ where, figma, code, status: "aberta" }` para cada diferença Figma × código |
+| `divergences` | Lista de `{ where, figma, code, status: "aberta" }` para cada diferença Figma × código, incluindo as da paridade do inventário (etapa 1) ainda sem decisão do dono do DS |
 
 Nomes de token no formato do Figma (`color/primary`, `control-height/md`). Componente sem variantes de cor (ex.: Input) usa só as chaves que fazem sentido; não invente variante. O modelo desse caso é o `input.tokens.json` (PR #104):
 - `states`: `default`, `focus`, `error`, `errorFocus` e `disabled`, cada um com fundo, texto, borda e anel.
