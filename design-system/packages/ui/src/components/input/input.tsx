@@ -74,10 +74,9 @@ function Input({
       {isPassword ? (
         <button
           type="button"
-          tabIndex={-1}
           aria-label={showPassword ? "Ocultar senha" : "Exibir senha"}
           onClick={() => setShowPassword((v) => !v)}
-          className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          className="cursor-pointer absolute right-2 top-1/2 inline-flex size-6 -translate-y-1/2 items-center justify-center text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
         >
           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </button>

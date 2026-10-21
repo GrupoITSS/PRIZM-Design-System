@@ -8,7 +8,7 @@ type NativeInputProps = React.InputHTMLAttributes<HTMLInputElement>;
  *
  * Extende os atributos nativos de `<input />`, sobrescrevendo a prop
  * `size` nativa (numérica) para usar as variantes tipadas em
- * `input.styles.ts` (`"sm" | "default" | "lg"`).
+ * `input.styles.ts` (`"sm" | "md" | "lg"`).
  */
 export interface InputProps extends Omit<NativeInputProps, "size">, InputVariantProps {
   /**

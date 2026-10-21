@@ -50,7 +50,7 @@ export interface InputGroupProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   /** Desabilita o controle e aplica estilos de disabled no grupo (API simplificada). */
   disabled?: boolean;
   /** Tamanho do Input interno (API simplificada). */
-  size?: "sm" | "md" | "default" | "lg";
+  size?: "sm" | "md" | "lg";
 }
 
 export type InputGroupAddonProps = React.HTMLAttributes<HTMLDivElement> &
@@ -65,7 +65,7 @@ export interface InputGroupInputProps extends Omit<
   "size"
 > {
   /** Variante de tamanho do Input (PRIZM), não o atributo HTML numérico. */
-  size?: "sm" | "md" | "default" | "lg";
+  size?: "sm" | "md" | "lg";
 }
 
 export type InputGroupTextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;

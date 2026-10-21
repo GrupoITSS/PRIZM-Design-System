@@ -1,0 +1,98 @@
+{
+  "component": "Input",
+  "description": "Mapa de tokens do Input: o que cada estado, parte e tamanho usa do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 21/10/2026 e conferido contra input.styles.ts pelo teste input.tokens.test.ts. Nomes no formato do Figma (color/input); no código viram classes Tailwind (border-input). O Input não tem variantes de cor: no Figma, Default, File e Password correspondem ao atributo type.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=65-533",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25188-1959",
+    "code": "design-system/packages/ui/src/components/input/input.tsx",
+    "story": "design-system/apps/docs/stories/input.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=e01cbbac-8a47-44ab-a16f-a9975c9d7cb5&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/104"
+    ],
+    "jira": [
+      "GIES-1725"
+    ]
+  },
+  "states": {
+    "default": {
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "placeholder": "color/muted-foreground",
+      "border": "color/input",
+      "shadow": "shadow/xs"
+    },
+    "focus": {
+      "border": "color/transparent",
+      "ring": "color/ring",
+      "ringWidth": 2,
+      "ringOffsetWidth": 0
+    },
+    "error": {
+      "border": "color/destructive",
+      "attribute": "aria-invalid"
+    },
+    "errorFocus": {
+      "border": "color/destructive",
+      "ring": "color/ring",
+      "ringWidth": 2
+    },
+    "disabled": {
+      "background": "color/muted",
+      "text": "color/muted-foreground",
+      "border": "color/transparent",
+      "shadow": null,
+      "opacity": 1,
+      "attribute": "disabled"
+    }
+  },
+  "parts": {
+    "startIcon": {
+      "size": 16,
+      "color": "color/muted-foreground"
+    },
+    "passwordToggle": {
+      "size": 24,
+      "iconSize": 16,
+      "color": "color/muted-foreground"
+    },
+    "fileButton": {
+      "text": "color/foreground",
+      "fontWeight": "font-weight/normal"
+    }
+  },
+  "sizes": {
+    "sm": {
+      "height": "control-height/sm",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/xs"
+    },
+    "md": {
+      "height": "control-height/md",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    },
+    "lg": {
+      "height": "control-height/lg",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    }
+  },
+  "divergences": [
+    {
+      "where": "lg · tamanho do texto",
+      "figma": "text/sm",
+      "code": "text-base md:text-sm (16px abaixo do breakpoint md)",
+      "status": "aberta"
+    }
+  ]
+}
