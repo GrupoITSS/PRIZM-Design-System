@@ -114,7 +114,7 @@
     {
       "where": "State = Focus",
       "figma": "anel do Button: color/ring (spread 5) sobre color/ring-offset (spread 2)",
-      "code": "sem foco: o Badge é uma div; a base tem focus-visible:outline-none",
+      "code": "sem foco: o Badge é uma div e não remove o outline",
       "status": "aceita em 21/10/2026"
     },
     {

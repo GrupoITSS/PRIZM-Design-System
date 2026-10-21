@@ -15,7 +15,6 @@ export const badgeVariants = cva(
     "inline-flex w-fit items-center whitespace-nowrap rounded-md border font-semibold leading-none",
     "px-2 py-0.5 transition-colors",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0",
-    "focus-visible:outline-none",
   ].join(" "),
   {
     variants: {

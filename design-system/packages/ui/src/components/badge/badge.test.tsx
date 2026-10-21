@@ -111,4 +111,12 @@ describe("Badge (PRIZM / Figma)", () => {
     expect(badge).toHaveAttribute("aria-busy", "true");
     expect(badge).toHaveAttribute("data-loading", "");
   });
+
+  it("não remove o outline sem um anel no lugar (Critério de acessibilidade, 2.4.7)", () => {
+    render(<Badge variant="default">Outline</Badge>);
+    const classes = screen.getByText("Outline").className.split(" ");
+    const semOutline = classes.some((c) => c.endsWith("outline-none"));
+    const comAnel = classes.some((c) => c.startsWith("focus-visible:ring"));
+    expect(semOutline && !comAnel).toBe(false);
+  });
 });
