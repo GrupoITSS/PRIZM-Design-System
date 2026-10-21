@@ -7,6 +7,14 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Input } from "@grupoitss/prizm-ui/input";
 
+// Traceability: the component set in [PRIZM] Componentes, its documentation
+// frame and the CMS article. The token map lives next to the component
+// (input.tokens.json) and is checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=65-533";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25188-1959";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=e01cbbac-8a47-44ab-a16f-a9975c9d7cb5&version=v1";
+
 const meta: Meta<typeof Input> = {
   title: "Primários/Input",
   component: Input,
@@ -18,6 +26,7 @@ const meta: Meta<typeof Input> = {
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
           "Input do design system PRIZM. Wrapper estilizado para o `<input />` nativo, com tamanhos (`size`) e tokens de cor alinhados ao tema PRIZM.\n\n" +
           "Esta página também demonstra exemplos de uso em conjunto com `Field`, baseados na documentação do shadcn/ui.\n\n" +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).\n\n` +
           "**Documentação base:** " +
           '<a href="https://ui.shadcn.com/docs/components/radix/input" target="_blank" rel="noopener noreferrer">Input — shadcn/ui (Radix)</a>',
       },
