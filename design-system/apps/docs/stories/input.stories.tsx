@@ -37,7 +37,7 @@ const meta: Meta<typeof Input> = {
     placeholder: { control: "text" },
     size: {
       control: "select",
-      options: ["sm", "md", "default", "lg"],
+      options: ["sm", "md", "lg"],
     },
     type: {
       control: "text",
@@ -91,7 +91,6 @@ export const Sizes: Story = {
     <div className="flex flex-col gap-3">
       <Input {...args} size="sm" placeholder="Pequeno (sm)" />
       <Input {...args} size="md" placeholder="Cockpit (md)" />
-      <Input {...args} size="default" placeholder="Padrão (default)" />
       <Input {...args} size="lg" placeholder="Grande (lg)" />
     </div>
   ),

@@ -62,7 +62,7 @@ function InputGroupWithAddons({
     if (key === "style" || key === "ref") {
       divProps[key as keyof React.HTMLAttributes<HTMLDivElement>] = value as never;
     } else if (key === "size" && typeof value === "number") {
-      // Omit native input size (number); Input component uses "sm" | "default" | "lg"
+      // Omit native input size (number); Input component uses "sm" | "md" | "lg"
       continue;
     } else if (key === "aria-invalid") {
       ariaInvalid = value as React.AriaAttributes["aria-invalid"];
