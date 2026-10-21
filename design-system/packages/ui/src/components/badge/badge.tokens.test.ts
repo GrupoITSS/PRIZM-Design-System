@@ -22,24 +22,11 @@ describe("Badge × mapa de tokens (badge.tokens.json)", () => {
   });
 
   for (const [variant, tokens] of Object.entries(map.variants)) {
-    it(`${variant}: fundo, texto, borda e hover do mapa estão nas classes`, () => {
+    it(`${variant}: fundo, texto e borda do mapa estão nas classes`, () => {
       const classes = classesOf(variant);
       expect(classes).toContain(`bg-${color(tokens.background)}`);
       expect(classes).toContain(`text-${color(tokens.text)}`);
       if (tokens.border) expect(classes).toContain(`border-${color(tokens.border)}`);
-      const hover = tokens.hover as {
-        opacity?: number;
-        overlay?: string;
-        overlayOpacity?: number;
-        text?: string;
-      };
-      if (hover.opacity) expect(classes).toContain(`hover:bg-${color(tokens.background)}/80`);
-      if (hover.overlay) {
-        const overlay = classes.find((c) => c.startsWith("hover:bg-[color-mix("));
-        expect(overlay).toContain(`--prizm-${String(hover.overlay).replace("/", "-")}`);
-        expect(overlay).toContain(`_${Math.round(Number(hover.overlayOpacity) * 100)}%`);
-      }
-      if (hover.text) expect(classes).toContain(`hover:text-${color(String(hover.text))}`);
     });
   }
 
@@ -65,9 +52,12 @@ describe("Badge × mapa de tokens (badge.tokens.json)", () => {
     expect(classes).toContain(`rounded-${step(n.radius)}`);
   });
 
-  it("foco: o Badge não tem anel no código, e a divergência está registrada", () => {
-    expect(classesOf("default").some((c) => c.startsWith("focus-visible:ring"))).toBe(false);
-    expect(map.states.focus.code).toBeNull();
-    expect(map.divergences.some((d) => d.where === "State = Focus")).toBe(true);
+  it("estados: o mapa registra que o Badge é estático, e o código não tem hover nem foco", () => {
+    expect(map.states.hover).toBeNull();
+    expect(map.states.focus).toBeNull();
+    for (const variant of Object.keys(map.variants)) {
+      const classes = classesOf(variant);
+      expect(classes.some((c) => /^(hover|focus|focus-visible):/.test(c))).toBe(false);
+    }
   });
 });

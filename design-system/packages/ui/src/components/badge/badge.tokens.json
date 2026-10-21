@@ -15,88 +15,48 @@
     "default": {
       "background": "color/primary",
       "text": "color/primary-foreground",
-      "border": null,
-      "hover": {
-        "rule": "cor de tom a 80%",
-        "background": "color/primary",
-        "opacity": 0.8
-      }
+      "border": null
     },
     "secondary": {
       "background": "color/secondary",
       "text": "color/secondary-foreground",
-      "border": null,
-      "hover": {
-        "rule": "sobreposição de foreground a 10%",
-        "background": "color/secondary",
-        "overlay": "color/foreground",
-        "overlayOpacity": 0.1
-      }
+      "border": null
     },
     "outline": {
       "background": "color/input-background",
       "text": "color/foreground",
       "border": "color/input",
-      "shadow": "style/shadow/xs",
-      "hover": {
-        "rule": "sem fundo: accent",
-        "background": "color/accent",
-        "text": "color/accent-foreground"
-      }
+      "shadow": "style/shadow/xs"
     },
     "destructive": {
       "background": "color/destructive",
       "text": "color/destructive-foreground",
-      "border": null,
-      "hover": {
-        "rule": "cor de tom a 80%",
-        "background": "color/destructive",
-        "opacity": 0.8
-      }
+      "border": null
     },
     "success": {
       "background": "color/success",
       "text": "color/success-foreground",
-      "border": null,
-      "hover": {
-        "rule": "cor de tom a 80%",
-        "background": "color/success",
-        "opacity": 0.8
-      }
+      "border": null
     },
     "verified": {
       "background": "color/info",
       "text": "color/info-foreground",
-      "border": null,
-      "hover": {
-        "rule": "cor de tom a 80%",
-        "background": "color/info",
-        "opacity": 0.8
-      }
+      "border": null
     },
     "warning": {
       "background": "color/warning",
       "text": "color/warning-foreground",
-      "border": null,
-      "hover": {
-        "rule": "cor de tom a 80%",
-        "background": "color/warning",
-        "opacity": 0.8
-      }
+      "border": null
     }
   },
   "states": {
-    "focus": {
-      "ring": "color/ring",
-      "ringSpread": 5,
-      "ringOffset": "color/ring-offset",
-      "ringOffsetSpread": 2,
-      "code": null
-    },
+    "hover": null,
+    "focus": null,
     "loading": {
       "opacity": 0.8,
       "attribute": "aria-busy"
-    }
+    },
+    "note": "O Badge é estático: só o estado padrão, no Figma e no código (decisão de 21/10/2026)."
   },
   "sizes": {
     "sm": {
@@ -139,24 +99,6 @@
     }
   },
   "divergences": [
-    {
-      "where": "State = Focus",
-      "figma": "anel do Button: color/ring (spread 5) sobre color/ring-offset (spread 2)",
-      "code": "sem foco: o Badge é uma div e não remove o outline",
-      "status": "aceita em 21/10/2026"
-    },
-    {
-      "where": "Secondary · Hover",
-      "figma": "não existe",
-      "code": "color-mix(secondary, foreground 10%)",
-      "status": "aberta"
-    },
-    {
-      "where": "Hover a 80% nas instâncias",
-      "figma": "a opacidade do paint ligado a variável aparece na variante principal, mas não nas instâncias (vale também para o Button)",
-      "code": "hover:bg-<tom>/80",
-      "status": "aberta"
-    },
     {
       "where": "Cor dos ícones aninhados",
       "figma": "base/primary-foreground, base/secondary-foreground, base/foreground, base/destructive-foreground e tailwind colors/base/white, sobras do kit",

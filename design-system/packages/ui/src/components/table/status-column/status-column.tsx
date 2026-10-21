@@ -17,10 +17,10 @@ const CHIP_BADGE = {
   active: { variant: "success", className: undefined },
   inactive: { variant: "secondary", className: undefined },
   error: { variant: "destructive", className: undefined },
-  default: { variant: "default", className: "bg-foreground text-background hover:bg-foreground/80" },
+  default: { variant: "default", className: "bg-foreground text-background" },
 } as const;
 
-const INDICATOR_SURFACE = "bg-transparent text-foreground hover:bg-transparent";
+const INDICATOR_SURFACE = "bg-transparent text-foreground";
 
 const INDICATOR_BADGE = {
   active: { variant: "success", className: `${INDICATOR_SURFACE} [&_[data-icon]]:text-success` },
@@ -32,7 +32,10 @@ const INDICATOR_BADGE = {
     variant: "destructive",
     className: `${INDICATOR_SURFACE} [&_[data-icon]]:text-destructive`,
   },
-  default: { variant: "default", className: `${INDICATOR_SURFACE} [&_[data-icon]]:text-foreground` },
+  default: {
+    variant: "default",
+    className: `${INDICATOR_SURFACE} [&_[data-icon]]:text-foreground`,
+  },
 } as const;
 
 const glyphClassName = "size-3 shrink-0";

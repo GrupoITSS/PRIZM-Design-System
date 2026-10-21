@@ -32,8 +32,6 @@ describe("Badge (PRIZM / Figma)", () => {
       "bg-input-background",
       "text-foreground",
       "shadow-xs",
-      "hover:bg-accent",
-      "hover:text-accent-foreground",
     );
   });
 
@@ -44,20 +42,12 @@ describe("Badge (PRIZM / Figma)", () => {
 
   it("success usa bg-success e o texto success-foreground", () => {
     render(<Badge variant="success">Success</Badge>);
-    expect(screen.getByText("Success")).toHaveClass(
-      "bg-success",
-      "text-success-foreground",
-      "hover:bg-success/80",
-    );
+    expect(screen.getByText("Success")).toHaveClass("bg-success", "text-success-foreground");
   });
 
   it("warning usa bg-warning e o texto warning-foreground", () => {
     render(<Badge variant="warning">Warning</Badge>);
-    expect(screen.getByText("Warning")).toHaveClass(
-      "bg-warning",
-      "text-warning-foreground",
-      "hover:bg-warning/80",
-    );
+    expect(screen.getByText("Warning")).toHaveClass("bg-warning", "text-warning-foreground");
   });
 
   it("tamanhos sm (padrão), md e lg, como no Figma", () => {
@@ -136,6 +126,25 @@ describe("Badge (PRIZM / Figma)", () => {
     const badge = screen.getByText("Loading");
     expect(badge).toHaveAttribute("aria-busy", "true");
     expect(badge).toHaveAttribute("data-loading", "");
+  });
+
+  it("é estático: sem classes de hover, foco ou transição", () => {
+    for (const variant of [
+      "default",
+      "secondary",
+      "outline",
+      "destructive",
+      "success",
+      "warning",
+      "verified",
+    ] as const) {
+      const { unmount } = render(<Badge variant={variant}>Estático</Badge>);
+      const classes = screen.getByText("Estático").className.split(" ");
+      expect(
+        classes.filter((c) => /^(hover|focus|focus-visible|active):|^transition/.test(c)),
+      ).toEqual([]);
+      unmount();
+    }
   });
 
   it("não remove o outline sem um anel no lugar (Critério de acessibilidade, 2.4.7)", () => {
