@@ -48,11 +48,17 @@ A referência do componente é o shadcn e o `[PRIZM] Componentes`, com as decis�
 1. **Código, sempre de `origin/main`**: `git fetch origin` na raiz do checkout e leia com `git show origin/main:design-system/packages/ui/src/components/<nome>/<arquivo>`. O checkout local pode estar dias atrás ou em outra branch (no piloto estava em 14/10, com o arquivo em outro caminho). Não leia o `@pas/ui` do Azure nem o do pas-web: são versões antigas, com outros padrões, e o que valia de lá já está no `prizm-ui`.
    Anote: variantes e tamanhos do `cva` (também os `compoundVariants`), props, classes de cada estado (hover, foco, active, disabled), atributos ARIA, dependências (outros componentes, ícones).
 2. **Inventário de uso**: rode `scripts/inventario-uso.mjs <nome>`. Ele cruza o código, as stories, os usos em JSX no repositório (stories de outros componentes e composições dentro do `prizm-ui`) e o Storybook publicado (https://grupoitss.github.io/PRIZM-Design-System/). Os controles das stories costumam estar incompletos: para saber o que é usado, valem o `cva` e as props. Como rodar, como ler e o que fazer com cada diferença em `references/inventario.md`.
-3. **Stories**: `design-system/apps/docs/stories/<nome>.stories.tsx` (também de `origin/main`). Mostram os usos previstos e servem de exemplos para o artigo; o inventário traz os links publicados de cada uma.
-4. **Figma**: no `[PRIZM] Componentes` (fileKey `7NPb3iuxjitMdpudp4yHTl`), ache a página do componente e o component set com `get_metadata`. Leia as propriedades com `scripts/propriedades-figma.js` e rode o inventário de novo com `--figma`, para a tabela de paridade.
-5. **CMS**: `search` pelo nome, para saber se já existe artigo.
+3. **Família do componente no Storybook publicado**: o componente não vive sozinho. Ache os irmãos que dividem o mesmo papel no Storybook (https://grupoitss.github.io/PRIZM-Design-System/, pela lista do `index.json`) e rode o inventário de cada um.
+   - Exemplos de família: campo = Input, InputGroup, Select, Textarea, DatePicker, MaskedInput, InputOTP e Field; ação = Button, ButtonGroup e Toggle.
+   - Compare a escala de tamanhos, as regras de foco, de disabled e de erro, e as props de rótulo, obrigatório e loading.
+   - Decisão tomada só num componente da família deixa os outros com outra escala. No Input (21/10/2026), sm/md/lg e o foco na base entraram só nele (PR #104). O contêiner do InputGroup ficou com 48px em volta de um campo de 40px, e o alinhamento foi para um segundo PR (#107).
 
-Feche a etapa com um resumo curto: o que o Figma e o shadcn definem, o que está em uso (inventário), a paridade em três grupos (em uso e fora do Figma, no Figma e fora do código, nome diferente) e se já há doc. **⏸ O dono do DS decide** cada diferença: entra no Figma, ou sai do código com migração dos usos. A documentação segue o Figma com essas decisões; o inventário aponta o que conferir e o que migrar.
+   Detalhes em `references/inventario.md`, seção Família.
+4. **Stories**: `design-system/apps/docs/stories/<nome>.stories.tsx` (também de `origin/main`). Mostram os usos previstos e servem de exemplos para o artigo; o inventário traz os links publicados de cada uma.
+5. **Figma**: no `[PRIZM] Componentes` (fileKey `7NPb3iuxjitMdpudp4yHTl`), ache a página do componente e o component set com `get_metadata`. Leia as propriedades com `scripts/propriedades-figma.js` e rode o inventário de novo com `--figma`, para a tabela de paridade.
+6. **CMS**: `search` pelo nome, para saber se já existe artigo.
+
+Feche a etapa com um resumo curto: o que o Figma e o shadcn definem, o que está em uso (inventário), a paridade em três grupos (em uso e fora do Figma, no Figma e fora do código, nome diferente), o que diverge na família e se já há doc. **⏸ O dono do DS decide** cada diferença: entra no Figma, ou sai do código com migração dos usos. A documentação segue o Figma com essas decisões; o inventário aponta o que conferir e o que migrar.
 
 ### 2. Figma ligado ao Core
 
