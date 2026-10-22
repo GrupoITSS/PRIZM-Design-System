@@ -55,6 +55,8 @@ Em `design-system/apps/docs/stories/<nome>.stories.tsx`, na `parameters.docs.des
 
 Confira o link que já existe em cada story. No Button ele apontava para o arquivo antigo "[TESTE LUCAS] Design Tokens Core" (`DKxVyaDsRPJGk3lvL630yS`); o certo é o `[PRIZM] Componentes` (`7NPb3iuxjitMdpudp4yHTl`).
 
+Acrescente também a tag `documentado` ao `tags` do `meta` (`tags: ["autodocs", "documentado"]`) e confira que o `title` está em `Primários/<Nome>`. A tag marca no filtro do Storybook os componentes que já passaram por este fluxo; os que não a têm ainda precisam ser revisados e documentados. Button, Badge e Input já têm.
+
 O lint e o `tsc` do app `docs` dão erros de tipo locais porque `@grupoitss/prizm-ui` não está compilado. Antes de concluir que a mudança quebrou algo, rode o mesmo comando no arquivo da main e compare; só conta o erro que a main não tem.
 
 ## 4. Seção no artigo
