@@ -36,15 +36,14 @@ export function useInputGroupWrapper(
     }
   };
 
+  // Foco, erro e disabled seguem o Input (decisões de 21/10/2026, aplicadas ao grupo em 22/10/2026):
+  // anel de 2px em `ring` com a borda transparente; no erro a borda fica `destructive` (classe da
+  // base) e o anel continua `ring`; disabled em `bg-muted`, sem sombra nem opacidade.
   const wrapperClassName = cn(
     INPUT_GROUP_BASE_CLASSES,
-    disabled && "cursor-not-allowed opacity-50",
-    // Ring neutro (foco)
-    isFocused && !isInvalid && "ring-[3px] ring-ring/50",
-    // Ring de erro (foco + inválido)
-    isFocused &&
-      isInvalid &&
-      "ring-[3px] ring-destructive/20",
+    disabled && "cursor-not-allowed border-transparent bg-muted shadow-none",
+    isFocused && !isInvalid && "border-transparent ring-2 ring-ring",
+    isFocused && isInvalid && "ring-2 ring-ring",
     className,
   );
 

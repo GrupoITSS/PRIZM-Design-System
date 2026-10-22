@@ -92,7 +92,6 @@ function InputGroupWithAddons({
     <div
       data-slot="input-group"
       role="group"
-      aria-invalid={ariaInvalid}
       data-invalid={isInvalid ? "true" : undefined}
       data-disabled={disabled ? "true" : undefined}
       aria-disabled={disabled || undefined}
@@ -103,20 +102,21 @@ function InputGroupWithAddons({
     >
       {isTextarea ? (
         <>
-          <InputGroupTextarea {...controlProps} />
+          {/* Complementos de início antes do controle no DOM: a ordem do Tab segue a da tela. */}
           {addonBlockStart != null && (
             <InputGroupAddon align="block-start">{addonBlockStart}</InputGroupAddon>
           )}
+          <InputGroupTextarea {...controlProps} />
           {addonBlockEnd != null && (
             <InputGroupAddon align="block-end">{addonBlockEnd}</InputGroupAddon>
           )}
         </>
       ) : (
         <>
-          <InputGroupInput {...controlProps} />
           {addonInlineStart != null && (
             <InputGroupAddon align="inline-start">{addonInlineStart}</InputGroupAddon>
           )}
+          <InputGroupInput {...controlProps} />
           {addonInlineEnd != null && (
             <InputGroupAddon align="inline-end">{addonInlineEnd}</InputGroupAddon>
           )}
@@ -217,6 +217,7 @@ function InputGroupButton({
       type={type}
       data-size={size}
       variant={variant}
+      size={size}
       className={cn(inputGroupButtonVariants({ size }), className)}
       {...props}
     />
