@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   InputGroup,
   InputGroupAddon,
@@ -124,5 +124,98 @@ describe("InputGroup: altura do contêiner segue o tamanho do Input", () => {
     }
     expect(classes).not.toContain("has-[[data-size=lg]]:h-12");
     expect(classes.some((c) => c.includes("data-size=default"))).toBe(false);
+  });
+});
+
+describe("InputGroup: foco, erro e disabled seguem o Input (acessibilidade)", () => {
+  const grupo = (container: HTMLElement) =>
+    container.querySelector<HTMLElement>("[data-slot=input-group]")!;
+
+  it("foco: anel de 2px em ring (sem translucidez) e borda transparente", () => {
+    const { container } = render(<InputGroup placeholder="c" addonInlineEnd={<span>x</span>} />);
+    fireEvent.focus(screen.getByPlaceholderText("c"));
+    const classes = [...grupo(container).classList];
+    expect(classes).toEqual(expect.arrayContaining(["ring-2", "ring-ring", "border-transparent"]));
+    expect(classes.some((c) => c.startsWith("ring-ring/") || c === "ring-[3px]")).toBe(false);
+  });
+
+  it("erro com foco: borda destructive e o mesmo anel ring", () => {
+    const { container } = render(
+      <InputGroup placeholder="c" aria-invalid addonInlineEnd={<span>x</span>} />,
+    );
+    fireEvent.focus(screen.getByPlaceholderText("c"));
+    const classes = [...grupo(container).classList];
+    expect(classes).toEqual(expect.arrayContaining(["ring-2", "ring-ring"]));
+    expect(classes).toContain("has-[[data-slot][aria-invalid=true]]:border-destructive");
+    expect(classes).not.toContain("border-transparent");
+    expect(classes.some((c) => c.startsWith("ring-destructive"))).toBe(false);
+  });
+
+  it("disabled: bg-muted, sem sombra e sem opacidade no grupo", () => {
+    const { container } = render(
+      <InputGroup placeholder="c" disabled addonInlineEnd={<span>x</span>} />,
+    );
+    const classes = [...grupo(container).classList];
+    expect(classes).toEqual(expect.arrayContaining(["bg-muted", "shadow-none"]));
+    expect(classes).not.toContain("opacity-50");
+    expect(screen.getByPlaceholderText("c")).toBeDisabled();
+  });
+
+  it("o aria-invalid fica no campo, não no role=group", () => {
+    const { container } = render(
+      <InputGroup placeholder="c" aria-invalid addonInlineEnd={<span>x</span>} />,
+    );
+    expect(grupo(container)).not.toHaveAttribute("aria-invalid");
+    expect(grupo(container)).toHaveAttribute("data-invalid", "true");
+    expect(screen.getByPlaceholderText("c")).toHaveAttribute("aria-invalid", "true");
+  });
+});
+
+describe("InputGroup: ordem de foco e nome dos botões", () => {
+  it("o complemento do início vem antes do campo no DOM (a ordem do Tab segue a tela)", () => {
+    const { container } = render(
+      <InputGroup
+        placeholder="c"
+        addonInlineStart={<InputGroupButton aria-label="início">I</InputGroupButton>}
+        addonInlineEnd={<InputGroupButton aria-label="fim">F</InputGroupButton>}
+      />,
+    );
+    const ordem = [...container.querySelectorAll("button, input")].map(
+      (e) => e.getAttribute("aria-label") ?? e.tagName.toLowerCase(),
+    );
+    expect(ordem).toEqual(["início", "input", "fim"]);
+  });
+
+  it("textarea: o complemento block-start vem antes do campo no DOM", () => {
+    const { container } = render(
+      <InputGroup
+        control="textarea"
+        placeholder="c"
+        addonBlockStart={<InputGroupButton aria-label="topo">T</InputGroupButton>}
+        addonBlockEnd={<InputGroupButton aria-label="base">B</InputGroupButton>}
+      />,
+    );
+    const ordem = [...container.querySelectorAll("button, textarea")].map(
+      (e) => e.getAttribute("aria-label") ?? e.tagName.toLowerCase(),
+    );
+    expect(ordem).toEqual(["topo", "textarea", "base"]);
+  });
+
+  it("avisa quando o botão só de ícone do complemento não tem nome", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(
+      <InputGroupButton size="icon-xs">
+        <svg aria-hidden="true" />
+      </InputGroupButton>,
+    );
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("sem nome acessível"));
+    warn.mockClear();
+    render(
+      <InputGroupButton size="icon-sm" aria-label="Limpar">
+        <svg aria-hidden="true" />
+      </InputGroupButton>,
+    );
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
   });
 });
