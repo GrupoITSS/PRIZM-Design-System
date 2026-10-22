@@ -98,6 +98,7 @@ Ligue as pontas, para que cada uma leve às outras e um teste avise quando Figma
 2. **Teste** `<nome>.tokens.test.ts` que confere o mapa contra as classes do `cva`.
 3. **Story** com os links do component set, do frame de doc e do artigo em `parameters.docs.description.component`. Confira o link antigo de cada story. Complete os controles que o inventário apontou como incompletos (valor do `cva` fora do `options`, prop sem controle).
 4. **Artigo**: seção final "Rastreabilidade" (tabela Ponta | Onde | Leva a, nota sobre o Code Connect, divergências abertas).
+5. **Tag `documentado`** na story: acrescente `"documentado"` ao `tags` do `meta` (`tags: ["autodocs", "documentado"]`). É o que separa, no filtro de tags do Storybook, o que já passou por este fluxo do que ainda falta revisar. O título da story fica em `Primários/<Nome>`.
 
 Os arquivos de código vão em worktree e PR, como na etapa 5. Divergências que o mapa achar (nome fora do padrão do Core, estado diferente do código) e as da paridade do inventário que seguirem abertas **⏸ vão para o dono do DS decidir**: corrigir o Figma, o código, ou deixar registrada como aberta.
 
