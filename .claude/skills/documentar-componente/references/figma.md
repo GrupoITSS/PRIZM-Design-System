@@ -65,7 +65,7 @@ Regra de hover por tipo de fundo (decidida em 20/10/2026), aplicar no Figma e no
 
 | Fundo | Hover | Figma |
 | --- | --- | --- |
-| Tom saturado (primary, destructive) | A cor a 80% | Fill único com opacidade 0.8, gravado como paint literal |
+| Tom saturado (primary, destructive) | A cor a 80% | Variante sem fill + camada "Hover fill" (absolute, STRETCH, raio ligado, fill 100%, `node.opacity = 0.8`). Paint com opacidade 0.8 se perde no religamento (22/10) |
 | Neutro ≈ fundo (secondary) | Sobreposição de `color/foreground` a 10% | Camada "Hover overlay" (absolute, STRETCH, raio ligado, fill 100%, `node.opacity = 0.1`) |
 | Sem fundo (outline, ghost) | Fundo `color/accent` | Fill `color/accent` |
 | Texto em tom (text) | Fundo `-weak` do tom | Fill `color/<tom>-weak` |
