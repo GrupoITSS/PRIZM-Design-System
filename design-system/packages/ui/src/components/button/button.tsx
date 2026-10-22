@@ -128,6 +128,7 @@ export function Button({
         aria-busy={loading || undefined}
         className={cn(buttonVariants({ variant, size }), className)}
         data-slot="button"
+        data-variant={variant ?? "default"}
         onClick={onClick}
         {...other}
       >
@@ -146,6 +147,7 @@ export function Button({
       aria-disabled={loading || undefined}
       className={cn(buttonVariants({ variant, size }), className)}
       data-slot="button"
+      data-variant={variant ?? "default"}
       disabled={disabled}
       onClick={(event) => {
         if (loading) {

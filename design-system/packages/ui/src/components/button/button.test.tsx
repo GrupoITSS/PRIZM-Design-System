@@ -111,4 +111,11 @@ describe("Button (PRIZM)", () => {
     );
     expect(warn).not.toHaveBeenCalled();
   });
+
+  it("marca data-variant, que o Badge usa para inverter as cores dentro do botão", () => {
+    const { rerender } = render(<Button>Salvar</Button>);
+    expect(screen.getByRole("button", { name: "Salvar" })).toHaveAttribute("data-variant", "default");
+    rerender(<Button variant="secondary">Salvar</Button>);
+    expect(screen.getByRole("button", { name: "Salvar" })).toHaveAttribute("data-variant", "secondary");
+  });
 });
