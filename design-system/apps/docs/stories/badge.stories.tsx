@@ -14,7 +14,7 @@ const CMS_URL =
 const meta: Meta<typeof Badge> = {
   title: "Primários/Badge",
   component: Badge,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {

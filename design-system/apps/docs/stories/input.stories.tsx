@@ -18,7 +18,7 @@ const CMS_URL =
 const meta: Meta<typeof Input> = {
   title: "Primários/Input",
   component: Input,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {

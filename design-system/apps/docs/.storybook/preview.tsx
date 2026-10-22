@@ -89,6 +89,7 @@ const preview: Preview = {
     // The decorator paints the token background; Storybook's own would hide dark mode.
     backgrounds: { disable: true },
     layout: "fullscreen",
+    options: { storySort: { order: ["Primários", "Compositions", "Tokens"] } },
   },
 };
 

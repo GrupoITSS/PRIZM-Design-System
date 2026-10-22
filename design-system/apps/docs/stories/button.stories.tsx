@@ -18,7 +18,8 @@ const CMS_URL =
   "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=978a4aa8-4d01-484f-a0bb-93d10c59c219&version=v1";
 
 const meta: Meta<typeof Button> = {
-  title: "Button",
+  title: "Primários/Button",
+  tags: ["documentado"],
   component: Button,
   parameters: {
     docs: {
