@@ -114,3 +114,15 @@ describe("InputGroup (PRIZM / shadcn)", () => {
     expect(screen.getByTestId("block-addon")).toHaveTextContent("Enviar");
   });
 });
+
+describe("InputGroup: altura do contêiner segue o tamanho do Input", () => {
+  it("usa control-height em sm, md e lg, sem o lg de 48px nem o default", async () => {
+    const { INPUT_GROUP_BASE_CLASSES } = await import("./input-group.styles");
+    const classes = INPUT_GROUP_BASE_CLASSES.split(" ");
+    for (const size of ["sm", "md", "lg"]) {
+      expect(classes).toContain(`has-[[data-size=${size}]]:h-control-height-${size}`);
+    }
+    expect(classes).not.toContain("has-[[data-size=lg]]:h-12");
+    expect(classes.some((c) => c.includes("data-size=default"))).toBe(false);
+  });
+});

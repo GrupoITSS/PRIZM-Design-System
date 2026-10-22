@@ -3,6 +3,7 @@ import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { DatePicker } from "./date-picker";
+import { datePickerTriggerVariants } from "./date-picker.styles";
 
 vi.mock("../popover", () => {
   const Popover = ({
@@ -72,5 +73,27 @@ describe("DatePicker (PRIZM / shadcn)", () => {
     // Quando captionLayout é "dropdown", o calendário deve renderizar selects no caption.
     const dropdowns = screen.getAllByRole("combobox");
     expect(dropdowns.length).toBeGreaterThanOrEqual(1);
+  });
+});
+
+describe("DatePicker: escala e estados iguais aos do Input (21/10/2026)", () => {
+  it.each(["sm", "md", "lg"] as const)("foco e disabled seguem a mesma regra no tamanho %s", (size) => {
+    const classes = datePickerTriggerVariants({ size }).split(" ");
+    expect(classes).toEqual(
+      expect.arrayContaining([
+        "focus-visible:ring-2",
+        "focus-visible:ring-ring",
+        "focus-visible:border-transparent",
+        "disabled:bg-muted",
+        "disabled:border-transparent",
+        "disabled:shadow-none",
+      ]),
+    );
+    expect(classes).not.toContain("focus-visible:ring-ring/30");
+    expect(classes).not.toContain("disabled:opacity-50");
+    expect(classes).toContain(`h-control-height-${size}`);
+    expect(classes).not.toContain("h-12");
+    // O gatilho é um Button: o espaço do anel dele não vale aqui.
+    expect(classes).toContain("focus-visible:ring-offset-0");
   });
 });

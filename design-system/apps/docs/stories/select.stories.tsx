@@ -16,7 +16,7 @@ const meta: Meta<typeof Select> = {
     },
   },
   args: {
-    size: "default",
+    size: "md",
     placeholder: "Selecione uma opção",
     options: [
       { value: "apple", label: "Apple" },
@@ -27,7 +27,7 @@ const meta: Meta<typeof Select> = {
   argTypes: {
     size: {
       control: "select",
-      options: ["sm", "default", "lg"],
+      options: ["sm", "md", "lg"],
     },
     placeholder: {
       control: "text",
@@ -123,7 +123,7 @@ export const Sizes: Story = {
   render: (args) => (
     <div className="flex flex-col gap-4">
       <Select {...args} size="sm" placeholder="Tamanho sm" />
-      <Select {...args} size="default" placeholder="Tamanho default" />
+      <Select {...args} size="md" placeholder="Tamanho md" />
       <Select {...args} size="lg" placeholder="Tamanho lg" />
     </div>
   ),
