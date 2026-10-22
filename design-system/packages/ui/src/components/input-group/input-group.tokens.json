@@ -1,0 +1,115 @@
+{
+  "component": "InputGroup",
+  "description": "Mapa de tokens do InputGroup: o que cada estado, tamanho e parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 22/10/2026 e conferido contra input-group.styles.ts, input-group.hooks.ts e a renderização pelo teste input-group.tokens.test.ts. Nomes no formato do Figma (color/input); no código viram classes Tailwind (border-input). O InputGroup não tem variantes de cor: Type (Input ou Textarea) corresponde à prop control, e só o Input tem Size.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18672-226415",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25239-2930",
+    "code": "design-system/packages/ui/src/components/input-group/input-group.tsx",
+    "story": "design-system/apps/docs/stories/input-group.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=fa0b64d6-ebd7-4895-a341-ca7e1738fd6a&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/107",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/111"
+    ],
+    "jira": []
+  },
+  "states": {
+    "default": {
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "placeholder": "color/muted-foreground",
+      "border": "color/input",
+      "shadow": "shadow/xs"
+    },
+    "focus": {
+      "border": "color/transparent",
+      "ring": "color/ring",
+      "ringWidth": 2
+    },
+    "error": {
+      "border": "color/destructive",
+      "attribute": "aria-invalid"
+    },
+    "errorFocus": {
+      "border": "color/destructive",
+      "ring": "color/ring",
+      "ringWidth": 2
+    },
+    "disabled": {
+      "background": "color/muted",
+      "text": "color/muted-foreground",
+      "border": "color/transparent",
+      "shadow": null,
+      "opacity": 1,
+      "addonOpacity": "opacity/50",
+      "attribute": "disabled"
+    }
+  },
+  "parts": {
+    "addon": {
+      "text": "color/muted-foreground",
+      "iconSize": 16
+    },
+    "button": {
+      "xs": { "height": "control-height/xs" },
+      "sm": { "height": "control-height/sm" },
+      "icon-xs": { "height": "control-height/xs", "width": "control-height/xs" },
+      "icon-sm": { "height": "control-height/sm", "width": "control-height/sm" }
+    }
+  },
+  "sizes": {
+    "sm": {
+      "height": "control-height/sm",
+      "paddingX": "spacing/3",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/xs"
+    },
+    "md": {
+      "height": "control-height/md",
+      "paddingX": "spacing/3",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    },
+    "lg": {
+      "height": "control-height/lg",
+      "paddingX": "spacing/3",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    }
+  },
+  "divergences": [
+    {
+      "where": "Texto do lg",
+      "figma": "text/sm",
+      "code": "text-base, e text-sm a partir do breakpoint md (herdado do Input)",
+      "status": "aberta"
+    },
+    {
+      "where": "Altura do botão xs e icon-xs do complemento",
+      "figma": "control-height/xs (Button 🟣)",
+      "code": "h-6 e size-6 fixos em inputGroupButtonVariants (24px, o mesmo valor do token)",
+      "status": "aberta"
+    },
+    {
+      "where": "Complementos por lado",
+      "figma": "Até 2 complementos no início e 2 no fim (booleanos)",
+      "code": "Um slot por lado (ReactNode), que aceita qualquer composição",
+      "status": "aberta"
+    },
+    {
+      "where": "Padding vertical do Input",
+      "figma": "spacing/1 no contêiner; a altura é fixa em control-height",
+      "code": "Sem padding vertical no contêiner; a altura vem de control-height",
+      "status": "aberta"
+    },
+    {
+      "where": "Menu do Dropdown oculto no Addon Inline",
+      "figma": "Sombras shadow/md do kit shadcn, fora do Core",
+      "code": "Não existe: o menu é do DropdownMenu",
+      "status": "aberta"
+    }
+  ]
+}
