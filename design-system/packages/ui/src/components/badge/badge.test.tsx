@@ -154,4 +154,14 @@ describe("Badge (PRIZM / Figma)", () => {
     const comAnel = classes.some((c) => c.startsWith("focus-visible:ring"));
     expect(semOutline && !comAnel).toBe(false);
   });
+
+  it("dentro de um Button cheio, inverte as cores (fundo na cor do texto do botão)", () => {
+    render(<Badge variant="default" shape="number">8</Badge>);
+    expect(screen.getByText("8")).toHaveClass(
+      "[[data-slot=button][data-variant=default]_&]:bg-primary-foreground",
+      "[[data-slot=button][data-variant=default]_&]:text-primary",
+      "[[data-slot=button][data-variant=destructive]_&]:bg-destructive-foreground",
+      "[[data-slot=button][data-variant=destructive]_&]:text-destructive",
+    );
+  });
 });
