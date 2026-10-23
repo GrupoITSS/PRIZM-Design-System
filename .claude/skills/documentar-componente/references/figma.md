@@ -50,7 +50,7 @@ Crie o frame "<Componente> — Documentação Prizm" na página do componente, a
 | 01 | Cabeçalho | Nome, uma frase do que faz, versão, base (shadcn/ui), links Figma/código/CMS. |
 | 02 | Playground por tema | Grade 5 marcas (PAS, PAS · CMS, Docnix, ITSS · AFIPE, ITSS · Digitrol) × claro/escuro. Cada célula é um frame com **modo explícito** nas coleções Theme e Mode do Core (`setExplicitVariableModeForCollection`), fundo `color/background`. Não troque cor à mão: só o modo. |
 | 03 | Variantes | Uma instância de cada variante do component set, com as decisões da etapa 1, tamanho padrão, rótulo com o nome do código. Com mais de um eixo, uma grade com as combinações. |
-| 04 | Quando usar | Hierarquia (quando o componente tem ênfases) e cards Faça / Evite, com instâncias reais. |
+| 04 | Quando usar | Sempre no formato do Input (seção `25189:2021`, ver "Quando usar" abaixo). Copie a seção e troque o conteúdo; não monte outro layout. |
 | 05 | API | Gerada de `componentPropertyDefinitions` do set: propriedade Figma, tipo, valores, padrão. Confira com as props do código e marque o que só existe de um lado (a tabela de paridade da etapa 1). |
 | 06 | Anatomia | Instância com marcadores numerados nas partes (ícone, rótulo, atalho…). |
 | 07 | Tamanhos | Gerado das ligações: altura (`control-height/*`), padding, gap, ícone, texto. Tabela de `control-height` por marca (Digitrol é um degrau abaixo). |
@@ -58,6 +58,16 @@ Crie o frame "<Componente> — Documentação Prizm" na página do componente, a
 | 09 | Estados | Os estados do component set (hover, foco, pressed, disabled, loading, erro…), conferidos com o que o código trata, e a regra de hover que se aplica. |
 | 10 | Acessibilidade | Resultado da etapa 4: tabela de contraste por marca·modo e os 4 blocos. |
 | 11 | Changelog | Versão, data, mudança. Junte dependências aqui, se houver. |
+
+### Quando usar
+
+A seção tem um formato só, o da doc do Input (`25189:2021`, página Input, frame `25188:1959`), decidido em 23/10/2026. Até então cada doc saiu de um jeito (Button com hierarquia, Badge com listas em duas colunas, InputGroup com grade de cards), porque cada sessão copiava a doc anterior mais parecida. Copie a seção do Input para o frame novo (`clone()` e `insertChild` no lugar da seção) e troque só o conteúdo:
+
+1. **Subtítulo:** uma frase do que o componente é e do que ele não é.
+2. **Tabela "Preciso de… / Use":** 4 a 6 linhas, cada uma uma necessidade e o componente que a atende, este e os irmãos da família (etapa 1). É ela que tira a dúvida "uso este ou outro?".
+3. **Pares Faça / Evite:** 2 ou 3 linhas, cada uma com um card Faça e um Evite sobre o mesmo tema, lado a lado. Cada card tem título "Faça · <tema>" ou "Evite · <tema>", uma ou duas frases do porquê e o bloco "Exemplo" com instância real do component set (nada desenhado por fora). Para uma linha a mais, clone a linha inteira.
+
+Componente com ênfases (Button, Badge) ganha a hierarquia num bloco antes da tabela, com os níveis em ordem; o resto do formato não muda.
 
 Quando houver decisões em aberto, crie uma seção "Propostas para decidir" logo após o cabeçalho, borda `color/primary`, e mostre as alternativas lado a lado. Quando o dono do DS decidir, ela vira "Decisões de <data>".
 
