@@ -1,4 +1,4 @@
-import { AlertCircle, AlertTriangle, CheckCircle, Info } from "@grupoitss/prizm-ui/icons";
+import { CircleAlert, TriangleAlert, CircleCheckBig, Info } from "@grupoitss/prizm-ui/icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Alert } from "@grupoitss/prizm-ui/alert";
 
@@ -46,7 +46,7 @@ export const Default: Story = {
 export const Destructive: Story = {
   args: {
     variant: "destructive",
-    icon: <AlertCircle className="size-4" />,
+    icon: <CircleAlert className="size-4" />,
     title: "Error",
     description: "Your session has expired. Please log in again.",
   },
@@ -56,7 +56,7 @@ export const Destructive: Story = {
 export const Warning: Story = {
   args: {
     variant: "warning",
-    icon: <AlertTriangle className="size-4" />,
+    icon: <TriangleAlert className="size-4" />,
     title: "Warning",
     description: "Your storage is almost full. Consider freeing up space.",
   },
@@ -66,7 +66,7 @@ export const Warning: Story = {
 export const Success: Story = {
   args: {
     variant: "success",
-    icon: <CheckCircle className="size-4" />,
+    icon: <CircleCheckBig className="size-4" />,
     title: "Success",
     description: "Your changes have been saved successfully.",
   },

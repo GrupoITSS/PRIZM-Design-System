@@ -1,5 +1,5 @@
 import { cn } from "../../lib/cn";
-import { GripVertical } from "lucide-react";
+import { GripVertical } from "../icons";
 import {
   Group as ResizablePanelGroup,
   Panel as ResizablePanel,

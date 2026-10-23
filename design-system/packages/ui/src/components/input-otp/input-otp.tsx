@@ -1,6 +1,6 @@
 import { cn } from "../../lib/cn";
 import { OTPInput } from "input-otp";
-import { Dot } from "lucide-react";
+import { Dot } from "../icons";
 import * as React from "react";
 import {
   inputOTPCaret,

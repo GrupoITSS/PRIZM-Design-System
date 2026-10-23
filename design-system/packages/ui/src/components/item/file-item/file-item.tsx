@@ -1,5 +1,11 @@
 import { cn } from "../../../lib/cn";
-import { FileIcon, FileImageIcon, FileSpreadsheetIcon, FileTextIcon, XIcon } from "lucide-react";
+import {
+  File as FileIcon,
+  FileImage as FileImageIcon,
+  FileSpreadsheet as FileSpreadsheetIcon,
+  FileText as FileTextIcon,
+  X as XIcon,
+} from "../../icons";
 import * as React from "react";
 import { Item } from "../item";
 import type { FileTypeKey } from "../item.utils";

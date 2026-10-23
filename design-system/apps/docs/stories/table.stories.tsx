@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@grupoitss/prizm-ui/dropdown-menu";
-import { MoreHorizontal } from "@grupoitss/prizm-ui/icons";
+import { Ellipsis } from "@grupoitss/prizm-ui/icons";
 import { Popover } from "@grupoitss/prizm-ui/popover";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ContentFormatType, ContentRenderType } from "@grupoitss/prizm-ui/table";
@@ -220,7 +220,7 @@ export const Default: Story = {
                 className="size-8 text-[#6b7280]"
                 aria-label={`Ações de ${row.organization.text}`}
               >
-                <MoreHorizontal className="size-4" />
+                <Ellipsis className="size-4" />
               </Button>
             }
             content={
@@ -315,7 +315,7 @@ export const WithRowActions: Story = {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="size-8">
-                <MoreHorizontal />
+                <Ellipsis />
                 <span className="sr-only">Open menu</span>
               </Button>
             </DropdownMenuTrigger>

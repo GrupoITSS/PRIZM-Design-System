@@ -1,5 +1,5 @@
 import { cn } from "../../lib/cn";
-import { Circle } from "lucide-react";
+import { Circle } from "../icons";
 import { RadioGroup as RadixRadioGroup } from "radix-ui";
 import * as React from "react";
 

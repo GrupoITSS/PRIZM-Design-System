@@ -1,5 +1,5 @@
 import { cn } from "../../lib/cn";
-import { X } from "lucide-react";
+import { X } from "../icons";
 import { Dialog as RadixDialog } from "radix-ui";
 import { dialogCloseButtonStyles } from "../dialog/dialog.styles";
 import { sheetPanelWidthClass } from "./sheet.constants";

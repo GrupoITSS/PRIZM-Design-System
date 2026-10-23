@@ -1,6 +1,6 @@
 import { cn } from "../../lib/cn";
 import { Checkbox as RadixCheckbox } from "radix-ui";
-import { Check, Minus } from "lucide-react";
+import { Check, Minus } from "../icons";
 import * as React from "react";
 import { Label } from "../label";
 import {

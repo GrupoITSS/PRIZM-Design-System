@@ -3,7 +3,7 @@ import { Dialog } from "@grupoitss/prizm-ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@grupoitss/prizm-ui/field";
 import { Input } from "@grupoitss/prizm-ui/input";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus } from "@grupoitss/prizm-ui/icons";
 import * as React from "react";
 import { Bar, BarChart, ResponsiveContainer } from "recharts";
 import {

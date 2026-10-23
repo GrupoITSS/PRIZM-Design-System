@@ -1,6 +1,6 @@
 import { Toaster as SonnerToaster } from "sonner";
 import { cn } from "../../lib/cn";
-import { CheckCircle, Info, Loader, OctagonX, TriangleAlert } from "../icons";
+import { CircleCheckBig, Info, Loader, OctagonX, TriangleAlert } from "../icons";
 import {
   toastActionButtonClassName,
   toastBaseClassName,
@@ -66,7 +66,7 @@ const Toaster: React.FC<ToasterProps> = (props) => {
       closeButton={closeButton}
       className={cn(toasterBaseClassName, className)}
       icons={{
-        success: <CheckCircle className="h-4 w-4" />,
+        success: <CircleCheckBig className="h-4 w-4" />,
         info: <Info className="h-4 w-4" />,
         warning: <TriangleAlert className="h-4 w-4" />,
         error: <OctagonX className="h-4 w-4" />,

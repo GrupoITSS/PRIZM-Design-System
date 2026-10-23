@@ -9,8 +9,8 @@ import {
   InputGroupTextarea,
 } from "@grupoitss/prizm-ui/input-group";
 import { Button } from "@grupoitss/prizm-ui/button";
-import { Loader2 } from "@grupoitss/prizm-ui/icons";
-import { ArrowUpIcon, LoaderIcon } from "lucide-react";
+import { LoaderCircle } from "@grupoitss/prizm-ui/icons";
+import { ArrowUp as ArrowUpIcon, Loader as LoaderIcon } from "@grupoitss/prizm-ui/icons";
 import { Spinner } from "@grupoitss/prizm-ui/spinner";
 
 const meta: Meta<typeof Spinner> = {
@@ -144,15 +144,15 @@ export const CustomIcon: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-4">
-        <Spinner icon={Loader2} aria-label="Custom Loader icon from DS" />
+        <Spinner icon={LoaderCircle} aria-label="Custom Loader icon from DS" />
         <span className="text-sm text-muted-foreground">
-          Using <code>Loader2</code> icon from <code>@/components/icons</code>
+          Using <code>LoaderCircle</code> from <code>@grupoitss/prizm-ui/icons</code>
         </span>
       </div>
       <div className="flex items-center gap-4">
-        <Spinner icon={LoaderIcon} aria-label="Custom LoaderIcon from lucide" />
+        <Spinner icon={LoaderIcon} aria-label="Custom Loader icon from DS" />
         <span className="text-sm text-muted-foreground">
-          Using <code>LoaderIcon</code> from <code>lucide-react</code>
+          Using <code>Loader</code> from <code>@grupoitss/prizm-ui/icons</code>
         </span>
       </div>
     </div>

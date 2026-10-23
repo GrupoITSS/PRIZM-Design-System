@@ -1,43 +1,50 @@
 /**
- * PRIZM Design System — Icons (Lucide React).
- * Import icons from `@grupoitss/prizm-ui/icons` so apps don't need to install lucide-react.
+ * PRIZM Design System — ícones.
+ *
+ * Lista curada do Lucide (lucide-react), mais três ícones de arquivo próprios.
+ * Apps e stories importam de `@grupoitss/prizm-ui/icons`; os componentes do
+ * prizm-ui importam de `../icons`. Ninguém importa `lucide-react` direto
+ * (o teste `icons.test.ts` confere).
+ *
+ * Ícone novo entra aqui quando um componente ou produto precisa dele, com o
+ * nome atual do Lucide (sem os nomes antigos, como `AlertTriangle`), e no
+ * Figma, na página Icons do [PRIZM] Componentes. A lista completa, com o nome
+ * no Figma, está em `icons.tokens.json`.
  *
  * @example
- * import { Plus, Search } from '@grupoitss/prizm-ui/icons'
- * <Button><Plus className="size-4" /> Add</Button>
+ * import { Plus, Search } from "@grupoitss/prizm-ui/icons";
+ * <Button><Plus /> Novo item</Button>
  */
 export {
-  AlertCircle,
-  AlertTriangle,
-  Component,
-  Network,
-  UserRoundCog,
   ArrowDown,
   ArrowLeft,
   ArrowRight,
+  ArrowUp,
   ArrowUpDown,
   ArrowUpRight,
   BadgeCheck,
   Bell,
   Bold,
+  Bookmark,
   BookOpen,
   BookSearch,
-  Bookmark,
   Bot,
   Boxes,
   Brain,
   Briefcase,
   Building,
   Building2,
+  Calendar,
   Check,
-  CheckCircle,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  ChevronUp,
   ChevronsUpDown,
+  ChevronUp,
   Circle,
+  CircleAlert,
   CircleCheck,
+  CircleCheckBig,
   CircleMinus,
   CirclePlus,
   CircleQuestionMark,
@@ -45,9 +52,10 @@ export {
   Clock,
   Cloud,
   Columns3,
+  Component,
   Copy,
-  Database,
   CreditCard,
+  Database,
   Dot,
   Download,
   Ellipsis,
@@ -58,6 +66,8 @@ export {
   EyeOff,
   File,
   FileCode,
+  FileImage,
+  FileSpreadsheet,
   FileText,
   Filter,
   Folder,
@@ -67,38 +77,40 @@ export {
   GitBranch,
   GitFork,
   Globe,
+  Grid3x3,
+  GripVertical,
   Heart,
-  HelpCircle,
   Home,
   Image,
+  Inbox,
   Info,
   Italic,
   Keyboard,
   Languages,
   Layers,
-  Layout,
   LayoutGrid,
-  Grid3x3,
   Link,
   List,
   Loader,
-  Loader2,
   LoaderCircle,
   Lock,
   LogOut,
   Mail,
   Maximize,
+  Maximize2,
   Menu,
   MessageSquare,
   Mic,
+  Minimize2,
   Minus,
   Monitor,
   Moon,
-  MoreHorizontal,
+  Network,
   OctagonX,
   Palette,
   PanelLeft,
   PanelRight,
+  PanelsTopLeft,
   Paperclip,
   Pencil,
   Phone,
@@ -114,6 +126,7 @@ export {
   Settings,
   Share,
   Shield,
+  ShieldAlert,
   ShieldCheck,
   ShieldMinus,
   SlidersHorizontal,
@@ -121,6 +134,7 @@ export {
   SquarePen,
   Store,
   Sun,
+  Tag,
   Trash2,
   TriangleAlert,
   Underline,
@@ -130,14 +144,15 @@ export {
   UserCheck,
   UserMinus,
   UserPlus,
-  UserX,
+  UserRoundCog,
   Users,
+  UserX,
   Wrench,
   X,
-  XCircle,
   Zap,
 } from "lucide-react";
 
+/** Nome do Prizm para `CircleMinus` (registro inativo). */
 export { CircleMinus as Inactive } from "lucide-react";
 
 export { FileCsv, FileDoc, FilePdf } from "./extra-icons";

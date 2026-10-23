@@ -1,5 +1,5 @@
 import { Badge } from "@grupoitss/prizm-ui/badge";
-import { CheckCircle, Link } from "@grupoitss/prizm-ui/icons";
+import { CircleCheckBig, Link } from "@grupoitss/prizm-ui/icons";
 import { Spinner } from "@grupoitss/prizm-ui/spinner";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
@@ -66,7 +66,7 @@ export const Variants: Story = {
       <Badge variant="destructive">Destructive</Badge>
       <Badge variant="success">Success</Badge>
       <Badge variant="warning">Warning</Badge>
-      <Badge variant="verified" startIcon={<CheckCircle />}>
+      <Badge variant="verified" startIcon={<CircleCheckBig />}>
         Verified
       </Badge>
     </div>
@@ -112,7 +112,7 @@ export const NumberBadge: Story = {
 export const WithIcon: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge variant="secondary" startIcon={<CheckCircle className="size-3" />}>
+      <Badge variant="secondary" startIcon={<CircleCheckBig className="size-3" />}>
         Verified
       </Badge>
       <Badge variant="outline" endIcon={<Link className="size-3" />}>

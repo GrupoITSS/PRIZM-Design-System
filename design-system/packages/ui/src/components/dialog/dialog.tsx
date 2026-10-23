@@ -1,6 +1,6 @@
 import { Input } from "../input";
 import { cn } from "../../lib/cn";
-import { X } from "lucide-react";
+import { X } from "../icons";
 import { Dialog as RadixDialog } from "radix-ui";
 import * as React from "react";
 import {
