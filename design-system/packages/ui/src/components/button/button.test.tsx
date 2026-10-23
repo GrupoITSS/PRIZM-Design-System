@@ -27,6 +27,15 @@ describe("Button (PRIZM)", () => {
     expect(button).toHaveFocus();
   });
 
+  it("loading mostra o Spinner decorativo, e o nome do botão continua o rótulo", () => {
+    const { container } = render(<Button loading>Salvar</Button>);
+    const svg = container.querySelector("svg");
+    expect(svg).toHaveClass("animate-spin");
+    expect(svg).toHaveAttribute("aria-hidden", "true");
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Salvar" })).toBeInTheDocument();
+  });
+
   it("loading num botão submit não envia o formulário", () => {
     const onSubmit = vi.fn();
     render(
