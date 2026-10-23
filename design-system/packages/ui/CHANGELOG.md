@@ -1,5 +1,61 @@
 # @grupoitss/prizm-ui
 
+## 0.3.0
+
+### Minor Changes
+
+- 783ee9f: **Badge dentro do Button**
+
+  - **Button** marca `data-variant` (como o shadcn), além de `data-slot="button"`.
+  - **Badge** dentro de um Button cheio (`default`, `destructive`) inverte as cores: fundo na cor do texto do botão e texto na cor do botão. Antes, um Badge `default` (`bg-primary`) sumia sobre o botão primary. Contraste do número: 4,88 a 13,41:1 no default e 4,53 a 5,84:1 no destructive, nas 5 marcas. Em botões neutros (secondary, outline, ghost) o Badge mantém as próprias cores, como no "Fixadas 8" e no "Limpar filtros 3" da AFIPE.
+
+- 3234d43: **Icons: sem nomes antigos do Lucide, importação única e ícones próprios acessíveis (22/10/2026)**
+
+  - **Saem os nomes antigos do Lucide** que duplicavam um ícone da lista: `AlertCircle`, `AlertTriangle`, `CheckCircle`, `HelpCircle`, `XCircle`, `MoreHorizontal`, `Loader2` e `Layout`. Fica o nome atual de cada um.
+  - **Entram 13 ícones**, que os componentes e as stories já usavam importando `lucide-react` direto: `CircleAlert`, `CircleCheckBig`, `PanelsTopLeft`, `Calendar`, `GripVertical`, `FileImage`, `FileSpreadsheet`, `ArrowUp`, `Maximize2`, `Minimize2`, `Tag`, `Inbox` e `ShieldAlert`. A lista passa a 138 ícones.
+  - **Importação única.** Os componentes do prizm-ui importam de `../icons` e as stories de `@grupoitss/prizm-ui/icons`; nenhum arquivo importa `lucide-react` direto (o teste `icons.test.tsx` confere). O Spinner usa `LoaderCircle` como ícone padrão (o mesmo desenho do `Loader2Icon`).
+  - **`FileCsv`, `FileDoc` e `FilePdf` saem com `aria-hidden="true"`** quando são decorativos, como os do Lucide (WCAG 1.1.1), e aceitam `size` e `color`. Antes, eram lidos pelo leitor de tela como uma imagem sem nome, e `size` ia parar como atributo inválido no `<svg>`.
+  - **Na raiz do pacote**, `Calendar` continua sendo o componente e `Tag` o tipo da tabela. Os ícones com esses nomes saem por `@grupoitss/prizm-ui/icons`.
+
+  **Quebra:** troque o nome antigo pelo atual, no import e no uso.
+
+  | Antes            | Depois               |
+  | ---------------- | -------------------- |
+  | `AlertCircle`    | `CircleAlert`        |
+  | `AlertTriangle`  | `TriangleAlert`      |
+  | `CheckCircle`    | `CircleCheckBig`     |
+  | `HelpCircle`     | `CircleQuestionMark` |
+  | `XCircle`        | `CircleX`            |
+  | `MoreHorizontal` | `Ellipsis`           |
+  | `Loader2`        | `LoaderCircle`       |
+  | `Layout`         | `PanelsTopLeft`      |
+
+  O desenho de cada ícone não muda. Quem importa de `lucide-react` direto não é afetado, mas deve passar a importar de `@grupoitss/prizm-ui/icons`.
+
+- 51cb71b: **Kbd: contexto no botão e separador**
+
+  - **Kbd** dentro de um Button segue a regra do Badge (Figma "Contexto"): em botão cheio (`default`, `destructive`) usa a cor do texto do botão com fundo dela a 20%; em botão neutro (secondary, outline, ghost, link, text) mantém `bg-muted` e `text-muted-foreground`. Antes, ele pegava a cor do texto de qualquer botão. No tooltip nada muda.
+  - **Kbd** ganha a prop `separator`, para teclas pressionadas juntas: `<Kbd keys={["Ctrl", "Alt", "B"]} separator="+" />`, como o KbdGroup "+ Separated" do Figma. O separador sai em `text-xs`, peso normal, na cor do texto da tecla.
+  - Em aberto (decisão de 23/10/2026): em botão cheio, o texto da tecla fica abaixo de 4,5:1 (3,33 a 7,31:1 no primary, 3,47 a 4,23:1 no destructive), como já era antes.
+
+- 2ae4990: **Spinner: escala do Figma, speed, nome em português e movimento reduzido**
+
+  - **Spinner** ganha a escala do Figma: `xs` 12px, `sm` 16px, `md` 20px, `lg` 24px e `xl` 32px. O **Dropzone** passa a usar `lg`, sem `className`.
+  - **Spinner** ganha a prop `speed` (`slow`, `normal`, `fast`). `degree` continua aceita até a próxima versão, com o mesmo efeito.
+  - **Spinner** aplica sempre a velocidade: `normal` passa a ser 600ms por volta, como estava documentado. Antes, o `normal` não era aplicado e o spinner girava em 1s, mais devagar que o `slow` (800ms).
+  - **Spinner** tem nome padrão "Carregando", e não mais "Loading" (WCAG 3.1.2). Com `aria-hidden`, não recebe `role` nem nome.
+  - **Spinner** gira a 1,5s por volta com `prefers-reduced-motion`, sem parar.
+
+  **Quebra:** `size="lg"` passa de 32px para 24px. Para manter os 32px, use `size="xl"`.
+
+### Patch Changes
+
+- 989b350: **Button, PhotoUpload e Sonner usam o Spinner**
+
+  - **Button**: o estado `loading` mostra o `<Spinner>`, decorativo (`aria-hidden`), no tamanho do ícone do botão (16px; 12px em `xs` e `icon-xs`). Antes era o ícone `LoaderCircle` com `animate-spin`, a 1s por volta; agora gira a 600ms e mais devagar com `prefers-reduced-motion`.
+  - **PhotoUpload**: o `loading` mostra o `<Spinner>` com o nome "Carregando foto" (`role="status"`). Antes o ícone não tinha nome nem papel, e o leitor de tela não anunciava nada.
+  - **Sonner**: o toast de carregamento usa o `<Spinner>` (`LoaderCircle`), decorativo, no lugar do ícone `Loader`. É o mesmo ícone dos outros componentes.
+
 ## 0.2.0
 
 ### Minor Changes
