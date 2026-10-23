@@ -7,17 +7,20 @@ import type { SpinnerProps } from "./spinner.types";
 /**
  * Indicador de carregamento simples baseado em ícone SVG.
  *
- * API principal é feita por props (`size`, `className`, `aria-*`), sem subcomponentes.
+ * API principal é feita por props (`size`, `speed`, `className`, `aria-*`), sem subcomponentes.
+ * Dentro de um botão ou ao lado de um texto que já diz o que carrega, passe
+ * `aria-hidden="true"`: quem anuncia é o botão (`aria-busy`) ou o texto.
  *
  * @example
  * ```tsx
  * <Spinner />
- * <Spinner size="lg" aria-label="Loading data" />
+ * <Spinner size="lg" aria-label="Carregando pedidos" />
  * ```
  */
 function Spinner({
   size = "md",
-  degree = "normal",
+  speed,
+  degree,
   icon,
   className,
   style,
@@ -27,14 +30,16 @@ function Spinner({
   ...props
 }: SpinnerProps & { ref?: React.Ref<SVGSVGElement> }) {
   const IconComponent = icon ?? LoaderCircle;
+  // Decorative spinner (aria-hidden): no role and no default name.
+  const hidden = props["aria-hidden"] === true || props["aria-hidden"] === "true";
 
   return (
     <IconComponent
       ref={ref}
-      role={role ?? "status"}
-      aria-label={ariaLabel ?? "Loading"}
+      role={hidden ? role : (role ?? "status")}
+      aria-label={hidden ? ariaLabel : (ariaLabel ?? "Carregando")}
       className={getSpinnerClassName({ size, className })}
-      style={getSpinnerStyle({ degree, style })}
+      style={getSpinnerStyle({ speed: speed ?? degree ?? "normal", style })}
       {...props}
     />
   );

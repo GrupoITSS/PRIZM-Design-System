@@ -119,7 +119,7 @@ function Dropzone({
 
   const currentIcon =
     loading && !disabled ? (
-      <Spinner size="md" aria-label="Enviando arquivos" className="size-6" />
+      <Spinner size="lg" aria-label="Enviando arquivos" />
     ) : (
       (icon ?? <Upload className="size-6" />)
     );
