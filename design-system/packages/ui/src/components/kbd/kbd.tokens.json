@@ -1,0 +1,76 @@
+{
+  "component": "Kbd",
+  "description": "Mapa de tokens do Kbd: o que cada contexto, o separador e o tamanho usam do [PRIZM] Design Tokens_Core. Extraído das ligações dos component sets Kbd e KbdGroup no Figma em 23/10/2026 e conferido contra kbd.styles.ts pelo teste kbd.tokens.test.ts. Nomes no formato do Figma (color/muted); no código viram classes Tailwind (bg-muted). O Kbd não tem variantes: o contexto vem do Button em volta (data-variant).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18665-781",
+    "figmaComponentGroup": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18665-995",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25330-67936",
+    "code": "design-system/packages/ui/src/components/kbd/kbd.tsx",
+    "story": "design-system/apps/docs/stories/kbd.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=4557c87f-6dda-4207-8d61-38b2f935a03b&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/98",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/120"
+    ],
+    "jira": []
+  },
+  "contexts": {
+    "padrao": {
+      "figma": "Contexto=Padrão",
+      "buttonVariant": null,
+      "background": "color/muted",
+      "backgroundOpacity": 1,
+      "text": "color/muted-foreground"
+    },
+    "sobrePrimary": {
+      "figma": "Contexto=Sobre primary",
+      "buttonVariant": "default",
+      "background": "color/primary-foreground",
+      "backgroundOpacity": 0.2,
+      "text": "color/primary-foreground"
+    },
+    "sobreDestructive": {
+      "figma": "Contexto=Sobre destructive",
+      "buttonVariant": "destructive",
+      "background": "color/destructive-foreground",
+      "backgroundOpacity": 0.2,
+      "text": "color/destructive-foreground"
+    }
+  },
+  "states": {
+    "hover": null,
+    "focus": null,
+    "note": "O Kbd é estático: não recebe foco nem clique (pointer-events: none)."
+  },
+  "sizes": {
+    "default": {
+      "height": "height/5",
+      "minWidth": "width/5",
+      "paddingX": "spacing/1",
+      "gap": "spacing/1",
+      "radius": "radius/sm",
+      "fontFamily": "font/sans",
+      "fontSize": "text/xs",
+      "fontWeight": "font-weight/medium",
+      "icon": "12px"
+    }
+  },
+  "group": {
+    "gap": "spacing/1"
+  },
+  "parts": {
+    "separator": {
+      "text": "color/muted-foreground",
+      "fontSize": "text/xs",
+      "fontWeight": "font-weight/normal"
+    }
+  },
+  "divergences": [
+    {
+      "where": "Kbd dentro do Tooltip",
+      "figma": "contexto Padrão (color/muted e color/muted-foreground)",
+      "code": "cor do texto do tooltip (currentColor) com fundo dela a 20%",
+      "status": "aberta"
+    }
+  ]
+}
