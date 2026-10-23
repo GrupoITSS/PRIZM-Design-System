@@ -14,12 +14,13 @@ import {
 } from "../dialog";
 import { Dropzone } from "../dropzone";
 import { FieldError } from "../field";
-import { LoaderCircle, Upload } from "../icons";
+import { Upload } from "../icons";
 import {
   photoUploadStyles,
   ENTITY_AVATAR_PX,
   ENTITY_AVATAR_SIZE_CLASS,
 } from "./photo-upload.styles";
+import { Spinner } from "../spinner";
 import type { PhotoUploadProps, PixelCrop } from "./photo-upload.types";
 
 export function getCroppedImg(imageSrc: string, pixelCrop: PixelCrop): Promise<string> {
@@ -176,7 +177,7 @@ export const PhotoUpload = ({
     <div className={cn(container(), "relative")}>
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
-          <LoaderCircle className="size-5 animate-spin text-muted-foreground" />
+          <Spinner className="text-muted-foreground" aria-label="Carregando foto" />
         </div>
       )}
 

@@ -1,8 +1,8 @@
 import { isValidElement, useEffect, type ComponentProps, type ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { LoaderCircle } from "../icons";
 import { Slot } from "radix-ui";
 import { cn } from "../../lib/cn";
+import { Spinner } from "../spinner";
 
 // Colors, heights, radius, font and shadow come from the design tokens (CSS
 // custom properties), so the same button follows the active brand, product
@@ -159,7 +159,8 @@ export function Button({
       type={type}
       {...other}
     >
-      {loading ? <LoaderCircle aria-hidden="true" className="animate-spin" /> : null}
+      {/* Decorative: the button announces the state with aria-busy. Its [&_svg] size wins over the Spinner size. */}
+      {loading ? <Spinner size="sm" aria-hidden="true" /> : null}
       {loading && iconOnly ? null : children}
     </button>
   );

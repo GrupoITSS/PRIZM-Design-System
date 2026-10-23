@@ -1,6 +1,7 @@
 import { Toaster as SonnerToaster } from "sonner";
 import { cn } from "../../lib/cn";
-import { CircleCheckBig, Info, Loader, OctagonX, TriangleAlert } from "../icons";
+import { CircleCheckBig, Info, OctagonX, TriangleAlert } from "../icons";
+import { Spinner } from "../spinner";
 import {
   toastActionButtonClassName,
   toastBaseClassName,
@@ -70,7 +71,8 @@ const Toaster: React.FC<ToasterProps> = (props) => {
         info: <Info className="h-4 w-4" />,
         warning: <TriangleAlert className="h-4 w-4" />,
         error: <OctagonX className="h-4 w-4" />,
-        loading: <Loader className="h-4 w-4 animate-spin" />,
+        // Decorative: the toast text says what is loading.
+        loading: <Spinner size="sm" aria-hidden="true" />,
       }}
       toastOptions={{
         ...toastOptions,
