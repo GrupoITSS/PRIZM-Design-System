@@ -46,6 +46,7 @@ export const Sizes: Story = {
       <Spinner size="sm" />
       <Spinner size="md" />
       <Spinner size="lg" />
+      <Spinner size="xl" />
     </div>
   ),
 };
@@ -115,20 +116,20 @@ export const InInputGroup: Story = {
   ),
 };
 
-export const DegreeAndColor: Story = {
-  name: "Degree & Color",
+export const SpeedAndColor: Story = {
+  name: "Speed & Color",
   render: () => (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-4">
-        <Spinner degree="slow" aria-label="Slow" />
+        <Spinner speed="slow" aria-label="Slow" />
         <span className="text-sm text-muted-foreground">Slow (800ms)</span>
       </div>
       <div className="flex items-center gap-4">
-        <Spinner degree="normal" aria-label="Normal" />
+        <Spinner speed="normal" aria-label="Normal" />
         <span className="text-sm text-muted-foreground">Normal (600ms)</span>
       </div>
       <div className="flex items-center gap-4">
-        <Spinner degree="fast" aria-label="Fast" />
+        <Spinner speed="fast" aria-label="Fast" />
         <span className="text-sm text-muted-foreground">Fast (400ms)</span>
       </div>
       <div className="flex items-center gap-4">

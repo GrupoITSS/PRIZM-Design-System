@@ -5,30 +5,37 @@ import type * as React from "react";
  *
  * - Baseado em um ícone SVG (`LoaderCircle`) com animação de loading.
  * - Expõe `size` como API principal para tamanhos mais comuns.
- * - Permite sobrescrever `className`, velocidade (`degree`), ícone (`icon`) e outros atributos nativos de `<svg>`.
+ * - Permite sobrescrever `className`, velocidade (`speed`), ícone (`icon`) e outros atributos nativos de `<svg>`.
  */
 export interface SpinnerProps extends React.SVGAttributes<SVGSVGElement> {
   /**
-   * Define o tamanho visual do spinner.
+   * Define o tamanho visual do spinner: xs 12px, sm 16px, md 20px, lg 24px e xl 32px
+   * (o "Size" do Figma).
    *
    * @default "md"
    * @example
    * ```tsx
    * <Spinner size="sm" />
-   * <Spinner size="lg" />
+   * <Spinner size="xl" />
    * ```
    */
-  size?: "xs" | "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
 
   /**
-   * Velocidade da animação de rotação do spinner.
+   * Velocidade da rotação: slow 800ms, normal 600ms e fast 400ms por volta.
+   * Com prefers-reduced-motion, o spinner gira a 1,5s por volta.
    *
    * @default "normal"
    * @example
    * ```tsx
-   * <Spinner degree="slow" />
-   * <Spinner degree="fast" />
+   * <Spinner speed="slow" />
+   * <Spinner speed="fast" />
    * ```
+   */
+  speed?: "slow" | "normal" | "fast";
+
+  /**
+   * @deprecated Use `speed`. Aceito até a próxima versão.
    */
   degree?: "slow" | "normal" | "fast";
 
