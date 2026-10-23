@@ -12,8 +12,9 @@
   },
   "color": {
     "default": "color/foreground",
+    "tone": "color/<tom>",
     "code": "currentColor",
-    "rule": "O ícone herda a cor do texto. Ícone na cor de um tom, sobre a página ou sobre o -weak, usa o degrau -strong."
+    "rule": "O ícone herda a cor do texto. Ícone de tom (primary, destructive, success, info, warning) usa o token base, sem sufixo, como a borda e o sólido (estudo de intensidade, Core node 2197:691: weak = superfície suave, base = sólido, borda e ícone, strong = texto). O -strong fica para o texto ao lado."
   },
   "sizes": {
     "xs": {
@@ -911,9 +912,15 @@
       "status": "aberta"
     },
     {
-      "where": "Ícone e texto em color/warning sobre o fundo claro",
-      "figma": "—",
-      "code": "text-warning e [&>svg]:text-warning no Alert, FileItem em processamento e menu de ações da tabela: 1,97:1 a 2,15:1",
+      "where": "Ícone de warning sobre o fundo claro",
+      "figma": "color/warning (base), pelo estudo de intensidade",
+      "code": "AlertMessage usa text-warning-strong no ícone do aviso (as outras variantes usam o base). Pelo estudo, o certo é text-warning, mas o base tem 1,97:1 a 2,15:1 contra o fundo claro, abaixo do 3:1 do ícone (1.4.11)",
+      "status": "aberta"
+    },
+    {
+      "where": "Texto em color/warning sobre o fundo claro",
+      "figma": "color/warning-strong (texto de status)",
+      "code": "text-warning no Alert warning, no FileItem em processamento e no menu de ações da tabela: 1,97:1 a 2,15:1, abaixo do 4,5:1",
       "status": "aberta"
     }
   ]

@@ -68,11 +68,11 @@ const meta: Meta<PlaygroundArgs> = {
       options: [
         "text-foreground",
         "text-muted-foreground",
-        "text-primary-strong",
-        "text-destructive-strong",
-        "text-success-strong",
-        "text-warning-strong",
-        "text-info-strong",
+        "text-primary",
+        "text-destructive",
+        "text-success",
+        "text-warning",
+        "text-info",
       ],
       description: "Cor do texto do pai; o ícone herda por currentColor.",
     },
@@ -155,10 +155,10 @@ export const Cor: Story = {
         [
           ["text-foreground", Info],
           ["text-muted-foreground", Search],
-          ["text-primary-strong", ExternalLink],
-          ["text-destructive-strong", CircleAlert],
-          ["text-success-strong", CircleCheckBig],
-          ["text-warning-strong", TriangleAlert],
+          ["text-primary", ExternalLink],
+          ["text-destructive", CircleAlert],
+          ["text-success", CircleCheckBig],
+          ["text-warning", TriangleAlert],
         ] as const
       ).map(([classe, Icon]) => (
         <div key={classe} className={`flex items-center gap-2 ${classe}`}>
@@ -181,8 +181,8 @@ export const ComNome: Story = {
           (decorativo: aria-hidden)
         </code>
       </span>
-      <span className="flex items-center gap-2 text-destructive-strong">
-        <CircleAlert className="size-4" aria-label="Erro" />
+      <span className="flex items-center gap-2">
+        <CircleAlert className="size-4 text-destructive" aria-label="Erro" />
         <code className="text-xs text-muted-foreground">
           (sozinho: aria-label)
         </code>
