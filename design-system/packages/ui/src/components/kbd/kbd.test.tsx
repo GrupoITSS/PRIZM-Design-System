@@ -35,14 +35,39 @@ describe("Kbd (PRIZM / shadcn)", () => {
     expect(kbd).toHaveClass("bg-muted", "text-muted-foreground", "rounded-sm");
   });
 
-  it("herda a cor do pai dentro de button e tooltip", () => {
+  it("herda a cor do pai dentro do tooltip", () => {
     render(<Kbd>K</Kbd>);
     expect(screen.getByText("K")).toHaveClass(
-      "[[data-slot=button]_&]:bg-current/20",
-      "[[data-slot=button]_&]:text-current",
       "[[data-slot=tooltip-content]_&]:bg-current/20",
       "[[data-slot=tooltip-content]_&]:text-current",
     );
+  });
+
+  it("muda de contexto só em botão cheio (default e destructive), como o Badge", () => {
+    render(<Kbd>K</Kbd>);
+    const kbd = screen.getByText("K");
+    expect(kbd).toHaveClass(
+      "[[data-slot=button][data-variant=default]_&]:bg-primary-foreground/20",
+      "[[data-slot=button][data-variant=default]_&]:text-primary-foreground",
+      "[[data-slot=button][data-variant=destructive]_&]:bg-destructive-foreground/20",
+      "[[data-slot=button][data-variant=destructive]_&]:text-destructive-foreground",
+    );
+    // Em botão neutro mantém bg-muted: nenhuma regra genérica de button.
+    expect(kbd.className).not.toContain("[[data-slot=button]_&]");
+  });
+
+  it("mostra o separador entre as teclas quando separator é passado", () => {
+    const { container } = render(<Kbd keys={["Ctrl", "Alt", "B"]} separator="+" />);
+    const group = container.querySelector('[data-slot="kbd-group"]');
+    const seps = container.querySelectorAll('[data-slot="kbd-separator"]');
+    expect(seps).toHaveLength(2);
+    expect(group?.textContent).toBe("Ctrl+Alt+B");
+    expect(seps[0]).toHaveClass("text-muted-foreground", "font-normal");
+  });
+
+  it("não mostra separador sem a prop separator", () => {
+    const { container } = render(<Kbd keys={["⌘", "K"]} />);
+    expect(container.querySelector('[data-slot="kbd-separator"]')).not.toBeInTheDocument();
   });
 
   it("aplica className no modo single key", () => {

@@ -12,6 +12,8 @@ export interface KbdSingleProps extends React.ComponentProps<"kbd"> {
   children?: React.ReactNode;
   /** When set, renders multiple keys in a row; `children` is ignored. */
   keys?: never;
+  /** Only with `keys`. */
+  separator?: never;
 }
 
 /**
@@ -24,6 +26,11 @@ export interface KbdKeysProps extends Omit<React.HTMLAttributes<HTMLSpanElement>
    * Renders as a group of styled keys with gap.
    */
   keys: (string | React.ReactNode)[];
+  /**
+   * Shown between the keys when they are pressed together (e.g. "+" for Ctrl + Alt + B,
+   * Figma KbdGroup "+ Separated"). Without it, the keys sit side by side.
+   */
+  separator?: React.ReactNode;
   /** Ignored when `keys` is provided. */
   children?: never;
 }
