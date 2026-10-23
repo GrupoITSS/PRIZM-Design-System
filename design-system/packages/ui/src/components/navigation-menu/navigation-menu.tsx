@@ -1,5 +1,5 @@
 import { cn } from "../../lib/cn";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown } from "../icons";
 import { NavigationMenu as RadixNavigationMenu } from "radix-ui";
 import * as React from "react";
 

@@ -1,6 +1,6 @@
 import { Button } from "@grupoitss/prizm-ui/button";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { TagIcon } from "lucide-react";
+import { Tag as TagIcon } from "@grupoitss/prizm-ui/icons";
 import { type ReactNode, useState } from "react";
 import { Item } from "@grupoitss/prizm-ui/item";
 import type { ItemBadge } from "@grupoitss/prizm-ui/item";

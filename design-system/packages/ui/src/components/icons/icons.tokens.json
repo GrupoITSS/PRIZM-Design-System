@@ -1,0 +1,927 @@
+{
+  "component": "Icon",
+  "description": "Mapa dos ícones do Prizm: o que @grupoitss/prizm-ui/icons exporta, o componente correspondente na página Icons do [PRIZM] Componentes e os tokens de cor, tamanho e traço. Extraído do Figma em 22/10/2026 (nome, nó, traço e variável de cor de cada componente) e conferido pelo teste icons.test.ts, que compara a lista com os exports e proíbe import direto de lucide-react. Nomes de token no formato do Figma (color/foreground); no código, a cor é currentColor e o tamanho vem de size-*.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=1-433",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25303-1957",
+    "code": "design-system/packages/ui/src/components/icons/icons.ts",
+    "story": "design-system/apps/docs/stories/icons.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=26fad0ad-6c9f-47f9-abd7-23762308dc87&version=v1",
+    "pullRequests": [],
+    "jira": []
+  },
+  "color": {
+    "default": "color/foreground",
+    "tone": "color/<tom>",
+    "code": "currentColor",
+    "rule": "O ícone herda a cor do texto. Ícone de tom (primary, destructive, success, info, warning) usa o token base, sem sufixo, como a borda e o sólido (estudo de intensidade, Core node 2197:691: weak = superfície suave, base = sólido, borda e ícone, strong = texto). O -strong fica para o texto ao lado."
+  },
+  "sizes": {
+    "xs": {
+      "size": 12,
+      "className": "size-3",
+      "strokeWidth": "stroke-width/1"
+    },
+    "sm": {
+      "size": 16,
+      "className": "size-4",
+      "strokeWidth": "stroke-width/1-33"
+    },
+    "md": {
+      "size": 20,
+      "className": "size-5",
+      "strokeWidth": "stroke-width/1-67"
+    },
+    "lg": {
+      "size": 24,
+      "className": "size-6",
+      "strokeWidth": "stroke-width/2"
+    }
+  },
+  "strokeWidth": {
+    "code": 2,
+    "rule": "Traço 2 na grade de 24px, que escala com o tamanho (2 × tamanho ÷ 24). No Figma, a instância redimensionada não escala o traço: ele fica ligado a stroke-width/* do Core.",
+    "exceptions": [
+      {
+        "where": "Checkbox (check e minus) e coluna de status da tabela",
+        "code": "strokeWidth={2.5}"
+      }
+    ]
+  },
+  "removed": {
+    "AlertCircle": "CircleAlert",
+    "AlertTriangle": "TriangleAlert",
+    "CheckCircle": "CircleCheckBig",
+    "HelpCircle": "CircleQuestionMark",
+    "XCircle": "CircleX",
+    "MoreHorizontal": "Ellipsis",
+    "Loader2": "LoaderCircle",
+    "Layout": "PanelsTopLeft"
+  },
+  "icons": [
+    {
+      "name": "ArrowDown",
+      "figma": "Icon / ArrowDown",
+      "figmaNode": "5197:4239",
+      "origin": "lucide"
+    },
+    {
+      "name": "ArrowLeft",
+      "figma": "Icon / ArrowLeft",
+      "figmaNode": "5197:4231",
+      "origin": "lucide"
+    },
+    {
+      "name": "ArrowRight",
+      "figma": "Icon / ArrowRight",
+      "figmaNode": "5197:4221",
+      "origin": "lucide"
+    },
+    {
+      "name": "ArrowUp",
+      "figma": "Icon / ArrowUp",
+      "figmaNode": "5197:4213",
+      "origin": "lucide"
+    },
+    {
+      "name": "ArrowUpDown",
+      "figma": "Icon / ArrowUpDown",
+      "figmaNode": "5197:4215",
+      "origin": "lucide"
+    },
+    {
+      "name": "ArrowUpRight",
+      "figma": "Icon / ArrowUpRight",
+      "figmaNode": "5197:4226",
+      "origin": "lucide"
+    },
+    {
+      "name": "BadgeCheck",
+      "figma": "Icon / BadgeCheck",
+      "figmaNode": "5197:4169",
+      "origin": "lucide"
+    },
+    {
+      "name": "Bell",
+      "figma": "Icon / Bell",
+      "figmaNode": "5197:4443",
+      "origin": "lucide"
+    },
+    {
+      "name": "Bold",
+      "figma": "Icon / Bold",
+      "figmaNode": "5197:4369",
+      "origin": "lucide"
+    },
+    {
+      "name": "Bookmark",
+      "figma": "Icon / Bookmark",
+      "figmaNode": "5197:4100",
+      "origin": "lucide"
+    },
+    {
+      "name": "BookOpen",
+      "figma": "Icon / BookOpen",
+      "figmaNode": "5197:4113",
+      "origin": "lucide"
+    },
+    {
+      "name": "BookSearch",
+      "figma": "Icon / BookSearch",
+      "figmaNode": "25300:1964",
+      "origin": "lucide"
+    },
+    {
+      "name": "Bot",
+      "figma": "Icon / Bot",
+      "figmaNode": "5197:4096",
+      "origin": "lucide"
+    },
+    {
+      "name": "Boxes",
+      "figma": "Icon / Boxes",
+      "figmaNode": "5197:4093",
+      "origin": "lucide"
+    },
+    {
+      "name": "Brain",
+      "figma": "Icon / Brain",
+      "figmaNode": "5197:4088",
+      "origin": "lucide"
+    },
+    {
+      "name": "Briefcase",
+      "figma": "Icon / Briefcase",
+      "figmaNode": "5197:4084",
+      "origin": "lucide"
+    },
+    {
+      "name": "Building",
+      "figma": "Icon / Building",
+      "figmaNode": "5197:4077",
+      "origin": "lucide"
+    },
+    {
+      "name": "Building2",
+      "figma": "Icon / Building2",
+      "figmaNode": "5197:4078",
+      "origin": "lucide"
+    },
+    {
+      "name": "Calendar",
+      "figma": "Icon / Calendar",
+      "figmaNode": "5197:4053",
+      "origin": "lucide"
+    },
+    {
+      "name": "Check",
+      "figma": "Icon / Check",
+      "figmaNode": "5197:4029",
+      "origin": "lucide"
+    },
+    {
+      "name": "ChevronDown",
+      "figma": "Icon / ChevronDown",
+      "figmaNode": "5197:4026",
+      "origin": "lucide"
+    },
+    {
+      "name": "ChevronLeft",
+      "figma": "Icon / ChevronLeft",
+      "figmaNode": "5197:4022",
+      "origin": "lucide"
+    },
+    {
+      "name": "ChevronRight",
+      "figma": "Icon / ChevronRight",
+      "figmaNode": "5197:4021",
+      "origin": "lucide"
+    },
+    {
+      "name": "ChevronsUpDown",
+      "figma": "Icon / ChevronsUpDown",
+      "figmaNode": "5197:4013",
+      "origin": "lucide"
+    },
+    {
+      "name": "ChevronUp",
+      "figma": "Icon / ChevronUp",
+      "figmaNode": "5197:4020",
+      "origin": "lucide"
+    },
+    {
+      "name": "Circle",
+      "figma": "Icon / Circle",
+      "figmaNode": "5197:3967",
+      "origin": "lucide"
+    },
+    {
+      "name": "CircleAlert",
+      "figma": "Icon / CircleAlert",
+      "figmaNode": "5197:4007",
+      "origin": "lucide"
+    },
+    {
+      "name": "CircleCheck",
+      "figma": "Icon / CircleCheck",
+      "figmaNode": "5197:3997",
+      "origin": "lucide"
+    },
+    {
+      "name": "CircleCheckBig",
+      "figma": "Icon / CircleCheckBig",
+      "figmaNode": "5197:3998",
+      "origin": "lucide"
+    },
+    {
+      "name": "CircleMinus",
+      "figma": "Icon / CircleMinus",
+      "figmaNode": "5197:3982",
+      "origin": "lucide"
+    },
+    {
+      "name": "CirclePlus",
+      "figma": "Icon / CirclePlus",
+      "figmaNode": "5197:3975",
+      "origin": "lucide"
+    },
+    {
+      "name": "CircleQuestionMark",
+      "figma": "Icon / CircleQuestionMark",
+      "figmaNode": "25300:1971",
+      "origin": "lucide"
+    },
+    {
+      "name": "CircleX",
+      "figma": "Icon / CircleX",
+      "figmaNode": "5197:3968",
+      "origin": "lucide"
+    },
+    {
+      "name": "Clock",
+      "figma": "Icon / Clock",
+      "figmaNode": "5197:3940",
+      "origin": "lucide"
+    },
+    {
+      "name": "Cloud",
+      "figma": "Icon / Cloud",
+      "figmaNode": "5197:3926",
+      "origin": "lucide"
+    },
+    {
+      "name": "Columns3",
+      "figma": "Icon / Columns3",
+      "figmaNode": "5197:3923",
+      "origin": "lucide"
+    },
+    {
+      "name": "Component",
+      "figma": "Icon / Component",
+      "figmaNode": "5197:3918",
+      "origin": "lucide"
+    },
+    {
+      "name": "Copy",
+      "figma": "Icon / Copy",
+      "figmaNode": "5197:3902",
+      "origin": "lucide"
+    },
+    {
+      "name": "CreditCard",
+      "figma": "Icon / CreditCard",
+      "figmaNode": "5197:3889",
+      "origin": "lucide"
+    },
+    {
+      "name": "Database",
+      "figma": "Icon / Database",
+      "figmaNode": "5197:3877",
+      "origin": "lucide"
+    },
+    {
+      "name": "Dot",
+      "figma": "Icon / Dot",
+      "figmaNode": "5197:3848",
+      "origin": "lucide"
+    },
+    {
+      "name": "Download",
+      "figma": "Icon / Download",
+      "figmaNode": "5197:3847",
+      "origin": "lucide"
+    },
+    {
+      "name": "Ellipsis",
+      "figma": "Icon / Ellipsis",
+      "figmaNode": "5197:3828",
+      "origin": "lucide"
+    },
+    {
+      "name": "EllipsisVertical",
+      "figma": "Icon / EllipsisVertical",
+      "figmaNode": "5197:3829",
+      "origin": "lucide"
+    },
+    {
+      "name": "Expand",
+      "figma": "Icon / Expand",
+      "figmaNode": "5197:3823",
+      "origin": "lucide"
+    },
+    {
+      "name": "ExternalLink",
+      "figma": "Icon / ExternalLink",
+      "figmaNode": "5197:3822",
+      "origin": "lucide"
+    },
+    {
+      "name": "Eye",
+      "figma": "Icon / Eye",
+      "figmaNode": "5197:3820",
+      "origin": "lucide"
+    },
+    {
+      "name": "EyeOff",
+      "figma": "Icon / EyeOff",
+      "figmaNode": "5197:3821",
+      "origin": "lucide"
+    },
+    {
+      "name": "File",
+      "figma": "Icon / File",
+      "figmaNode": "5197:3754",
+      "origin": "lucide"
+    },
+    {
+      "name": "FileCode",
+      "figma": "Icon / FileCode",
+      "figmaNode": "5197:3798",
+      "origin": "lucide"
+    },
+    {
+      "name": "FileCsv",
+      "figma": "Icon / FileCsv",
+      "figmaNode": "25300:1976",
+      "origin": "prizm",
+      "paint": "fill"
+    },
+    {
+      "name": "FileDoc",
+      "figma": "Icon / FileDoc",
+      "figmaNode": "25300:1981",
+      "origin": "prizm",
+      "paint": "fill"
+    },
+    {
+      "name": "FileImage",
+      "figma": "Icon / FileImage",
+      "figmaNode": "5197:3792",
+      "origin": "lucide"
+    },
+    {
+      "name": "FilePdf",
+      "figma": "Icon / FilePdf",
+      "figmaNode": "25300:1986",
+      "origin": "prizm",
+      "paint": "fill"
+    },
+    {
+      "name": "FileSpreadsheet",
+      "figma": "Icon / FileSpreadsheet",
+      "figmaNode": "5197:3769",
+      "origin": "lucide"
+    },
+    {
+      "name": "FileText",
+      "figma": "Icon / FileText",
+      "figmaNode": "5197:3765",
+      "origin": "lucide"
+    },
+    {
+      "name": "Filter",
+      "figma": "Icon / Filter",
+      "figmaNode": "5197:3750",
+      "origin": "lucide"
+    },
+    {
+      "name": "Folder",
+      "figma": "Icon / Folder",
+      "figmaNode": "5197:3696",
+      "origin": "lucide"
+    },
+    {
+      "name": "FolderOpen",
+      "figma": "Icon / FolderOpen",
+      "figmaNode": "5197:3708",
+      "origin": "lucide"
+    },
+    {
+      "name": "FolderSearch",
+      "figma": "Icon / FolderSearch",
+      "figmaNode": "5197:3702",
+      "origin": "lucide"
+    },
+    {
+      "name": "Fullscreen",
+      "figma": "Icon / Fullscreen",
+      "figmaNode": "5197:3687",
+      "origin": "lucide"
+    },
+    {
+      "name": "GitBranch",
+      "figma": "Icon / GitBranch",
+      "figmaNode": "5197:3672",
+      "origin": "lucide"
+    },
+    {
+      "name": "GitFork",
+      "figma": "Icon / GitFork",
+      "figmaNode": "5197:4371",
+      "origin": "lucide"
+    },
+    {
+      "name": "Globe",
+      "figma": "Icon / Globe",
+      "figmaNode": "5197:4333",
+      "origin": "lucide"
+    },
+    {
+      "name": "Grid3x3",
+      "figma": "Icon / Grid3x3",
+      "figmaNode": "5197:4316",
+      "origin": "lucide"
+    },
+    {
+      "name": "GripVertical",
+      "figma": "Icon / GripVertical",
+      "figmaNode": "5197:4312",
+      "origin": "lucide"
+    },
+    {
+      "name": "Heart",
+      "figma": "Icon / Heart",
+      "figmaNode": "5197:4246",
+      "origin": "lucide"
+    },
+    {
+      "name": "Home",
+      "figma": "Icon / Home",
+      "figmaNode": "5197:4236",
+      "origin": "lucide"
+    },
+    {
+      "name": "Image",
+      "figma": "Icon / Image",
+      "figmaNode": "5197:4208",
+      "origin": "lucide"
+    },
+    {
+      "name": "Inactive",
+      "figma": "Icon / CircleMinus",
+      "figmaNode": "5197:3982",
+      "origin": "lucide",
+      "lucide": "CircleMinus"
+    },
+    {
+      "name": "Inbox",
+      "figma": "Icon / Inbox",
+      "figmaNode": "5197:4202",
+      "origin": "lucide"
+    },
+    {
+      "name": "Info",
+      "figma": "Icon / Info",
+      "figmaNode": "5197:4192",
+      "origin": "lucide"
+    },
+    {
+      "name": "Italic",
+      "figma": "Icon / Italic",
+      "figmaNode": "5197:4186",
+      "origin": "lucide"
+    },
+    {
+      "name": "Keyboard",
+      "figma": "Icon / Keyboard",
+      "figmaNode": "5197:4164",
+      "origin": "lucide"
+    },
+    {
+      "name": "Languages",
+      "figma": "Icon / Languages",
+      "figmaNode": "5197:4146",
+      "origin": "lucide"
+    },
+    {
+      "name": "Layers",
+      "figma": "Icon / Layers",
+      "figmaNode": "5197:3666",
+      "origin": "lucide"
+    },
+    {
+      "name": "LayoutGrid",
+      "figma": "Icon / LayoutGrid",
+      "figmaNode": "5197:3662",
+      "origin": "lucide"
+    },
+    {
+      "name": "Link",
+      "figma": "Icon / Link",
+      "figmaNode": "5197:3643",
+      "origin": "lucide"
+    },
+    {
+      "name": "List",
+      "figma": "Icon / List",
+      "figmaNode": "5197:3627",
+      "origin": "lucide"
+    },
+    {
+      "name": "Loader",
+      "figma": "Icon / Loader",
+      "figmaNode": "5197:3624",
+      "origin": "lucide"
+    },
+    {
+      "name": "LoaderCircle",
+      "figma": "Icon / LoaderCircle",
+      "figmaNode": "5197:3626",
+      "origin": "lucide"
+    },
+    {
+      "name": "Lock",
+      "figma": "Icon / Lock",
+      "figmaNode": "5197:3617",
+      "origin": "lucide"
+    },
+    {
+      "name": "LogOut",
+      "figma": "Icon / LogOut",
+      "figmaNode": "5197:3615",
+      "origin": "lucide"
+    },
+    {
+      "name": "Mail",
+      "figma": "Icon / Mail",
+      "figmaNode": "5197:3603",
+      "origin": "lucide"
+    },
+    {
+      "name": "Maximize",
+      "figma": "Icon / Maximize",
+      "figmaNode": "5197:3594",
+      "origin": "lucide"
+    },
+    {
+      "name": "Maximize2",
+      "figma": "Icon / Maximize2",
+      "figmaNode": "5197:3595",
+      "origin": "lucide"
+    },
+    {
+      "name": "Menu",
+      "figma": "Icon / Menu",
+      "figmaNode": "5197:3588",
+      "origin": "lucide"
+    },
+    {
+      "name": "MessageSquare",
+      "figma": "Icon / MessageSquare",
+      "figmaNode": "5197:3561",
+      "origin": "lucide"
+    },
+    {
+      "name": "Mic",
+      "figma": "Icon / Mic",
+      "figmaNode": "5197:3557",
+      "origin": "lucide"
+    },
+    {
+      "name": "Minimize2",
+      "figma": "Icon / Minimize2",
+      "figmaNode": "5197:3551",
+      "origin": "lucide"
+    },
+    {
+      "name": "Minus",
+      "figma": "Icon / Minus",
+      "figmaNode": "5197:3549",
+      "origin": "lucide"
+    },
+    {
+      "name": "Monitor",
+      "figma": "Icon / Monitor",
+      "figmaNode": "5197:3537",
+      "origin": "lucide"
+    },
+    {
+      "name": "Moon",
+      "figma": "Icon / Moon",
+      "figmaNode": "5197:3535",
+      "origin": "lucide"
+    },
+    {
+      "name": "Network",
+      "figma": "Icon / Network",
+      "figmaNode": "5197:3504",
+      "origin": "lucide"
+    },
+    {
+      "name": "OctagonX",
+      "figma": "Icon / OctagonX",
+      "figmaNode": "5197:3491",
+      "origin": "lucide"
+    },
+    {
+      "name": "Palette",
+      "figma": "Icon / Palette",
+      "figmaNode": "5197:3474",
+      "origin": "lucide"
+    },
+    {
+      "name": "PanelLeft",
+      "figma": "Icon / PanelLeft",
+      "figmaNode": "5197:3466",
+      "origin": "lucide"
+    },
+    {
+      "name": "PanelRight",
+      "figma": "Icon / PanelRight",
+      "figmaNode": "5197:3462",
+      "origin": "lucide"
+    },
+    {
+      "name": "PanelsTopLeft",
+      "figma": "Icon / PanelsTopLeft",
+      "figmaNode": "5197:3455",
+      "origin": "lucide"
+    },
+    {
+      "name": "Paperclip",
+      "figma": "Icon / Paperclip",
+      "figmaNode": "5197:3454",
+      "origin": "lucide"
+    },
+    {
+      "name": "Pencil",
+      "figma": "Icon / Pencil",
+      "figmaNode": "5197:3440",
+      "origin": "lucide"
+    },
+    {
+      "name": "Phone",
+      "figma": "Icon / Phone",
+      "figmaNode": "5197:3430",
+      "origin": "lucide"
+    },
+    {
+      "name": "Pin",
+      "figma": "Icon / Pin",
+      "figmaNode": "5197:3416",
+      "origin": "lucide"
+    },
+    {
+      "name": "PinOff",
+      "figma": "Icon / PinOff",
+      "figmaNode": "5197:3417",
+      "origin": "lucide"
+    },
+    {
+      "name": "Plus",
+      "figma": "Icon / Plus",
+      "figmaNode": "5197:3405",
+      "origin": "lucide"
+    },
+    {
+      "name": "Puzzle",
+      "figma": "Icon / Puzzle",
+      "figmaNode": "5197:3390",
+      "origin": "lucide"
+    },
+    {
+      "name": "RefreshCw",
+      "figma": "Icon / RefreshCw",
+      "figmaNode": "5197:3355",
+      "origin": "lucide"
+    },
+    {
+      "name": "Save",
+      "figma": "Icon / Save",
+      "figmaNode": "5197:3319",
+      "origin": "lucide"
+    },
+    {
+      "name": "Search",
+      "figma": "Icon / Search",
+      "figmaNode": "5197:3296",
+      "origin": "lucide"
+    },
+    {
+      "name": "Send",
+      "figma": "Icon / Send",
+      "figmaNode": "5197:3292",
+      "origin": "lucide"
+    },
+    {
+      "name": "SendHorizontal",
+      "figma": "Icon / SendHorizontal",
+      "figmaNode": "5197:3294",
+      "origin": "lucide"
+    },
+    {
+      "name": "Settings",
+      "figma": "Icon / Settings",
+      "figmaNode": "5197:4421",
+      "origin": "lucide"
+    },
+    {
+      "name": "Share",
+      "figma": "Icon / Share",
+      "figmaNode": "5197:4445",
+      "origin": "lucide"
+    },
+    {
+      "name": "Shield",
+      "figma": "Icon / Shield",
+      "figmaNode": "5197:3286",
+      "origin": "lucide"
+    },
+    {
+      "name": "ShieldAlert",
+      "figma": "Icon / ShieldAlert",
+      "figmaNode": "5197:4441",
+      "origin": "lucide"
+    },
+    {
+      "name": "ShieldCheck",
+      "figma": "Icon / ShieldCheck",
+      "figmaNode": "5197:4396",
+      "origin": "lucide"
+    },
+    {
+      "name": "ShieldMinus",
+      "figma": "Icon / ShieldMinus",
+      "figmaNode": "5197:4413",
+      "origin": "lucide"
+    },
+    {
+      "name": "SlidersHorizontal",
+      "figma": "Icon / SlidersHorizontal",
+      "figmaNode": "5197:3259",
+      "origin": "lucide"
+    },
+    {
+      "name": "SlidersVertical",
+      "figma": "Icon / SlidersVertical",
+      "figmaNode": "5197:3258",
+      "origin": "lucide"
+    },
+    {
+      "name": "SquarePen",
+      "figma": "Icon / SquarePen",
+      "figmaNode": "5197:3197",
+      "origin": "lucide"
+    },
+    {
+      "name": "Store",
+      "figma": "Icon / Store",
+      "figmaNode": "5197:3167",
+      "origin": "lucide"
+    },
+    {
+      "name": "Sun",
+      "figma": "Icon / Sun",
+      "figmaNode": "5197:3158",
+      "origin": "lucide"
+    },
+    {
+      "name": "Tag",
+      "figma": "Icon / Tag",
+      "figmaNode": "5197:3138",
+      "origin": "lucide"
+    },
+    {
+      "name": "Trash2",
+      "figma": "Icon / Trash2",
+      "figmaNode": "5197:3086",
+      "origin": "lucide"
+    },
+    {
+      "name": "TriangleAlert",
+      "figma": "Icon / TriangleAlert",
+      "figmaNode": "5197:3077",
+      "origin": "lucide"
+    },
+    {
+      "name": "Underline",
+      "figma": "Icon / Underline",
+      "figmaNode": "5197:3063",
+      "origin": "lucide"
+    },
+    {
+      "name": "Undo2",
+      "figma": "Icon / Undo2",
+      "figmaNode": "5197:3062",
+      "origin": "lucide"
+    },
+    {
+      "name": "Upload",
+      "figma": "Icon / Upload",
+      "figmaNode": "5197:3052",
+      "origin": "lucide"
+    },
+    {
+      "name": "User",
+      "figma": "Icon / User",
+      "figmaNode": "5197:3037",
+      "origin": "lucide"
+    },
+    {
+      "name": "UserCheck",
+      "figma": "Icon / UserCheck",
+      "figmaNode": "5197:3050",
+      "origin": "lucide"
+    },
+    {
+      "name": "UserMinus",
+      "figma": "Icon / UserMinus",
+      "figmaNode": "5197:3048",
+      "origin": "lucide"
+    },
+    {
+      "name": "UserPlus",
+      "figma": "Icon / UserPlus",
+      "figmaNode": "5197:3047",
+      "origin": "lucide"
+    },
+    {
+      "name": "UserRoundCog",
+      "figma": "Icon / UserRoundCog",
+      "figmaNode": "5197:3045",
+      "origin": "lucide"
+    },
+    {
+      "name": "Users",
+      "figma": "Icon / Users",
+      "figmaNode": "5197:3035",
+      "origin": "lucide"
+    },
+    {
+      "name": "UserX",
+      "figma": "Icon / UserX",
+      "figmaNode": "5197:3038",
+      "origin": "lucide"
+    },
+    {
+      "name": "Wrench",
+      "figma": "Icon / Wrench",
+      "figmaNode": "5197:2989",
+      "origin": "lucide"
+    },
+    {
+      "name": "X",
+      "figma": "Icon / X",
+      "figmaNode": "5197:2988",
+      "origin": "lucide"
+    },
+    {
+      "name": "Zap",
+      "figma": "Icon / Zap",
+      "figmaNode": "5197:2985",
+      "origin": "lucide"
+    }
+  ],
+  "divergences": [
+    {
+      "where": "Traço dos ícones de 12px dentro do Button (xs e icon-xs)",
+      "figma": "stroke-width/1-33",
+      "code": "1px (2 × 12 ÷ 24), pela escala do Lucide",
+      "status": "aberta"
+    },
+    {
+      "where": "Tamanho padrão de FileCsv, FileDoc e FilePdf sem size nem classe",
+      "figma": "24px, como os outros componentes da página Icons",
+      "code": "20px (grade própria de 20px); os do Lucide saem com 24px",
+      "status": "aberta"
+    },
+    {
+      "where": "Nomes antigos do Lucide sem duplicata na lista",
+      "figma": "Building2, Filter, Home e Trash2 (o kit é de uma versão anterior do Lucide)",
+      "code": "Os mesmos nomes; no Lucide atual são apelidos de BuildingComplex, Funnel, House e Trash",
+      "status": "aberta"
+    },
+    {
+      "where": "Ícone de warning sobre o fundo claro",
+      "figma": "color/warning (base), pelo estudo de intensidade",
+      "code": "AlertMessage usa text-warning-strong no ícone do aviso (as outras variantes usam o base). Pelo estudo, o certo é text-warning, mas o base tem 1,97:1 a 2,15:1 contra o fundo claro, abaixo do 3:1 do ícone (1.4.11)",
+      "status": "aberta"
+    },
+    {
+      "where": "Texto em color/warning sobre o fundo claro",
+      "figma": "color/warning-strong (texto de status)",
+      "code": "text-warning no Alert warning, no FileItem em processamento e no menu de ações da tabela: 1,97:1 a 2,15:1, abaixo do 4,5:1",
+      "status": "aberta"
+    }
+  ]
+}

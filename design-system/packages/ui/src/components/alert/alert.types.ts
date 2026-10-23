@@ -16,8 +16,8 @@ export interface AlertProps
   description?: React.ReactNode;
   /**
    * Icon element displayed at the left. Optional.
-   * Commonly used: lucide-react icons (Info, CheckCircle, AlertTriangle, AlertCircle).
-   * @example <CheckCircle className="size-4" />
+   * Commonly used: icons from @grupoitss/prizm-ui/icons (Info, CircleCheckBig, TriangleAlert, CircleAlert).
+   * @example <CircleCheckBig className="size-4" />
    */
   icon?: React.ReactNode;
 }

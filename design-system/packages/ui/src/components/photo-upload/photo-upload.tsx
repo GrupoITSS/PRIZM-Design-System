@@ -14,7 +14,7 @@ import {
 } from "../dialog";
 import { Dropzone } from "../dropzone";
 import { FieldError } from "../field";
-import { Loader2, Upload } from "../icons";
+import { LoaderCircle, Upload } from "../icons";
 import {
   photoUploadStyles,
   ENTITY_AVATAR_PX,
@@ -176,7 +176,7 @@ export const PhotoUpload = ({
     <div className={cn(container(), "relative")}>
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
-          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+          <LoaderCircle className="size-5 animate-spin text-muted-foreground" />
         </div>
       )}
 

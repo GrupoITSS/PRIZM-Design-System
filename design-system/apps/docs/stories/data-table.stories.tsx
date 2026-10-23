@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@grupoitss/prizm-ui/dropdown-menu";
-import { ArrowUpDown, MoreHorizontal } from "@grupoitss/prizm-ui/icons";
+import { ArrowUpDown, Ellipsis } from "@grupoitss/prizm-ui/icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { MockPayment } from "./mocks/data-table.mock";
@@ -415,7 +415,7 @@ export const WithRowActions: Story = {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="size-8 p-0">
                   <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="size-4" />
+                  <Ellipsis className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -524,7 +524,7 @@ export const CompleteExample: Story = {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="size-8 p-0">
                   <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="size-4" />
+                  <Ellipsis className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

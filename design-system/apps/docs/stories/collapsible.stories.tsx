@@ -16,7 +16,7 @@ import {
 import { Field, FieldGroup, FieldLabel } from "@grupoitss/prizm-ui/field";
 import { Input } from "@grupoitss/prizm-ui/input";
 import { ChevronDown } from "@grupoitss/prizm-ui/icons";
-import { ChevronsUpDown, Maximize2, Minimize2 } from "lucide-react";
+import { ChevronsUpDown, Maximize2, Minimize2 } from "@grupoitss/prizm-ui/icons";
 
 const meta: Meta<typeof Collapsible> = {
   title: "Primários/Collapsible",

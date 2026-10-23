@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle } from "../dialog";
 import { cn } from "../../lib/cn";
 import { Command as CommandPrimitive } from "cmdk";
-import { Search } from "lucide-react";
+import { Search } from "../icons";
 import * as React from "react";
 import {
   commandDialogStyles,

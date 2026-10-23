@@ -3,7 +3,7 @@ import { Input } from "@grupoitss/prizm-ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@grupoitss/prizm-ui/input-group";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { addDays } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon } from "@grupoitss/prizm-ui/icons";
 import * as React from "react";
 import type { DateRange } from "react-day-picker";
 import { DatePicker } from "@grupoitss/prizm-ui/date-picker";

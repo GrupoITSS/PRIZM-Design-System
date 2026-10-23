@@ -17,15 +17,15 @@ import {
 } from "@grupoitss/prizm-ui/field";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  BadgeCheckIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ExternalLinkIcon,
-  HomeIcon,
-  InboxIcon,
-  PlusIcon,
-  ShieldAlertIcon,
-} from "lucide-react";
+  BadgeCheck as BadgeCheckIcon,
+  ChevronDown as ChevronDownIcon,
+  ChevronRight as ChevronRightIcon,
+  ExternalLink as ExternalLinkIcon,
+  Home as HomeIcon,
+  Inbox as InboxIcon,
+  Plus as PlusIcon,
+  ShieldAlert as ShieldAlertIcon,
+} from "@grupoitss/prizm-ui/icons";
 import { Item } from "@grupoitss/prizm-ui/item";
 
 const meta: Meta<typeof Item> = {

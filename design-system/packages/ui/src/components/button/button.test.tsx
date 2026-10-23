@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { Plus } from "lucide-react";
+import { Plus } from "../icons";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Button } from "./button";
 

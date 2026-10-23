@@ -8,7 +8,7 @@ import {
   CommandItem,
   CommandList,
 } from "@grupoitss/prizm-ui/command";
-import { Calendar } from "lucide-react";
+import { Calendar } from "@grupoitss/prizm-ui/icons";
 
 const meta: Meta<typeof Command> = {
   title: "Compositions/Command",

@@ -1,248 +1,192 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import * as icons from "@grupoitss/prizm-ui/icons";
 import {
-  AlertCircle,
-  AlertTriangle,
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpDown,
-  Bell,
-  Bold,
-  Bookmark,
-  Check,
-  CheckCircle,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  Circle,
-  Copy,
-  CreditCard,
-  Dot,
-  Download,
-  Expand,
+  CircleAlert,
+  CircleCheckBig,
   ExternalLink,
-  File,
-  FileCode,
-  FileText,
-  Filter,
-  Folder,
-  FolderOpen,
-  FolderSearch,
-  Heart,
-  HelpCircle,
-  Home,
   Info,
-  Italic,
-  Keyboard,
-  Languages,
-  Layout,
-  Link,
-  Loader,
-  Loader2,
-  LogOut,
-  Mail,
-  Minus,
-  Monitor,
-  Moon,
-  MoreHorizontal,
-  OctagonX,
-  Palette,
-  Pencil,
-  Plus,
-  Save,
   Search,
-  Settings,
-  Shield,
-  Sun,
-  Trash2,
   TriangleAlert,
-  Underline,
-  Upload,
-  User,
-  Users,
-  X,
-  XCircle,
 } from "@grupoitss/prizm-ui/icons";
+import type { LucideIcon } from "@grupoitss/prizm-ui/icons";
 
-type IconEntry = {
-  name: string;
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+const FIGMA_URL =
+  "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=1-433";
+const FIGMA_DOC_URL =
+  "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25303-1957";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=26fad0ad-6c9f-47f9-abd7-23762308dc87&version=v1";
+
+// Todos os ícones exportados, em ordem alfabética (os tipos somem em tempo de execução).
+const catalogo = Object.entries(
+  icons as unknown as Record<string, LucideIcon>,
+).sort(([a], [b]) => a.localeCompare(b, "en", { sensitivity: "base" }));
+const PROPRIOS = ["FileCsv", "FileDoc", "FilePdf", "Inactive"];
+
+const TAMANHOS = [
+  { classe: "size-3", px: 12, traco: "1px" },
+  { classe: "size-4", px: 16, traco: "1,33px" },
+  { classe: "size-5", px: 20, traco: "1,67px" },
+  { classe: "size-6", px: 24, traco: "2px" },
+] as const;
+
+type PlaygroundArgs = {
+  icone: string;
+  tamanho: (typeof TAMANHOS)[number]["classe"];
+  cor: string;
 };
 
-type IconGroup = {
-  title: string;
-  description: string;
-  icons: IconEntry[];
-};
-
-const iconGroups: IconGroup[] = [
-  {
-    title: "Navigation & Arrows",
-    description: "Navegação entre páginas, listas e flows.",
-    icons: [
-      { name: "ArrowLeft", Icon: ArrowLeft },
-      { name: "ArrowRight", Icon: ArrowRight },
-      { name: "ArrowUpDown", Icon: ArrowUpDown },
-      { name: "ChevronDown", Icon: ChevronDown },
-      { name: "ChevronLeft", Icon: ChevronLeft },
-      { name: "ChevronRight", Icon: ChevronRight },
-      { name: "ChevronUp", Icon: ChevronUp },
-      { name: "Home", Icon: Home },
-      { name: "ExternalLink", Icon: ExternalLink },
-      { name: "Expand", Icon: Expand },
-      { name: "MoreHorizontal", Icon: MoreHorizontal },
-    ],
-  },
-  {
-    title: "Actions & Objects",
-    description: "Ações principais, edição, arquivos e recursos.",
-    icons: [
-      { name: "Plus", Icon: Plus },
-      { name: "Minus", Icon: Minus },
-      { name: "Check", Icon: Check },
-      { name: "X", Icon: X },
-      { name: "Trash2", Icon: Trash2 },
-      { name: "Download", Icon: Download },
-      { name: "Upload", Icon: Upload },
-      { name: "Save", Icon: Save },
-      { name: "Copy", Icon: Copy },
-      { name: "Pencil", Icon: Pencil },
-      { name: "Filter", Icon: Filter },
-      { name: "Search", Icon: Search },
-      { name: "Settings", Icon: Settings },
-      { name: "LogOut", Icon: LogOut },
-      { name: "Monitor", Icon: Monitor },
-      { name: "Mail", Icon: Mail },
-      { name: "CreditCard", Icon: CreditCard },
-      { name: "Folder", Icon: Folder },
-      { name: "FolderOpen", Icon: FolderOpen },
-      { name: "FolderSearch", Icon: FolderSearch },
-      { name: "File", Icon: File },
-      { name: "FileText", Icon: FileText },
-      { name: "FileCode", Icon: FileCode },
-      { name: "Bookmark", Icon: Bookmark },
-      { name: "Bell", Icon: Bell },
-      { name: "Loader", Icon: Loader },
-      { name: "Loader2", Icon: Loader2 },
-    ],
-  },
-  {
-    title: "Status & Feedback",
-    description: "Estados de sistema, alertas, sucesso e erro.",
-    icons: [
-      { name: "AlertCircle", Icon: AlertCircle },
-      { name: "AlertTriangle", Icon: AlertTriangle },
-      { name: "TriangleAlert", Icon: TriangleAlert },
-      { name: "OctagonX", Icon: OctagonX },
-      { name: "Info", Icon: Info },
-      { name: "HelpCircle", Icon: HelpCircle },
-      { name: "CheckCircle", Icon: CheckCircle },
-      { name: "Circle", Icon: Circle },
-      { name: "Dot", Icon: Dot },
-      { name: "Shield", Icon: Shield },
-    ],
-  },
-  {
-    title: "Text & Layout",
-    description: "Edição de texto, formatação e estrutura.",
-    icons: [
-      { name: "Bold", Icon: Bold },
-      { name: "Italic", Icon: Italic },
-      { name: "Underline", Icon: Underline },
-      { name: "Link", Icon: Link },
-      { name: "Palette", Icon: Palette },
-      { name: "Layout", Icon: Layout },
-      { name: "Keyboard", Icon: Keyboard },
-      { name: "Languages", Icon: Languages },
-    ],
-  },
-  {
-    title: "User & Theme",
-    description: "Identidade de usuário e preferência de tema.",
-    icons: [
-      { name: "User", Icon: User },
-      { name: "Users", Icon: Users },
-      { name: "Heart", Icon: Heart },
-      { name: "Sun", Icon: Sun },
-      { name: "Moon", Icon: Moon },
-      { name: "XCircle", Icon: XCircle },
-    ],
-  },
-];
-
-const meta: Meta = {
+const meta: Meta<PlaygroundArgs> = {
   title: "Tokens/Icons",
+  tags: ["autodocs", "documentado"],
   parameters: {
     layout: "padded",
     docs: {
       description: {
         component:
-          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          "Icons are Lucide icons re-exported by `@grupoitss/prizm-ui/icons`. The gallery below mostra **apenas um subconjunto curado** para exemplos de uso — a biblioteca Lucide completa possui centenas de ícones adicionais. Sempre importe pelos nomes re-exportados no design system.",
+          `[Ícones no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).\n\n` +
+          `Ícones de interface do Prizm: **${catalogo.length} ícones**, uma lista curada do [Lucide](https://lucide.dev) mais três ícones de arquivo próprios (FileCsv, FileDoc e FilePdf). ` +
+          "Importe sempre de `@grupoitss/prizm-ui/icons`, nunca de `lucide-react`.\n\n" +
+          "O ícone herda a cor do texto (`currentColor`). O tamanho vem da classe `size-3` a `size-6`, e o traço escala junto. " +
+          "Ícone decorativo sai com `aria-hidden`; ícone que carrega a informação sozinho precisa de `aria-label`.",
       },
     },
   },
+  argTypes: {
+    icone: {
+      control: "select",
+      options: catalogo.map(([nome]) => nome),
+      description: "Nome exportado por @grupoitss/prizm-ui/icons.",
+    },
+    tamanho: {
+      control: "inline-radio",
+      options: TAMANHOS.map((t) => t.classe),
+      description: "Classe de tamanho: 12, 16, 20 ou 24px.",
+    },
+    cor: {
+      control: "select",
+      options: [
+        "text-foreground",
+        "text-muted-foreground",
+        "text-primary",
+        "text-destructive",
+        "text-success",
+        "text-warning",
+        "text-info",
+      ],
+      description: "Cor do texto do pai; o ícone herda por currentColor.",
+    },
+  },
+  args: { icone: "Search", tamanho: "size-6", cor: "text-foreground" },
 };
 
 export default meta;
 
-type Story = StoryObj;
+type Story = StoryObj<PlaygroundArgs>;
 
-export const AllIcons: Story = {
+export const Playground: Story = {
+  render: ({ icone, tamanho, cor }) => {
+    const Icon =
+      (icons as unknown as Record<string, LucideIcon>)[icone] ?? Search;
+    return (
+      <div className={`flex items-center gap-3 ${cor}`}>
+        <Icon className={tamanho} />
+        <code className="text-sm">{icone}</code>
+      </div>
+    );
+  },
+};
+
+export const Catalogo: Story = {
+  name: "Catálogo",
   render: () => (
-    <div className="space-y-6 rounded-lg border border-border bg-card p-6">
+    <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Import icons from{" "}
-        <code className="rounded bg-muted px-1 py-0.5 text-xs">@grupoitss/prizm-ui/icons</code>, for
-        example:{" "}
+        {catalogo.length} ícones exportados por{" "}
         <code className="rounded bg-muted px-1 py-0.5 text-xs">
-          import &#123; Plus, Search &#125; from &quot;@grupoitss/prizm-ui/icons&quot;
+          @grupoitss/prizm-ui/icons
         </code>
-        . This page shows a **representative subset** of the most common icons; Lucide includes many
-        more if needed.
+        . Em destaque, os próprios do Prizm. Ícone que não está aqui não existe
+        no pacote: peça a inclusão com uma issue.
       </p>
-      {iconGroups.map((group) => (
-        <section key={group.title} className="space-y-3">
-          <div className="flex items-baseline justify-between gap-4">
-            <h3 className="text-sm font-semibold text-foreground">{group.title}</h3>
-            <p className="text-xs text-muted-foreground">{group.description}</p>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-2">
+        {catalogo.map(([nome, Icon]) => (
+          <div
+            key={nome}
+            className={`flex flex-col items-center gap-2 rounded-md p-4 text-center ${
+              PROPRIOS.includes(nome) ? "bg-primary-weak" : "bg-muted"
+            }`}
+          >
+            <Icon className="size-6 text-foreground" />
+            <span className="font-mono text-[11px] text-muted-foreground">
+              {nome}
+            </span>
           </div>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(7rem,1fr))] gap-4">
-            {group.icons.map(({ name, Icon }) => (
-              <div
-                key={name}
-                className="flex flex-col items-center gap-2 rounded-md border border-border bg-background p-4 text-center transition-colors hover:bg-accent/50"
-              >
-                <Icon className="size-6 text-foreground" aria-hidden />
-                <span className="text-[11px] font-medium text-foreground/90">{name}</span>
-              </div>
-            ))}
+        ))}
+      </div>
+    </div>
+  ),
+};
+
+export const Tamanhos: Story = {
+  render: () => (
+    <div className="flex flex-wrap items-end gap-10 rounded-lg bg-muted p-6">
+      {TAMANHOS.map(({ classe, px, traco }) => (
+        <div key={classe} className="flex flex-col items-center gap-2">
+          <div className="flex items-center gap-3 text-foreground">
+            <icons.Search className={classe} />
+            <icons.Settings className={classe} />
+            <icons.FilePdf className={classe} />
           </div>
-        </section>
+          <code className="text-xs text-foreground">
+            {classe} · {px}px
+          </code>
+          <span className="text-xs text-muted-foreground">traço {traco}</span>
+        </div>
       ))}
     </div>
   ),
 };
 
-export const IconSizes: Story = {
+export const Cor: Story = {
   render: () => (
-    <div className="flex flex-wrap items-end gap-6 rounded-lg border border-border bg-card p-6">
-      <div className="flex flex-col items-center gap-2">
-        <Search className="size-3 text-foreground" aria-hidden />
-        <span className="text-xs text-muted-foreground">size-3 (12px)</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <Search className="size-4 text-foreground" aria-hidden />
-        <span className="text-xs text-muted-foreground">size-4 (16px)</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <Search className="size-5 text-foreground" aria-hidden />
-        <span className="text-xs text-muted-foreground">size-5 (20px)</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <Search className="size-6 text-foreground" aria-hidden />
-        <span className="text-xs text-muted-foreground">size-6 (24px)</span>
-      </div>
+    <div className="flex flex-wrap gap-6">
+      {(
+        [
+          ["text-foreground", Info],
+          ["text-muted-foreground", Search],
+          ["text-primary", ExternalLink],
+          ["text-destructive", CircleAlert],
+          ["text-success", CircleCheckBig],
+          ["text-warning", TriangleAlert],
+        ] as const
+      ).map(([classe, Icon]) => (
+        <div key={classe} className={`flex items-center gap-2 ${classe}`}>
+          <Icon className="size-5" />
+          <code className="text-xs">{classe}</code>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const ComNome: Story = {
+  name: "Com nome acessível",
+  render: () => (
+    <div className="flex items-center gap-6 text-foreground">
+      <span className="flex items-center gap-2">
+        <icons.Plus className="size-4" />
+        Novo item{" "}
+        <code className="text-xs text-muted-foreground">
+          (decorativo: aria-hidden)
+        </code>
+      </span>
+      <span className="flex items-center gap-2">
+        <CircleAlert className="size-4 text-destructive" aria-label="Erro" />
+        <code className="text-xs text-muted-foreground">
+          (sozinho: aria-label)
+        </code>
+      </span>
     </div>
   ),
 };

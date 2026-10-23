@@ -75,3 +75,9 @@ export * from "./components/tooltip";
 
 // Helpers
 export { cn } from "./lib/cn";
+
+// Calendar e Tag existem como ícone e como componente ou tipo. Na raiz vale o
+// componente (Calendar) e o tipo da tabela (Tag); os ícones saem por
+// @grupoitss/prizm-ui/icons.
+export { Calendar } from "./components/calendar";
+export type { Tag } from "./components/table";

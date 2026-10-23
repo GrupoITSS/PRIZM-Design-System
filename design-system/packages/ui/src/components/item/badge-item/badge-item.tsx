@@ -1,6 +1,6 @@
 import { Badge } from "../../badge";
 import { cn } from "../../../lib/cn";
-import { XIcon } from "lucide-react";
+import { X as XIcon } from "../../icons";
 import * as React from "react";
 import {
   itemBadgeRemoveIconStyles,

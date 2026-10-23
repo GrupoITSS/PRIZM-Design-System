@@ -24,7 +24,7 @@ export interface DropzoneProps
   disabled?: boolean;
   /**
    * Visual loading state. Most útil para indicar upload em andamento.
-   * Quando true, mostra ícone Loader2 e aplica estilos de carregando.
+   * Quando true, mostra ícone LoaderCircle e aplica estilos de carregando.
    * @default false
    */
   loading?: boolean;

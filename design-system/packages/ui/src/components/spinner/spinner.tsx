@@ -1,4 +1,4 @@
-import { Loader2Icon } from "lucide-react";
+import { LoaderCircle } from "../icons";
 import * as React from "react";
 
 import { getSpinnerClassName, getSpinnerStyle } from "./spinner.styles";
@@ -26,7 +26,7 @@ function Spinner({
   ref,
   ...props
 }: SpinnerProps & { ref?: React.Ref<SVGSVGElement> }) {
-  const IconComponent = icon ?? Loader2Icon;
+  const IconComponent = icon ?? LoaderCircle;
 
   return (
     <IconComponent

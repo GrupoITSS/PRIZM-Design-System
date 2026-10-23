@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ArrowRight, Circle, Plus, Trash2 } from "lucide-react";
+import { ArrowRight, Circle, Plus, Trash2 } from "@grupoitss/prizm-ui/icons";
 import { Button, type ButtonProps } from "@grupoitss/prizm-ui/button";
 
 type Variant = NonNullable<ButtonProps["variant"]>;

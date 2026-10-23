@@ -3,7 +3,7 @@ import type * as React from "react";
 /**
  * Props do componente `Spinner` do design system PRIZM.
  *
- * - Baseado em um ícone SVG (`Loader2Icon`) com animação de loading.
+ * - Baseado em um ícone SVG (`LoaderCircle`) com animação de loading.
  * - Expõe `size` como API principal para tamanhos mais comuns.
  * - Permite sobrescrever `className`, velocidade (`degree`), ícone (`icon`) e outros atributos nativos de `<svg>`.
  */
@@ -33,15 +33,15 @@ export interface SpinnerProps extends React.SVGAttributes<SVGSVGElement> {
   degree?: "slow" | "normal" | "fast";
 
   /**
-   * Componente de ícone a ser usado no lugar do `Loader2Icon` padrão.
+   * Componente de ícone a ser usado no lugar do `LoaderCircle` padrão.
    * Deve ser um SVG compatível com os atributos nativos de `<svg>`.
    *
-   * @default Loader2Icon
+   * @default LoaderCircle
    * @example
    * ```tsx
-   * import { LoaderIcon } from "lucide-react";
+   * import { Loader } from "@grupoitss/prizm-ui/icons";
    *
-   * <Spinner icon={LoaderIcon} />
+   * <Spinner icon={Loader} />
    * ```
    */
   icon?: React.ComponentType<React.SVGAttributes<SVGSVGElement>>;

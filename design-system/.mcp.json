@@ -18,6 +18,14 @@
         "Authorization": "Bearer ${PAS_CMS_TOKEN}",
         "X-Tenant-ID": "development-team"
       }
+    },
+    "prizm-cms": {
+      "type": "http",
+      "url": "https://sgq.pas.app.br/cms/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${PRIZM_CMS_TOKEN}",
+        "X-Tenant-ID": "sgq"
+      }
     }
   }
 }

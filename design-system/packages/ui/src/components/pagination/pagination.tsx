@@ -1,5 +1,5 @@
 import { cn } from "../../lib/cn";
-import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight, Ellipsis } from "../icons";
 import * as React from "react";
 import {
   paginationEllipsisVariants,
@@ -174,7 +174,7 @@ function Pagination({
             // eslint-disable-next-line @eslint-react/no-array-index-key -- positional list, items have no stable id
             <li key={`ellipsis-${i}`}>
               <span aria-hidden className={cn(paginationEllipsisVariants({ size: ellipsisSize }))}>
-                <MoreHorizontal className="h-4 w-4" />
+                <Ellipsis className="h-4 w-4" />
                 <span className="sr-only">More pages</span>
               </span>
             </li>

@@ -1,5 +1,5 @@
 import { cn } from "../../lib/cn";
-import { Check, ChevronRight, Circle } from "lucide-react";
+import { Check, ChevronRight, Circle } from "../icons";
 import { Menubar as RadixMenubar } from "radix-ui";
 import * as React from "react";
 

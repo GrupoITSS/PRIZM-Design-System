@@ -1,6 +1,6 @@
 import { isValidElement, useEffect, type ComponentProps, type ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "../icons";
 import { Slot } from "radix-ui";
 import { cn } from "../../lib/cn";
 

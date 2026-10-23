@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  FileIcon,
-  FolderIcon,
-  HelpCircleIcon,
-  SaveIcon,
-  SettingsIcon,
-  TrashIcon,
-} from "lucide-react";
+  File as FileIcon,
+  Folder as FolderIcon,
+  CircleQuestionMark as HelpCircleIcon,
+  Save as SaveIcon,
+  Settings as SettingsIcon,
+  Trash2 as TrashIcon,
+} from "@grupoitss/prizm-ui/icons";
 
 import { Menubar } from "@grupoitss/prizm-ui/menubar";
 

@@ -1,5 +1,5 @@
 import { cn } from "../../lib/cn";
-import { AlertCircle, AlertTriangle, CheckCircle } from "../icons";
+import { CircleAlert, TriangleAlert, CircleCheckBig } from "../icons";
 import type { AlertMessageProps } from "./alert-message.types";
 
 /**
@@ -15,25 +15,25 @@ const INLINE_KIND_STYLES = {
     container: "bg-info-weak border-info",
     text: "text-info-strong",
     icon: "text-info",
-    Icon: AlertCircle,
+    Icon: CircleAlert,
   },
   warning: {
     container: "bg-warning-weak border-warning",
     text: "text-warning-strong",
     icon: "text-warning-strong",
-    Icon: AlertTriangle,
+    Icon: TriangleAlert,
   },
   error: {
     container: "bg-destructive-weak border-destructive",
     text: "text-destructive-strong",
     icon: "text-destructive",
-    Icon: AlertCircle,
+    Icon: CircleAlert,
   },
   success: {
     container: "bg-success-weak border-success",
     text: "text-success-strong",
     icon: "text-success",
-    Icon: CheckCircle,
+    Icon: CircleCheckBig,
   },
 } as const;
 

@@ -1,4 +1,4 @@
-import { ChevronRight, MoreHorizontal } from "../icons";
+import { ChevronRight, Ellipsis } from "../icons";
 import { cn } from "../../lib/cn";
 import { Slot } from "radix-ui";
 import * as React from "react";
@@ -179,7 +179,7 @@ const BreadcrumbEllipsis = ({ className, ...props }: BreadcrumbEllipsisProps) =>
     className={cn(breadcrumbEllipsisStyles, className)}
     {...props}
   >
-    <MoreHorizontal className="h-4 w-4" />
+    <Ellipsis className="h-4 w-4" />
     <span className="sr-only">More</span>
   </span>
 );

@@ -1,4 +1,4 @@
-import { Calendar as CalendarIcon, ChevronDownIcon } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronDown as ChevronDownIcon } from "../icons";
 import * as React from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
