@@ -1,0 +1,43 @@
+{
+  "component": "Spinner",
+  "description": "Mapa de tokens do Spinner: o que cada tamanho usa do [PRIZM] Design Tokens_Core. Extraído das ligações do component set Spinner no Figma em 23/10/2026 e conferido contra spinner.styles.ts pelo teste spinner.tokens.test.ts. Nomes no formato do Figma (color/foreground). O Spinner não tem fundo nem borda; no código, o traço herda a cor do texto (currentColor) e a espessura é a do ícone Lucide (2 em 24px), proporcional ao tamanho.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18665-25956",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25351-69773",
+    "code": "design-system/packages/ui/src/components/spinner/spinner.tsx",
+    "story": "design-system/apps/docs/stories/spinner.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=67a0dda1-03da-4685-953f-eeac0a8f361e&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/121"],
+    "jira": []
+  },
+  "stroke": {
+    "figma": "color/foreground",
+    "code": "currentColor"
+  },
+  "sizes": {
+    "xs": { "size": "12px", "strokeWidth": "stroke-width/1" },
+    "sm": { "size": "16px", "strokeWidth": "stroke-width/1-33" },
+    "md": { "size": "20px", "strokeWidth": "stroke-width/1-67" },
+    "lg": { "size": "24px", "strokeWidth": "stroke-width/2" },
+    "xl": { "size": "32px", "strokeWidth": "stroke-width/2" }
+  },
+  "speeds": {
+    "slow": "800ms",
+    "normal": "600ms",
+    "fast": "400ms",
+    "reducedMotion": "1.5s"
+  },
+  "states": {
+    "hover": null,
+    "focus": null,
+    "note": "O Spinner não é interativo. Rotação (0, 90, 180, 270) no Figma são quadros para o protótipo; no código, a animação animate-spin."
+  },
+  "divergences": [
+    {
+      "where": "Espessura do traço no xl (32px)",
+      "figma": "stroke-width/2 (2px): o Core não tem stroke-width/2-67",
+      "code": "2,67px (ícone Lucide: 2 em 24px, escalado para 32px)",
+      "status": "aberta"
+    }
+  ]
+}
