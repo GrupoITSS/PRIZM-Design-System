@@ -1,0 +1,102 @@
+{
+  "component": "Textarea",
+  "description": "Mapa de tokens do Textarea: o que cada estado, tamanho e o botão de expandir usam do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 26/10/2026 e conferido contra textarea.styles.ts e textarea.tsx pelo teste textarea.tokens.test.ts. Nomes no formato do Figma (color/input); no código viram classes Tailwind (border-input). O Textarea não tem variantes de cor.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=183-74",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25419-2501",
+    "code": "design-system/packages/ui/src/components/textarea/textarea.tsx",
+    "story": "design-system/apps/docs/stories/textarea.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=eb800a83-0027-43be-871d-94e91541b92b&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/107",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/123",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/127"
+    ],
+    "jira": [
+      "GIES-1725"
+    ]
+  },
+  "states": {
+    "default": {
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "placeholder": "color/muted-foreground",
+      "border": "color/input",
+      "shadow": "shadow/xs"
+    },
+    "focus": {
+      "border": "color/transparent",
+      "ring": "color/ring",
+      "ringWidth": 2,
+      "ringOffsetWidth": 0
+    },
+    "error": {
+      "border": "color/destructive",
+      "attribute": "aria-invalid"
+    },
+    "errorFocus": {
+      "border": "color/destructive",
+      "ring": "color/ring",
+      "ringWidth": 2
+    },
+    "disabled": {
+      "background": "color/input-background",
+      "border": "color/input",
+      "shadow": "shadow/xs",
+      "opacity": "opacity/50",
+      "attribute": "disabled",
+      "note": "Opacidade 50% na camada, sobre a aparência do default (26/10/2026)."
+    }
+  },
+  "parts": {
+    "expandButton": {
+      "size": "width/7",
+      "radius": "radius/md",
+      "color": "color/muted-foreground",
+      "hover": {
+        "background": "color/accent",
+        "text": "color/accent-foreground"
+      },
+      "ring": "color/ring",
+      "ringWidth": 2,
+      "figmaProperty": "Expandable",
+      "codeProp": "expandable"
+    },
+    "expandIcon": {
+      "icon": "Expand",
+      "size": 14,
+      "note": "No Figma, 14px sem ligação: o plugin não mantém width/3-5 na instância do ícone (proporção travada do kit). Ligar à mão."
+    }
+  },
+  "sizes": {
+    "sm": {
+      "minHeight": "height/16",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/1-5",
+      "radius": "radius/md",
+      "fontSize": "text/xs"
+    },
+    "md": {
+      "minHeight": "height/16",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    },
+    "lg": {
+      "minHeight": "height/20",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    }
+  },
+  "divergences": [
+    {
+      "where": "lg · tamanho do texto",
+      "figma": "text/sm",
+      "code": "text-base md:text-sm (16px abaixo do breakpoint md), como no Input",
+      "status": "aberta"
+    }
+  ]
+}
