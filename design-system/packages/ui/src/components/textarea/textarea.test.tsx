@@ -42,12 +42,11 @@ describe("Textarea: escala e estados iguais aos do Input (21/10/2026)", () => {
         "focus-visible:ring-2",
         "focus-visible:ring-ring",
         "focus-visible:border-transparent",
-        "disabled:bg-muted",
-        "disabled:border-transparent",
-        "disabled:shadow-none",
+        "disabled:opacity-50",
+        "disabled:cursor-not-allowed",
       ]),
     );
     expect(classes).not.toContain("focus-visible:ring-ring/30");
-    expect(classes).not.toContain("disabled:opacity-50");
+    expect(classes).not.toContain("disabled:bg-muted");
   });
 });

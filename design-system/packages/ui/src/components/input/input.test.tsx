@@ -53,8 +53,9 @@ describe("Input (PRIZM / shadcn)", () => {
       expect(input).toHaveClass("focus-visible:ring-2", "focus-visible:ring-ring", "focus-visible:border-transparent");
       expect(input).not.toHaveClass("focus-visible:ring-ring/30");
       expect(input).toHaveClass("aria-invalid:border-destructive", "aria-invalid:focus-visible:border-destructive");
-      expect(input).toHaveClass("disabled:bg-muted", "disabled:border-transparent");
-      expect(input).not.toHaveClass("disabled:opacity-50");
+      // Disabled com opacidade 50%, como o Button (revisto em 26/10/2026).
+      expect(input).toHaveClass("disabled:opacity-50", "disabled:cursor-not-allowed");
+      expect(input).not.toHaveClass("disabled:bg-muted");
     },
   );
 

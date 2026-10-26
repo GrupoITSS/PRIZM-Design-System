@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 /**
  * Trigger do DatePicker — alinhado visualmente ao Input do PRIZM.
- * Tamanhos, foco e disabled espelham o Input (`sm` | `md` | `lg`, decisões de 21/10/2026).
+ * Tamanhos, foco e disabled (opacidade 50%, 26/10/2026) espelham o Input (`sm` | `md` | `lg`, decisões de 21/10/2026).
  * `ring-offset-0` anula o espaço do anel que o Button (gatilho) traz.
  */
 export const datePickerTriggerVariants = cva(
@@ -10,7 +10,7 @@ export const datePickerTriggerVariants = cva(
     "text-foreground shadow-xs ring-offset-background transition-colors " +
     "hover:bg-accent hover:text-foreground " +
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 focus-visible:border-transparent " +
-    "disabled:pointer-events-none disabled:cursor-not-allowed disabled:border-transparent disabled:shadow-none disabled:bg-muted disabled:text-muted-foreground disabled:opacity-100 " +
+    "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 " +
     "data-[empty=true]:text-muted-foreground",
   {
     variants: {

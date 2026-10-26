@@ -267,6 +267,8 @@ function InputGroupTextarea({
       className={cn(
         "flex-1 resize-none rounded-none border-0 bg-transparent py-3",
         "focus-visible:shadow-none! data-[invalid=true]:focus-visible:shadow-none!",
+        // A caixa do grupo já fica a 50%; o campo de dentro não soma outra opacidade.
+        "disabled:opacity-100",
         className,
       )}
       {...props}

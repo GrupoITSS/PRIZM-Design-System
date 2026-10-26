@@ -39,14 +39,13 @@ describe("Input × mapa de tokens (input.tokens.json)", () => {
     expect(classes).toContain(`aria-invalid:focus-visible:border-${color(map.states.errorFocus.border)}`);
   });
 
-  it("disabled: fundo, texto e borda do mapa, sem sombra e sem opacidade", () => {
+  it("disabled: a aparência do default com a opacidade do mapa", () => {
     const classes = classesOf();
     const s = map.states.disabled;
-    expect(classes).toContain(`disabled:bg-${color(s.background)}`);
-    expect(classes).toContain(`disabled:!text-${color(s.text)}`);
-    expect(classes).toContain(`disabled:border-${color(s.border)}`);
-    expect(classes).toContain("disabled:shadow-none");
-    expect(classes.some((c) => c.startsWith("disabled:opacity-"))).toBe(false);
+    expect(classes).toContain(`disabled:opacity-${s.opacity.split("/")[1]}`);
+    expect(s.background).toBe(map.states.default.background);
+    expect(s.border).toBe(map.states.default.border);
+    expect(classes.some((c) => /^disabled:(bg|border|shadow)-/.test(c))).toBe(false);
   });
 
   it("File: peso do texto do botão interno do mapa está nas classes", () => {

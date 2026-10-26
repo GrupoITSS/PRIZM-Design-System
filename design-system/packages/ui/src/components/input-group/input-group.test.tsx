@@ -151,13 +151,14 @@ describe("InputGroup: foco, erro e disabled seguem o Input (acessibilidade)", ()
     expect(classes.some((c) => c.startsWith("ring-destructive"))).toBe(false);
   });
 
-  it("disabled: bg-muted, sem sombra e sem opacidade no grupo", () => {
+  it("disabled: opacidade 50% no grupo inteiro, sem somar no campo de dentro", () => {
     const { container } = render(
       <InputGroup placeholder="c" disabled addonInlineEnd={<span>x</span>} />,
     );
     const classes = [...grupo(container).classList];
-    expect(classes).toEqual(expect.arrayContaining(["bg-muted", "shadow-none"]));
-    expect(classes).not.toContain("opacity-50");
+    expect(classes).toContain("opacity-50");
+    expect(classes).not.toContain("bg-muted");
+    expect(screen.getByPlaceholderText("c")).toHaveClass("disabled:!opacity-100");
     expect(screen.getByPlaceholderText("c")).toBeDisabled();
   });
 
