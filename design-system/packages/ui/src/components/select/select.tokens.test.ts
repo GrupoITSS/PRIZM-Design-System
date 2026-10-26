@@ -3,6 +3,7 @@ import {
   selectContentStyles,
   selectItemStyles,
   selectLabelStyles,
+  selectTriggerIconStyles,
   selectTriggerVariants,
   selectViewportStyles,
 } from "./select.styles";
@@ -81,6 +82,20 @@ describe("Select × mapa de tokens (select.tokens.json)", () => {
     expect(classes).toContain(`py-${spacing(p.paddingY)}`);
     expect(classes).toContain(`text-${suffix(p.fontSize)}`);
     expect(classes).toContain(`data-[highlighted]:bg-${color(p.highlighted.background)}`);
+    expect(classes).toContain(`data-[highlighted]:text-${color(p.highlighted.text)}`);
+  });
+
+  it("item: o texto herda a cor da lista do mapa", () => {
+    expect(map.parts.item.text).toBe(map.parts.content.text);
+    expect(split(selectItemStyles).some((c) => /^text-(foreground|popover-foreground)$/.test(c))).toBe(false);
+  });
+
+  it("chevron: tamanho e cor do mapa estão nas classes, sem opacidade", () => {
+    const classes = split(selectTriggerIconStyles);
+    const p = map.parts.chevron;
+    expect(classes).toContain(`size-${suffix(p.size)}`);
+    expect(classes).toContain(`text-${color(p.color)}`);
+    expect(classes.some((c) => c.startsWith("opacity-"))).toBe(false);
   });
 
   it("rótulo da lista: texto, tamanho, peso e padding do mapa estão nas classes", () => {

@@ -74,12 +74,14 @@
       "paddingY": "spacing/1-5",
       "fontSize": "text/sm",
       "highlighted": {
-        "background": "color/accent"
+        "background": "color/accent",
+        "text": "color/accent-foreground"
       },
       "check": {
         "icon": "Check",
         "size": "width/4"
-      }
+      },
+      "note": "O texto herda color/popover-foreground da lista (26/10/2026)."
     },
     "label": {
       "text": "color/muted-foreground",
@@ -120,36 +122,6 @@
       "where": "lg · tamanho do texto",
       "figma": "text/sm",
       "code": "text-base md:text-sm (16px abaixo do breakpoint md), como no Input",
-      "status": "aberta"
-    },
-    {
-      "where": "chevron · cor",
-      "figma": "color/muted-foreground a 100% (conferido pelo render)",
-      "code": "opacity-60 sobre a cor do texto: muted-foreground com placeholder, foreground com valor",
-      "status": "aberta"
-    },
-    {
-      "where": "Focus e Error (Focus) · texto do placeholder",
-      "figma": "color/foreground",
-      "code": "data-[placeholder]:text-muted-foreground também no foco",
-      "status": "aberta"
-    },
-    {
-      "where": "item · cor do texto",
-      "figma": "color/popover-foreground, também em Hover",
-      "code": "text-foreground; em destaque, text-accent-foreground",
-      "status": "aberta"
-    },
-    {
-      "where": "Select / Menu · raio do item e do rótulo nas instâncias",
-      "figma": "radius/xs nas instâncias dentro da lista (o set do item usa radius/sm)",
-      "code": "rounded-sm",
-      "status": "aberta"
-    },
-    {
-      "where": "Select / Menu · setas de rolagem",
-      "figma": "ChevronUp com 15px, sem ligação a width/4",
-      "code": "size-4 (16px)",
       "status": "aberta"
     }
   ]
