@@ -37,4 +37,12 @@ export interface TextareaProps extends NativeTextareaProps, TextareaVariantProps
    * e o textarea dentro do dialog.
    */
   expandable?: boolean;
+
+  /**
+   * Título do Dialog de edição expandida (só com `expandable`). Dá o nome
+   * acessível ao Dialog e ao textarea dentro dele.
+   *
+   * @default "Editar texto"
+   */
+  expandTitle?: string;
 }
