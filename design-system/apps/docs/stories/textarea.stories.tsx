@@ -3,10 +3,18 @@ import { Field, FieldDescription, FieldLabel } from "@grupoitss/prizm-ui/field";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Textarea } from "@grupoitss/prizm-ui/textarea";
 
+// Traceability: the component set in [PRIZM] Componentes, its documentation
+// frame and the CMS article. The token map lives next to the component
+// (textarea.tokens.json) and is checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=183-74";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25419-2501";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=eb800a83-0027-43be-871d-94e91541b92b&version=v1";
+
 const meta: Meta<typeof Textarea> = {
   title: "Primários/Textarea",
   component: Textarea,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
@@ -15,9 +23,11 @@ const meta: Meta<typeof Textarea> = {
           "Textarea do design system PRIZM. Wrapper estilizado para o `<textarea />` nativo, com tamanhos (`size`) e tokens de cor alinhados ao tema PRIZM.\n\n" +
           "Esta página também demonstra exemplos de uso em conjunto com `Field`, baseados na documentação do shadcn/ui.\n\n" +
           "**Props adicionais PRIZM:**\n\n" +
-          "- `expandable`: controla se o textarea pode ser expandido para preencher o espaço disponível. Padrão: `false`.\n" +
+          "- `expandable`: mostra o botão \"Expandir campo\", que abre o mesmo texto num Dialog grande. Padrão: `false`.\n" +
           "- `resizable`: controla se o textarea pode ser redimensionado pelo usuário (handle de resize na borda inferior). Padrão: `false`.\n" +
+          "- `expandTitle`: título do Dialog de edição expandida. Padrão: `\"Editar texto\"`.\n" +
           "O estado de erro é controlado via atributo nativo `aria-invalid`, geralmente aplicado por libs de formulário (ex.: React Hook Form).\n\n" +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).\n\n` +
           "**Documentação base:** " +
           '<a href="https://ui.shadcn.com/docs/components/radix/textarea" target="_blank" rel="noopener noreferrer">Textarea — shadcn/ui (Radix)</a>',
       },
@@ -43,6 +53,17 @@ const meta: Meta<typeof Textarea> = {
     expandable: {
       control: "boolean",
       description: "Quando verdadeiro, exibe um botão para expandir o conteúdo em um Dialog.",
+    },
+    expandTitle: {
+      control: "text",
+      description: "Título do Dialog de edição expandida. Padrão: \"Editar texto\".",
+    },
+    "aria-invalid": {
+      control: "boolean",
+      description: "Marca o campo como inválido: borda destructive.",
+    },
+    placeholder: {
+      control: "text",
     },
   },
 };
