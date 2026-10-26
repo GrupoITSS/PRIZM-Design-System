@@ -6,11 +6,12 @@ import { cva, type VariantProps } from "class-variance-authority";
  *
  * Tamanhos, foco e disabled iguais aos do Input (decisões de 21/10/2026): sm, md e lg;
  * anel de 2px em `ring` com a borda transparente; disabled com opacidade 50% (26/10/2026).
+ * Erro com `aria-invalid`: borda `destructive`, também no foco, como o Input e o Select (26/10/2026).
  *
  * Baseado no componente Textarea do shadcn/ui (Radix).
  */
 const textareaBase =
-  "flex w-full rounded-md border border-input bg-input-background px-3 font-normal text-foreground shadow-xs ring-offset-background placeholder:text-muted-foreground hover:bg-input-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-transparent disabled:cursor-not-allowed disabled:opacity-50";
+  "flex w-full rounded-md border border-input bg-input-background px-3 font-normal text-foreground shadow-xs ring-offset-background placeholder:text-muted-foreground hover:bg-input-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-transparent aria-invalid:border-destructive aria-invalid:focus-visible:border-destructive disabled:cursor-not-allowed disabled:opacity-50";
 
 export const textareaVariants = cva(textareaBase, {
   variants: {

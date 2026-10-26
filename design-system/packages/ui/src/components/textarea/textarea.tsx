@@ -29,6 +29,7 @@ function Textarea({
   "aria-invalid": ariaInvalidProp,
   style,
   expandable = false,
+  expandTitle = "Editar texto",
   value,
   defaultValue,
   onChange,
@@ -60,9 +61,12 @@ function Textarea({
     onChange?.(event);
   };
 
+  const expandTitleId = React.useId();
+
   // Shared by the inline textarea and the one in the expanded dialog. The ref
-  // goes only to the inline one.
-  const textareaProps = (fullHeight: boolean = false) => ({
+  // goes only to the inline one; the dialog copy drops the id (no duplicate ids)
+  // and takes its name from the dialog title.
+  const textareaProps = (inDialog: boolean = false) => ({
     "data-slot": "textarea",
     "data-size": size,
     "data-invalid": isInvalid ? "true" : undefined,
@@ -70,12 +74,13 @@ function Textarea({
     className: cn(
       textareaVariants({ size, className }),
       "custom-scroll",
-      fullHeight && "h-full min-h-0",
+      inDialog && "h-full min-h-0",
     ),
     style: mergedStyle,
     value: currentValue,
     onChange: handleChange,
     ...props,
+    ...(inDialog ? { id: undefined, "aria-labelledby": expandTitleId } : {}),
   });
 
   if (!expandable) {
@@ -89,13 +94,13 @@ function Textarea({
         trigger={
           <button
             type="button"
-            className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground bg-transparent transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer"
-            aria-label="Expandir textarea"
+            className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground bg-transparent transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
+            aria-label="Expandir campo"
           >
-            <Expand className="size-3.5" />
+            <Expand className="size-3.5" aria-hidden />
           </button>
         }
-        title={undefined}
+        title={<span id={expandTitleId}>{expandTitle}</span>}
         description={undefined}
         contentClassName="w-[96vw] max-w-6xl h-[92vh] max-h-[96vh]"
         body={
