@@ -2,16 +2,26 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Avatar } from "@grupoitss/prizm-ui/avatar";
 import { Select } from "@grupoitss/prizm-ui/select";
 
+// Traceability: the component set in [PRIZM] Componentes, its documentation
+// frame and the CMS article. The token map lives next to the component
+// (select.tokens.json) and is checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=345-11530";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25389-2241";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=0f1ab357-c2a5-4bc4-b568-67b715331ac8&version=v1";
+
 const meta: Meta<typeof Select> = {
   title: "Primários/Select",
   component: Select,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Select do design system PRIZM com API **100% baseada em props** (sem subcomponentes). Internamente usa Radix `Select` para acessibilidade e comportamento, mas a composição é totalmente encapsulada.\n\nUso recomendado:\n\n```tsx\nconst options = [\n  { value: "apple", label: "Apple" },\n  { value: "banana", label: "Banana" },\n  { value: "orange", label: "Orange" },\n];\n\n<Select\n  placeholder="Selecione uma fruta"\n  value={value}\n  onChange={setValue}\n  options={options}\n/>\n```\n\n**Documentação de referência (Radix/shadcn):** <a href="https://ui.shadcn.com/docs/components/radix/select" target="_blank" rel="noopener noreferrer">Select — shadcn/ui (Radix)</a>',
+          'Select do design system PRIZM com API **100% baseada em props** (sem subcomponentes). Internamente usa Radix `Select` para acessibilidade e comportamento, mas a composição é totalmente encapsulada.\n\nUso recomendado:\n\n```tsx\nconst options = [\n  { value: "apple", label: "Apple" },\n  { value: "banana", label: "Banana" },\n  { value: "orange", label: "Orange" },\n];\n\n<Select\n  placeholder="Selecione uma fruta"\n  value={value}\n  onChange={setValue}\n  options={options}\n/>\n```\n\n' +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).\n\n` +
+          '**Documentação de referência (Radix/shadcn):** <a href="https://ui.shadcn.com/docs/components/radix/select" target="_blank" rel="noopener noreferrer">Select — shadcn/ui (Radix)</a>',
       },
     },
   },
@@ -31,6 +41,28 @@ const meta: Meta<typeof Select> = {
     },
     placeholder: {
       control: "text",
+    },
+    label: {
+      control: "text",
+    },
+    disabled: {
+      control: "boolean",
+    },
+    loading: {
+      control: "boolean",
+    },
+    required: {
+      control: "boolean",
+    },
+    "aria-invalid": {
+      control: "boolean",
+    },
+    hideCheckIcon: {
+      control: "boolean",
+    },
+    align: {
+      control: "select",
+      options: ["start", "center", "end"],
     },
   },
 };

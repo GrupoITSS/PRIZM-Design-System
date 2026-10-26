@@ -1,0 +1,156 @@
+{
+  "component": "Select",
+  "description": "Mapa de tokens do Select: o que cada estado do trigger, a lista e o item usam do [PRIZM] Design Tokens_Core. Extraído das ligações dos component sets no Figma em 26/10/2026 (Select, Select / Menu e Select Menu / Item) e conferido contra select.styles.ts pelo teste select.tokens.test.ts. Nomes no formato do Figma (color/input); no código viram classes Tailwind (border-input). O Select não tem variantes de cor.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=345-11530",
+    "figmaItem": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=118-1541",
+    "figmaMenu": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=118-2501",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25389-2241",
+    "code": "design-system/packages/ui/src/components/select/select.tsx",
+    "story": "design-system/apps/docs/stories/select.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=0f1ab357-c2a5-4bc4-b568-67b715331ac8&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/107",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/123",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/124",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/125"
+    ],
+    "jira": [
+      "GIES-1725"
+    ]
+  },
+  "states": {
+    "default": {
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "placeholder": "color/muted-foreground",
+      "border": "color/input",
+      "shadow": "shadow/xs"
+    },
+    "focus": {
+      "border": "color/transparent",
+      "ring": "color/ring",
+      "ringWidth": 2,
+      "ringOffsetWidth": 0,
+      "note": "Vale também para a lista aberta (data-[state=open]), decisão P3 de 26/10/2026."
+    },
+    "error": {
+      "border": "color/destructive",
+      "attribute": "aria-invalid"
+    },
+    "errorFocus": {
+      "border": "color/destructive",
+      "ring": "color/ring",
+      "ringWidth": 2
+    },
+    "disabled": {
+      "background": "color/input-background",
+      "border": "color/input",
+      "shadow": "shadow/xs",
+      "opacity": "opacity/50",
+      "attribute": "disabled",
+      "note": "Opacidade 50% na camada, sobre a aparência do default (26/10/2026)."
+    }
+  },
+  "parts": {
+    "chevron": {
+      "icon": "ChevronDown",
+      "size": "width/4",
+      "color": "color/muted-foreground"
+    },
+    "content": {
+      "background": "color/popover",
+      "text": "color/popover-foreground",
+      "border": "color/border",
+      "radius": "radius/md",
+      "padding": "spacing/1",
+      "shadow": "shadow/md"
+    },
+    "item": {
+      "text": "color/popover-foreground",
+      "radius": "radius/sm",
+      "paddingLeft": "spacing/2",
+      "paddingRight": "spacing/8",
+      "paddingY": "spacing/1-5",
+      "fontSize": "text/sm",
+      "highlighted": {
+        "background": "color/accent"
+      },
+      "check": {
+        "icon": "Check",
+        "size": "width/4"
+      }
+    },
+    "label": {
+      "text": "color/muted-foreground",
+      "fontSize": "text/xs",
+      "fontWeight": "font-weight/medium",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/1-5"
+    }
+  },
+  "sizes": {
+    "sm": {
+      "height": "control-height/sm",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/xs"
+    },
+    "md": {
+      "height": "control-height/md",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    },
+    "lg": {
+      "height": "control-height/lg",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    }
+  },
+  "divergences": [
+    {
+      "where": "lg · tamanho do texto",
+      "figma": "text/sm",
+      "code": "text-base md:text-sm (16px abaixo do breakpoint md), como no Input",
+      "status": "aberta"
+    },
+    {
+      "where": "chevron · cor",
+      "figma": "color/muted-foreground a 100% (conferido pelo render)",
+      "code": "opacity-60 sobre a cor do texto: muted-foreground com placeholder, foreground com valor",
+      "status": "aberta"
+    },
+    {
+      "where": "Focus e Error (Focus) · texto do placeholder",
+      "figma": "color/foreground",
+      "code": "data-[placeholder]:text-muted-foreground também no foco",
+      "status": "aberta"
+    },
+    {
+      "where": "item · cor do texto",
+      "figma": "color/popover-foreground, também em Hover",
+      "code": "text-foreground; em destaque, text-accent-foreground",
+      "status": "aberta"
+    },
+    {
+      "where": "Select / Menu · raio do item e do rótulo nas instâncias",
+      "figma": "radius/xs nas instâncias dentro da lista (o set do item usa radius/sm)",
+      "code": "rounded-sm",
+      "status": "aberta"
+    },
+    {
+      "where": "Select / Menu · setas de rolagem",
+      "figma": "ChevronUp com 15px, sem ligação a width/4",
+      "code": "size-4 (16px)",
+      "status": "aberta"
+    }
+  ]
+}
