@@ -1,0 +1,79 @@
+# =============================================================================
+# Design acompanha a main
+# =============================================================================
+#
+# A cada push na main, avança a branch "design" até a main (fast-forward).
+#
+# POR QUÊ:
+# O Tokens Studio do [PRIZM] Design Tokens_Core sincroniza com a "design".
+# Mudanças de token que entram na main por PR de código (ex.: PR #125, accent
+# do escuro) não voltavam para a "design": em 26/10/2026 ela estava 86 commits
+# atrás. Um pull no plugin seguido de exportação levaria os valores antigos de
+# volta para o Core.
+#
+# COMO:
+# - "design" contida na main: avança (fast-forward). Nada é reescrito.
+# - "design" com commits que a main não tem (sync do Tokens Studio esperando a
+#   PR design → main, ver tokens-studio-pr.yml): não mexe e avisa no resumo da
+#   execução. Quando essa PR for mergeada, o próximo push na main avança a
+#   "design".
+# Nunca usa --force.
+#
+# O push é feito com o GITHUB_TOKEN, que não dispara outros workflows: o
+# "Tokens Studio PR" não roda por causa deste avanço.
+#
+# TROUBLESHOOTING:
+# - 403 ou "protected branch" no push: a regra da "design" precisa permitir
+#   push do GitHub Actions.
+# - Para rodar à mão: Actions > Design acompanha a main > Run workflow.
+# =============================================================================
+
+name: Design acompanha a main
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: design-acompanha-main
+  cancel-in-progress: false
+
+env:
+  TARGET_BRANCH: design
+
+jobs:
+  fast-forward:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Avançar a design até a main
+        run: |
+          set -euo pipefail
+          git fetch origin main "$TARGET_BRANCH"
+
+          main_sha=$(git rev-parse origin/main)
+          design_sha=$(git rev-parse "origin/$TARGET_BRANCH")
+
+          if [ "$main_sha" = "$design_sha" ]; then
+            echo "A $TARGET_BRANCH já está na main ($main_sha)." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if git merge-base --is-ancestor "origin/$TARGET_BRANCH" origin/main; then
+            atras=$(git rev-list --count "origin/$TARGET_BRANCH..origin/main")
+            git push origin "origin/main:refs/heads/$TARGET_BRANCH"
+            echo "A $TARGET_BRANCH avançou $atras commits, até $main_sha." >> "$GITHUB_STEP_SUMMARY"
+          else
+            a_frente=$(git rev-list --count "origin/main..origin/$TARGET_BRANCH")
+            echo "::warning::A $TARGET_BRANCH tem $a_frente commits que a main não tem (sync do Tokens Studio esperando a PR). Nada foi alterado."
+            echo "A $TARGET_BRANCH tem $a_frente commits que a main não tem. Nada foi alterado; ela avança depois que a PR design → main for mergeada." >> "$GITHUB_STEP_SUMMARY"
+          fi
