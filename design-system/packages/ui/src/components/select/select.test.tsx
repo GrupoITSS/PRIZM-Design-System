@@ -2,7 +2,7 @@ import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Select } from "./select";
-import { selectTriggerVariants } from "./select.styles";
+import { selectContentStyles, selectItemStyles, selectTriggerVariants } from "./select.styles";
 
 const options = [
   { value: "apple", label: "Apple" },
@@ -117,5 +117,37 @@ describe("Select: escala e estados iguais aos do Input (21/10/2026)", () => {
     expect(classes).not.toContain("disabled:bg-muted");
     expect(classes).toContain(`h-control-height-${size}`);
     expect(classes).not.toContain("h-12");
+  });
+});
+
+describe("Select: decisões de 26/10/2026", () => {
+  it("P2: aria-invalid e aria-describedby chegam ao trigger, com a borda destructive", () => {
+    render(<Select label="Organização" options={options} aria-invalid aria-describedby="erro-org" />);
+    const trigger = screen.getByRole("combobox", { name: "Organização" });
+    expect(trigger).toHaveAttribute("aria-invalid", "true");
+    expect(trigger).toHaveAttribute("aria-describedby", "erro-org");
+    expect(trigger).toHaveClass("aria-invalid:border-destructive", "aria-invalid:focus-visible:border-destructive");
+  });
+
+  it("P3: a lista aberta usa o mesmo anel do foco", () => {
+    const classes = selectTriggerVariants({ size: "md" }).split(" ");
+    expect(classes).toEqual(
+      expect.arrayContaining(["data-[state=open]:ring-2", "data-[state=open]:ring-ring", "data-[state=open]:border-transparent"]),
+    );
+    expect(classes).not.toContain("data-[state=open]:ring-ring/50");
+    expect(classes).not.toContain("data-[state=open]:ring-[3px]");
+  });
+
+  it("P4: o trigger usa ChevronDown", () => {
+    const { container } = render(<Select placeholder="Escolha" options={options} />);
+    expect(container.querySelector("svg.lucide-chevron-down")).toBeInTheDocument();
+    expect(container.querySelector("svg.lucide-chevrons-up-down")).not.toBeInTheDocument();
+  });
+
+  it("P5 e P6: lista com border-border e item com rounded-sm", () => {
+    expect(selectContentStyles.split(" ")).toContain("border-border");
+    expect(selectContentStyles.split(" ")).not.toContain("border-input");
+    expect(selectItemStyles.split(" ")).toContain("rounded-sm");
+    expect(selectItemStyles.split(" ")).not.toContain("rounded-md");
   });
 });

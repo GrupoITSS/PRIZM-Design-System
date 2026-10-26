@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, ChevronsUpDown, Check } from "../icons";
+import { ChevronDown, ChevronUp, Check } from "../icons";
 import { cn } from "../../lib/cn";
 import { Field, FieldLabel } from "../field";
 import { Select as RadixSelect } from "radix-ui";
@@ -99,6 +99,8 @@ function SelectImpl({
   id,
   loading = false,
   "aria-label": ariaLabel,
+  "aria-invalid": ariaInvalid,
+  "aria-describedby": ariaDescribedBy,
   ref,
   ...rootProps
 }: SelectProps & { ref?: React.Ref<HTMLButtonElement> }) {
@@ -188,6 +190,8 @@ function SelectImpl({
         ref={ref}
         id={triggerId}
         aria-label={triggerAriaLabel}
+        aria-invalid={ariaInvalid}
+        aria-describedby={ariaDescribedBy}
         data-slot="select-trigger"
         data-size={size}
         className={triggerClassName}
@@ -207,7 +211,7 @@ function SelectImpl({
           ) : null}
         </RadixSelect.Value>
         <RadixSelect.Icon asChild>
-          <ChevronsUpDown className="size-4 opacity-60" aria-hidden />
+          <ChevronDown className="size-4 opacity-60" aria-hidden />
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
 

@@ -108,6 +108,15 @@ export interface SelectProps
    */
   "aria-label"?: string;
   /**
+   * Marca o campo como inválido: borda `destructive`, anunciado pelo leitor de tela.
+   * Vai para o trigger (combobox), como no Input.
+   */
+  "aria-invalid"?: boolean | "true" | "false";
+  /**
+   * id da mensagem de ajuda ou de erro (ex.: `FieldError`), ligada ao trigger.
+   */
+  "aria-describedby"?: string;
+  /**
    * Conteúdo fixo exibido no rodapé do dropdown, após o separador.
    * Útil para ações como "Criar assistente" que devem permanecer visíveis
    * mesmo quando a lista de opções está vazia.
