@@ -20,7 +20,7 @@ export const navigationMenuContentInlineStyles =
   "absolute left-0 top-full z-50 mt-1.5 w-auto min-w-[12rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95";
 
 export const navigationMenuListItemStyles =
-  "relative flex w-full cursor-default select-none items-center rounded-md py-2 pl-2 pr-8 text-left text-sm font-normal text-foreground outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50";
+  "relative flex w-full cursor-default select-none items-center rounded-md py-2 pl-2 pr-8 text-left text-sm font-normal text-foreground outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:[&_.text-muted-foreground]:text-accent-foreground disabled:pointer-events-none disabled:opacity-50";
 
 export const navigationMenuViewportWrapperStyles = "absolute left-0 top-full flex justify-center";
 
@@ -38,7 +38,7 @@ export const navigationMenuIndicatorInnerStyles =
  * Mantém compatibilidade com o estilo original do shadcn/ui.
  */
 export const navigationMenuTriggerVariants = cva(
-  "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-normal transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=open]:text-accent-foreground data-[state=open]:bg-accent/50 data-[state=open]:hover:bg-accent data-[state=open]:focus:bg-accent",
+  "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-normal transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:[&_.text-muted-foreground]:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=open]:text-accent-foreground data-[state=open]:bg-accent/50 data-[state=open]:hover:bg-accent data-[state=open]:focus:bg-accent",
 );
 
 export type NavigationMenuTriggerVariantProps = VariantProps<typeof navigationMenuTriggerVariants>;

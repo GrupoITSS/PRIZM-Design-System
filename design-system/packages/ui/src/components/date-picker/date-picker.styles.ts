@@ -11,7 +11,7 @@ export const datePickerTriggerVariants = cva(
     "hover:bg-accent hover:text-foreground " +
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 focus-visible:border-transparent " +
     "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 " +
-    "data-[empty=true]:text-muted-foreground",
+    "data-[empty=true]:text-muted-foreground data-[empty=true]:hover:text-accent-foreground",
   {
     variants: {
       fullWidth: {

@@ -252,7 +252,7 @@ function NavigationMenuPanelLinkInstance({
       </>
     );
 
-    const itemClassName = cn(navigationMenuListItemStyles, selected && "bg-accent", className);
+    const itemClassName = cn(navigationMenuListItemStyles, selected && "bg-accent [&_.text-muted-foreground]:text-accent-foreground", className);
 
     if (onSelect || !href) {
       return (
@@ -277,8 +277,8 @@ function NavigationMenuPanelLinkInstance({
   }
 
   const baseCardStyles =
-    "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent focus:bg-accent";
-  const highlightStyles = "bg-accent/40 hover:bg-accent/60 focus:bg-accent/60";
+    "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent focus:bg-accent hover:[&_.text-muted-foreground]:text-accent-foreground focus:[&_.text-muted-foreground]:text-accent-foreground";
+  const highlightStyles = "bg-accent/40 hover:bg-accent/60 focus:bg-accent/60 hover:[&_.text-muted-foreground]:text-accent-foreground focus:[&_.text-muted-foreground]:text-accent-foreground";
 
   if (onSelect && !href) {
     return (
