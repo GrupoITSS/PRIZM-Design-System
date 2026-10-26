@@ -36,13 +36,14 @@
       "ringWidth": 2
     },
     "disabled": {
-      "background": "color/muted",
-      "text": "color/muted-foreground",
-      "border": "color/transparent",
-      "shadow": null,
-      "opacity": 1,
-      "addonOpacity": "opacity/50",
-      "attribute": "disabled"
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "placeholder": "color/muted-foreground",
+      "border": "color/input",
+      "shadow": "shadow/xs",
+      "opacity": "opacity/50",
+      "attribute": "disabled",
+      "note": "Opacidade 50% na camada, sobre a aparência do default (revisto em 26/10/2026; antes era color/muted, borda transparente e sem sombra)."
     }
   },
   "parts": {

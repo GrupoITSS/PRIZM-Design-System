@@ -71,13 +71,12 @@ describe("InputGroup × mapa de tokens (input-group.tokens.json)", () => {
     expect(classes).not.toContain("border-transparent");
   });
 
-  it("disabled: fundo e borda do mapa, sem sombra e sem opacidade na caixa", () => {
+  it("disabled: a caixa inteira com a opacidade do mapa, na aparência do default", () => {
     const classes = classesDoGrupo({ disabled: true });
     const s = map.states.disabled;
-    expect(classes).toContain(`bg-${color(s.background)}`);
-    expect(classes).toContain(`border-${color(s.border)}`);
-    expect(classes).toContain("shadow-none");
-    expect(classes.some((c) => c.startsWith("opacity-"))).toBe(false);
+    expect(classes).toContain(`opacity-${s.opacity.split("/")[1]}`);
+    expect(s.background).toBe(map.states.default.background);
+    expect(classes).not.toContain("bg-muted");
   });
 
   describe("botão do complemento", () => {
