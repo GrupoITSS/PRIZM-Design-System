@@ -11,6 +11,7 @@ import {
   selectItemStyles,
   selectLabelStyles,
   selectScrollButtonStyles,
+  selectTriggerIconStyles,
   selectTriggerVariants,
   selectViewportStyles,
   type SelectTriggerVariantProps,
@@ -211,7 +212,7 @@ function SelectImpl({
           ) : null}
         </RadixSelect.Value>
         <RadixSelect.Icon asChild>
-          <ChevronDown className="size-4 opacity-60" aria-hidden />
+          <ChevronDown className={selectTriggerIconStyles} aria-hidden />
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
 
