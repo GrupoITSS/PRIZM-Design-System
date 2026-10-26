@@ -4,13 +4,13 @@ import { cva, type VariantProps } from "class-variance-authority";
  * PRIZM Select — estilos base usando tokens de `@grupoitss/prizm-tokens`.
  * Compatível com tema claro/escuro via variáveis CSS.
  *
- * Tamanhos, foco e disabled iguais aos do Input (decisões de 21/10/2026): sm, md e lg em
+ * Tamanhos, foco, erro e disabled iguais aos do Input (decisões de 21/10/2026): sm, md e lg em
  * `control-height`; anel de 2px em `ring` com a borda transparente; disabled com opacidade 50% (26/10/2026).
  *
  * Baseado no componente Select do shadcn/ui (Radix).
  */
 const selectTriggerBase =
-  "flex w-full items-center gap-2 justify-between rounded-md border border-input bg-input-background px-3 py-2 text-left font-normal text-foreground shadow-xs ring-offset-background data-[placeholder]:text-muted-foreground hover:bg-input-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-transparent data-[state=open]:bg-input-background data-[state=open]:shadow-xs data-[state=open]:ring-[3px] data-[state=open]:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:min-w-0 [&>span]:flex-1 [&>span]:truncate [&>span]:text-left";
+  "flex w-full items-center gap-2 justify-between rounded-md border border-input bg-input-background px-3 py-2 text-left font-normal text-foreground shadow-xs ring-offset-background data-[placeholder]:text-muted-foreground hover:bg-input-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-transparent data-[state=open]:bg-input-background data-[state=open]:ring-2 data-[state=open]:ring-ring data-[state=open]:border-transparent aria-invalid:border-destructive aria-invalid:focus-visible:border-destructive aria-invalid:data-[state=open]:border-destructive disabled:cursor-not-allowed disabled:opacity-50 [&>span]:min-w-0 [&>span]:flex-1 [&>span]:truncate [&>span]:text-left";
 
 export const selectTriggerVariants = cva(selectTriggerBase, {
   variants: {
@@ -30,7 +30,7 @@ export type SelectTriggerVariantProps = VariantProps<typeof selectTriggerVariant
 
 /** Estilos do conteúdo do dropdown do Select (portal). */
 export const selectContentStyles =
-  "mt-2 relative z-[300] max-h-[min(24rem,var(--radix-select-content-available-height))] min-w-[8rem] overflow-hidden rounded-md border border-input bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-select-content-transform-origin]";
+  "mt-2 relative z-[300] max-h-[min(24rem,var(--radix-select-content-available-height))] min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-select-content-transform-origin]";
 
 /** Estilos do viewport interno do Select (lista de opções). */
 export const selectViewportStyles =
@@ -38,7 +38,7 @@ export const selectViewportStyles =
 
 /** Estilos do item de opção do Select. */
 export const selectItemStyles =
-  "relative flex w-full cursor-default select-none items-center rounded-md py-1.5 pl-2 pr-8 text-sm text-foreground outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
+  "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm text-foreground outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
 
 /** Estilos do label de grupo no dropdown (`Select.Label`). */
 export const selectLabelStyles = "px-2 py-1.5 text-xs font-medium text-muted-foreground";
