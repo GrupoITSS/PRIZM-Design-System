@@ -36,6 +36,9 @@ export type ComboboxChipsProps = React.ComponentPropsWithoutRef<typeof ComboboxP
 
 export type ComboboxChipProps = React.ComponentPropsWithoutRef<typeof ComboboxPrimitive.Chip>;
 
+/** Tamanhos do campo, os mesmos do Input. @default "md" */
+export type ComboboxSize = "sm" | "md" | "lg";
+
 /**
  * API simplificada por props para uso primário (~90% dos casos).
  * Quando `items` é passado e não há `children`, o Combobox renderiza
@@ -47,14 +50,20 @@ export interface ComboboxSimplifiedProps<T = string> extends Omit<
 > {
   /** Itens da lista (obrigatório para API simplificada). */
   items?: T[];
-  /** Placeholder do input. @default "Select..." */
+  /** Placeholder do input. @default "Selecionar…" */
   placeholder?: string;
-  /** Mensagem quando não há resultados. @default "No items found." */
+  /** Mensagem quando não há resultados. @default "Nenhum item encontrado." */
   emptyMessage?: React.ReactNode;
   /** Mostrar botão de seta para abrir. @default true */
   showTrigger?: boolean;
   /** Mostrar botão de limpar. @default false */
   showClear?: boolean;
+  /** Tamanho do campo. @default "md" */
+  size?: ComboboxSize;
+  /** Estado de erro, encaminhado ao input. */
+  "aria-invalid"?: React.AriaAttributes["aria-invalid"];
+  /** Descrição do erro, encaminhada ao input. */
+  "aria-describedby"?: string;
   /** Conteúdo quando usar composição (escape hatch). */
   children?: React.ReactNode;
 }

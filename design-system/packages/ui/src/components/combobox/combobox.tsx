@@ -1,5 +1,6 @@
 import { Button } from "../button";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../input-group";
+import { useInputGroupWrapper } from "../input-group/input-group.hooks";
 import { cn } from "../../lib/cn";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react";
 import { Check as CheckIcon, ChevronDown as ChevronDownIcon, X as XIcon } from "../icons";
@@ -11,7 +12,19 @@ import {
   comboboxItemStyles,
   comboboxListStyles,
 } from "./combobox.styles";
-import type { ComboboxSimplifiedProps } from "./combobox.types";
+import type { ComboboxSimplifiedProps, ComboboxSize } from "./combobox.types";
+
+const DEFAULT_PLACEHOLDER = "Selecionar…";
+const DEFAULT_EMPTY = "Nenhum item encontrado.";
+
+function isAriaInvalid(value: React.AriaAttributes["aria-invalid"] | undefined): boolean {
+  return value === true || value === "true";
+}
+
+function chipName(children: React.ReactNode): string {
+  if (typeof children === "string" || typeof children === "number") return String(children);
+  return "item";
+}
 
 /**
  * Combobox — input de seleção e busca baseado em `@base-ui/react`.
@@ -23,8 +36,8 @@ import type { ComboboxSimplifiedProps } from "./combobox.types";
  *
  * <Combobox
  *   items={frameworks}
- *   placeholder="Select a framework"
- *   emptyMessage="No items found."
+ *   placeholder="Selecionar um framework"
+ *   emptyMessage="Nenhum item encontrado."
  * />
  * ```
  *
@@ -37,8 +50,8 @@ import type { ComboboxSimplifiedProps } from "./combobox.types";
  */
 function ComboboxRoot<T = string>({
   items,
-  placeholder = "Select...",
-  emptyMessage = "No items found.",
+  placeholder = DEFAULT_PLACEHOLDER,
+  emptyMessage = DEFAULT_EMPTY,
   showTrigger = true,
   showClear = false,
   multiple,
@@ -46,7 +59,11 @@ function ComboboxRoot<T = string>({
   onValueChange,
   itemToStringValue,
   children,
-  ...rootProps
+  size = "md",
+  disabled,
+  "aria-invalid": ariaInvalid,
+  "aria-describedby": ariaDescribedBy,
+  ...restRoot
 }: ComboboxSimplifiedProps<T>) {
   const useSimplifiedAPI = Array.isArray(items) && items.length > 0 && children === undefined;
 
@@ -58,7 +75,8 @@ function ComboboxRoot<T = string>({
         multiple={multiple}
         value={value}
         onValueChange={onValueChange}
-        {...rootProps}
+        disabled={disabled}
+        {...restRoot}
       >
         {children}
       </ComboboxPrimitive.Root>
@@ -71,6 +89,12 @@ function ComboboxRoot<T = string>({
       : String(itemToStringValue ? itemToStringValue(item) : item);
   const getLabel = (item: T) => (itemToStringValue ? itemToStringValue(item) : String(item));
 
+  const fieldA11y = {
+    disabled,
+    "aria-invalid": ariaInvalid,
+    "aria-describedby": ariaDescribedBy,
+  };
+
   if (multiple && Array.isArray(value)) {
     return (
       <ComboboxPrimitive.Root
@@ -79,15 +103,16 @@ function ComboboxRoot<T = string>({
         value={value}
         onValueChange={onValueChange}
         itemToStringValue={itemToStringValue}
-        {...(rootProps as object)}
+        disabled={disabled}
+        {...(restRoot as object)}
       >
-        <ComboboxChips>
+        <ComboboxChips disabled={disabled} size={size} isInvalid={isAriaInvalid(ariaInvalid)}>
           <ComboboxValue>
             {(value as T[]).map((item) => (
               <ComboboxChip key={getKey(item)}>{getLabel(item)}</ComboboxChip>
             ))}
           </ComboboxValue>
-          <ComboboxChipsInput placeholder={placeholder} />
+          <ComboboxChipsInput placeholder={placeholder} {...fieldA11y} />
         </ComboboxChips>
         <ComboboxContent>
           <ComboboxEmpty>{emptyMessage}</ComboboxEmpty>
@@ -104,8 +129,19 @@ function ComboboxRoot<T = string>({
   }
 
   return (
-    <ComboboxPrimitive.Root items={items} itemToStringValue={itemToStringValue} {...rootProps}>
-      <ComboboxInput placeholder={placeholder} showTrigger={showTrigger} showClear={showClear} />
+    <ComboboxPrimitive.Root
+      items={items}
+      itemToStringValue={itemToStringValue}
+      disabled={disabled}
+      {...restRoot}
+    >
+      <ComboboxInput
+        placeholder={placeholder}
+        showTrigger={showTrigger}
+        showClear={showClear}
+        size={size}
+        {...fieldA11y}
+      />
       <ComboboxContent>
         <ComboboxEmpty>{emptyMessage}</ComboboxEmpty>
         <ComboboxList>
@@ -161,14 +197,29 @@ function ComboboxInput({
   disabled = false,
   showTrigger = true,
   showClear = false,
+  size = "md",
   ...props
-}: ComboboxPrimitive.Input.Props & {
+}: Omit<ComboboxPrimitive.Input.Props, "size"> & {
   showTrigger?: boolean;
   showClear?: boolean;
+  size?: ComboboxSize;
 }) {
+  const isInvalid = isAriaInvalid(props["aria-invalid"]);
+  const { wrapperClassName, handleFocus, handleBlur } = useInputGroupWrapper({
+    className: cn("w-auto", className),
+    disabled,
+    isInvalid,
+  });
+
   return (
-    <InputGroup className={cn("w-auto", className)}>
-      <ComboboxPrimitive.Input render={<InputGroupInput disabled={disabled} />} {...props} />
+    <InputGroup
+      className={wrapperClassName}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      data-disabled={disabled ? "true" : undefined}
+      aria-disabled={disabled || undefined}
+    >
+      <ComboboxPrimitive.Input render={<InputGroupInput disabled={disabled} size={size} />} {...props} />
       <InputGroupAddon align="inline-end">
         {showTrigger && (
           <ComboboxPrimitive.Trigger
@@ -300,15 +351,51 @@ function ComboboxSeparator({ className, ...props }: ComboboxPrimitive.Separator.
   );
 }
 
-function ComboboxChips(
-  props: React.ComponentPropsWithRef<typeof ComboboxPrimitive.Chips> &
-    ComboboxPrimitive.Chips.Props,
-) {
-  const { className, ...rest } = props;
+const chipsMinHeight: Record<ComboboxSize, string> = {
+  sm: "min-h-control-height-sm",
+  md: "min-h-control-height-md",
+  lg: "min-h-control-height-lg",
+};
+
+function ComboboxChips({
+  className,
+  disabled,
+  size = "md",
+  isInvalid = false,
+  onFocus,
+  onBlur,
+  ...rest
+}: React.ComponentPropsWithRef<typeof ComboboxPrimitive.Chips> &
+  ComboboxPrimitive.Chips.Props & {
+    disabled?: boolean;
+    size?: ComboboxSize;
+    isInvalid?: boolean;
+  }) {
+  const [isFocused, setIsFocused] = React.useState(false);
+
   return (
     <ComboboxPrimitive.Chips
       data-slot="combobox-chips"
-      className={cn(comboboxChipsStyles, className)}
+      data-disabled={disabled ? "true" : undefined}
+      data-invalid={isInvalid ? "true" : undefined}
+      className={cn(
+        comboboxChipsStyles,
+        chipsMinHeight[size],
+        disabled && "cursor-not-allowed opacity-50",
+        isFocused && !isInvalid && "border-transparent ring-2 ring-ring",
+        isFocused && isInvalid && "ring-2 ring-ring",
+        className,
+      )}
+      onFocus={(event) => {
+        onFocus?.(event);
+        setIsFocused(true);
+      }}
+      onBlur={(event) => {
+        onBlur?.(event);
+        if (event.currentTarget && !event.currentTarget.contains(event.relatedTarget)) {
+          setIsFocused(false);
+        }
+      }}
       {...rest}
     />
   );
@@ -331,7 +418,7 @@ function ComboboxChip({
       {children}
       {showRemove && (
         <ComboboxPrimitive.ChipRemove
-          aria-label="Remover"
+          aria-label={`Remover ${chipName(children)}`}
           className="-ml-1 opacity-50 hover:opacity-100"
           data-slot="combobox-chip-remove"
           render={
@@ -350,7 +437,7 @@ function ComboboxChipsInput(props: ComboboxPrimitive.Input.Props) {
   return (
     <ComboboxPrimitive.Input
       data-slot="combobox-chip-input"
-      className={cn("min-w-16 flex-1 outline-none", className)}
+      className={cn("min-w-16 flex-1 outline-none disabled:opacity-100", className)}
       {...rest}
     />
   );

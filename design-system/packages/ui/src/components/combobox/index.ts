@@ -31,4 +31,5 @@ export type {
   ComboboxRootProps,
   ComboboxSeparatorProps,
   ComboboxSimplifiedProps,
+  ComboboxSize,
 } from "./combobox.types";
