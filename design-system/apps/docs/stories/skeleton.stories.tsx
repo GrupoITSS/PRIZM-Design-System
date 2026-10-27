@@ -2,20 +2,35 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Card, CardContent, CardHeader } from "@grupoitss/prizm-ui/card";
 import { Skeleton } from "@grupoitss/prizm-ui/skeleton";
 
+// Traceability: the component set in [PRIZM] Componentes, the documentation frame and the
+// CMS article. The token map lives next to the component (skeleton.tokens.json) and is
+// checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=295-462";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25516-1970";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=37cc09a5-9d4e-469d-93d6-8b83799ce15b&version=v1";
+
 const meta: Meta<typeof Skeleton> = {
   title: "Primários/Skeleton",
   component: Skeleton,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
+  argTypes: {
+    shape: { control: "select", options: ["rect", "pill", "circle"] },
+    className: { control: "text" },
+  },
+  args: {
+    shape: "rect",
+    className: "h-4 w-32",
+  },
   parameters: {
     docs: {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          "Skeleton de carregamento do design system PRIZM, baseado no componente Skeleton do shadcn/ui.\n\n" +
-          "**API principal baseada em props (recomendada):** use apenas o componente `Skeleton` com `className` para tamanho/forma/layout, sem subcomponents específicos de Skeleton.\n\n" +
-          'Exemplos: `<Skeleton className="h-4 w-32" />`, `<Skeleton className="size-10 rounded-full" />`.\n\n' +
-          "**Documentação:** " +
-          '<a href="https://ui.shadcn.com/docs/components/radix/skeleton" target="_blank" rel="noopener noreferrer">Skeleton — shadcn/ui</a>',
+          "Reserva o lugar do conteúdo enquanto ele carrega: um bloco em `color/muted` que pulsa (2 ciclos e para), na forma do que vai aparecer.\n\n" +
+          "A forma vem de `shape` (`rect`, `pill`, `circle`), os mesmos nomes do Figma. O tamanho vem do `className` (`h-*`, `w-*`, `size-*`); `circle` só precisa de um tamanho. " +
+          'Quem anuncia o carregamento é o contêiner (`role="status"`, `aria-busy` e texto `sr-only`); o Skeleton fica com `aria-hidden`.\n\n' +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
@@ -24,12 +39,36 @@ const meta: Meta<typeof Skeleton> = {
 export default meta;
 type Story = StoryObj<typeof Skeleton>;
 
+export const Playground: Story = {};
+
+export const Shapes: Story = {
+  name: "Formas",
+  render: () => (
+    <div className="flex items-center gap-8">
+      <Skeleton className="h-4 w-32" />
+      <Skeleton shape="pill" className="h-8 w-24" />
+      <Skeleton shape="circle" className="size-10" />
+    </div>
+  ),
+};
+
+export const Loading: Story = {
+  name: "Com anúncio",
+  render: () => (
+    <div role="status" aria-busy="true" className="flex w-full max-w-xs flex-col gap-2">
+      <Skeleton aria-hidden className="h-4 w-full" />
+      <Skeleton aria-hidden className="h-4 w-3/4" />
+      <span className="sr-only">Carregando</span>
+    </div>
+  ),
+};
+
 export const Demo: Story = {
   render: () => (
     <div className="space-y-8">
       {/* Avatar + text (hero) */}
       <div className="flex items-center gap-4">
-        <Skeleton className="h-12 w-12 rounded-full" />
+        <Skeleton shape="circle" className="size-12" />
         <div className="space-y-2">
           <Skeleton className="h-4 w-[250px]" />
           <Skeleton className="h-4 w-[200px]" />
@@ -70,7 +109,7 @@ export const Demo: Story = {
 export const Avatar: Story = {
   render: () => (
     <div className="flex w-fit items-center gap-4">
-      <Skeleton className="size-10 shrink-0 rounded-full" />
+      <Skeleton shape="circle" className="size-10 shrink-0" />
       <div className="grid gap-2">
         <Skeleton className="h-4 w-[150px]" />
         <Skeleton className="h-4 w-[100px]" />

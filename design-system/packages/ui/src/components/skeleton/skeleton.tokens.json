@@ -1,0 +1,44 @@
+{
+  "component": "Skeleton",
+  "description": "Mapa de tokens do Skeleton: o que cada forma usa do [PRIZM] Design Tokens_Core. Extraído das ligações do component set Skeleton no Figma em 27/10/2026 e conferido contra skeleton.styles.ts pelo teste skeleton.tokens.test.ts. Nomes no formato do Figma (color/muted). No código, o tamanho vem do className; o tamanho do set é só o padrão do Figma.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=295-462",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25516-1970",
+    "code": "design-system/packages/ui/src/components/skeleton/skeleton.tsx",
+    "story": "design-system/apps/docs/stories/skeleton.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=37cc09a5-9d4e-469d-93d6-8b83799ce15b&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/135"],
+    "jira": []
+  },
+  "shapes": {
+    "rect": {
+      "background": "color/muted",
+      "radius": "radius/md",
+      "figmaSize": { "width": "width/32", "height": "height/4" }
+    },
+    "pill": {
+      "background": "color/muted",
+      "radius": "radius/full",
+      "figmaSize": { "width": "width/24", "height": "height/8" }
+    },
+    "circle": {
+      "background": "color/muted",
+      "radius": "radius/full",
+      "aspectSquare": true,
+      "figmaSize": { "width": "width/10", "height": "height/10" }
+    }
+  },
+  "animation": {
+    "figma": null,
+    "code": "animate-pulse",
+    "iterations": 2,
+    "reducedMotion": null,
+    "note": "No Figma o Skeleton é estático. No código, o pulso roda 2 ciclos (WCAG 2.2.2) e é igual com prefers-reduced-motion (decisão de 27/10/2026)."
+  },
+  "states": {
+    "hover": null,
+    "focus": null,
+    "note": "O Skeleton não é interativo."
+  },
+  "divergences": []
+}
