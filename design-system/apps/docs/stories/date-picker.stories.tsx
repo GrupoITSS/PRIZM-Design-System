@@ -7,6 +7,7 @@ import { Calendar as CalendarIcon } from "@grupoitss/prizm-ui/icons";
 import * as React from "react";
 import type { DateRange } from "react-day-picker";
 import { DatePicker } from "@grupoitss/prizm-ui/date-picker";
+import { EstadosGrade } from "./_estados";
 
 // Pequeno helper local para parsear datas em linguagem natural simples,
 // sem depender da biblioteca externa `chrono-node`.
@@ -20,8 +21,8 @@ function parseDate(value: string): Date | null {
     return direct;
   }
 
-  // 2) Suporte básico a expressões do tipo "In 2 days".
-  const inDaysMatch = /^in\s+(\d+)\s+days?$/i.exec(trimmed);
+  // 2) Suporte básico a expressões do tipo "Em 2 dias".
+  const inDaysMatch = /^em\s+(\d+)\s+dias?$/i.exec(trimmed);
   if (inDaysMatch) {
     const days = Number(inDaysMatch[1]);
     const base = new Date();
@@ -43,14 +44,34 @@ const meta: Meta<typeof DatePicker> = {
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
           "Componente de seleção de datas do design system PRIZM. Construído em cima de `Popover` e `Calendar` (baseado em `react-day-picker`), exposto como um único componente baseado em props.\n\n" +
           'Suporta seleção de data única (`mode="single"`) e intervalo de datas (`mode="range"`), além de cenários avançados com input, presets e linguagem natural.\n\n' +
+          "O calendário abre como diálogo com o nome de `calendarLabel` (padrão \"Escolher data\"), em pt-BR, com o foco no dia escolhido. Erro com `aria-invalid`; o campo não muda no hover; com o calendário aberto, o gatilho usa o anel do foco.\n\n" +
           '**Documentação de referência:** <a href="https://ui.shadcn.com/docs/components/radix/date-picker" target="_blank" rel="noopener noreferrer">Date Picker — shadcn/ui</a>',
       },
     },
   },
   args: {
-    placeholder: "Pick a date",
+    placeholder: "Selecionar data",
   },
   argTypes: {
+    size: {
+      control: "select",
+      options: ["sm", "md", "lg"],
+    },
+    iconPosition: {
+      control: "select",
+      options: ["start", "end"],
+    },
+    showIcon: { control: "boolean" },
+    showChevron: { control: "boolean" },
+    disabled: { control: "boolean" },
+    "aria-invalid": {
+      control: "boolean",
+      description: "Marca o campo como inválido: borda destructive.",
+    },
+    calendarLabel: {
+      control: "text",
+      description: 'Nome do calendário para o leitor de tela. Padrão: "Escolher data".',
+    },
     mode: {
       control: "select",
       options: ["single", "range"],
@@ -92,7 +113,7 @@ export const Basic: Story = {
 
     return (
       <Field className="mx-auto w-44">
-        <FieldLabel htmlFor="date-picker-basic">Date</FieldLabel>
+        <FieldLabel htmlFor="date-picker-basic">Data</FieldLabel>
         <DatePicker
           mode="single"
           id="date-picker-basic"
@@ -121,7 +142,7 @@ export const WithIcon: Story = {
         mode="single"
         value={date}
         onChange={setDate}
-        placeholder="Pick a date"
+        aria-label="Data"
         fullWidth={false}
         calendarProps={{
           defaultMonth: date,
@@ -148,13 +169,14 @@ export const RangePicker: Story = {
 
     return (
       <Field className="mx-auto w-60">
-        <FieldLabel htmlFor="date-picker-range">Date Picker Range</FieldLabel>
+        <FieldLabel htmlFor="date-picker-range">Período</FieldLabel>
         <DatePicker
           mode="range"
           id="date-picker-range"
           value={range}
           onChange={setRange}
-          placeholder="Pick a date"
+          placeholder="Selecionar período"
+          calendarLabel="Escolher período"
           calendarProps={{
             defaultMonth: range?.from,
             numberOfMonths: 2,
@@ -176,13 +198,12 @@ export const DateOfBirth: Story = {
 
     return (
       <Field className="mx-auto w-44">
-        <FieldLabel htmlFor="date-of-birth">Date of birth</FieldLabel>
+        <FieldLabel htmlFor="date-of-birth">Data de nascimento</FieldLabel>
         <DatePicker
           mode="single"
           id="date-of-birth"
           value={date}
           onChange={setDate}
-          placeholder="Select date"
           calendarProps={{
             captionLayout: "dropdown",
             defaultMonth: date,
@@ -205,7 +226,7 @@ export const WithInputField: Story = {
   render: function Render() {
     function formatDate(date: Date | undefined) {
       if (!date) return "";
-      return date.toLocaleDateString("en-US", {
+      return date.toLocaleDateString("pt-BR", {
         day: "2-digit",
         month: "long",
         year: "numeric",
@@ -224,12 +245,12 @@ export const WithInputField: Story = {
 
     return (
       <Field className="mx-auto w-64">
-        <FieldLabel htmlFor="date-required">Subscription Date</FieldLabel>
+        <FieldLabel htmlFor="date-required">Data de assinatura</FieldLabel>
         <InputGroup>
           <InputGroupInput
             id="date-required"
             value={value}
-            placeholder="June 01, 2025"
+            placeholder="01 de junho de 2025"
             onChange={(e) => {
               const nextDate = new Date(e.target.value);
               setValue(e.target.value);
@@ -252,7 +273,7 @@ export const WithInputField: Story = {
                 setDate(next);
                 setValue(formatDate(next));
               }}
-              placeholder="Select date"
+              aria-label="Abrir calendário"
               fullWidth={false}
               showChevron={false}
               icon={<CalendarIcon className="size-4" />}
@@ -287,7 +308,7 @@ export const WithTimeInput: Story = {
     return (
       <FieldGroup className="mx-auto max-w-xs flex-row">
         <Field>
-          <FieldLabel htmlFor="date-picker-optional">Date</FieldLabel>
+          <FieldLabel htmlFor="date-picker-optional">Data</FieldLabel>
           <DatePicker
             mode="single"
             id="date-picker-optional"
@@ -296,7 +317,6 @@ export const WithTimeInput: Story = {
               setDate(next);
               setOpen(false);
             }}
-            placeholder="Select date"
             fullWidth={false}
             showIcon={false}
             icon={<></>}
@@ -312,7 +332,7 @@ export const WithTimeInput: Story = {
           />
         </Field>
         <Field className="w-32">
-          <FieldLabel htmlFor="time-picker-optional">Time</FieldLabel>
+          <FieldLabel htmlFor="time-picker-optional">Horário</FieldLabel>
           <Input
             type="time"
             id="time-picker-optional"
@@ -335,7 +355,7 @@ export const NaturalLanguage: Story = {
   render: function Render() {
     function formatDateDisplay(date: Date | undefined) {
       if (!date) return "";
-      return date.toLocaleDateString("en-US", {
+      return date.toLocaleDateString("pt-BR", {
         day: "2-digit",
         month: "long",
         year: "numeric",
@@ -343,17 +363,17 @@ export const NaturalLanguage: Story = {
     }
 
     const [open, setOpen] = React.useState(false);
-    const [value, setValue] = React.useState("In 2 days");
+    const [value, setValue] = React.useState("Em 2 dias");
     const [date, setDate] = React.useState<Date | undefined>(() => parseDate(value) || undefined);
 
     return (
       <Field className="mx-auto max-w-xs">
-        <FieldLabel htmlFor="date-optional">Schedule Date</FieldLabel>
+        <FieldLabel htmlFor="date-optional">Data de publicação</FieldLabel>
         <InputGroup>
           <InputGroupInput
             id="date-optional"
             value={value}
-            placeholder="Tomorrow or next week"
+            placeholder="Em 2 dias ou 2026-11-15"
             onChange={(e) => {
               setValue(e.target.value);
               const parsed = parseDate(e.target.value);
@@ -375,7 +395,7 @@ export const NaturalLanguage: Story = {
                 setDate(next);
                 setValue(formatDateDisplay(next));
               }}
-              placeholder="Select date"
+              aria-label="Abrir calendário"
               fullWidth={false}
               showChevron={false}
               icon={<CalendarIcon className="size-4" />}
@@ -393,10 +413,70 @@ export const NaturalLanguage: Story = {
           </InputGroupAddon>
         </InputGroup>
         <div className="text-muted-foreground px-1 text-sm">
-          Your post will be published on{" "}
+          A publicação sai em{" "}
           <span className="font-medium">{formatDateDisplay(date)}</span>.
         </div>
       </Field>
     );
   },
+};
+
+/**
+ * Tamanhos — sm, md e lg, com a altura em `control-height`, como o Input.
+ */
+export const Sizes: Story = {
+  render: () => (
+    <div className="flex w-64 flex-col gap-3">
+      <DatePicker size="sm" aria-label="Tamanho sm" />
+      <DatePicker aria-label="Tamanho md" />
+      <DatePicker size="lg" aria-label="Tamanho lg" />
+    </div>
+  ),
+};
+
+/**
+ * Erro — `aria-invalid` no DatePicker e a mensagem ligada por `aria-describedby`.
+ */
+export const Erro: Story = {
+  render: function Render() {
+    const [date, setDate] = React.useState<Date | undefined>();
+    return (
+      <Field className="mx-auto w-64" data-invalid>
+        <FieldLabel htmlFor="date-picker-erro">Data de entrega</FieldLabel>
+        <DatePicker
+          id="date-picker-erro"
+          value={date}
+          onChange={setDate}
+          aria-invalid
+          aria-describedby="date-picker-erro-msg"
+        />
+        <p id="date-picker-erro-msg" className="text-destructive text-sm">
+          Escolha uma data a partir de amanhã.
+        </p>
+      </Field>
+    );
+  },
+};
+
+/**
+ * Os 6 estados do Figma lado a lado. Focus e Error (Focus) usam o foco forçado
+ * pelo storybook-addon-pseudo-states; o calendário aberto usa o mesmo anel.
+ */
+export const Estados: Story = {
+  parameters: {
+    pseudo: { focusVisible: ["#date-picker-estado-focus", "#date-picker-estado-erro-focus"] },
+    controls: { disable: true },
+  },
+  render: () => (
+    <EstadosGrade
+      estados={[
+        { nome: "Default", gatilho: "sem data, fechado", campo: <DatePicker aria-label="Default" /> },
+        { nome: "Filled", gatilho: "com value", campo: <DatePicker aria-label="Filled" value={new Date(2026, 9, 27)} /> },
+        { nome: "Focus", gatilho: ":focus-visible ou calendário aberto", campo: <DatePicker id="date-picker-estado-focus" aria-label="Focus" /> },
+        { nome: "Disabled", gatilho: "disabled", campo: <DatePicker aria-label="Disabled" disabled /> },
+        { nome: "Error", gatilho: "aria-invalid", campo: <DatePicker aria-label="Error" aria-invalid /> },
+        { nome: "Error (Focus)", gatilho: "aria-invalid + foco", campo: <DatePicker id="date-picker-estado-erro-focus" aria-label="Error (Focus)" aria-invalid /> },
+      ]}
+    />
+  ),
 };

@@ -76,4 +76,13 @@ export interface PopoverProps extends Omit<RadixPopoverRootProps, "children">, P
    * Chamado no Escape do conteúdo. Use `event.preventDefault()` para impedir o fechamento.
    */
   onEscapeKeyDown?: RadixPopoverContentProps["onEscapeKeyDown"];
+
+  /**
+   * Atributos repassados ao conteúdo do popover: nome acessível (o conteúdo tem `role="dialog"`)
+   * e controle do foco ao abrir e ao fechar.
+   */
+  contentProps?: Pick<
+    RadixPopoverContentProps,
+    "aria-label" | "aria-labelledby" | "onOpenAutoFocus" | "onCloseAutoFocus"
+  >;
 }

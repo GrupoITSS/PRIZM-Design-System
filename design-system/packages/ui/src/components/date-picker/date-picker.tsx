@@ -62,6 +62,10 @@ const DatePicker = ({
     size = "md",
     fullWidth = true,
     closeOnSelect = true,
+    calendarLabel = "Escolher data",
+    "aria-invalid": ariaInvalid,
+    "aria-describedby": ariaDescribedBy,
+    "aria-label": ariaLabel,
     calendarProps,
     popoverProps,
   } = props;
@@ -133,6 +137,12 @@ const DatePicker = ({
       {...popoverProps}
       open={popoverProps?.open ?? open}
       onOpenChange={handleOpenChange}
+      contentProps={{
+        // O calendário é um diálogo: precisa de nome, e o foco começa na data (WCAG 4.1.2 e 2.4.3).
+        "aria-label": calendarLabel,
+        onOpenAutoFocus: (event) => event.preventDefault(),
+        ...popoverProps?.contentProps,
+      }}
       modal={popoverProps?.modal ?? true}
       size="sm"
       align={popoverProps?.align ?? "start"}
@@ -149,6 +159,9 @@ const DatePicker = ({
           data-empty={isEmpty ? "true" : undefined}
           data-size={size}
           aria-haspopup="dialog"
+          aria-invalid={ariaInvalid}
+          aria-describedby={ariaDescribedBy}
+          aria-label={ariaLabel}
           aria-expanded={popoverProps?.open ?? open}
           className={cn(
             datePickerTriggerVariants({ fullWidth, size }),
@@ -168,7 +181,8 @@ const DatePicker = ({
         props.mode === "range" ? (
           <Calendar
             {...calendarProps}
-            locale={calendarProps?.locale ?? ptBR}
+            locale={calendarProps?.locale}
+            autoFocus={calendarProps?.autoFocus ?? true}
             mode="range"
             selected={props.value}
             onSelect={handleRangeSelect}
@@ -178,7 +192,8 @@ const DatePicker = ({
         ) : (
           <Calendar
             {...calendarProps}
-            locale={calendarProps?.locale ?? ptBR}
+            locale={calendarProps?.locale}
+            autoFocus={calendarProps?.autoFocus ?? true}
             mode="single"
             selected={props.value}
             onSelect={handleSingleSelect}
