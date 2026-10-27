@@ -77,7 +77,12 @@ export const CustomItems: Story = {
     <Combobox<Framework>
       items={frameworksCustom}
       itemToStringValue={(item) => (item as Framework).label}
-      {...args}
+      placeholder={args.placeholder}
+      emptyMessage={args.emptyMessage}
+      showTrigger={args.showTrigger}
+      showClear={args.showClear}
+      size={args.size}
+      disabled={args.disabled}
     />
   ),
 };
