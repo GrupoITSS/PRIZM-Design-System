@@ -138,6 +138,18 @@ Cada uma custou horas no piloto. Leia antes da etapa 2.
 
 **Lint e `tsc` do app `docs` dão erros de tipo locais**, porque `@grupoitss/prizm-ui` não está compilado. Antes de concluir que a mudança quebrou algo, rode o mesmo comando no arquivo da main e compare.
 
+**"No changes" ao publicar o Core não quer dizer que a mudança não subiu (26/10, accent do escuro).** O botão Publish fica desabilitado também quando a biblioteca já foi publicada com a mudança, inclusive quando a variável alterada é oculta da publicação (`palette/*`). Antes de concluir, compare o id da variável ligada num nó (`VariableID:<key>/<versão>`) com o de `figma.variables.importVariableByKeyAsync(key)`: se forem diferentes e a versão nova tiver o valor novo, o Core está publicado e falta só o `upgrade-core.js`.
+
+**Clonar o frame de doc de um irmão da família economiza a etapa 3 (26/10, Textarea a partir do Select).** Clone o frame, troque as instâncias com `swapComponent` (mapeando State e Size) e reescreva os textos seção por seção. Três cuidados: (1) os `hyperlink` do cabeçalho (código, Storybook) vêm junto e continuam apontando para o componente de origem: troque-os; (2) a seção de acessibilidade traz os números do outro componente: esvazie até a etapa 4; (3) procure sobras com `findAll` de TEXT pelo nome do componente de origem antes de mostrar o frame.
+
+**Instância oculta por propriedade booleana não mostra os filhos ao plugin.** Num botão ligado a `Expandable` (padrão `false`), `children` da instância do ícone vem vazio, e a leitura de cor ou ligação falha. Leia da camada que não é instância, ou ligue a propriedade numa instância temporária.
+
+**A ligação de tamanho não fica na instância de ícone do kit.** `setBoundVariable('width', …)` numa instância de `Icon / *` não dá erro e não grava (proporção travada no componente do ícone). O tamanho fica certo em px; registre no mapa de tokens e peça a ligação à mão.
+
+**No jsdom, o foco não volta ao gatilho do Dialog do Radix ao fechar; no navegador, volta.** Antes de registrar falha de 2.4.3, confira no Storybook publicado (`iframe.html?id=<story>`) pelo navegador embutido: abra, feche com Esc e leia `document.activeElement`.
+
+**O Tokens Studio do Core sincroniza com a branch `design`, não com a main.** O workflow `design-acompanha-main.yml` (PR #129) avança a `design` a cada push na main; se ela tiver um sync esperando a PR, não mexe. Com sync no GitHub, o plugin não guarda os tokens no arquivo (`values` = `{}` em `sharedPluginData('tokens')`): para conferir o que ele carregou, olhe na interface do plugin, não no arquivo.
+
 Outras, menores:
 
 - `packages/tokens/dist/` é ignorado pelo git: o `dist` do checkout pode ser de outro dia. Gere de `origin/main` antes de medir contraste.
