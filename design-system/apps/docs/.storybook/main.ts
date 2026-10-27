@@ -13,6 +13,9 @@ const config: StorybookConfig = {
   addons: [
     getAbsolutePath("@storybook/addon-docs"),
     getAbsolutePath("@storybook/addon-a11y"),
+    // Forces :focus-visible / :hover on a story (parameters.pseudo), so the
+    // "Estados" stories show every state side by side, like the Figma doc.
+    getAbsolutePath("storybook-addon-pseudo-states"),
     // MCP server at /mcp (the default endpoint).
     getAbsolutePath("@storybook/addon-mcp"),
   ],

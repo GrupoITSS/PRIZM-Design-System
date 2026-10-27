@@ -6,6 +6,7 @@ import { InputGroup } from "@grupoitss/prizm-ui/input-group";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Input } from "@grupoitss/prizm-ui/input";
+import { EstadosGrade } from "./_estados";
 
 // Traceability: the component set in [PRIZM] Componentes, its documentation
 // frame and the CMS article. The token map lives next to the component
@@ -389,5 +390,28 @@ export const InputInputGroup: Story = {
         Campo composto da lib (`InputGroup` + ícone), sem classes ad-hoc no Input.
       </FieldDescription>
     </Field>
+  ),
+};
+
+/**
+ * Os 6 estados do Figma lado a lado. Focus e Error (Focus) usam o foco forçado
+ * pelo storybook-addon-pseudo-states; nos outros exemplos, clique no campo ou use Tab.
+ */
+export const Estados: Story = {
+  parameters: {
+    pseudo: { focusVisible: ["#input-estado-focus", "#input-estado-erro-focus"] },
+    controls: { disable: true },
+  },
+  render: () => (
+    <EstadosGrade
+      estados={[
+        { nome: "Default", gatilho: "vazio, sem foco", campo: <Input aria-label="Default" placeholder="Digite seu nome" /> },
+        { nome: "Focus", gatilho: ":focus-visible", campo: <Input id="input-estado-focus" aria-label="Focus" placeholder="Digite seu nome" /> },
+        { nome: "Filled", gatilho: "com value", campo: <Input aria-label="Filled" defaultValue="Acme Ltda" /> },
+        { nome: "Disabled", gatilho: "disabled", campo: <Input aria-label="Disabled" disabled defaultValue="Somente leitura" /> },
+        { nome: "Error", gatilho: "aria-invalid", campo: <Input aria-label="Error" aria-invalid defaultValue="nome@empresa" /> },
+        { nome: "Error (Focus)", gatilho: "aria-invalid + :focus-visible", campo: <Input id="input-estado-erro-focus" aria-label="Error (Focus)" aria-invalid defaultValue="nome@empresa" /> },
+      ]}
+    />
   ),
 };

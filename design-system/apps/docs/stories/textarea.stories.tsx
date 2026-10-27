@@ -2,6 +2,7 @@ import { Button } from "@grupoitss/prizm-ui/button";
 import { Field, FieldDescription, FieldLabel } from "@grupoitss/prizm-ui/field";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Textarea } from "@grupoitss/prizm-ui/textarea";
+import { EstadosGrade } from "./_estados";
 
 // Traceability: the component set in [PRIZM] Componentes, its documentation
 // frame and the CMS article. The token map lives next to the component
@@ -178,5 +179,28 @@ export const InvalidWithResizable: Story = {
         Combina o estado inválido com a possibilidade de redimensionar o textarea.
       </FieldDescription>
     </Field>
+  ),
+};
+
+/**
+ * Os 6 estados do Figma lado a lado. Focus e Error (Focus) usam o foco forçado
+ * pelo storybook-addon-pseudo-states; nos outros exemplos, clique no campo ou use Tab.
+ */
+export const Estados: Story = {
+  parameters: {
+    pseudo: { focusVisible: ["#textarea-estado-focus", "#textarea-estado-erro-focus"] },
+    controls: { disable: true },
+  },
+  render: () => (
+    <EstadosGrade
+      estados={[
+        { nome: "Default", gatilho: "vazio, sem foco", campo: <Textarea aria-label="Default" placeholder="Descreva o problema" /> },
+        { nome: "Focus", gatilho: ":focus-visible", campo: <Textarea id="textarea-estado-focus" aria-label="Focus" placeholder="Descreva o problema" /> },
+        { nome: "Filled", gatilho: "com value", campo: <Textarea aria-label="Filled" defaultValue="Trocar o endereço de entrega do pedido 4521." /> },
+        { nome: "Disabled", gatilho: "disabled", campo: <Textarea aria-label="Disabled" disabled defaultValue="Trocar o endereço de entrega do pedido 4521." /> },
+        { nome: "Error", gatilho: "aria-invalid", campo: <Textarea aria-label="Error" aria-invalid placeholder="Descreva o problema" /> },
+        { nome: "Error (Focus)", gatilho: "aria-invalid + :focus-visible", campo: <Textarea id="textarea-estado-erro-focus" aria-label="Error (Focus)" aria-invalid placeholder="Descreva o problema" /> },
+      ]}
+    />
   ),
 };
