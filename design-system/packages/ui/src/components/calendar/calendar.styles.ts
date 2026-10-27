@@ -21,7 +21,6 @@ export const calendarRootStyles = [
   "[--rdp-range_end-color:var(--prizm-color-primary-foreground)]",
   "[--rdp-range_end-date-background-color:var(--prizm-color-primary)]",
   "[--rdp-today-color:var(--prizm-color-accent-foreground)]",
-  "[--rdp-outside-opacity:0.5]",
 ].join(" ");
 
 export const calendarRtlChevronRotationStyles = [
@@ -38,7 +37,7 @@ export const calendarClassNames = {
   monthCaption: "flex items-center justify-center h-(--cell-size) w-full px-(--cell-size)",
   dropdowns: "w-full flex items-center text-sm font-medium justify-center h-(--cell-size) gap-1.5",
   dropdownRoot:
-    "has-focus:border-ring border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] relative rounded-md border",
+    "border-input shadow-xs has-focus:border-transparent has-focus:ring-2 has-focus:ring-ring relative rounded-md border",
   dropdown: "bg-popover absolute inset-0 opacity-0",
   captionLabelBase: "select-none font-medium",
   captionLabelAsLabel: "text-sm",
@@ -82,6 +81,6 @@ export const calendarDayButtonStyles = [
   "data-[range-end=true]:bg-primary! data-[range-end=true]:text-primary-foreground! data-[range-end=true]:hover:bg-primary/80!",
   "data-[range-middle=true]:bg-accent! data-[range-middle=true]:text-accent-foreground! data-[range-middle=true]:rounded-none",
 
-  "group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px]",
+  "group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-2 group-data-[focused=true]/day:ring-ring",
   "",
 ].join(" ");

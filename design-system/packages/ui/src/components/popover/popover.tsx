@@ -31,6 +31,7 @@ const Popover = ({
   collisionPadding = 8,
   portalContainer,
   onEscapeKeyDown,
+  contentProps,
   ref,
   ...rootProps
 }: PopoverProps & { ref?: React.Ref<React.ComponentRef<typeof RadixPopover.Content>> }) => {
@@ -46,6 +47,7 @@ const Popover = ({
           sideOffset={sideOffset}
           collisionPadding={collisionPadding}
           onEscapeKeyDown={onEscapeKeyDown}
+          {...contentProps}
           className={cn(
             popoverContentVariants({ size }),
             "max-h-[var(--radix-popover-content-available-height)] overflow-y-auto",

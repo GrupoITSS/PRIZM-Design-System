@@ -4,6 +4,7 @@ import {
   ChevronRight as ChevronRightIcon,
 } from "../icons";
 import * as React from "react";
+import { ptBR } from "react-day-picker/locale";
 import {
   type CustomComponents,
   DayButton,
@@ -50,7 +51,8 @@ function CalendarBase({
   buttonVariant = "ghost",
   formatters,
   components,
-  locale,
+  // pt-BR por padrão: nomes dos dias, dos meses e rótulos dos botões (WCAG 3.1.2).
+  locale = ptBR,
   ...props
 }: CalendarProps) {
   const defaultClassNames = getDefaultClassNames();

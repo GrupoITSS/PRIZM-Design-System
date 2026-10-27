@@ -81,6 +81,27 @@ export interface DatePickerBaseProps {
   calendarProps?: CalendarConfigProps;
 
   /**
+   * Nome do calendário para o leitor de tela (o popover tem `role="dialog"`).
+   * @default "Escolher data"
+   */
+  calendarLabel?: string;
+
+  /**
+   * Marca o campo como inválido: borda `destructive`, anunciado no botão.
+   */
+  "aria-invalid"?: boolean | "true" | "false";
+
+  /**
+   * id da mensagem de ajuda ou de erro (ex.: `FieldError`), ligada ao botão.
+   */
+  "aria-describedby"?: string;
+
+  /**
+   * Nome acessível quando não há rótulo visível.
+   */
+  "aria-label"?: string;
+
+  /**
    * Props opcionais repassadas para o componente `Popover` interno.
    * Útil para customizar alinhamento, lado, controle manual de open, etc.
    */
