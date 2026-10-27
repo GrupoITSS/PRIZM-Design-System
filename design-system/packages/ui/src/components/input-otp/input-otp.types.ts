@@ -3,7 +3,7 @@ import type { InputOTPVariantProps } from "./input-otp.styles";
 
 /**
  * Separator between OTP slots.
- * - `true`: dot (•) between slots
+ * - `true`: dash (Minus icon) between slots
  * - `string`: character(s) between slots (e.g. "-", " ")
  * - `ReactNode`: custom element between slots
  * - `undefined`: no separator
@@ -26,7 +26,7 @@ export interface InputOTPProps extends InputOTPVariantProps {
    */
   length?: number;
   /**
-   * Separator between slots. `true` = dot, string = character(s), ReactNode = custom.
+   * Separator between slots. `true` = dash, string = character(s), ReactNode = custom.
    * @default undefined
    */
   separator?: InputOTPSeparator;
@@ -77,9 +77,14 @@ export interface InputOTPProps extends InputOTPVariantProps {
   pasteTransformer?: (pasted: string) => string;
   /**
    * Error state: sets aria-invalid on the input for a11y and styling.
+   * Apelido de `aria-invalid`, mantido por compatibilidade.
    * @default false
    */
   invalid?: boolean;
+  /**
+   * Marca o campo como inválido: borda `destructive`, anunciado no input.
+   */
+  "aria-invalid"?: boolean | "true" | "false";
   /**
    * Id for the underlying input (e.g. for FieldLabel htmlFor).
    */
@@ -88,5 +93,6 @@ export interface InputOTPProps extends InputOTPVariantProps {
    * Additional props forwarded to the underlying invisible input (a11y, aria-*, etc.).
    */
   "aria-label"?: string;
+  "aria-labelledby"?: string;
   "aria-describedby"?: string;
 }

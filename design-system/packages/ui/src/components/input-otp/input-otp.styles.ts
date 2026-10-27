@@ -3,6 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 /**
  * PRIZM InputOTP — container and slot styles using tokens from @grupoitss/prizm-tokens.
  * Slots are flush (no gap), like shadcn docs; spacing only around separators.
+ * Escala, fundo, erro e foco da família do campo (decisões D1 a D4 de 27/10/2026).
  */
 const containerBase = "flex items-center has-[:disabled]:opacity-50";
 
@@ -10,26 +11,30 @@ export const inputOTPContainerVariants = cva(containerBase, {
   variants: {
     size: {
       sm: "",
-      default: "",
+      md: "",
       lg: "",
     },
   },
   defaultVariants: {
-    size: "default",
+    size: "md",
   },
 });
 
 /** Margin around separator (so only separators add space, slots stay flush) */
 export const inputOTPSeparatorGap = "mx-1.5";
 
-/** Wrapper: one rounded bordered box when slots are flush (no separator) or per-group when separator */
-export const inputOTPWrapper = "flex overflow-hidden rounded-md border border-input bg-background";
+/** Separator color: apoio visual, não conteúdo (pendência 3 de 27/10/2026). */
+export const inputOTPSeparatorStyles = "shrink-0 text-muted-foreground";
 
-/** Invalid/error state for wrapper (applied to the group container) */
-export const inputOTPWrapperInvalid = "border-destructive ring-2 ring-destructive/20";
+/** Wrapper: one rounded bordered box when slots are flush (no separator) or per-group when separator */
+export const inputOTPWrapper =
+  "flex overflow-hidden rounded-md border border-input bg-input-background shadow-xs";
+
+/** Invalid/error state for wrapper: só a borda; o anel do foco continua ring (D3). */
+export const inputOTPWrapperInvalid = "border-destructive";
 
 const slotBase =
-  "relative flex items-center justify-center border-r border-input text-sm transition-all outline-none";
+  "relative flex items-center justify-center border-r border-input text-foreground transition-all outline-none";
 
 /** @deprecated Not used (wrapper handles rounding); kept for backwards compatibility. */
 export const inputOTPSlotFirst = "";
@@ -39,18 +44,21 @@ export const inputOTPSlotLast = "";
 export const inputOTPSlotVariants = cva(slotBase, {
   variants: {
     size: {
-      sm: "h-8 w-8 min-w-8 text-xs",
-      default: "h-10 w-10 min-w-10",
-      lg: "h-12 w-12 min-w-12 text-base",
+      sm: "size-control-height-sm text-xs",
+      md: "size-control-height-md text-sm",
+      lg: "size-control-height-lg text-base md:text-sm",
     },
   },
   defaultVariants: {
-    size: "default",
+    size: "md",
   },
 });
 
 /** Active/focused slot ring (apply when slot is active) */
 export const inputOTPSlotActive = "z-10 ring-2 ring-ring ring-offset-background";
+
+/** Placeholder character in empty slots (pendência 2 de 27/10/2026). */
+export const inputOTPPlaceholder = "text-muted-foreground";
 
 /** Caret blink animation container (inside slot) */
 export const inputOTPCaret =
@@ -59,6 +67,6 @@ export const inputOTPCaret =
 export const inputOTPCaretLine = "h-4 w-px animate-caret-blink bg-foreground duration-1000";
 
 /** @deprecated Error state now applies to wrapper instead of individual slots. Use inputOTPWrapperInvalid. */
-export const inputOTPSlotInvalid = "border-destructive ring-2 ring-destructive/20";
+export const inputOTPSlotInvalid = "border-destructive";
 
 export type InputOTPVariantProps = VariantProps<typeof inputOTPContainerVariants>;
