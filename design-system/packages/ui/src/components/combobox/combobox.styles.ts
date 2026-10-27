@@ -11,8 +11,11 @@ export const comboboxListStyles =
 export const comboboxItemStyles =
   "relative flex w-full cursor-default select-none items-center gap-2 rounded-md py-1 pl-1.5 pr-8 text-sm text-foreground outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-accent data-highlighted:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
 
+// Foco, erro e disabled seguem o InputGroup (decisões de 27/10/2026): anel de 2px
+// em `ring` com a borda transparente; no erro a borda fica `destructive` e o anel
+// continua `ring`; sem ring-3 nem ring/50 (mediam 1,66:1). Altura vem do size.
 export const comboboxChipsStyles =
-  "flex min-h-control-height-sm flex-wrap items-center gap-1 rounded-lg border bg-transparent bg-clip-padding px-2.5 py-1 text-sm transition-colors has-aria-invalid:border-destructive has-aria-invalid:ring-3 has-aria-invalid:ring-destructive/20 has-aria-invalid:ring-offset-0 border-input focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 has-data-[slot=combobox-chip]:px-1";
+  "flex flex-wrap items-center gap-1 rounded-lg border bg-transparent bg-clip-padding px-2.5 py-1 text-sm transition-[color,box-shadow,border-color,background-color] border-input has-aria-invalid:border-destructive has-data-[slot=combobox-chip]:px-1";
 
 export const comboboxChipStyles =
-  "flex h-[calc(--spacing(5.25))] w-fit items-center justify-center gap-1 whitespace-nowrap rounded-sm bg-muted px-1.5 text-xs font-medium text-foreground has-data-[slot=combobox-chip-remove]:pr-0 has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50";
+  "flex h-[calc(--spacing(5.25))] w-fit items-center justify-center gap-1 whitespace-nowrap rounded-sm bg-muted px-1.5 text-xs font-medium text-foreground has-data-[slot=combobox-chip-remove]:pr-0 has-disabled:pointer-events-none has-disabled:cursor-not-allowed";

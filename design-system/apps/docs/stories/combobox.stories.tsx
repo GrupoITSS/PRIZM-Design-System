@@ -18,9 +18,31 @@ const meta: Meta<typeof Combobox> = {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Combobox do design system PRIZM. Campo de seleção/busca construído sobre `@base-ui/react`.\n\n**Uso recomendado (props diretas):** passar `items`, `placeholder`, `emptyMessage`; para múltipla seleção use `multiple`, `value` e `onValueChange`; para itens objeto use `itemToStringValue`. A composição com subcomponentes fica como escape hatch.\n\n**Documentação base:** <a href="https://base-ui.com/react/components/combobox" target="_blank" rel="noopener noreferrer">Combobox — Base UI</a>',
+          "Combobox do design system PRIZM. Campo de seleção/busca construído sobre `@base-ui/react`.\n\n**Uso recomendado (props diretas):** passar `items`, `placeholder`, `emptyMessage`; para múltipla seleção use `multiple`, `value` e `onValueChange`; para itens objeto use `itemToStringValue`. A composição com subcomponentes fica como escape hatch.\n\n**Documentação base:** <a href=\"https://base-ui.com/react/components/combobox\" target=\"_blank\" rel=\"noopener noreferrer\">Combobox — Base UI</a>",
       },
     },
+    controls: {
+      include: ["placeholder", "emptyMessage", "showTrigger", "showClear", "size", "disabled"],
+      expanded: true,
+    },
+  },
+  args: {
+    placeholder: "Selecionar um framework",
+    emptyMessage: "Nenhum item encontrado.",
+    showTrigger: true,
+    showClear: false,
+    size: "md",
+    disabled: false,
+  },
+  argTypes: {
+    placeholder: { control: "text" },
+    size: {
+      control: "select",
+      options: ["sm", "md", "lg"],
+    },
+    showTrigger: { control: "boolean" },
+    showClear: { control: "boolean" },
+    disabled: { control: "boolean" },
   },
 };
 
@@ -32,21 +54,13 @@ const frameworks = ["Next.js", "SvelteKit", "Nuxt.js", "Remix", "Astro"];
 
 /** Uso primário: apenas props, sem subcomponentes. */
 export const Basic: Story = {
-  render: () => (
-    <Combobox items={frameworks} placeholder="Select a framework" emptyMessage="No items found." />
-  ),
+  render: (args) => <Combobox items={frameworks} {...args} />,
 };
 
 /** Botão de limpar visível. */
 export const ClearButton: Story = {
-  render: () => (
-    <Combobox
-      items={frameworks}
-      placeholder="Select a framework"
-      emptyMessage="No items found."
-      showClear
-    />
-  ),
+  args: { showClear: true },
+  render: (args) => <Combobox items={frameworks} {...args} />,
 };
 
 type Framework = { label: string; value: string };
@@ -59,19 +73,18 @@ const frameworksCustom: Framework[] = [
 
 /** Itens como objetos; `itemToStringValue` para exibir e filtrar. */
 export const CustomItems: Story = {
-  render: () => (
+  render: (args) => (
     <Combobox<Framework>
       items={frameworksCustom}
       itemToStringValue={(item) => (item as Framework).label}
-      placeholder="Select a framework"
-      emptyMessage="No items found."
+      {...args}
     />
   ),
 };
 
 /** Múltipla seleção com chips (controlado por value/onValueChange). */
 export const Multiple: Story = {
-  render: function MultipleStory() {
+  render: function MultipleStory(args) {
     const [value, setValue] = useState<string[]>([]);
     return (
       <Combobox
@@ -79,8 +92,8 @@ export const Multiple: Story = {
         multiple
         value={value}
         onValueChange={(nextValue) => setValue(nextValue as string[])}
-        placeholder="Add framework"
-        emptyMessage="No items found."
+        {...args}
+        placeholder={args.placeholder ?? "Adicionar framework"}
       />
     );
   },
@@ -88,13 +101,18 @@ export const Multiple: Story = {
 
 /** Desabilitado. */
 export const Disabled: Story = {
-  render: () => (
-    <Combobox
-      items={frameworks}
-      placeholder="Select a framework"
-      emptyMessage="No items found."
-      disabled
-    />
+  args: { disabled: true },
+  render: (args) => <Combobox items={frameworks} {...args} />,
+};
+
+/** Tamanhos sm, md e lg, os mesmos do Input. */
+export const Sizes: Story = {
+  render: (args) => (
+    <div className="flex w-80 flex-col gap-3">
+      <Combobox items={frameworks} {...args} size="sm" placeholder="sm" />
+      <Combobox items={frameworks} {...args} size="md" placeholder="md" />
+      <Combobox items={frameworks} {...args} size="lg" placeholder="lg" />
+    </div>
   ),
 };
 
@@ -109,9 +127,9 @@ export const Composition: Story = {
   },
   render: () => (
     <Combobox items={frameworks}>
-      <ComboboxInput placeholder="Select a framework" showTrigger showClear />
+      <ComboboxInput placeholder="Selecionar um framework" showTrigger showClear />
       <ComboboxContent>
-        <ComboboxEmpty>No items found.</ComboboxEmpty>
+        <ComboboxEmpty>Nenhum item encontrado.</ComboboxEmpty>
         <ComboboxList>
           {(item: string) => (
             <ComboboxItem key={item} value={item}>
@@ -126,24 +144,10 @@ export const Composition: Story = {
 
 /** Estado inválido via `aria-invalid`. */
 export const Invalid: Story = {
-  render: () => (
-    <Combobox
-      items={frameworks}
-      placeholder="Select a framework"
-      emptyMessage="No items found."
-      aria-invalid="true"
-    />
-  ),
+  render: (args) => <Combobox items={frameworks} aria-invalid="true" {...args} />,
 };
 
 /** Auto highlight do primeiro item ao digitar. */
 export const AutoHighlight: Story = {
-  render: () => (
-    <Combobox
-      items={frameworks}
-      placeholder="Select a framework"
-      emptyMessage="No items found."
-      autoHighlight
-    />
-  ),
+  render: (args) => <Combobox items={frameworks} autoHighlight {...args} />,
 };
