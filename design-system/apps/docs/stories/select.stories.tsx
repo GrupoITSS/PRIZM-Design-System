@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Avatar } from "@grupoitss/prizm-ui/avatar";
 import { Select } from "@grupoitss/prizm-ui/select";
+import { EstadosGrade } from "./_estados";
 
 // Traceability: the component set in [PRIZM] Componentes, its documentation
 // frame and the CMS article. The token map lives next to the component
@@ -158,5 +159,36 @@ export const Sizes: Story = {
       <Select {...args} size="md" placeholder="Tamanho md" />
       <Select {...args} size="lg" placeholder="Tamanho lg" />
     </div>
+  ),
+};
+
+const opcoesEstados = [
+  { value: "pas", label: "Organização Prizm" },
+  { value: "docnix", label: "Docnix" },
+];
+
+/**
+ * Os 7 estados do Figma lado a lado. Os de foco usam o foco forçado pelo
+ * storybook-addon-pseudo-states; a lista aberta usa o mesmo anel do foco.
+ */
+export const Estados: Story = {
+  parameters: {
+    pseudo: {
+      focusVisible: ["#select-estado-focus", "#select-estado-filled-focus", "#select-estado-erro-focus"],
+    },
+    controls: { disable: true },
+  },
+  render: () => (
+    <EstadosGrade
+      estados={[
+        { nome: "Default", gatilho: "sem valor, fechado", campo: <Select aria-label="Default" placeholder="Placeholder" options={opcoesEstados} /> },
+        { nome: "Focus", gatilho: ":focus-visible ou lista aberta", campo: <Select id="select-estado-focus" aria-label="Focus" placeholder="Placeholder" options={opcoesEstados} /> },
+        { nome: "Filled", gatilho: "com value", campo: <Select aria-label="Filled" value="pas" options={opcoesEstados} /> },
+        { nome: "Filled (Focus)", gatilho: "com value + foco", campo: <Select id="select-estado-filled-focus" aria-label="Filled (Focus)" value="pas" options={opcoesEstados} /> },
+        { nome: "Disabled", gatilho: "disabled", campo: <Select aria-label="Disabled" disabled value="pas" options={opcoesEstados} /> },
+        { nome: "Error", gatilho: "aria-invalid", campo: <Select aria-label="Error" aria-invalid placeholder="Placeholder" options={opcoesEstados} /> },
+        { nome: "Error (Focus)", gatilho: "aria-invalid + foco", campo: <Select id="select-estado-erro-focus" aria-label="Error (Focus)" aria-invalid placeholder="Placeholder" options={opcoesEstados} /> },
+      ]}
+    />
   ),
 };
