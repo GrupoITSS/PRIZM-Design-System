@@ -33,10 +33,18 @@ function parseDate(value: string): Date | null {
   return null;
 }
 
+// Traceability: the component set in [PRIZM] Componentes, its documentation
+// frame and the CMS article. The token map lives next to the component
+// (date-picker.tokens.json) and is checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=334-4051";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25439-2501";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=68521515-38ca-420e-a465-3833b6f7c285&version=v1";
+
 const meta: Meta<typeof DatePicker> = {
   title: "Primários/DatePicker",
   component: DatePicker,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
@@ -45,6 +53,7 @@ const meta: Meta<typeof DatePicker> = {
           "Componente de seleção de datas do design system PRIZM. Construído em cima de `Popover` e `Calendar` (baseado em `react-day-picker`), exposto como um único componente baseado em props.\n\n" +
           'Suporta seleção de data única (`mode="single"`) e intervalo de datas (`mode="range"`), além de cenários avançados com input, presets e linguagem natural.\n\n' +
           "O calendário abre como diálogo com o nome de `calendarLabel` (padrão \"Escolher data\"), em pt-BR, com o foco no dia escolhido. Erro com `aria-invalid`; o campo não muda no hover; com o calendário aberto, o gatilho usa o anel do foco.\n\n" +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).\n\n` +
           '**Documentação de referência:** <a href="https://ui.shadcn.com/docs/components/radix/date-picker" target="_blank" rel="noopener noreferrer">Date Picker — shadcn/ui</a>',
       },
     },
@@ -63,6 +72,8 @@ const meta: Meta<typeof DatePicker> = {
     },
     showIcon: { control: "boolean" },
     showChevron: { control: "boolean" },
+    fullWidth: { control: "boolean" },
+    closeOnSelect: { control: "boolean" },
     disabled: { control: "boolean" },
     "aria-invalid": {
       control: "boolean",

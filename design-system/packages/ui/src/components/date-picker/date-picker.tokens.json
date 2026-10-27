@@ -1,0 +1,130 @@
+{
+  "component": "DatePicker",
+  "description": "Mapa de tokens do DatePicker: o que cada estado do gatilho e as peças usam do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 27/10/2026 (Date Picker, 54 variantes, e Date Picker / Button) e conferido contra date-picker.styles.ts e date-picker.tsx pelo teste date-picker.tokens.test.ts. Nomes no formato do Figma (color/input); no código viram classes Tailwind (border-input). O DatePicker não tem variantes de cor: o Type do Figma (Icon Left, Icon Right, With Input) é a posição do ícone ou uma composição.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=334-4051",
+    "figmaCalendarButton": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18403-8670",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25439-2501",
+    "code": "design-system/packages/ui/src/components/date-picker/date-picker.tsx",
+    "story": "design-system/apps/docs/stories/date-picker.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=68521515-38ca-420e-a465-3833b6f7c285&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/107",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/123",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/132"
+    ],
+    "jira": [
+      "GIES-1725"
+    ]
+  },
+  "types": {
+    "Icon Left": "iconPosition=\"start\"",
+    "Icon Right": "iconPosition=\"end\" (padrão)",
+    "With Input": "composição de InputGroup com o DatePicker no fim (story WithInputField)"
+  },
+  "states": {
+    "default": {
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "placeholder": "color/muted-foreground",
+      "border": "color/input",
+      "borderWidth": "border-width/1",
+      "shadow": "shadow/xs"
+    },
+    "focus": {
+      "border": "color/transparent",
+      "ring": "color/ring",
+      "ringWidth": 2,
+      "ringOffsetWidth": 0,
+      "note": "Vale também para o calendário aberto (data-[state=open]), decisão D4 de 27/10/2026."
+    },
+    "error": {
+      "border": "color/destructive",
+      "attribute": "aria-invalid"
+    },
+    "errorFocus": {
+      "border": "color/destructive",
+      "ring": "color/ring",
+      "ringWidth": 2
+    },
+    "disabled": {
+      "background": "color/input-background",
+      "border": "color/input",
+      "shadow": "shadow/xs",
+      "opacity": "opacity/50",
+      "attribute": "disabled",
+      "note": "Opacidade 50% na camada, sobre a aparência do default (26/10/2026)."
+    },
+    "hover": {
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "note": "Sem hover no campo (D3, 27/10/2026): o hover do Button outline é anulado."
+    }
+  },
+  "parts": {
+    "icon": {
+      "icon": "Calendar",
+      "size": "width/4",
+      "color": "color/muted-foreground"
+    },
+    "calendarButton": {
+      "size": 24,
+      "radius": "radius/md",
+      "icon": "Calendar",
+      "iconSize": "height/3-5",
+      "iconColor": "color/foreground",
+      "hover": {
+        "background": "color/accent",
+        "iconColor": "color/accent-foreground"
+      },
+      "disabledOpacity": "opacity/50",
+      "note": "Só no Type With Input. No código, o DatePicker dentro de um InputGroupAddon."
+    }
+  },
+  "sizes": {
+    "sm": {
+      "height": "control-height/sm",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/xs"
+    },
+    "md": {
+      "height": "control-height/md",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    },
+    "lg": {
+      "height": "control-height/lg",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    }
+  },
+  "divergences": [
+    {
+      "where": "lg · tamanho do texto",
+      "figma": "text/sm",
+      "code": "text-base md:text-sm (16px abaixo do breakpoint md), como no Input",
+      "status": "aberta"
+    },
+    {
+      "where": "Type With Input",
+      "figma": "variante do set, com padding spacing/1 × spacing/10 e o botão de calendário de 24px",
+      "code": "composição de InputGroup + DatePicker (sem variante), decisão D5 de 27/10/2026",
+      "status": "aberta"
+    },
+    {
+      "where": "Time Picker",
+      "figma": "set 18415:7484",
+      "code": "sem componente; Input type=\"time\" ao lado (decisão D6 de 27/10/2026)",
+      "status": "aberta"
+    }
+  ]
+}
