@@ -37,6 +37,32 @@ describe("Skeleton (PRIZM / Skeleton)", () => {
     expect(el).toHaveClass("rounded-full");
   });
 
+  it("circle é sempre redondo: aspect-square, só pill fica alongado", () => {
+    const { rerender, container } = render(<Skeleton shape="circle" className="w-24" />);
+
+    let el = container.querySelector<HTMLElement>('[data-slot="skeleton"]');
+    expect(el).toHaveClass("aspect-square", "rounded-full");
+
+    rerender(<Skeleton shape="pill" className="h-4 w-24" />);
+    el = container.querySelector<HTMLElement>('[data-slot="skeleton"]');
+    expect(el).toHaveClass("rounded-full");
+    expect(el).not.toHaveClass("aspect-square");
+  });
+
+  it("o pulso para depois de 2 ciclos (WCAG 2.2.2)", () => {
+    const { container } = render(<Skeleton className="h-4 w-32" />);
+
+    const el = container.querySelector<HTMLElement>('[data-slot="skeleton"]');
+    expect(el).toHaveClass("animate-pulse", "[animation-iteration-count:2]!");
+  });
+
+  it("sem motion-reduce: o pulso é igual com reduzir movimento (decisão de 27/10/2026)", () => {
+    const { container } = render(<Skeleton className="h-4 w-32" />);
+
+    const el = container.querySelector<HTMLElement>('[data-slot="skeleton"]');
+    expect(el?.className).not.toMatch(/motion-reduce:/);
+  });
+
   it("aceita className extra para tamanho/layout", () => {
     const { container } = render(<Skeleton className="h-6 w-48 custom-class" />);
 
