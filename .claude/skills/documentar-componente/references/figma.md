@@ -36,10 +36,25 @@ Template: frame `25019:4489` "Button — Documentação Prizm", na página "Butt
 | estilo de texto local | desligar; a tipografia fica nas variáveis |
 | sombra local | `style/shadow/xs` (estilo do Core) |
 
-5. Com o ok, rode `scripts/rebind-core.js` primeiro com `__DRY__ = true`, mostre `unmapped` e `manual`, depois com `false`. Inclua as dependências (ícones, Spinner, Kbd…) nos `__ROOTS__`.
-6. Confira 2 ou 3 variantes em temas diferentes pelo `get_screenshot` (ver Armadilhas no SKILL.md).
+5. Com o ok, rode `scripts/rebind-core.js` primeiro com `__DRY__ = true`, mostre `unmapped` e `manual`, depois com `false`. Inclua nos `__ROOTS__` as dependências (ícones, Spinner, Kbd…) **e os componentes de apoio da página** (item de lista, busca, menus de exemplo, avatar dentro do set). No Combobox (27/10), só o set principal foi religado: o Menu Item, a busca, os quatro Command Menus e o avatar ficaram no kit, e o artigo afirmou o contrário.
+6. Os nós em `manual` (overrides em instância aninhada, id `I…;…`): quando o valor do override é o mesmo do componente principal, que já está no Core, `resetOverrides()` na instância grava e passa a herdar (os 30 chevrons do Combobox). Trocar o paint do nó `I…` pode não gravar; liste esses para conferir à mão.
+7. Recontar as variáveis locais em todas as raízes da página numa chamada nova. O que sobrar tem de vir de outro componente ainda não religado (no Combobox, o Checkbox e o título de grupo do Command): registre quais, no frame e no artigo.
+8. Confira 2 ou 3 variantes em temas diferentes pelo `get_screenshot` (ver Armadilhas no SKILL.md).
 
 Defeitos de kit que apareceram no Button e valem conferir em todo componente: tamanhos de ícone com min/max fixos e proporção travada (não seguem `control-height`), estado hover sem mudança visual, altura fixa em px em vez do token.
+
+**Textos de exemplo em inglês (regra de 28/10/2026).** Dentro dos componentes do `[PRIZM] Componentes`, o texto de exemplo fica em inglês, como no kit e em Input, Select e Textarea: "Placeholder", "Group Label", "Search", "Backlog", "Add new". Não traduza ao religar nem ao documentar (no DatePicker e no Combobox a tradução teve de ser desfeita). O que o time lê (frame de doc, artigo, stories) e os padrões do código seguem em pt-BR; a tabela Figma × código do artigo registra os dois ("Placeholder" no Figma, padrão "Selecionar…" no código).
+
+**Layout do set: grade padrão (28/10/2026).** Depois de criar, remover ou clonar variantes, confira o set pelo `get_screenshot`: no Combobox, as 42 variantes estavam empilhadas no mesmo ponto, e só se via uma. O set fica encaixado sobre a grade do kit:
+
+- um frame `" "` com um filho `Instances` em auto-layout vertical: contorno `#9747ff`, 1px, tracejado `[10, 5]`, raio 5;
+- linhas (`Row`) de células `Instance` com 84px de altura, divisórias tracejadas só à direita e embaixo (a última coluna e a última linha sem divisória);
+- rótulos em Inter Medium 12, `#9747ff`: estados à esquerda, colunas em cima (`Type · Size`);
+- o set sem fill e sem contorno, do tamanho de `Instances`, posicionado sobre ela, com cada variante centralizada na célula.
+
+Propriedades booleanas que mudam o visual (Avatar, Group Label, Clear) não aparecem na grade das variantes, porque o valor padrão é falso: monte logo abaixo uma grade igual, com instâncias e essas propriedades ligadas, para que se vejam. A seção Components fica de cima para baixo: set principal, grade de propriedades, peças auxiliares (item de lista) e exemplos. Sem espaço vazio sobrando.
+
+**Remover variante (Hover e Pressed do Combobox, 28/10/2026).** Antes de apagar, procure as instâncias com `variante.getInstancesAsync()` (frame de doc, grades, outras páginas) e troque ou apague cada uma; depois, atualize no frame de doc os textos que citam o estado (API, Estados, Tokens, Decisões, Changelog).
 
 ## Etapa 3 — Frame de documentação
 
@@ -48,7 +63,7 @@ Crie o frame "<Componente> — Documentação Prizm" na página do componente, a
 | # | Seção | Como montar |
 | --- | --- | --- |
 | 01 | Cabeçalho | Nome, uma frase do que faz, versão, base (shadcn/ui), links Figma/código/CMS. |
-| 02 | Playground por tema | Grade 5 marcas (PAS, PAS · CMS, Docnix, ITSS · AFIPE, ITSS · Digitrol) × claro/escuro. Cada célula é um frame com **modo explícito** nas coleções Theme e Mode do Core (`setExplicitVariableModeForCollection`), fundo `color/background`. Não troque cor à mão: só o modo. |
+| 02 | Playground por tema | Grade 5 marcas (PAS, PAS · CMS, Docnix, ITSS · AFIPE, ITSS · Digitrol) × claro/escuro. Cada célula é um frame com **modo explícito** nas coleções Theme e Mode do Core (`setExplicitVariableModeForCollection`), fundo `color/background`. Não troque cor à mão: só o modo. Se a instância md não cabe na célula (InputOTP), use o tamanho sm e diga no subtítulo. |
 | 03 | Variantes | Uma instância de cada variante do component set, com as decisões da etapa 1, tamanho padrão, rótulo com o nome do código. Com mais de um eixo, uma grade com as combinações. |
 | 04 | Quando usar | Sempre no formato do Input (seção `25189:2021`, ver "Quando usar" abaixo). Copie a seção e troque o conteúdo; não monte outro layout. |
 | 05 | API | Gerada de `componentPropertyDefinitions` do set: propriedade Figma, tipo, valores, padrão. Confira com as props do código e marque o que só existe de um lado (a tabela de paridade da etapa 1). |
@@ -101,3 +116,5 @@ set.documentationLinks = [{ uri: '<link do artigo no CMS>' }]; // aceita um link
 Confira lendo `set.descriptionMarkdown` de volta: o link tem de sair com `&version=v1`, sem `&amp;`. No cabeçalho do frame de doc, troque o link "Artigo no CMS · em breve" pelo do artigo (`hyperlink` do texto).
 
 Se o set apontava para o shadcn, o shadcn passa a ficar só na seção Rastreabilidade do artigo. Dev resources (links no Dev Mode) não se criam pelo plugin.
+
+Ponha o mesmo link nos outros sets da página (o slot do InputOTP, o Menu Item do Combobox). Para fechar: acrescente 🟣 ao nome da página (é como se vê, na lista de páginas, o que já passou por este fluxo) e confira se o frame de exemplo do kit tem o selo "Legado do kit · não usar como referência" no topo; se não tiver, clone o selo de outra página já documentada (o do DatePicker, dentro do frame `17086:199333`).
