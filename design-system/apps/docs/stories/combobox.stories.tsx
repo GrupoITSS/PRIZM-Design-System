@@ -9,16 +9,26 @@ import {
   ComboboxList,
 } from "@grupoitss/prizm-ui/combobox";
 
+// Traceability: the component set in [PRIZM] Componentes, its documentation
+// frame and the CMS article. The token map lives next to the component
+// (combobox.tokens.json) and is checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=430-4114";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25477-5552";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=98920a34-adcb-4477-b99c-a51817140dc6&version=v1";
+
 const meta: Meta<typeof Combobox> = {
   title: "Primários/Combobox",
   component: Combobox,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
-          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          "Combobox do design system PRIZM. Campo de seleção/busca construído sobre `@base-ui/react`.\n\n**Uso recomendado (props diretas):** passar `items`, `placeholder`, `emptyMessage`; para múltipla seleção use `multiple`, `value` e `onValueChange`; para itens objeto use `itemToStringValue`. A composição com subcomponentes fica como escape hatch.\n\n**Documentação base:** <a href=\"https://base-ui.com/react/components/combobox\" target=\"_blank\" rel=\"noopener noreferrer\">Combobox — Base UI</a>",
+          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + `@base-ui/react`, com tokens PRIZM.\n\n" +
+          "Combobox do design system PRIZM. Campo de seleção/busca: a pessoa digita e a lista filtra.\n\n**Uso recomendado (props diretas):** passar `items`, `placeholder`, `emptyMessage`; para múltipla seleção use `multiple`, `value` e `onValueChange`; para itens objeto use `itemToStringValue`. A composição com subcomponentes fica como escape hatch.\n\n" +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).\n\n` +
+          '**Documentação base:** <a href="https://base-ui.com/react/components/combobox" target="_blank" rel="noopener noreferrer">Combobox — Base UI</a>',
       },
     },
     controls: {
@@ -36,6 +46,7 @@ const meta: Meta<typeof Combobox> = {
   },
   argTypes: {
     placeholder: { control: "text" },
+    emptyMessage: { control: "text" },
     size: {
       control: "select",
       options: ["sm", "md", "lg"],

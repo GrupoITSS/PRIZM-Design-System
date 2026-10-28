@@ -1,0 +1,158 @@
+{
+  "component": "Combobox",
+  "description": "Mapa de tokens do Combobox: o que cada estado do campo, as peças e os tamanhos usam do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 27/10/2026 (Combobox, 42 variantes) e conferido contra combobox.styles.ts, o InputGroup do Default e o Input interno pelo teste combobox.tokens.test.tsx. Nomes no formato do Figma (color/input); no código viram classes Tailwind (border-input). O Combobox não tem variantes de cor: o Type do Figma (Default, Multiple) é a seleção simples ou com chips.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=430-4114",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25477-5552",
+    "code": "design-system/packages/ui/src/components/combobox/combobox.tsx",
+    "story": "design-system/apps/docs/stories/combobox.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=98920a34-adcb-4477-b99c-a51817140dc6&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/134"
+    ],
+    "jira": [
+      "GIES-1725"
+    ]
+  },
+  "types": {
+    "Default": "sem multiple; o campo é um InputGroup",
+    "Multiple": "multiple (chips)"
+  },
+  "states": {
+    "default": {
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "placeholder": "color/muted-foreground",
+      "border": "color/input",
+      "borderWidth": "border-width/1",
+      "shadow": "shadow/xs"
+    },
+    "focus": {
+      "border": "color/transparent",
+      "ring": "color/ring",
+      "ringWidth": 2,
+      "ringOffsetWidth": 0
+    },
+    "error": {
+      "border": "color/destructive",
+      "attribute": "aria-invalid"
+    },
+    "errorFocus": {
+      "border": "color/destructive",
+      "ring": "color/ring",
+      "ringWidth": 2
+    },
+    "disabled": {
+      "background": "color/input-background",
+      "border": "color/input",
+      "shadow": "shadow/xs",
+      "opacity": "opacity/50",
+      "attribute": "disabled",
+      "note": "Opacidade 50% na camada, sobre a aparência do default (PR #134)."
+    },
+    "hover": {
+      "background": "color/muted",
+      "border": "color/input",
+      "note": "Só no Figma. No código o campo não muda no hover, como Input, Select, Textarea e DatePicker."
+    },
+    "pressed": {
+      "background": "color/input-background",
+      "border": "color/input",
+      "note": "Só no Figma; visual igual ao Default."
+    }
+  },
+  "parts": {
+    "trigger": {
+      "icon": "ChevronDown",
+      "size": "width/4",
+      "color": "color/muted-foreground",
+      "buttonSize": "icon-xs"
+    },
+    "clear": {
+      "icon": "X",
+      "buttonSize": "icon-xs",
+      "ariaLabel": "Limpar"
+    },
+    "chip": {
+      "background": "color/muted",
+      "text": "color/foreground",
+      "fontSize": "text/xs",
+      "radius": "radius/sm",
+      "removeAriaLabel": "Remover {valor}"
+    },
+    "groupLabel": {
+      "text": "color/muted-foreground",
+      "fontSize": "text/xs",
+      "note": "No Figma, empilhado no campo (Show Group Label). No código o rótulo do campo é Field; ComboboxLabel rotula grupos da lista."
+    },
+    "avatar": {
+      "size": 20,
+      "note": "Só no Figma (Show Avatar, Size=5). No código entra por composição."
+    },
+    "content": {
+      "background": "color/popover",
+      "text": "color/popover-foreground",
+      "radius": "radius/lg",
+      "shadow": "shadow/md"
+    },
+    "item": {
+      "text": "color/foreground",
+      "radius": "radius/md",
+      "fontSize": "text/sm",
+      "highlighted": {
+        "background": "color/accent",
+        "text": "color/accent-foreground"
+      },
+      "check": {
+        "icon": "Check",
+        "size": "width/4"
+      }
+    }
+  },
+  "sizes": {
+    "sm": {
+      "height": "control-height/sm",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/xs"
+    },
+    "md": {
+      "height": "control-height/md",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    },
+    "lg": {
+      "height": "control-height/lg",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm"
+    }
+  },
+  "divergences": [
+    {
+      "where": "Hover e Pressed",
+      "figma": "Hover com fundo color/muted; Pressed igual ao Default",
+      "code": "o campo não muda no hover nem no pressed, como o resto da família",
+      "status": "aberta"
+    },
+    {
+      "where": "Show Avatar e Show Group Label",
+      "figma": "booleanas do set; Group Label empilhado no campo; Avatar Size=5 à esquerda",
+      "code": "rótulo é Field; avatar entra por composição; ComboboxLabel rotula grupos da lista",
+      "status": "aberta"
+    },
+    {
+      "where": "lg · tamanho do texto",
+      "figma": "text/sm",
+      "code": "text-base md:text-sm (16px abaixo do breakpoint md), como no Input",
+      "status": "aberta"
+    }
+  ]
+}
