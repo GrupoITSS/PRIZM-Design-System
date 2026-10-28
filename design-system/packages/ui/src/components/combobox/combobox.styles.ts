@@ -13,9 +13,17 @@ export const comboboxItemStyles =
 
 // Foco, erro e disabled seguem o InputGroup (decisões de 27/10/2026): anel de 2px
 // em `ring` com a borda transparente; no erro a borda fica `destructive` e o anel
-// continua `ring`; sem ring-3 nem ring/50 (mediam 1,66:1). Altura vem do size.
+// continua `ring`; sem ring-3 nem ring/50 (mediam 1,66:1). Altura e texto vêm do size.
+// Fundo, raio e sombra iguais ao Default (InputGroup), decisão de 28/10/2026.
 export const comboboxChipsStyles =
-  "flex flex-wrap items-center gap-1 rounded-lg border bg-transparent bg-clip-padding px-2.5 py-1 text-sm transition-[color,box-shadow,border-color,background-color] border-input has-aria-invalid:border-destructive has-data-[slot=combobox-chip]:px-1";
+  "flex flex-wrap items-center gap-1 rounded-md border bg-input-background bg-clip-padding shadow-xs px-2.5 py-1 transition-[color,box-shadow,border-color,background-color] border-input has-aria-invalid:border-destructive has-data-[slot=combobox-chip]:px-1";
+
+/** Altura mínima e texto da caixa do Multiple por tamanho, como o Input. */
+export const comboboxChipsSizeStyles = {
+  sm: "min-h-control-height-sm text-xs",
+  md: "min-h-control-height-md text-sm",
+  lg: "min-h-control-height-lg text-base md:text-sm",
+} as const;
 
 export const comboboxChipStyles =
   "flex h-[calc(--spacing(5.25))] w-fit items-center justify-center gap-1 whitespace-nowrap rounded-sm bg-muted px-1.5 text-xs font-medium text-foreground has-data-[slot=combobox-chip-remove]:pr-0 has-disabled:pointer-events-none has-disabled:cursor-not-allowed";
