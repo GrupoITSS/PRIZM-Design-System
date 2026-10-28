@@ -5,10 +5,18 @@ import { useState } from "react";
 import { InputOTP } from "@grupoitss/prizm-ui/input-otp";
 import { EstadosGrade } from "./_estados";
 
+// Traceability: the component sets in [PRIZM] Componentes, the documentation
+// frame and the CMS article. The token map lives next to the component
+// (input-otp.tokens.json) and is checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=81-141";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25499-4421";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=0eb2c671-f414-47e4-8a2d-890ab75a1720&version=v1";
+
 const meta: Meta<typeof InputOTP> = {
   title: "Primários/InputOTP",
   component: InputOTP,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
@@ -19,6 +27,7 @@ const meta: Meta<typeof InputOTP> = {
           "Suporta separador (incl. `separatorEvery` para grupos), pattern, erro com `aria-invalid` e tamanhos `sm`, `md` e `lg`.\n\n" +
           "O campo precisa de nome: ligue um `FieldLabel` pelo `id` ou passe `aria-label` (não os dois: o `aria-label` substitui o rótulo visível). " +
           "Os slots são só visuais; o valor, o nome e o estado ficam no input.\n\n" +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).\n\n` +
           "**Documentação base:** " +
           '<a href="https://ui.shadcn.com/docs/components/input-otp" target="_blank" rel="noopener noreferrer">Input OTP — shadcn/ui</a>',
       },

@@ -1,0 +1,104 @@
+{
+  "component": "InputOTP",
+  "description": "Mapa de tokens do InputOTP: o que cada estado do slot, o contêiner e o separador usam do [PRIZM] Design Tokens_Core. Extraído das ligações dos component sets no Figma em 28/10/2026 (InputOTP, 9 variantes, e InputOTP / Slot, 18 variantes) e conferido contra input-otp.styles.ts pelo teste input-otp.tokens.test.ts. Nomes no formato do Figma (color/input); no código viram classes Tailwind (border-input). O InputOTP não tem variantes de cor: a Variant do Figma é o separador (separator e separatorEvery).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=81-141",
+    "figmaSlot": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=81-122",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25499-4421",
+    "code": "design-system/packages/ui/src/components/input-otp/input-otp.tsx",
+    "story": "design-system/apps/docs/stories/input-otp.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=0eb2c671-f414-47e4-8a2d-890ab75a1720&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/136"
+    ],
+    "jira": [
+      "GIES-1725"
+    ]
+  },
+  "variants": {
+    "Digits Only": "sem separator",
+    "Simple": "separator separatorEvery={3}",
+    "With Separator": "separator separatorEvery={2}"
+  },
+  "states": {
+    "default": {
+      "background": "color/input-background",
+      "text": "color/foreground",
+      "placeholder": "color/muted-foreground",
+      "border": "color/input",
+      "borderWidth": "border-width/1"
+    },
+    "focus": {
+      "border": "color/transparent",
+      "ring": "color/ring",
+      "ringWidth": 2,
+      "note": "No slot ativo (slot.isActive), não em :focus-visible: o foco é do input invisível (D4, 27/10/2026)."
+    },
+    "error": {
+      "border": "color/destructive",
+      "attribute": "aria-invalid",
+      "note": "A borda de erro fica no contêiner; o anel ring-destructive saiu (D3)."
+    },
+    "errorFocus": {
+      "border": "color/destructive",
+      "ring": "color/ring",
+      "ringWidth": 2
+    },
+    "disabled": {
+      "background": "color/input-background",
+      "border": "color/input",
+      "opacity": "opacity/50",
+      "attribute": "disabled",
+      "note": "Opacidade 50% no contêiner, sobre a aparência do default (família do campo)."
+    }
+  },
+  "parts": {
+    "container": {
+      "background": "color/input-background",
+      "border": "color/input",
+      "borderWidth": "border-width/1",
+      "radius": "radius/md",
+      "shadow": "shadow/xs",
+      "note": "No código, o grupo de slots; no Figma, a variante Digits Only ou cada Group das outras."
+    },
+    "separator": {
+      "icon": "Minus",
+      "size": "width/4",
+      "color": "color/muted-foreground",
+      "gap": "spacing/1-5",
+      "note": "separator={true} (D5); cor da pendência 3 de 27/10/2026. No Figma, o ícone tem 16px sem ligação de largura."
+    },
+    "caret": {
+      "color": "color/foreground",
+      "note": "Cursor piscando do slot ativo, só no código."
+    }
+  },
+  "sizes": {
+    "sm": {
+      "size": "control-height/sm",
+      "fontSize": "text/xs"
+    },
+    "md": {
+      "size": "control-height/md",
+      "fontSize": "text/sm"
+    },
+    "lg": {
+      "size": "control-height/lg",
+      "fontSize": "text/sm"
+    }
+  },
+  "divergences": [
+    {
+      "where": "lg · tamanho do texto",
+      "figma": "text/sm",
+      "code": "text-base md:text-sm (16px abaixo do breakpoint md), como no Input",
+      "status": "aberta"
+    },
+    {
+      "where": "cursor do slot ativo",
+      "figma": "não desenhado",
+      "code": "h-4 w-px bg-foreground com animate-caret-blink",
+      "status": "aberta"
+    }
+  ]
+}
