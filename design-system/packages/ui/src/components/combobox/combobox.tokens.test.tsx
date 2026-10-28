@@ -50,12 +50,11 @@ describe("Combobox × mapa de tokens (combobox.tokens.json)", () => {
     expect(input).toContain(`placeholder:text-${color(s.placeholder)}`);
   });
 
-  it("hover e pressed: só no Figma; o código não muda o fundo", () => {
-    expect(map.states.hover.background).toBe("color/muted");
-    expect(map.states.pressed.background).toBe(map.states.default.background);
+  it("sem hover: o fundo do mapa não muda, e o código não tem classe de hover", () => {
+    expect(map.states.hover.background).toBe(map.states.default.background);
     expect(groupBase.some((c) => c.startsWith("hover:"))).toBe(false);
     expect(split(comboboxChipsStyles).some((c) => c.startsWith("hover:"))).toBe(false);
-    expect(map.divergences.some((d) => d.where.includes("Hover"))).toBe(true);
+    expect(map.divergences.some((d) => d.where.includes("Hover"))).toBe(false);
   });
 
   it("foco: anel e borda do mapa, sem offset e sem translucidez", () => {

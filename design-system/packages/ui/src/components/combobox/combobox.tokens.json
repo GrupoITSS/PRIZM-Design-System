@@ -1,6 +1,6 @@
 {
   "component": "Combobox",
-  "description": "Mapa de tokens do Combobox: o que cada estado do campo, as peças e os tamanhos usam do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 27/10/2026 (Combobox, 42 variantes) e conferido contra combobox.styles.ts, o InputGroup do Default e o Input interno pelo teste combobox.tokens.test.tsx. Nomes no formato do Figma (color/input); no código viram classes Tailwind (border-input). O Combobox não tem variantes de cor: o Type do Figma (Default, Multiple) é a seleção simples ou com chips.",
+  "description": "Mapa de tokens do Combobox: o que cada estado do campo, as peças e os tamanhos usam do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 27/10/2026 (Combobox, 42 variantes; 30 desde 28/10, sem Hover e Pressed) e conferido contra combobox.styles.ts, o InputGroup do Default e o Input interno pelo teste combobox.tokens.test.tsx. Nomes no formato do Figma (color/input); no código viram classes Tailwind (border-input). O Combobox não tem variantes de cor: o Type do Figma (Default, Multiple) é a seleção simples ou com chips.",
   "sources": {
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=430-4114",
     "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25477-5552",
@@ -8,7 +8,8 @@
     "story": "design-system/apps/docs/stories/combobox.stories.tsx",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=98920a34-adcb-4477-b99c-a51817140dc6&version=v1",
     "pullRequests": [
-      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/134"
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/134",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/140"
     ],
     "jira": [
       "GIES-1725"
@@ -51,14 +52,8 @@
       "note": "Opacidade 50% na camada, sobre a aparência do default (PR #134)."
     },
     "hover": {
-      "background": "color/muted",
-      "border": "color/input",
-      "note": "Só no Figma. No código o campo não muda no hover, como Input, Select, Textarea e DatePicker."
-    },
-    "pressed": {
       "background": "color/input-background",
-      "border": "color/input",
-      "note": "Só no Figma; visual igual ao Default."
+      "note": "Sem hover no campo, como Input, Select, Textarea e DatePicker. Hover e Pressed saíram do Figma em 28/10/2026."
     }
   },
   "parts": {
@@ -136,12 +131,6 @@
     }
   },
   "divergences": [
-    {
-      "where": "Hover e Pressed",
-      "figma": "Hover com fundo color/muted; Pressed igual ao Default",
-      "code": "o campo não muda no hover nem no pressed, como o resto da família",
-      "status": "aberta"
-    },
     {
       "where": "Show Avatar e Show Group Label",
       "figma": "booleanas do set; Group Label empilhado no campo; Avatar Size=5 à esquerda",
