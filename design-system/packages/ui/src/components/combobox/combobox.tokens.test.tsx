@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { Combobox } from "./combobox";
 import {
   comboboxChipStyles,
+  comboboxChipsSizeStyles,
   comboboxChipsStyles,
   comboboxContentStyles,
   comboboxItemStyles,
@@ -157,7 +158,29 @@ describe("Combobox × mapa de tokens (combobox.tokens.json)", () => {
       );
       const chips = r.container.querySelector("[data-slot=combobox-chips]")!;
       expect(chips).toHaveClass(`min-h-${scale(tokens.height)}`);
+      // lg: text-base abaixo do breakpoint md, como o Default (divergência aberta).
+      expect(chips).toHaveClass(
+        size === "lg" ? `md:text-${suffix(tokens.fontSize)}` : `text-${suffix(tokens.fontSize)}`,
+      );
       cleanup();
     });
   }
+
+  // A caixa do Multiple segue o Default (InputGroup): mesmo fundo, borda, raio e sombra (28/10/2026).
+  it("Multiple: fundo, borda, raio e sombra do mapa estão na caixa, como no Default", () => {
+    const classes = split(comboboxChipsStyles);
+    const s = map.states.default;
+    expect(classes).toEqual(
+      expect.arrayContaining([
+        `bg-${color(s.background)}`,
+        `border-${color(s.border)}`,
+        scale(s.shadow),
+        `rounded-${suffix(map.sizes.md.radius)}`,
+      ]),
+    );
+    expect(classes).not.toContain("bg-transparent");
+    // O texto vem de comboboxChipsSizeStyles, não da base.
+    expect(classes.some((c) => /^text-(xs|sm|base)$/.test(c))).toBe(false);
+    expect(Object.keys(comboboxChipsSizeStyles).sort()).toEqual(Object.keys(map.sizes).sort());
+  });
 });

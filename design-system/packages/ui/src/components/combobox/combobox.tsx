@@ -7,6 +7,7 @@ import { Check as CheckIcon, ChevronDown as ChevronDownIcon, X as XIcon } from "
 import * as React from "react";
 import {
   comboboxChipStyles,
+  comboboxChipsSizeStyles,
   comboboxChipsStyles,
   comboboxContentStyles,
   comboboxItemStyles,
@@ -351,12 +352,6 @@ function ComboboxSeparator({ className, ...props }: ComboboxPrimitive.Separator.
   );
 }
 
-const chipsMinHeight: Record<ComboboxSize, string> = {
-  sm: "min-h-control-height-sm",
-  md: "min-h-control-height-md",
-  lg: "min-h-control-height-lg",
-};
-
 function ComboboxChips({
   className,
   disabled,
@@ -380,7 +375,7 @@ function ComboboxChips({
       data-invalid={isInvalid ? "true" : undefined}
       className={cn(
         comboboxChipsStyles,
-        chipsMinHeight[size],
+        comboboxChipsSizeStyles[size],
         disabled && "cursor-not-allowed opacity-50",
         isFocused && !isInvalid && "border-transparent ring-2 ring-ring",
         isFocused && isInvalid && "ring-2 ring-ring",
