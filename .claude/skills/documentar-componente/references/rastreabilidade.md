@@ -45,7 +45,10 @@ Ao extrair, procure nomes fora do padrão do Core (`base/*`, `custom/*`, `tailwi
 - o mapa cobre todas as variantes e tamanhos do código (lista explícita no teste);
 - fundo, texto e borda de cada variante estão nas classes (`color/primary` → `bg-primary`);
 - anel e espaço de foco (`focus-visible:ring-*`, `ring-offset-*`);
-- altura por tamanho (`control-height/md` → `h-control-height-md` ou `size-…`).
+- altura por tamanho (`control-height/md` → `h-control-height-md` ou `size-…`);
+- **todos os Types e as peças que têm caixa própria**, não só o padrão. No Combobox (27/10), o teste conferia o Default (InputGroup) e não a caixa do Multiple, que estava com `bg-transparent`, `rounded-lg`, sem sombra e com texto fixo, ao contrário do mapa; a diferença só apareceu na revisão (PR #140).
+
+Os tokens das peças (lista, item, busca) saem das ligações dessas peças no Figma, depois de religadas, e não do código: no Combobox o mapa foi montado do código e dizia que tudo estava no Core enquanto a lista seguia no kit.
 
 Componente sem `cva` (classes fixas): teste as classes do elemento renderizado com `@testing-library/react`. Rode com Node 24 (ver `codigo.md`). O teste falhar é informação: ou o mapa está errado, ou Figma e código divergem (registre em `divergences`, não ajuste o teste para passar).
 

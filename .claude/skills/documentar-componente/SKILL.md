@@ -95,7 +95,7 @@ Escreva o artigo no workspace `prizm_design_system` pelo MCP `prizm-cms`, na pas
 Ligue as pontas, para que cada uma leve às outras e um teste avise quando Figma e código se separarem. Modelo: o Button (PR #100, já na main). Passo a passo em `references/rastreabilidade.md`.
 
 1. **Mapa de tokens** em `packages/ui/src/components/<nome>/<nome>.tokens.json`, extraído das ligações do component set (`scripts/extrair-mapa-tokens.js`), nunca digitado: `sources`, `variants`, `states`, `sizes` e `divergences`.
-2. **Teste** `<nome>.tokens.test.ts` que confere o mapa contra as classes do `cva`.
+2. **Teste** `<nome>.tokens.test.ts` que confere o mapa contra as classes do `cva`, em todos os Types e peças com caixa própria (ver `references/rastreabilidade.md`).
 3. **Story** com os links do component set, do frame de doc e do artigo em `parameters.docs.description.component`. Confira o link antigo de cada story. Complete os controles que o inventário apontou como incompletos (valor do `cva` fora do `options`, prop sem controle).
 4. **Artigo**: seção final "Rastreabilidade" (tabela Ponta | Onde | Leva a, nota sobre o Code Connect, divergências abertas).
 5. **Tag `documentado`** na story: acrescente `"documentado"` ao `tags` do `meta` (`tags: ["autodocs", "documentado"]`). É o que separa, no filtro de tags do Storybook, o que já passou por este fluxo do que ainda falta revisar. O título da story fica em `Primários/<Nome>`.
@@ -104,7 +104,7 @@ Os arquivos de código vão em worktree e PR, como na etapa 5. Divergências que
 
 ### 8. Figma → link
 
-**⏸ Com o ok**, atualize `description` e `documentationLinks` do component set apontando para o artigo (ver `references/figma.md`).
+**⏸ Com o ok**, atualize `description` e `documentationLinks` do component set (e dos outros sets da página) apontando para o artigo, acrescente 🟣 ao nome da página e confira o selo "Legado do kit" no frame de exemplo do kit (ver `references/figma.md`).
 
 Ao terminar, resuma: o que mudou no Figma (ids), PRs abertos, artigo (código e id, rascunho), divergências do mapa, pendências que ficaram e o que depende do dono do DS (publicar o Core, mergear, publicar o artigo, ajustes à mão no Figma).
 
@@ -136,11 +136,11 @@ Cada uma custou horas no piloto. Leia antes da etapa 2.
 
 **Na extração do mapa, a opacidade lida pelo plugin não vale.** Ele leu 100% em hovers que o render mostra a 80%. A opacidade de hover vem da regra conferida pelo render, não da leitura.
 
-**Lint e `tsc` do app `docs` dão erros de tipo locais**, porque `@grupoitss/prizm-ui` não está compilado. Antes de concluir que a mudança quebrou algo, rode o mesmo comando no arquivo da main e compare.
+**Lint e `tsc` do app `docs` dão erros de tipo locais**, porque `@grupoitss/prizm-ui` não está compilado. O jeito confiável é compilar antes (`pnpm --filter @grupoitss/prizm-tokens build` e `pnpm --filter @grupoitss/prizm-ui build`) e rodar de novo: com o pacote compilado, a story tem de passar limpa (InputOTP, 27/10). Comparar com o arquivo da main sem compilar engana: uma cópia com outro nome pode sair do projeto do ESLint e não dar erro nenhum.
 
 **"No changes" ao publicar o Core não quer dizer que a mudança não subiu (26/10, accent do escuro).** O botão Publish fica desabilitado também quando a biblioteca já foi publicada com a mudança, inclusive quando a variável alterada é oculta da publicação (`palette/*`). Antes de concluir, compare o id da variável ligada num nó (`VariableID:<key>/<versão>`) com o de `figma.variables.importVariableByKeyAsync(key)`: se forem diferentes e a versão nova tiver o valor novo, o Core está publicado e falta só o `upgrade-core.js`.
 
-**Clonar o frame de doc de um irmão da família economiza a etapa 3 (26/10, Textarea a partir do Select).** Clone o frame, troque as instâncias com `swapComponent` (mapeando State e Size) e reescreva os textos seção por seção. Três cuidados: (1) os `hyperlink` do cabeçalho (código, Storybook) vêm junto e continuam apontando para o componente de origem: troque-os; (2) a seção de acessibilidade traz os números do outro componente: esvazie até a etapa 4; (3) procure sobras com `findAll` de TEXT pelo nome do componente de origem antes de mostrar o frame.
+**Clonar o frame de doc de um irmão da família economiza a etapa 3 (26/10, Textarea a partir do Select).** Clone o frame, troque as instâncias com `swapComponent` (mapeando State e Size) e reescreva os textos seção por seção. Três cuidados: (1) os `hyperlink` do cabeçalho (código, Storybook) vêm junto e continuam apontando para o componente de origem: troque-os; (2) a seção de acessibilidade traz os números do outro componente: esvazie até a etapa 4; (3) procure sobras com `findAll` de TEXT pelo nome do componente de origem antes de mostrar o frame; (4) cartões com número fixo de linhas (decisões, pendências com opções A, B e C) trazem as linhas do outro componente: apague as que sobram em vez de deixar texto sem sentido (no DatePicker, a opção C da pendência 5 apareceu repetida nas pendências 1 a 4).
 
 **Instância oculta por propriedade booleana não mostra os filhos ao plugin.** Num botão ligado a `Expandable` (padrão `false`), `children` da instância do ícone vem vazio, e a leitura de cor ou ligação falha. Leia da camada que não é instância, ou ligue a propriedade numa instância temporária.
 
@@ -149,6 +149,14 @@ Cada uma custou horas no piloto. Leia antes da etapa 2.
 **No jsdom, o foco não volta ao gatilho do Dialog do Radix ao fechar; no navegador, volta.** Antes de registrar falha de 2.4.3, confira no Storybook publicado (`iframe.html?id=<story>`) pelo navegador embutido: abra, feche com Esc e leia `document.activeElement`.
 
 **O Tokens Studio do Core sincroniza com a branch `design`, não com a main.** O workflow `design-acompanha-main.yml` (PR #129) avança a `design` a cada push na main; se ela tiver um sync esperando a PR, não mexe. Com sync no GitHub, o plugin não guarda os tokens no arquivo (`values` = `{}` em `sharedPluginData('tokens')`): para conferir o que ele carregou, olhe na interface do plugin, não no arquivo.
+
+**Skill usada fora do Claude Code (Combobox no Cursor, 27/10).** O código, os testes e o artigo saíram no padrão; o Figma não: subcomponentes no kit, variantes empilhadas, Hover e Pressed mantidos e o mapa afirmando que tudo estava no Core. As regras do Figma estão em `references/figma.md`, não no código, e o agente não as lê se o prompt não mandar. Quem roda a skill em outra ferramenta abre `references/figma.md` antes da etapa 2 e confere a página pelo render no fim.
+
+**`editComponentProperty({ defaultValue })` pode não gravar.** Em 28/10, o texto padrão do Combobox apareceu trocado na mesma chamada e voltou ao valor antigo na chamada seguinte. Releia numa chamada nova (`set.componentPropertyDefinitions` e os textos das variantes) antes de dizer que mudou.
+
+**Artigo editado por outra pessoa ou sessão.** `update_article_content` com `expectedLastEditedAt` recusa a escrita quando o artigo mudou depois da sua leitura (28/10, Combobox). Leia de novo com `fetch`, mescle as mudanças e só então escreva; nunca reescreva por cima com o texto antigo.
+
+**Foco que vem de estado do componente não é forçado pelo `storybook-addon-pseudo-states`.** No InputOTP (slot ativo) e no Combobox (`isFocused` na caixa dos chips), o anel vem do JavaScript, não de `:focus-visible`. Na story Estados, documente que esses estados aparecem ao clicar; no artigo, descreva como "foco no campo", que aparece também no clique.
 
 Outras, menores:
 
