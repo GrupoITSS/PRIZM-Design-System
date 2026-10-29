@@ -1,0 +1,61 @@
+{
+  "component": "Empty",
+  "description": "Mapa de tokens do Empty: o que cada aparência e parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações dos sets Empty e Empty / Media no Figma em 29/10/2026 e conferido contra empty.styles.ts pelo teste empty.tokens.test.ts. Nomes no formato do Figma (color/muted); no código viram classes Tailwind (bg-muted).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25616-2715",
+    "figmaSupport": {
+      "media": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18672-1781",
+      "content": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18672-2914"
+    },
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25617-2403",
+    "code": "design-system/packages/ui/src/components/empty/empty.tsx",
+    "story": "design-system/apps/docs/stories/empty.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=18074c86-a32b-40df-9974-b1dc0357a22f&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/143"],
+    "jira": ["GIES-1725"]
+  },
+  "appearances": {
+    "dashed": {
+      "border": "color/border",
+      "borderStyle": "dashed",
+      "borderWidth": "border-width/1",
+      "radius": "radius/lg",
+      "padding": "spacing/12",
+      "paddingMobile": "spacing/6",
+      "headerMaxWidth": "max-width/sm",
+      "mediaIcon": "color/foreground"
+    },
+    "plain": {
+      "border": null,
+      "padding": null,
+      "headerMaxWidth": null,
+      "mediaIcon": "color/muted-foreground"
+    }
+  },
+  "parts": {
+    "media": {
+      "icon": { "size": "width/10", "radius": "radius/lg", "background": "color/muted", "iconSize": 24 },
+      "default": { "background": null, "note": "Espaço livre: avatar, grupo de avatares ou ilustração." }
+    },
+    "title": { "color": "color/foreground", "fontSize": "text/lg/font-size", "fontWeight": "font-weight/medium" },
+    "description": {
+      "color": "color/muted-foreground",
+      "fontSize": "text/sm/font-size",
+      "link": { "underline": true, "hover": { "rule": "sublinhado de 2px, como o variant link do Button", "underlineThickness": 2 } }
+    },
+    "content": { "maxWidth": "max-width/sm", "gap": "spacing/4" }
+  },
+  "layout": { "gap": "spacing/6", "titleGap": "spacing/2" },
+  "role": "status",
+  "states": {
+    "hover": null,
+    "focus": null,
+    "note": "O Empty não é interativo. As ações seguem o Button e o InputGroup."
+  },
+  "divergences": [
+    { "where": "espaço interno (dashed)", "figma": "spacing/12 (48px), o desktop", "code": "p-6 md:p-12 (24px abaixo de md)", "status": "representação" },
+    { "where": "mídia → título", "figma": "itemSpacing spacing/4 (16px)", "code": "gap-2 no cabeçalho + mb-2 na mídia (16px)", "status": "representação" },
+    { "where": "mídia padrão", "figma": "a instância do Empty abre em icon", "code": "mediaVariant padrão é default", "status": "representação" },
+    { "where": "descrição", "figma": "altura de linha sem ligação a variável", "code": "text-sm/relaxed", "status": "aberta" }
+  ]
+}

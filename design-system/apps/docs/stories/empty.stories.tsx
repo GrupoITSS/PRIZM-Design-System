@@ -13,17 +13,26 @@ import {
 } from "@grupoitss/prizm-ui/icons";
 import { Empty } from "@grupoitss/prizm-ui/empty";
 
+// Traceability: the component set in [PRIZM] Componentes, the documentation frame and the
+// CMS article. The token map lives next to the component (empty.tokens.json) and is
+// checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25616-2715";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25617-2403";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=18074c86-a32b-40df-9974-b1dc0357a22f&version=v1";
+
 const meta: Meta<typeof Empty> = {
   title: "Primários/Empty",
   component: Empty,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
-          "empty state (`title`, `description`, `icon`, `content`).\n\n" +
+          "Estado vazio (`title`, `description`, `icon`, `content`). `appearance`: `dashed` (padrão) ou `plain` (dentro de tabela, lista ou card). Anuncia com `role=\"status\"`.\n\n" +
           '**Documentação:** <a href="https://ui.shadcn.com/docs/components/empty" target="_blank" rel="noopener noreferrer">Empty — shadcn/ui</a>\n\n' +
-          "Padrão de listagem do Cockpit (fallback centralizado + CTA): ver a story **Cockpit List Fallback**.",
+          "Padrão de listagem do Cockpit (fallback centralizado + CTA): ver a story **Cockpit List Fallback**." +
+          `\n\n[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
