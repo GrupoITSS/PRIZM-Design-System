@@ -1,0 +1,40 @@
+{
+  "component": "Alert",
+  "description": "Mapa de tokens do Alert: o que cada variante usa do [PRIZM] Design Tokens_Core. Extraído das ligações do component set Alert no Figma em 29/10/2026 e conferido contra alert.styles.ts pelo teste alert.tokens.test.ts. Nomes no formato do Figma (color/destructive-weak); no código viram classes Tailwind (bg-destructive-weak). Tons no padrão de aviso: fundo -weak, borda e ícone no tom, título e descrição -strong.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26-160",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25605-2102",
+    "code": "design-system/packages/ui/src/components/alert/alert.tsx",
+    "story": "design-system/apps/docs/stories/alert.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=c94fab5a-c506-4789-ac71-5dfda227f992&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/143"],
+    "jira": ["GIES-1725"]
+  },
+  "variants": {
+    "default": { "background": "color/card", "border": "color/border", "icon": "color/foreground", "title": "color/foreground", "description": "color/muted-foreground", "role": "status" },
+    "destructive": { "background": "color/destructive-weak", "border": "color/destructive", "icon": "color/destructive", "title": "color/destructive-strong", "description": "color/destructive-strong", "role": "alert" },
+    "warning": { "background": "color/warning-weak", "border": "color/warning", "icon": "color/warning", "title": "color/warning-strong", "description": "color/warning-strong", "role": "alert" },
+    "success": { "background": "color/success-weak", "border": "color/success", "icon": "color/success", "title": "color/success-strong", "description": "color/success-strong", "role": "status" },
+    "info": { "background": "color/info-weak", "border": "color/info", "icon": "color/info", "title": "color/info-strong", "description": "color/info-strong", "role": "status" }
+  },
+  "layout": {
+    "paddingX": "spacing/4",
+    "paddingY": "spacing/3",
+    "iconGap": "spacing/3",
+    "titleGap": "spacing/1",
+    "iconSize": "width/4",
+    "radius": "radius/lg",
+    "borderWidth": "border-width/1",
+    "title": { "fontSize": "text/sm/font-size", "lineHeight": "text/sm/line-height", "fontWeight": "font-weight/medium" },
+    "description": { "fontSize": "text/sm/font-size", "fontWeight": "font-weight/normal" }
+  },
+  "states": {
+    "hover": null,
+    "focus": null,
+    "note": "O Alert não é interativo. Uma ação dentro dele (composição) segue os estados do Button."
+  },
+  "divergences": [
+    { "where": "ícone", "figma": "Icon / CircleCheck como padrão em todas as variantes (troca de instância)", "code": "sem ícone padrão: quem usa passa icon", "status": "representação" },
+    { "where": "ícone ↔ texto", "figma": "itemSpacing spacing/3 entre o ícone e o texto", "code": "ícone absoluto e [&>svg~*]:pl-7 (16 + 12px)", "status": "representação" }
+  ]
+}
