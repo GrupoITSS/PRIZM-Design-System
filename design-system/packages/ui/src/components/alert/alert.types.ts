@@ -22,6 +22,7 @@ export interface AlertProps
   icon?: React.ReactNode;
 }
 
-export type AlertTitleProps = React.HTMLAttributes<HTMLHeadingElement>;
+/** Title of the alert. Rendered as a `div`, so it does not enter the page heading outline. */
+export type AlertTitleProps = React.HTMLAttributes<HTMLDivElement>;
 
 export type AlertDescriptionProps = React.HTMLAttributes<HTMLDivElement>;

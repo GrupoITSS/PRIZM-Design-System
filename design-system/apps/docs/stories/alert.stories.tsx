@@ -11,7 +11,7 @@ const meta: Meta<typeof Alert> = {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Alert do design system PRIZM. Uso recomendado: `<Alert title={} description={} icon={} variant={} />`. Título é obrigatório. Baseado em shadcn/ui.\n\n**Documentação:** <a href="https://ui.shadcn.com/docs/components/alert" target="_blank" rel="noopener noreferrer">Alert — shadcn/ui</a>',
+          'Alert do design system PRIZM. Uso recomendado: `<Alert title={} description={} icon={} variant={} />`. Título é obrigatório. Baseado em shadcn/ui.\n\n`destructive` e `warning` usam `role="alert"` (interrompem o leitor de tela); `default`, `success` e `info` usam `role="status"`.\n\n**Documentação:** <a href="https://ui.shadcn.com/docs/components/alert" target="_blank" rel="noopener noreferrer">Alert — shadcn/ui</a>',
       },
     },
   },
@@ -23,7 +23,7 @@ const meta: Meta<typeof Alert> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "destructive", "warning", "success"],
+      options: ["default", "destructive", "warning", "success", "info"],
     },
     title: { control: "text" },
     description: { control: "text" },
@@ -69,6 +69,17 @@ export const Success: Story = {
     icon: <CircleCheckBig className="size-4" />,
     title: "Success",
     description: "Your changes have been saved successfully.",
+  },
+  render: (args) => <Alert {...args} />,
+};
+
+export const InfoVariant: Story = {
+  name: "Info",
+  args: {
+    variant: "info",
+    icon: <Info className="size-4" />,
+    title: "New version",
+    description: "A new version is available. Reload to update.",
   },
   render: (args) => <Alert {...args} />,
 };

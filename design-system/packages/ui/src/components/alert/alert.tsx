@@ -1,10 +1,13 @@
 import { cn } from "../../lib/cn";
 import * as React from "react";
-import { alertDescriptionStyles, alertTitleStyles, alertVariants } from "./alert.styles";
+import { alertDescriptionStyles, alertRoles, alertTitleStyles, alertVariants } from "./alert.styles";
 import type { AlertDescriptionProps, AlertProps, AlertTitleProps } from "./alert.types";
 
 /**
- * Alert — container for important messages (variants: default/primary, destructive, warning, success).
+ * Alert — message that stays on the page (variants: default, destructive, warning, success, info).
+ *
+ * `destructive` and `warning` render with `role="alert"` (interrupts the screen reader);
+ * `default`, `success` and `info` with `role="status"` (polite). Pass `role` to override.
  *
  * **Simplified API:** Pass `title`, `description`, `icon` as props (e.g. `<Alert variant="success" title="Saved" description="Changes saved." />`).
  * **Composition API:** Pass AlertTitle and AlertDescription as children for advanced use.
@@ -27,7 +30,7 @@ const Alert = ({
   return (
     <div
       ref={ref}
-      role="alert"
+      role={alertRoles[variant ?? "default"]}
       data-slot="alert"
       data-variant={variant}
       className={cn(alertVariants({ variant }), className)}
@@ -51,8 +54,8 @@ const AlertTitle = ({
   className,
   ref,
   ...props
-}: AlertTitleProps & { ref?: React.Ref<HTMLParagraphElement> }) => (
-  <h5 ref={ref} data-slot="alert-title" className={cn(alertTitleStyles, className)} {...props} />
+}: AlertTitleProps & { ref?: React.Ref<HTMLDivElement> }) => (
+  <div ref={ref} data-slot="alert-title" className={cn(alertTitleStyles, className)} {...props} />
 );
 AlertTitle.displayName = "AlertTitle";
 
