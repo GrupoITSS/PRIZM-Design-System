@@ -61,4 +61,22 @@ describe("Empty (PRIZM)", () => {
     expect(root).not.toHaveClass("border-dashed");
     expect(document.querySelector('[data-slot="empty-description"]')).toHaveClass("max-w-xl");
   });
+
+  it("anuncia o estado vazio com role status (4.1.3)", () => {
+    render(<Empty appearance="plain" title="No results" description="Try another term." />);
+    expect(screen.getByRole("status")).toHaveTextContent("No results");
+  });
+
+  it("role pode ser sobrescrito", () => {
+    render(<Empty title="Title" role="region" aria-label="Projects" />);
+    expect(screen.getByRole("region", { name: "Projects" })).toBeInTheDocument();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("link da descrição segue o Link do Button: sublinhado, 2px no hover, sem trocar a cor", () => {
+    render(<Empty title="Title" description={<a href="#docs">Docs</a>} />);
+    const desc = document.querySelector('[data-slot="empty-description"]');
+    expect(desc).toHaveClass("[&>a]:underline", "[&>a:hover]:decoration-2");
+    expect(desc?.className).not.toMatch(/hover\]:text-/);
+  });
 });

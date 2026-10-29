@@ -19,6 +19,9 @@ import type { EmptyProps } from "./empty.types";
  *
  * **Composition (escape hatch):** Omit `title` and pass `children` for full custom layout.
  *
+ * Renders with `role="status"`, so a search with no results or an empty table is announced
+ * by screen readers without interrupting them. Pass `role` to override.
+ *
  * @see [Empty state patterns](https://ui.shadcn.com/docs/components/empty)
  */
 const Empty = ({
@@ -39,6 +42,7 @@ const Empty = ({
   return (
     <div
       ref={ref}
+      role="status"
       data-slot="empty"
       data-appearance={appearance}
       className={cn(emptyRootStyles, isPlain && emptyPlainStyles.root, className)}

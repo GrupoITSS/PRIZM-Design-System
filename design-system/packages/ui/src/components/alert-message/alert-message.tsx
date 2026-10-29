@@ -3,6 +3,11 @@ import { CircleAlert, TriangleAlert, CircleCheckBig } from "../icons";
 import type { AlertMessageProps } from "./alert-message.types";
 
 /**
+ * @deprecated Use `Alert` (`@grupoitss/prizm-ui/alert`), decisão de 29/10/2026. O Alert já usa
+ * o mesmo padrão de cores (fundo `-weak`, texto `-strong`). Migração do `kind` para o `variant`:
+ * `info` → `info`, `warning` → `warning`, `error` → `destructive`, `success` → `success`.
+ * `message` vira `title`; `items`, uma lista em `description`.
+ *
  * Alerta **fixo / inline** (Figma: Callouts abaixo de campos).
  * Fundo claro, borda suave — ex.: domínio em "Nova organização" (node 31187:16026).
  *

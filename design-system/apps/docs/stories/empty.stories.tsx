@@ -33,6 +33,7 @@ const meta: Meta<typeof Empty> = {
     mediaVariant: "icon",
   },
   argTypes: {
+    appearance: { control: "select", options: ["dashed", "plain"] },
     mediaVariant: {
       control: "select",
       options: ["default", "icon"],
