@@ -132,6 +132,8 @@ function ComboboxRoot<T = string>({
   return (
     <ComboboxPrimitive.Root
       items={items}
+      value={value}
+      onValueChange={onValueChange}
       itemToStringValue={itemToStringValue}
       disabled={disabled}
       {...restRoot}
