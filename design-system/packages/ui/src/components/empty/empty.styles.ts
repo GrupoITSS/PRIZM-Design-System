@@ -42,8 +42,12 @@ export const emptyPlainStyles = {
 
 export const emptyTitleStyles = "text-lg font-medium tracking-tight";
 
+/**
+ * Link in the description follows the Button `link` rule: always underlined,
+ * 2px underline on hover, no color change (decision of 29/10/2026).
+ */
 export const emptyDescriptionStyles =
-  "text-muted-foreground [&>a:hover]:text-primary text-sm/relaxed [&>a]:underline [&>a]:underline-offset-4";
+  "text-muted-foreground text-sm/relaxed [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:decoration-2";
 
 export const emptyContentStyles =
   "flex w-full min-w-0 max-w-sm flex-col items-center gap-4 text-balance text-sm";
