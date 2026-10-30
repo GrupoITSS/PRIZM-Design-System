@@ -29,7 +29,7 @@ describe("Empty (PRIZM)", () => {
     expect(screen.getByTestId("custom-child")).toHaveTextContent("Custom content");
   });
 
-  it("uses simplified layout when title is set (ignores children for layout)", () => {
+  it("com title, children entram depois do layout por props", () => {
     render(
       <Empty title="Title" description="Desc">
         <span data-testid="child">Child</span>
@@ -37,8 +37,19 @@ describe("Empty (PRIZM)", () => {
     );
     expect(screen.getByText("Title")).toBeInTheDocument();
     expect(screen.getByText("Desc")).toBeInTheDocument();
-    // Children are not rendered when using simplified API
-    expect(screen.queryByTestId("child")).not.toBeInTheDocument();
+    expect(screen.getByTestId("child")).toBeInTheDocument();
+  });
+
+  it("description sem title aparece, sem título vazio (o Figma permite)", () => {
+    render(<Empty description="As tarefas novas aparecem aqui." />);
+    expect(screen.getByText("As tarefas novas aparecem aqui.")).toBeInTheDocument();
+    expect(document.querySelector('[data-slot="empty-title"]')).not.toBeInTheDocument();
+  });
+
+  it("só content, sem cabeçalho", () => {
+    render(<Empty content={<button type="button">Criar</button>} />);
+    expect(screen.getByRole("button", { name: "Criar" })).toBeInTheDocument();
+    expect(document.querySelector('[data-slot="empty-header"]')).not.toBeInTheDocument();
   });
 
   it("has data-slot empty on root", () => {

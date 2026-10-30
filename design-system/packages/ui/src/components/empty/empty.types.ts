@@ -30,8 +30,8 @@ export interface EmptyProps
    */
   content?: React.ReactNode;
   /**
-   * Custom content. When `title` is not set, children are rendered as-is (escape hatch).
-   * When `title` is set, children are ignored in favor of the props-based layout.
+   * Custom content. Without `title`, `description`, `icon` and `content`, children are rendered
+   * as-is (escape hatch). With any of them, children are rendered after the props-based layout.
    */
   children?: React.ReactNode;
 }

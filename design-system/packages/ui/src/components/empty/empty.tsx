@@ -36,7 +36,10 @@ const Empty = ({
   ref,
   ...props
 }: EmptyProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const useSimplifiedAPI = title !== undefined;
+  // API por props quando há title, description, icon ou content (o Figma permite Empty sem
+  // título). Sem nenhum deles, só children. Na API por props, children entram no fim.
+  const useSimplifiedAPI = title != null || description != null || icon != null || content != null;
+  const hasHeader = title != null || description != null || icon != null;
   const isPlain = appearance === "plain";
 
   return (
@@ -50,6 +53,7 @@ const Empty = ({
     >
       {useSimplifiedAPI ? (
         <>
+          {hasHeader ? (
           <div
             data-slot="empty-header"
             className={cn(emptyHeaderStyles, isPlain && emptyPlainStyles.header)}
@@ -66,9 +70,11 @@ const Empty = ({
                 {icon}
               </div>
             ) : null}
-            <div data-slot="empty-title" className={emptyTitleStyles}>
-              {title}
-            </div>
+            {title != null ? (
+              <div data-slot="empty-title" className={emptyTitleStyles}>
+                {title}
+              </div>
+            ) : null}
             {description != null ? (
               <div
                 data-slot="empty-description"
@@ -78,11 +84,13 @@ const Empty = ({
               </div>
             ) : null}
           </div>
+          ) : null}
           {content != null ? (
             <div data-slot="empty-content" className={emptyContentStyles}>
               {content}
             </div>
           ) : null}
+          {children}
         </>
       ) : (
         children
