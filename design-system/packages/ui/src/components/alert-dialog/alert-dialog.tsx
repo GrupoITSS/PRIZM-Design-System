@@ -6,6 +6,7 @@ import {
   alertDialogDescriptionStyles,
   alertDialogFooterStyles,
   alertDialogHeaderStyles,
+  alertDialogMediaStyles,
   alertDialogOverlayStyles,
   alertDialogTitleStyles,
 } from "./alert-dialog.styles";
@@ -16,6 +17,7 @@ import type {
   AlertDialogDescriptionProps,
   AlertDialogFooterProps,
   AlertDialogHeaderProps,
+  AlertDialogMediaProps,
   AlertDialogProps,
   AlertDialogTitleProps,
   AlertDialogTriggerProps,
@@ -25,7 +27,9 @@ import { Button } from "../button";
 /**
  * AlertDialog (root). Modal for confirmations and important actions.
  *
- * **Simplified API:** Pass `trigger`, `title`, `description`, `cancelText`, `actionText`, `onAction` as props.
+ * **Simplified API:** Pass `trigger`, `title`, `description`, `icon`, `cancelText`, `actionText`, `onAction` as props.
+ * For an action that takes time, use the composition API with `<Button loading>` inside
+ * `AlertDialogAction` and a controlled `open`, so the dialog only closes when the action ends.
  * **Composition API:** Pass AlertDialogTrigger, AlertDialogContent, etc. as children for advanced use.
  *
  * @see [Alert Dialog — shadcn/ui (Radix)](https://ui.shadcn.com/docs/components/radix/alert-dialog)
@@ -34,6 +38,7 @@ function AlertDialogRoot({
   trigger,
   title,
   description,
+  icon,
   cancelText = "Cancelar",
   actionText = "Continuar",
   onAction,
@@ -50,6 +55,7 @@ function AlertDialogRoot({
         {Boolean(trigger) && <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>}
         <AlertDialogContent>
           <AlertDialogHeader>
+            {Boolean(icon) && <AlertDialogMedia>{icon}</AlertDialogMedia>}
             {Boolean(title) && <AlertDialogTitle>{title}</AlertDialogTitle>}
             {Boolean(description) && <AlertDialogDescription>{description}</AlertDialogDescription>}
           </AlertDialogHeader>
@@ -147,6 +153,20 @@ const AlertDialogFooter = ({ className, ...props }: AlertDialogFooterProps) => (
 );
 AlertDialogFooter.displayName = "AlertDialogFooter";
 
+/**
+ * Decorative media (an icon) shown above the title on mobile and to its left from 640px.
+ * `aria-hidden` by default: the title already names the dialog.
+ */
+const AlertDialogMedia = ({ className, ...props }: AlertDialogMediaProps) => (
+  <div
+    aria-hidden="true"
+    data-slot="alert-dialog-media"
+    className={cn(alertDialogMediaStyles, className)}
+    {...props}
+  />
+);
+AlertDialogMedia.displayName = "AlertDialogMedia";
+
 const AlertDialogTitle = ({
   className,
   ref,
@@ -220,6 +240,7 @@ export {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogMedia,
   AlertDialogOverlay,
   AlertDialogPortal,
   AlertDialogTitle,

@@ -1,6 +1,19 @@
 import { Button } from "@grupoitss/prizm-ui/button";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { AlertDialog } from "@grupoitss/prizm-ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@grupoitss/prizm-ui/alert-dialog";
+import { Trash2 } from "@grupoitss/prizm-ui/icons";
+import * as React from "react";
 
 const meta: Meta<typeof AlertDialog> = {
   title: "Compositions/AlertDialog",
@@ -46,4 +59,69 @@ export const Primary: Story = {
       onCancel={() => console.log("Cancelled")}
     />
   ),
+};
+
+/** Media = Icon no Figma: mídia acima do título no celular e à esquerda a partir de 640px. */
+export const ComIcone: Story = {
+  name: "Com ícone",
+  render: () => (
+    <AlertDialog
+      trigger={<Button variant="destructive">Excluir projeto</Button>}
+      icon={<Trash2 />}
+      title="Excluir projeto?"
+      description="Esta ação não pode ser desfeita. O projeto e os arquivos serão removidos."
+      actionText="Excluir projeto"
+    />
+  ),
+};
+
+/**
+ * Ação que demora: composição com `<Button loading>` dentro de `AlertDialogAction` e `open`
+ * controlado. O modal só fecha quando a ação termina.
+ */
+export const AcaoDemorada: Story = {
+  name: "Ação que demora",
+  render: function AcaoDemoradaStory() {
+    const [open, setOpen] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    return (
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogTrigger asChild>
+          <Button variant="destructive">Excluir projeto</Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogMedia>
+              <Trash2 />
+            </AlertDialogMedia>
+            <AlertDialogTitle>Excluir projeto?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. O projeto e os arquivos serão removidos.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel asChild>
+              <Button variant="outline">Cancelar</Button>
+            </AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <Button
+                variant="destructive"
+                loading={loading}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                  event.preventDefault();
+                  setLoading(true);
+                  setTimeout(() => {
+                    setLoading(false);
+                    setOpen(false);
+                  }, 1500);
+                }}
+              >
+                {loading ? "Excluindo…" : "Excluir projeto"}
+              </Button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
+  },
 };
