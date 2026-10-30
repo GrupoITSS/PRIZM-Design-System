@@ -1,5 +1,162 @@
 # @grupoitss/prizm-ui
 
+## 0.3.0
+
+### Minor Changes
+
+- 3639d33: **Alert e Empty: decisões de 29/10/2026**
+
+  - **Alert: tons no padrão de aviso.** `destructive`, `warning` e `success` passam de texto colorido sobre `bg-card` para fundo `<tom>-weak`, borda e ícone no tom e título e descrição em `<tom>-strong`. O texto warning tinha 2,15:1 nas 5 marcas no claro, e o destructive 3,84:1 no Docnix escuro; agora o pior caso é 5,69:1 (warning no Digitrol claro).
+  - **Alert: nova variante `info`**, no mesmo padrão (`info-weak`, `info`, `info-strong`). Cobre o `kind="info"` do AlertMessage.
+  - **Alert: `default` neutro.** Fundo `card`, borda `border`, ícone e título `foreground`, descrição `muted-foreground`.
+  - **Alert: espaçamento 12/16** (`py-3 px-4`, antes `p-4`), como no Figma e no shadcn atual. O título ganha `text-sm` e `leading-5`, e o ícone fica alinhado à primeira linha.
+  - **Alert: papel pela variante (WCAG 4.1.3).** `destructive` e `warning` usam `role="alert"`, que interrompe o leitor de tela; `default`, `success` e `info` usam `role="status"`. A prop `role` sobrescreve.
+  - **Alert: `AlertTitle` vira `div`** (antes `h5`), para não entrar na estrutura de títulos da página (WCAG 1.3.1).
+  - **AlertMessage marcado como `@deprecated`.** Use o Alert: `info` → `info`, `warning` → `warning`, `error` → `destructive`, `success` → `success`.
+  - **Empty: `role="status"` por padrão (WCAG 4.1.3).** Uma busca sem resultado ou uma tabela vazia passam a ser anunciadas sem interromper a leitura. A prop `role` sobrescreve.
+  - **Empty: link da descrição no padrão do Link do Button.** Sempre sublinhado, e no hover o sublinhado passa a 2px. Sai o hover em `text-primary`, que tinha 3,53:1 a 4,06:1 no escuro.
+
+  **Quebra:** quem buscava o Alert por `getByRole("alert")` nas variantes `default`, `success` ou `info` passa a usar `getByRole("status")`, ou passa `role="alert"`. Quem estilizava `h5` dentro do Alert usa `[data-slot=alert-title]`.
+
+- 783ee9f: **Badge dentro do Button**
+
+  - **Button** marca `data-variant` (como o shadcn), além de `data-slot="button"`.
+  - **Badge** dentro de um Button cheio (`default`, `destructive`) inverte as cores: fundo na cor do texto do botão e texto na cor do botão. Antes, um Badge `default` (`bg-primary`) sumia sobre o botão primary. Contraste do número: 4,88 a 13,41:1 no default e 4,53 a 5,84:1 no destructive, nas 5 marcas. Em botões neutros (secondary, outline, ghost) o Badge mantém as próprias cores, como no "Fixadas 8" e no "Limpar filtros 3" da AFIPE.
+
+- 725f02c: **Campos: disabled com opacidade 50%**
+
+  - **Input**, **Select**, **Textarea**, **DatePicker** e **InputGroup** passam a mostrar o disabled com a aparência normal do campo e opacidade 50% (`disabled:opacity-50`), como o Button. Antes, o disabled tinha fundo `bg-muted`, borda transparente e sem sombra (decisão de 21/10/2026, revista em 26/10/2026): o campo desabilitado parecia um botão secondary.
+  - **InputGroup**: a caixa inteira fica a 50%. O campo de dentro (`InputGroupInput`, `InputGroupTextarea`) e os complementos não somam outra opacidade; antes, os complementos ficavam a 50% dentro de uma caixa em `bg-muted`.
+  - O cursor continua `not-allowed`, e o atributo `disabled` continua no elemento.
+
+- 63e189f: **Checkbox: decisões de 30/10/2026**
+
+  - **Tokens: novo `color/input-strong`** (`neutral.500` no claro, branco a 40% no escuro), para controles que só têm o contorno para identificar. Tem de 3,73 a 4,83:1 contra a página (WCAG 1.4.11). `color/input` não muda.
+  - **Borda sem marcar em `input-strong`.** Com `color/input`, a caixa ficava entre 1,16 e 1,55:1.
+  - **Erro visível.** `aria-invalid` agora pinta a borda de `destructive`, também com a caixa marcada ou indeterminada. Antes, o erro não aparecia na caixa.
+  - **Fundo em `input-background`,** como os campos. Muda o visual no modo escuro.
+  - **Raio em `rounded-xs`** (antes 4px fixo): 2px no PAS e no ITSS, 1px no Docnix.
+  - **Alvo de ponteiro de 24px** nos dois tamanhos, sem mudar o layout (WCAG 2.5.8).
+  - **Anel com `ring-offset-ring-offset`,** como o Button.
+
+- 0fdbd2c: **Combobox: foco, erro, disabled, size e nomes em pt-BR**
+
+  - **Combobox** passa a mostrar o foco como o Input: anel de 2px em `ring`, borda transparente. Antes, o Default não tinha indicador (o InputGroup por children zerava o anel) e o Multiple usava `ring-3 ring-ring/50` (1,66:1 no PAS · CMS escuro).
+  - **Combobox**: `disabled` deixa a caixa inteira a 50% e o `disabled` nativo no input. Antes só marcava `data-disabled`, e o campo continuava no Tab.
+  - **Combobox**: `aria-invalid` e `aria-describedby` na API por props chegam ao input, com borda `destructive`. Antes essas props paravam no Root.
+  - **Combobox** ganha `size` (`sm` | `md` | `lg`), o mesmo do Input. Padrão `md`.
+  - **Combobox**: padrões em pt-BR (`Selecionar…`, `Nenhum item encontrado.`). O botão do chip passa a se chamar `Remover {valor}`.
+
+  **Quebra:** quem dependia de `placeholder="Select..."` ou `emptyMessage="No items found."` como padrão precisa passar o texto; os botões de ícone e o pt-BR dos padrões são a correção de acessibilidade (3.1.2, 4.1.2).
+
+- a01defe: **DatePicker: erro, calendário nomeado e em pt-BR**
+
+  - **DatePicker** ganha o estado de erro do Input: `aria-invalid`, `aria-describedby` e `aria-label` vão para o botão, com borda `destructive`. Antes, essas props não chegavam ao botão, e o erro não era anunciado.
+  - **DatePicker**: o campo não muda no hover, como Input, Select e Textarea. Antes herdava o `hover:bg-accent` do Button outline.
+  - **DatePicker**: com o calendário aberto, o botão usa o mesmo anel do foco (2px em `ring`, borda transparente).
+  - **DatePicker**: o calendário aberto tem nome, pela prop nova `calendarLabel` (padrão "Escolher data"). Ao abrir, o foco vai para o dia escolhido (ou hoje), e não para o botão de mês anterior.
+  - **Calendar**: rótulos em pt-BR por padrão (`locale` do `react-day-picker`), como "Ir para o mês anterior". A prop `locale` continua aceitando outro idioma.
+  - **Calendar**: dias fora do mês sem opacidade de 50% (mediam 2,34:1), só com `text-muted-foreground`. O foco do dia e dos seletores de mês e ano usa o anel do sistema (2px em `ring`), no lugar de `ring/50` (mediam 1,53:1).
+  - **Popover** ganha a prop opcional `contentProps` (`aria-label`, `aria-labelledby`, `onOpenAutoFocus`, `onCloseAutoFocus`), repassada ao conteúdo do Radix.
+
+- 3234d43: **Icons: sem nomes antigos do Lucide, importação única e ícones próprios acessíveis (22/10/2026)**
+
+  - **Saem os nomes antigos do Lucide** que duplicavam um ícone da lista: `AlertCircle`, `AlertTriangle`, `CheckCircle`, `HelpCircle`, `XCircle`, `MoreHorizontal`, `Loader2` e `Layout`. Fica o nome atual de cada um.
+  - **Entram 13 ícones**, que os componentes e as stories já usavam importando `lucide-react` direto: `CircleAlert`, `CircleCheckBig`, `PanelsTopLeft`, `Calendar`, `GripVertical`, `FileImage`, `FileSpreadsheet`, `ArrowUp`, `Maximize2`, `Minimize2`, `Tag`, `Inbox` e `ShieldAlert`. A lista passa a 138 ícones.
+  - **Importação única.** Os componentes do prizm-ui importam de `../icons` e as stories de `@grupoitss/prizm-ui/icons`; nenhum arquivo importa `lucide-react` direto (o teste `icons.test.tsx` confere). O Spinner usa `LoaderCircle` como ícone padrão (o mesmo desenho do `Loader2Icon`).
+  - **`FileCsv`, `FileDoc` e `FilePdf` saem com `aria-hidden="true"`** quando são decorativos, como os do Lucide (WCAG 1.1.1), e aceitam `size` e `color`. Antes, eram lidos pelo leitor de tela como uma imagem sem nome, e `size` ia parar como atributo inválido no `<svg>`.
+  - **Na raiz do pacote**, `Calendar` continua sendo o componente e `Tag` o tipo da tabela. Os ícones com esses nomes saem por `@grupoitss/prizm-ui/icons`.
+
+  **Quebra:** troque o nome antigo pelo atual, no import e no uso.
+
+  | Antes            | Depois               |
+  | ---------------- | -------------------- |
+  | `AlertCircle`    | `CircleAlert`        |
+  | `AlertTriangle`  | `TriangleAlert`      |
+  | `CheckCircle`    | `CircleCheckBig`     |
+  | `HelpCircle`     | `CircleQuestionMark` |
+  | `XCircle`        | `CircleX`            |
+  | `MoreHorizontal` | `Ellipsis`           |
+  | `Loader2`        | `LoaderCircle`       |
+  | `Layout`         | `PanelsTopLeft`      |
+
+  O desenho de cada ícone não muda. Quem importa de `lucide-react` direto não é afetado, mas deve passar a importar de `@grupoitss/prizm-ui/icons`.
+
+- bef7534: **InputOTP: escala, erro, foco e leitura da família do campo**
+
+  - **InputOTP** passa a `sm`, `md` e `lg` em `control-height`, com o slot quadrado (`size-control-height-*`), como o Input. Antes eram alturas fixas de 32, 40 e 48px.
+  - **Quebra:** `size="default"` sai. Para migrar: `size="default"` → `size="md"` (ou sem `size`, que já é `md`). O `lg` passa de 48px à altura de controle da marca.
+  - **InputOTP**: o contêiner usa `bg-input-background` e `shadow-xs`, como o Input (antes `bg-background`, sem sombra).
+  - **InputOTP** aceita `aria-invalid` e `aria-labelledby`. O erro mostra só a borda `destructive`; o anel `ring-destructive/20` saiu, e no foco o anel continua `ring`. `invalid` continua como apelido de `aria-invalid`.
+  - **InputOTP**: `separator={true}` desenha o traço (`Minus`) em `muted-foreground`, como o Figma e o shadcn. Antes era um ponto (`Dot`).
+  - **InputOTP**: o caractere de `placeholder` sai em `muted-foreground`, para não parecer preenchido.
+  - **InputOTP**: slots e separadores ficam com `aria-hidden`; o valor, o nome e o estado continuam no input. Antes o leitor de tela repetia o valor, caractere a caractere, e anunciava "separador".
+  - **InputOTP**: em desenvolvimento, avisa no console quando o campo não tem nome (sem `FieldLabel` ligado pelo `id`, `aria-label` nem `aria-labelledby`).
+
+- 51cb71b: **Kbd: contexto no botão e separador**
+
+  - **Kbd** dentro de um Button segue a regra do Badge (Figma "Contexto"): em botão cheio (`default`, `destructive`) usa a cor do texto do botão com fundo dela a 20%; em botão neutro (secondary, outline, ghost, link, text) mantém `bg-muted` e `text-muted-foreground`. Antes, ele pegava a cor do texto de qualquer botão. No tooltip nada muda.
+  - **Kbd** ganha a prop `separator`, para teclas pressionadas juntas: `<Kbd keys={["Ctrl", "Alt", "B"]} separator="+" />`, como o KbdGroup "+ Separated" do Figma. O separador sai em `text-xs`, peso normal, na cor do texto da tecla.
+  - Em aberto (decisão de 23/10/2026): em botão cheio, o texto da tecla fica abaixo de 4,5:1 (3,33 a 7,31:1 no primary, 3,47 a 4,23:1 no destructive), como já era antes.
+
+- 4309bea: **Select: erro, lista aberta, ícone e lista alinhados ao Figma**
+
+  - **Select** ganha o estado de erro do Input: `aria-invalid` (e `aria-describedby`) vão para o trigger, com borda `destructive`; no foco e com a lista aberta, o anel continua `ring`. Antes, `aria-invalid` passado ao Select ficava no Root do Radix e não chegava ao combobox, então o erro não era anunciado.
+  - **Select**: com a lista aberta, o trigger usa o mesmo anel do foco (2px em `ring`, borda transparente). Antes era um anel de 3px em `ring/50`.
+  - **Select**: o trigger usa `ChevronDown`, como o Figma e o shadcn. Antes era `ChevronsUpDown`, o ícone do Combobox.
+  - **Select**: a lista usa `border-border`, como os outros popovers (antes `border-input`, o cinza do campo), e o item usa `rounded-sm` (antes `rounded-md`).
+
+- 2ae4990: **Spinner: escala do Figma, speed, nome em português e movimento reduzido**
+
+  - **Spinner** ganha a escala do Figma: `xs` 12px, `sm` 16px, `md` 20px, `lg` 24px e `xl` 32px. O **Dropzone** passa a usar `lg`, sem `className`.
+  - **Spinner** ganha a prop `speed` (`slow`, `normal`, `fast`). `degree` continua aceita até a próxima versão, com o mesmo efeito.
+  - **Spinner** aplica sempre a velocidade: `normal` passa a ser 600ms por volta, como estava documentado. Antes, o `normal` não era aplicado e o spinner girava em 1s, mais devagar que o `slow` (800ms).
+  - **Spinner** tem nome padrão "Carregando", e não mais "Loading" (WCAG 3.1.2). Com `aria-hidden`, não recebe `role` nem nome.
+  - **Spinner** gira a 1,5s por volta com `prefers-reduced-motion`, sem parar.
+
+  **Quebra:** `size="lg"` passa de 32px para 24px. Para manter os 32px, use `size="xl"`.
+
+- a6f21b7: **Textarea: erro visível e Dialog de edição com nome**
+
+  - **Textarea** ganha o estado de erro do Input e do Select: `aria-invalid` pinta a borda de `destructive`, também no foco (o anel continua `ring`). Antes, `aria-invalid` era repassado, mas a borda não mudava, embora a story `Invalid` dissesse que mudava.
+  - **Textarea com `expandable`**: o Dialog de edição ganha título visível, da prop nova `expandTitle` (padrão "Editar texto"), e passa a ter nome para o leitor de tela. O textarea dentro do Dialog não repete mais o `id` do campo e é nomeado pelo título. Antes, o Dialog abria sem nome e havia dois elementos com o mesmo `id`.
+  - **Textarea com `expandable`**: o botão passa a se chamar "Expandir campo" (antes "Expandir textarea") e usa o anel de foco padrão, sem `ring-offset-2`.
+
+### Patch Changes
+
+- 498c671: **Accent do escuro em neutral 700**
+
+  - **Tokens**: `palette/accent/dark` passa de `neutral.800` para `neutral.700` nas marcas PAS, Docnix e ITSS (e nos produtos que herdam delas). Antes, accent e popover eram o mesmo cinza no escuro (1,00:1), e o item em destaque de Select, DropdownMenu, Command e afins não aparecia na lista (WCAG 2.4.7). Agora fica em 1,42–1,46:1 sobre o popover e 1,89–1,95:1 sobre o background. O claro não muda.
+  - **UI**: `muted-foreground` sobre o novo accent fica em 4,06–4,13:1, abaixo de 4,5:1. No item em destaque de ContextMenu, DropdownMenu, Menubar, NavigationMenu e Command, o texto com `text-muted-foreground` (descrição, atalho) passa a `accent-foreground` (9,86–10,03:1).
+
+- 7e3ee4c: **Alert e Empty: props sem título e children junto das props (decisões de 30/10/2026)**
+
+  - **`description`, `icon` (e `content`, no Empty) aparecem sem `title`.** O Figma deixa desligar o título (booleana Title / Show Title), mas o código só montava pelas props com `title`: sem ele, `<Alert variant="warning" description="…" />` não mostrava nada, sem aviso. Agora qualquer uma dessas props usa a API por props, sem título vazio.
+  - **`children` junto das props entram no fim.** Antes eram descartados sem aviso quando havia `title`: no Alert, um `Button` de ação depois da descrição sumia. Agora aparecem depois da descrição (Alert) ou das ações (Empty). Sem nenhuma prop, continua a composição só com `children`.
+
+- e7d1f0a: **Combobox: a caixa do Multiple segue o Default e a família do campo**
+
+  - **Combobox** com `multiple`: a caixa dos chips passa a usar `bg-input-background`, `rounded-md` e `shadow-xs`, como o Default (InputGroup) e o Input. Antes era transparente, com `rounded-lg` e sem sombra.
+  - **Combobox** com `multiple`: o texto acompanha o `size` (`text-xs` no `sm`, `text-sm` no `md`, `text-base` e `text-sm` a partir do breakpoint md no `lg`). Antes ficava em `text-sm` em todos os tamanhos.
+
+- e426abd: Combobox: na API por props, a seleção única passa a respeitar `value` e `onValueChange`. Antes, as duas props eram ignoradas sem aviso e o valor não ficava controlado; só o `multiple` e a composição por `children` funcionavam.
+- 1c30557: **Select: chevron e texto do item como no Figma**
+
+  - **Select**: o chevron do trigger passa a `text-muted-foreground`, sem opacidade, com ou sem valor escolhido. Antes era 60% da cor do texto, e o tom mudava quando havia valor. Novo export: `selectTriggerIconStyles`.
+  - **Select**: o item da lista herda `popover-foreground` da lista (antes `text-foreground`). No destaque, continua `accent-foreground`. Os valores são os mesmos hoje: nada muda na tela.
+
+- 7caeef6: **Skeleton: `circle` sempre redondo e pulso que para (decisões de 27/10/2026)**
+
+  - **`shape="circle"` ganha `aspect-square`.** Antes, `pill` e `circle` geravam a mesma classe (`rounded-full`), e o círculo só ficava redondo com altura e largura iguais. Agora basta um tamanho: `<Skeleton shape="circle" className="size-10" />`. Quem já passa `h-10 w-10` não vê diferença.
+  - **O pulso roda 2 ciclos (4s) e para com o bloco cheio** (`[animation-iteration-count:2]!` sobre o `animate-pulse`). A WCAG 2.2.2 (nível A) pede um jeito de parar movimento que dura mais de 5s ao lado de outro conteúdo; o bloco cinza continua no lugar até o conteúdo chegar.
+  - **Sem `motion-reduce`:** o pulso é igual com reduzir movimento, para deixar claro que está carregando (WCAG 2.3.3 é AAA, fora do critério).
+
+- 989b350: **Button, PhotoUpload e Sonner usam o Spinner**
+
+  - **Button**: o estado `loading` mostra o `<Spinner>`, decorativo (`aria-hidden`), no tamanho do ícone do botão (16px; 12px em `xs` e `icon-xs`). Antes era o ícone `LoaderCircle` com `animate-spin`, a 1s por volta; agora gira a 600ms e mais devagar com `prefers-reduced-motion`.
+  - **PhotoUpload**: o `loading` mostra o `<Spinner>` com o nome "Carregando foto" (`role="status"`). Antes o ícone não tinha nome nem papel, e o leitor de tela não anunciava nada.
+  - **Sonner**: o toast de carregamento usa o `<Spinner>` (`LoaderCircle`), decorativo, no lugar do ícone `Loader`. É o mesmo ícone dos outros componentes.
+
 ## 0.2.0
 
 ### Minor Changes
