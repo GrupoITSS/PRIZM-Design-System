@@ -73,6 +73,7 @@ Major para toda mudança de valor seria pior: cada ajuste no Figma viraria uma v
 1. A PR traz o changeset (manual nos componentes e nas mudanças que o script não vê; automático nos syncs do Figma).
 2. Ao mergear na `main`, o workflow **Publicar pacotes** abre ou atualiza a PR **"chore: versão dos pacotes"**, com as versões novas e o `CHANGELOG`.
 3. Mergear essa PR **publica** os pacotes, cria a tag (`@grupoitss/prizm-tokens@4.0.0`) e um GitHub Release por pacote. O release dos tokens leva os zips de Android e iOS.
+4. Depois do release, atualize no CMS os artigos que dizem "próxima versão": no aviso do topo e no Changelog, troque pela versão publicada, e publique os artigos.
 
 Regras:
 - **Depois de mergear uma PR na `main`, espere a PR de versão ser atualizada** (1 a 2 minutos) antes de mergeá-la. Se ela for mergeada antes, sai uma versão sem a mudança, ou pula um número (a `2.0.0` dos tokens nunca foi publicada por isso).
