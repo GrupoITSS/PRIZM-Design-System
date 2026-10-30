@@ -9,7 +9,7 @@ import type { AlertDescriptionProps, AlertProps, AlertTitleProps } from "./alert
  * `destructive` and `warning` render with `role="alert"` (interrupts the screen reader);
  * `default`, `success` and `info` with `role="status"` (polite). Pass `role` to override.
  *
- * **Simplified API:** Pass `title`, `description`, `icon` as props (e.g. `<Alert variant="success" title="Saved" description="Changes saved." />`).
+ * **Simplified API:** Pass `title`, `description`, `icon` as props (any of them; `title` is optional) (e.g. `<Alert variant="success" title="Saved" description="Changes saved." />`).
  * **Composition API:** Pass AlertTitle and AlertDescription as children for advanced use.
  *
  * @see [Alert — shadcn/ui](https://ui.shadcn.com/docs/components/alert)
@@ -24,8 +24,10 @@ const Alert = ({
   ref,
   ...props
 }: AlertProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  // Se title é fornecido, usar API simplificada por props; senão, renderizar children (composição)
-  const useSimplifiedAPI = title !== undefined;
+  // API por props quando há title, description ou icon (o Figma permite Alert sem título).
+  // Sem nenhum deles, é composição: só children. Na API por props, children entram depois
+  // da descrição (ex.: um Button de ação), para nada sumir sem aviso.
+  const useSimplifiedAPI = title != null || description != null || icon != null;
 
   return (
     <div
@@ -39,8 +41,9 @@ const Alert = ({
       {useSimplifiedAPI ? (
         <>
           {icon}
-          <AlertTitle>{title}</AlertTitle>
-          {Boolean(description) && <AlertDescription>{description}</AlertDescription>}
+          {title != null && <AlertTitle>{title}</AlertTitle>}
+          {description != null && <AlertDescription>{description}</AlertDescription>}
+          {children}
         </>
       ) : (
         children

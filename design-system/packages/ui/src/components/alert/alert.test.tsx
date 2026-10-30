@@ -63,4 +63,41 @@ describe("Alert (PRIZM / shadcn)", () => {
     render(<Alert title="Title" />);
     expect(screen.getByRole("status")).toHaveClass("py-3", "px-4");
   });
+
+  describe("props sem título e ação (decisões de 30/10/2026)", () => {
+    it("description e icon sem title aparecem, sem título vazio", () => {
+      render(
+        <Alert
+          variant="warning"
+          icon={<svg data-testid="icon" />}
+          description="Alguns campos podem estar desatualizados."
+        />,
+      );
+      expect(screen.getByText("Alguns campos podem estar desatualizados.")).toBeInTheDocument();
+      expect(screen.getByTestId("icon")).toBeInTheDocument();
+      expect(document.querySelector('[data-slot="alert-title"]')).not.toBeInTheDocument();
+    });
+
+    it("com title e description, children (ação) entram depois da descrição", () => {
+      render(
+        <Alert variant="destructive" title="Não foi possível salvar" description="Verifique a conexão.">
+          <button type="button">Tentar de novo</button>
+        </Alert>,
+      );
+      const root = screen.getByRole("alert");
+      const button = screen.getByRole("button", { name: "Tentar de novo" });
+      expect(root).toContainElement(button);
+      const desc = document.querySelector('[data-slot="alert-description"]');
+      expect(desc?.compareDocumentPosition(button)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    });
+
+    it("sem title, description e icon, continua composição", () => {
+      render(
+        <Alert>
+          <AlertTitle>Composição</AlertTitle>
+        </Alert>,
+      );
+      expect(screen.getByText("Composição")).toBeInTheDocument();
+    });
+  });
 });

@@ -4,8 +4,9 @@ import type { AlertVariantProps } from "./alert.styles";
 export interface AlertProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "title">, AlertVariantProps {
   /**
-   * Alert title. Recommended for semantic clarity when using simplified API.
-   * When using composition (AlertTitle/AlertDescription as children), omit this prop.
+   * Alert title. Optional: `description` or `icon` alone also use the props-based layout
+   * (the Figma set lets the title be turned off). With props, `children` (e.g. an action
+   * Button) render after the description. Omit all three to compose with AlertTitle/AlertDescription.
    * @example "Changes saved"
    */
   title?: React.ReactNode;
