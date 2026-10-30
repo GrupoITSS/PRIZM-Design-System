@@ -63,7 +63,7 @@ O artigo é lido por pessoas e por agentes (Cursor, Claude). O agente conhece o 
 
 Componente que ainda não saiu em pacote: `Desde a próxima versão`. Ao lançar a versão, os artigos que dizem "próxima versão" são atualizados (passo em `docs/versionamento.md`).
 
-**Prizm × shadcn.** Subseção da API, ao lado de Figma × código. Tabela `Ponto | shadcn | Prizm`, com tudo o que um agente faria errado copiando o shadcn: API por props, tamanhos, foco, disabled, textos padrão em pt-BR, tokens próprios. Compare com o código do shadcn (`apps/v4/registry/new-york-v4/ui/<nome>.tsx`, no repositório dele), não com a memória nem com o `@pas/ui`, e registre a data da consulta. Uma diferença com a versão anterior do Prizm vai para o Changelog, não para esta tabela.
+**Prizm × shadcn.** Subseção da API, ao lado de Figma × código. Tabela `Ponto | shadcn | Prizm`, com tudo o que um agente faria errado copiando o shadcn: API por props, tamanhos, foco, disabled, textos padrão em pt-BR, tokens próprios. O nosso código é a fonte da verdade: a coluna Prizm sai do `.tsx` e dos estilos da `origin/main`, nunca da memória nem de outro artigo. A coluna shadcn sai do código dele (`apps/v4/registry/new-york-v4/ui/<nome>.tsx`, no repositório do shadcn), com a data da consulta. O shadcn é só o ponto de comparação: uma diferença nesta tabela não é motivo para mudar o nosso componente. Uma diferença com a versão anterior do Prizm vai para o Changelog, não para esta tabela.
 
 **Não use para.** Lista em Quando usar, depois da tabela `Preciso de… | Use`. Uma linha por item, sempre com a alternativa nomeada e mencionada: `Não use para lista curta e fechada, sem busca → use [Select](pas-mention:…)`. Quando a alternativa ainda não tem artigo, nomeie o componente em `código`.
 
@@ -104,7 +104,7 @@ O artigo só vai para o dono do DS revisar com tudo isto:
 
 - [ ] Aviso do topo só com status e versão; histórico no Changelog
 - [ ] API conferida com o `.tsx`, com todas as variantes e props em uso citadas (documentadas ou removidas com migração)
-- [ ] Figma × código e Prizm × shadcn, conferida no código do shadcn, com a data
+- [ ] Figma × código e Prizm × shadcn: coluna Prizm conferida no nosso código, coluna shadcn no código dele, com a data
 - [ ] Não use para, com a alternativa nomeada
 - [ ] Deve e não deve, uma regra por linha, cada uma com código
 - [ ] Combinações inválidas, cada uma com o tratamento
