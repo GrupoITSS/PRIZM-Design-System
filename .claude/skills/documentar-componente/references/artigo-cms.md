@@ -25,8 +25,7 @@ Confira com `get_content_tree` e `search` se algo não bater: a árvore pode ter
 <Uma ou duas frases: o que faz. Base shadcn/ui, ligado ao [PRIZM] Design Tokens_Core.>
 
 > [!NOTE]
-> Status: beta · Pacote: @grupoitss/prizm-ui, próxima versão (hoje 0.2.0)
-> Código na main do PRIZM-Design-System: PRs que entraram.
+> Status: estável · Desde a 0.2.0
 
 ![Prévia · PAS claro](file:<id> "Prévia · PAS claro")
 
@@ -36,9 +35,10 @@ Confira com `get_content_tree` e `search` se algo não bater: a árvore pode ter
 ## API               (tabela Prop | Tipo | Padrão | Descrição, conferida com o .tsx e o inventário; variante removida por decisão: diga como migrar; ### Figma × código; ### Prizm × shadcn)
 ---
 ## Quando usar       (tabela Preciso de… | Use; ### Não use para; ### Deve e não deve, com código)
+## Anatomia          (imagem + lista numerada das partes, com tokens)
 ## Estados           (tabela Estado | Visual | Código; regra de hover se couber)
-## Combinações inválidas (tabela Combinação | Por quê | Em vez disso)
-## Tokens por variante
+## Combinações inválidas (tabela Combinação | Por quê | Em vez disso | Tratamento)
+## Tokens por variante   (ou Tokens por estado, quando o componente não tem variantes)
 ## Acessibilidade    (menção ao Critério; bullets; tabela de contraste marca · tema)
 ## Marcas            (playground; tabela control-height/raio por marca; diferenças por marca)
 ## Changelog         (Versão | Data | Mudança)
@@ -53,17 +53,23 @@ Seções sem conteúdo para o componente saem; não deixe título vazio. As do f
 
 O artigo é lido por pessoas e por agentes (Cursor, Claude). O agente conhece o shadcn do treino, não o Prizm: ele precisa da regra em texto, da alternativa nomeada e do que muda em relação ao shadcn.
 
-**Status e versão.** Primeira linha do aviso do topo: `Status: <status> · Pacote: @grupoitss/prizm-ui <versão>`.
+**Status e versão.** O aviso do topo tem só isto: `Status: <status> · Desde a <X.Y.Z>`. O status descreve o componente, nunca o artigo. A versão é a primeira em que o componente saiu no pacote. Histórico, PRs e mudanças ficam no Changelog: o que está no topo envelhece e ninguém volta para corrigir.
 
 | Status | Quando |
 | --- | --- |
-| beta | O código ainda não saiu num pacote publicado, ou o artigo está em rascunho. |
-| estável | Saiu num pacote publicado e o artigo foi publicado. |
-| obsoleto | Tem substituto: diga qual e como migrar. |
+| beta | A API ou o visual ainda podem mudar sem aviso. |
+| estável | A API e o visual estão fechados. Mudança segue o versionamento. |
+| obsoleto | Tem substituto. Sempre com link para ele e o caminho de migração. |
 
-Se o código do artigo ainda não saiu, escreva `próxima versão (hoje X.Y.Z)`, com a última publicada.
+Componente que ainda não saiu em pacote: `Desde a próxima versão`. Ao lançar a versão, os artigos que dizem "próxima versão" são atualizados (passo em `docs/versionamento.md`).
 
-**Prizm × shadcn.** Subseção da API, ao lado de Figma × código. Tabela `Ponto | shadcn | Prizm`, com tudo o que um agente faria errado copiando o shadcn: API por props, tamanhos, foco, disabled, textos padrão em pt-BR, tokens próprios. Compare com a doc do shadcn do link da Rastreabilidade e com o `git log` do componente.
+**Prizm × shadcn.** Subseção da API, ao lado de Figma × código. Tabela `Ponto | shadcn | Prizm`, com tudo o que um agente faria errado copiando o shadcn: API por props, tamanhos, foco, disabled, textos padrão em pt-BR, tokens próprios.
+
+- **Coluna Prizm.** O nosso código é a fonte da verdade: ela sai do `.tsx` e dos estilos da `origin/main`, nunca da memória nem de outro artigo. Mas a `main` não é produção: os produtos usam a última versão publicada. O que ainda não saiu leva `(próxima versão)` na célula, e a marcação sai no release.
+- **Coluna shadcn.** Sai do código dele, na mesma base do nosso componente, com a data da consulta. Veja o import do nosso `.tsx` (`radix-ui` ou `@base-ui/react`) e confira se o arquivo do shadcn importa o mesmo: `apps/v4/registry/new-york-v4/ui/<nome>.tsx` ou `bases/base/ui/<nome>.tsx`. Em `bases/base`, os estilos ficam em classes `cn-*`, fora do arquivo.
+- **Cada linha é intencional.** O dono do DS confirma na revisão, principalmente o que não aparece no Figma e não passa pela paridade, como o formato da API e os textos padrão. Código que parece bug leva `suspeita de bug` na célula e vira correção: a tabela não transforma bug em padrão do Prizm.
+- **O shadcn é só ponto de comparação.** Uma diferença nesta tabela não é motivo para mudar o nosso componente.
+- **Versão anterior do Prizm.** A diferença vai para o Changelog, não para esta tabela.
 
 **Não use para.** Lista em Quando usar, depois da tabela `Preciso de… | Use`. Uma linha por item, sempre com a alternativa nomeada e mencionada: `Não use para lista curta e fechada, sem busca → use [Select](pas-mention:…)`. Quando a alternativa ainda não tem artigo, nomeie o componente em `código`.
 
@@ -80,11 +86,21 @@ Se o código do artigo ainda não saiu, escreva `próxima versão (hoje X.Y.Z)`,
 
 As imagens de Faça e evite do frame de doc continuam, abaixo das regras. A regra não vive só na imagem.
 
-**Combinações inválidas.** Seção própria, depois de Estados. Tabela `Combinação | Por quê | Em vez disso`: props que não funcionam juntas, prop que exige outra, estado que não existe numa variante, propriedade do Figma sem par no código. Saia do `cva`, dos tipos, dos testes e das divergências do mapa de tokens; não invente.
+**Combinações inválidas.** Seção própria, depois de Estados. Tabela `Combinação | Por quê | Em vez disso | Tratamento`: props que não funcionam juntas, prop que exige outra, estado que não existe numa variante, propriedade do Figma sem par no código. Saia do `cva`, dos tipos, dos testes e das divergências do mapa de tokens; não invente.
+
+Combinação inválida também é suspeita de bug: leia o código de cada uma (no Combobox, foi assim que apareceu o PR #146). Cada linha leva um tratamento, proposto na etapa e decidido pelo dono do DS:
+
+| Tratamento | Quando |
+| --- | --- |
+| documentar | O comportamento é esperado e não dá para impedir. |
+| travar no tipo | O TypeScript consegue impedir a combinação. |
+| avisar no console | Só dá para detectar em execução. O aviso aparece em desenvolvimento. |
+| corrigir em PR | É bug: o componente devia funcionar. |
 
 **Escrita para agente.**
 
-- Todo valor aparece como nome de token (`color/ring`, `control-height/md`, `radius/lg`). Valor resolvido (px, hex) só nas tabelas de Marcas e de contraste.
+- Em texto e tabelas, todo valor aparece com o nome de token do Figma (`color/ring`, `control-height/md`, `radius/lg`). Valor resolvido (px, hex) só nas tabelas de Marcas e de contraste.
+- Dentro de bloco `tsx`, use a classe do Tailwind (`ring-ring`, `h-control-height-md`), que é o que o agente copia para o código. A conversão entre os dois está em [Regras de token](pas-mention:article/7601392c-e07b-4574-89c5-09d326f7cc66?version=9aab337b-ff81-406a-bff1-1de369b6eedd): mencione a página no artigo.
 - Regra é frase de "deve" ou "não deve", uma por linha. Nada de regra só em imagem ou só em legenda.
 - Nome igual em Figma, código e artigo. Divergência vai para "Figma × código" e para as divergências abertas.
 
@@ -92,13 +108,14 @@ As imagens de Faça e evite do frame de doc continuam, abaixo das regras. A regr
 
 O artigo só vai para o dono do DS revisar com tudo isto:
 
-- [ ] Status e versão na primeira linha do aviso do topo
+- [ ] Aviso do topo só com status e versão; histórico no Changelog
 - [ ] API conferida com o `.tsx`, com todas as variantes e props em uso citadas (documentadas ou removidas com migração)
-- [ ] Figma × código e Prizm × shadcn
+- [ ] Figma × código e Prizm × shadcn: coluna Prizm conferida no nosso código, coluna shadcn no código dele, na mesma base, com a data
+- [ ] Cada linha da Prizm × shadcn é intencional; o que ainda não saiu leva `(próxima versão)` e o que parece bug leva `suspeita de bug`
 - [ ] Não use para, com a alternativa nomeada
 - [ ] Deve e não deve, uma regra por linha, cada uma com código
-- [ ] Combinações inválidas
-- [ ] Valores como nome de token fora das tabelas de Marcas e contraste
+- [ ] Combinações inválidas, cada uma com o tratamento
+- [ ] Nome de token do Figma em texto e tabelas; classe do Tailwind nos blocos `tsx`
 - [ ] Acessibilidade com a tabela de contraste por marca e tema
 - [ ] Rastreabilidade completa (ou marcada para a etapa 7)
 
