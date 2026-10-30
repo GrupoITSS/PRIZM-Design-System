@@ -5,7 +5,7 @@ description: Documenta um componente do design system Prizm (Grupo ITSS) de pont
 
 # Documentar um componente do Prizm
 
-Esta skill repete, para qualquer componente, o que foi feito com o Button em 19–20/10/2026: Figma religado ao Core, doc completa no Figma, acessibilidade medida, correções no código em PR, artigo no CMS e rastreabilidade entre as pontas. O resultado do piloto é o modelo de tudo: frame `25019:4489` no Figma e artigo "Button" no CMS.
+Esta skill repete, para qualquer componente, o que foi feito com o Button em 19–20/10/2026: Figma religado ao Core, doc completa no Figma, acessibilidade medida, correções no código em PR, artigo no CMS e rastreabilidade entre as pontas. O modelo do frame no Figma é o do Button (`25019:4489`). O modelo do artigo no CMS é o "Combobox", que já está no formato novo (DS-61).
 
 ## Papéis
 
@@ -86,7 +86,9 @@ Se a correção muda um token, ela vale para o Core no Figma também: aplique no
 
 ### 6. Artigo no CMS
 
-Escreva o artigo no workspace `prizm_design_system` pelo MCP `prizm-cms`, na pasta Componentes, no formato do shadcn + seções Prizm. A API segue o código já alinhado às decisões, conferida com o inventário (nenhuma variante em uso fica sem menção: ou está documentada, ou consta como removida, com a migração). Use os links das stories publicadas. O artigo "Button" é o modelo: leia com `fetch` o id `978a4aa8-4d01-484f-a0bb-93d10c59c219` antes de escrever. Imagens exportadas com `get_screenshot` e subidas por `POST /cms/api/mcp/images` (`scripts/subir-imagem.sh`). Sempre como rascunho. Estrutura, ids e passo a passo em `references/artigo-cms.md`.
+Escreva o artigo no workspace `prizm_design_system` pelo MCP `prizm-cms`, na pasta Componentes, no formato do shadcn + seções Prizm. A API segue o código já alinhado às decisões, conferida com o inventário (nenhuma variante em uso fica sem menção: ou está documentada, ou consta como removida, com a migração). Use os links das stories publicadas. O artigo "Combobox" é o modelo: leia com `fetch` o id `98920a34-adcb-4477-b99c-a51817140dc6` antes de escrever. Imagens exportadas com `get_screenshot` e subidas por `POST /cms/api/mcp/images` (`scripts/subir-imagem.sh`). Sempre como rascunho. Estrutura, ids e passo a passo em `references/artigo-cms.md`.
+
+O artigo é lido também por agentes de IA (DS-61): status e versão no topo, Prizm × shadcn, "Não use para" com a alternativa nomeada, regras de "deve / não deve" com código, combinações inválidas e valores sempre como nome de token. O artigo só vai para revisão com a lista "Pronto para revisão" de `references/artigo-cms.md` completa.
 
 **⏸ O dono do DS revisa o rascunho.** Publicar só com pedido explícito, com essas palavras.
 
