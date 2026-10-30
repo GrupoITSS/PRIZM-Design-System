@@ -1,0 +1,132 @@
+{
+  "component": "Checkbox",
+  "description": "Mapa de tokens do Checkbox: o que cada estado da caixa, as peças e os tamanhos usam do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 30/10/2026 (1.746 ligações, nenhuma local). O checkbox.tokens.test.tsx confere o mapa contra as classes do código.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=46-112",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25747-16210",
+    "code": "design-system/packages/ui/src/components/checkbox/checkbox.tsx",
+    "story": "design-system/apps/docs/stories/checkbox.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=4fa0bf53-0fcf-4282-b437-cfb63216ed42&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/151"
+    ],
+    "jira": [
+      "GIES-1728",
+      "GIES-1725"
+    ]
+  },
+  "types": {
+    "Default": "a caixa, com ou sem rótulo",
+    "Box": "cartão: FieldLabel envolvendo Field, por composição; só no size default"
+  },
+  "checked": {
+    "no": {
+      "background": "color/input-background",
+      "border": "color/input-strong"
+    },
+    "yes": {
+      "background": "color/primary",
+      "border": "color/primary",
+      "icon": "Check",
+      "iconColor": "color/primary-foreground"
+    },
+    "indeterminate": {
+      "background": "color/primary",
+      "border": "color/primary",
+      "icon": "Minus",
+      "iconColor": "color/primary-foreground",
+      "ariaChecked": "mixed"
+    }
+  },
+  "states": {
+    "focus": {
+      "ring": "color/ring",
+      "ringWidth": 2,
+      "ringOffset": "color/ring-offset",
+      "ringOffsetWidth": 2,
+      "note": "Só no foco por teclado: a caixa é um botão no HTML."
+    },
+    "error": {
+      "border": "color/destructive",
+      "attribute": "aria-invalid"
+    },
+    "errorFocus": {
+      "border": "color/destructive",
+      "ring": "color/ring",
+      "ringWidth": 2
+    },
+    "disabled": {
+      "opacity": "opacity/50",
+      "labelOpacity": "opacity/70",
+      "attribute": "disabled"
+    },
+    "hover": {
+      "note": "Sem hover, como os campos."
+    }
+  },
+  "parts": {
+    "box": {
+      "radius": "radius/xs",
+      "borderWidth": "border-width/1"
+    },
+    "label": {
+      "color": "color/foreground",
+      "fontSize": "text/sm"
+    },
+    "description": {
+      "color": "color/muted-foreground",
+      "fontSize": "text/sm",
+      "note": "Só no Figma; no código, FieldDescription."
+    },
+    "card": {
+      "radius": "radius/md",
+      "padding": "spacing/4",
+      "border": "color/border",
+      "checkedBorder": "color/primary",
+      "checkedBackground": "color/primary",
+      "checkedBackgroundOpacity": "opacity/5"
+    }
+  },
+  "spacing": {
+    "boxToText": "spacing/2",
+    "labelToDescription": "spacing/1-5"
+  },
+  "sizes": {
+    "default": {
+      "width": "width/4",
+      "height": "height/4",
+      "icon": "size-3.5"
+    },
+    "sm": {
+      "width": "width/3-5",
+      "height": "height/3-5",
+      "icon": "size-3"
+    }
+  },
+  "divergences": [
+    {
+      "where": "Peso do rótulo",
+      "figma": "font-weight/medium",
+      "code": "font-light",
+      "status": "aberta"
+    },
+    {
+      "where": "Borda do cartão sem marcar",
+      "figma": "color/border",
+      "code": "cor padrão da borda (color/border)",
+      "status": "conferido"
+    },
+    {
+      "where": "Área de clique",
+      "figma": "sem camada: a área de 24px não aparece no Figma",
+      "code": "after:-inset-1 (sm: after:-inset-[5px])",
+      "status": "aberta"
+    },
+    {
+      "where": "Tamanho do ícone",
+      "figma": "em px, sem ligação: o componente de ícone não aceita a ligação",
+      "code": "size-3.5 (sm: size-3)",
+      "status": "aberta"
+    }
+  ]
+}
