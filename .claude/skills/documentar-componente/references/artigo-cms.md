@@ -7,7 +7,7 @@ Referência da etapa 6. Workspace `prizm_design_system` em produção (`https://
 | O quê | id |
 | --- | --- |
 | Pasta Componentes | `914832f9-305e-4fd5-8d18-414e3c16b8de` |
-| Artigo modelo "Button" (0001) | `978a4aa8-4d01-484f-a0bb-93d10c59c219` |
+| Artigo modelo "Combobox" (0101) | `98920a34-adcb-4477-b99c-a51817140dc6` |
 | Artigo "Critério de acessibilidade" (0002) | `27090792-48ee-49bb-a162-291c7c97c92e` |
 | Versão de documentação v1 | `9aab337b-ff81-406a-bff1-1de369b6eedd` |
 

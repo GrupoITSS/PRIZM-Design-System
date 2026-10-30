@@ -5,7 +5,7 @@ description: Documenta um componente do design system Prizm (Grupo ITSS) de pont
 
 # Documentar um componente do Prizm
 
-Esta skill repete, para qualquer componente, o que foi feito com o Button em 19–20/10/2026: Figma religado ao Core, doc completa no Figma, acessibilidade medida, correções no código em PR, artigo no CMS e rastreabilidade entre as pontas. O resultado do piloto é o modelo de tudo: frame `25019:4489` no Figma e artigo "Button" no CMS.
+Esta skill repete, para qualquer componente, o que foi feito com o Button em 19–20/10/2026: Figma religado ao Core, doc completa no Figma, acessibilidade medida, correções no código em PR, artigo no CMS e rastreabilidade entre as pontas. O modelo do frame no Figma é o do Button (`25019:4489`). O modelo do artigo no CMS é o "Combobox", que já está no formato novo (DS-61).
 
 ## Papéis
 
