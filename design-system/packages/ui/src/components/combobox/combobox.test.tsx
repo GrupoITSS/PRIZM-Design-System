@@ -87,6 +87,40 @@ describe("Combobox: teclado (APG)", () => {
   });
 });
 
+describe("Combobox: valor controlado na seleção única", () => {
+  it("mostra o value vindo de fora", () => {
+    render(<Combobox items={items} value="SvelteKit" placeholder="c" />);
+
+    expect(screen.getByPlaceholderText("c")).toHaveValue("SvelteKit");
+  });
+
+  it("chama onValueChange ao escolher e segue o estado do pai", () => {
+    const escolhas: unknown[] = [];
+    function Harness() {
+      const [value, setValue] = useState<string | null>(null);
+      return (
+        <Combobox
+          items={items}
+          value={value}
+          onValueChange={(nextValue) => {
+            escolhas.push(nextValue);
+            setValue(nextValue as string | null);
+          }}
+          placeholder="c"
+        />
+      );
+    }
+    render(<Harness />);
+    const input = screen.getByPlaceholderText("c");
+    fireEvent.focus(input);
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(escolhas).toEqual(["Next.js"]);
+    expect(input).toHaveValue("Next.js");
+  });
+});
+
 describe("Combobox: Multiple", () => {
   function Harness(props: { "aria-invalid"?: boolean; disabled?: boolean; size?: "sm" | "md" | "lg" }) {
     const [value, setValue] = useState<string[]>(["Next.js"]);
