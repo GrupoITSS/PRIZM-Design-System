@@ -3,31 +3,33 @@ import { cva, type VariantProps } from "class-variance-authority";
 /**
  * PRIZM Checkbox — root styles aligned with shadcn/ui.
  * Radix Checkbox.Root renders a <button>; we reset native button styles and use
- * border-input when unchecked, primary when checked. Uses design tokens from @grupoitss/prizm-tokens.
+ * border-input-strong when unchecked, primary when checked. Uses design tokens from @grupoitss/prizm-tokens.
  *
  * @see https://ui.shadcn.com/docs/components/checkbox
  * @see https://www.radix-ui.com/docs/primitives/components/checkbox
  */
 export const checkboxRootVariants = cva(
   [
-    "peer grid shrink-0 place-content-center rounded-[4px] border border-input",
-    "bg-background transition-colors",
+    "peer relative grid shrink-0 place-content-center rounded-xs border border-input-strong",
+    "bg-input-background transition-colors",
     /* 1px internal padding so the check icon sits inset from the border */
     "p-px",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset",
     "disabled:cursor-not-allowed disabled:opacity-50",
     "data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
     "data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-primary-foreground",
+    /* Error wins over the checked border; the focus ring stays on ring */
+    "aria-invalid:border-destructive aria-invalid:data-[state=checked]:border-destructive aria-invalid:data-[state=indeterminate]:border-destructive",
     /* Reset native <button> appearance */
     "cursor-pointer appearance-none",
   ].join(" "),
   {
     variants: {
       size: {
-        /* 16px total = 14px inner + 2×1px padding */
-        default: "h-4 w-4 min-h-4 min-w-4",
-        /* 14px total = 12px inner + 2×1px padding */
-        sm: "h-[14px] w-[14px] min-h-[14px] min-w-[14px]",
+        /* 16px total = 14px inner + 2×1px padding. after: 24px pointer target (WCAG 2.5.8) */
+        default: "size-4 min-h-4 min-w-4 after:absolute after:-inset-1 after:content-['']",
+        /* 14px total = 12px inner + 2×1px padding. after: 24px pointer target (WCAG 2.5.8) */
+        sm: "size-3.5 min-h-3.5 min-w-3.5 after:absolute after:-inset-[5px] after:content-['']",
       },
     },
     defaultVariants: {
