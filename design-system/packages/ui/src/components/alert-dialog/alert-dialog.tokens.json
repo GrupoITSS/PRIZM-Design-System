@@ -1,0 +1,100 @@
+{
+  "component": "AlertDialog",
+  "description": "Mapa de tokens do AlertDialog: o que cada parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do component set Alert Dialog no Figma em 31/10/2026 (4 variantes: Breakpoint desktop · mobile × Media None · Icon, todas no Core) e conferido contra alert-dialog.styles.ts pelo teste alert-dialog.tokens.test.ts. Nomes no formato do Figma (color/muted-foreground); no código viram classes Tailwind (text-muted-foreground). Os botões são o Button e seguem o button.tokens.json.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=83-122",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25767-2011",
+    "code": "design-system/packages/ui/src/components/alert-dialog/alert-dialog.tsx",
+    "story": "design-system/apps/docs/stories/alert-dialog.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=fe5ac0c3-f27b-47a2-9ba9-a6de1ee0fae1&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/152",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/153"
+    ],
+    "jira": ["GIES-1725"]
+  },
+  "parts": {
+    "overlay": {
+      "background": null,
+      "code": "bg-black/80 backdrop-blur-[0.125rem]",
+      "note": "Só no código, sem token: pendência da família (Dialog usa color/alpha-80)."
+    },
+    "content": {
+      "background": "color/background",
+      "border": "color/border",
+      "borderWidth": "border-width/1",
+      "radius": "radius/lg",
+      "shadow": "shadow/lg",
+      "padding": "spacing/6",
+      "gap": "spacing/4",
+      "maxWidth": "max-width/lg",
+      "mobileMargin": "16px (max-w-[calc(100%-2rem)])"
+    },
+    "header": { "gap": "spacing/2", "mediaGap": "spacing/6" },
+    "media": {
+      "background": "color/muted",
+      "icon": "color/foreground",
+      "width": "width/16",
+      "height": "height/16",
+      "radius": "radius/md",
+      "iconSize": "32px"
+    },
+    "title": {
+      "text": "color/foreground",
+      "fontSize": "text/lg/font-size",
+      "lineHeight": "text/lg/line-height",
+      "fontWeight": "font-weight/semibold"
+    },
+    "description": {
+      "text": "color/muted-foreground",
+      "fontSize": "text/sm/font-size",
+      "lineHeight": "text/sm/line-height",
+      "fontWeight": "font-weight/normal"
+    },
+    "footer": { "gap": "spacing/2", "cancel": "Button outline", "action": "Button default" }
+  },
+  "breakpoints": {
+    "desktop": {
+      "width": "max-width/lg",
+      "from": "640px (sm)",
+      "media": "à esquerda do título e da descrição"
+    },
+    "mobile": {
+      "width": "343px no Figma (375 − 2 × 16)",
+      "media": "acima do título, centralizada",
+      "footer": "botões empilhados, ação em cima"
+    }
+  },
+  "states": {
+    "hover": null,
+    "focus": "nos botões (Button)",
+    "loading": "Button loading na ação, com open controlado",
+    "note": "A caixa não é interativa. Abre e fecha com fade e zoom (95% → 100%) em 200ms."
+  },
+  "divergences": [
+    {
+      "where": "fundo escuro",
+      "figma": "não existe no Figma",
+      "code": "bg-black/80 com backdrop-blur, sem token",
+      "status": "aberta"
+    },
+    {
+      "where": "Breakpoint",
+      "figma": "variante desktop · mobile",
+      "code": "sem prop: o layout muda a partir de 640px",
+      "status": "representação"
+    },
+    {
+      "where": "mídia → título no mobile",
+      "figma": "spacing/2 (8px), itemSpacing do header",
+      "code": "mb-2 na mídia + gap-2 do header (16px)",
+      "status": "aberta"
+    },
+    {
+      "where": "texto de exemplo",
+      "figma": "inglês, como no kit (Title Text, Cancel, Continue)",
+      "code": "padrões em pt-BR (Cancelar, Continuar)",
+      "status": "representação"
+    }
+  ]
+}
