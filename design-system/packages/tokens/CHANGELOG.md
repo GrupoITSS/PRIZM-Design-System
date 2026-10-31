@@ -1,5 +1,24 @@
 # @grupoitss/prizm-tokens
 
+## 5.2.0
+
+### Minor Changes
+
+- 498c671: **Accent do escuro em neutral 700**
+
+  - **Tokens**: `palette/accent/dark` passa de `neutral.800` para `neutral.700` nas marcas PAS, Docnix e ITSS (e nos produtos que herdam delas). Antes, accent e popover eram o mesmo cinza no escuro (1,00:1), e o item em destaque de Select, DropdownMenu, Command e afins não aparecia na lista (WCAG 2.4.7). Agora fica em 1,42–1,46:1 sobre o popover e 1,89–1,95:1 sobre o background. O claro não muda.
+  - **UI**: `muted-foreground` sobre o novo accent fica em 4,06–4,13:1, abaixo de 4,5:1. No item em destaque de ContextMenu, DropdownMenu, Menubar, NavigationMenu e Command, o texto com `text-muted-foreground` (descrição, atalho) passa a `accent-foreground` (9,86–10,03:1).
+
+- 63e189f: **Checkbox: decisões de 30/10/2026**
+
+  - **Tokens: novo `color/input-strong`** (`neutral.500` no claro, branco a 40% no escuro), para controles que só têm o contorno para identificar. Tem de 3,73 a 4,83:1 contra a página (WCAG 1.4.11). `color/input` não muda.
+  - **Borda sem marcar em `input-strong`.** Com `color/input`, a caixa ficava entre 1,16 e 1,55:1.
+  - **Erro visível.** `aria-invalid` agora pinta a borda de `destructive`, também com a caixa marcada ou indeterminada. Antes, o erro não aparecia na caixa.
+  - **Fundo em `input-background`,** como os campos. Muda o visual no modo escuro.
+  - **Raio em `rounded-xs`** (antes 4px fixo): 2px no PAS e no ITSS, 1px no Docnix.
+  - **Alvo de ponteiro de 24px** nos dois tamanhos, sem mudar o layout (WCAG 2.5.8).
+  - **Anel com `ring-offset-ring-offset`,** como o Button.
+
 ## 5.1.0
 
 ### Minor Changes
