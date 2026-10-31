@@ -9,15 +9,16 @@
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=fe5ac0c3-f27b-47a2-9ba9-a6de1ee0fae1&version=v1",
     "pullRequests": [
       "https://github.com/GrupoITSS/PRIZM-Design-System/pull/152",
-      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/153"
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/153",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/155"
     ],
     "jira": ["GIES-1725"]
   },
   "parts": {
     "overlay": {
-      "background": null,
-      "code": "bg-black/80 backdrop-blur-[0.125rem]",
-      "note": "Só no código, sem token: pendência da família (Dialog usa color/alpha-80)."
+      "background": "color/alpha-80",
+      "blur": "backdrop-blur-[0.125rem]",
+      "note": "Igual ao Dialog. Só no código: o Figma não desenha o fundo atrás do modal."
     },
     "content": {
       "background": "color/background",
@@ -30,7 +31,11 @@
       "maxWidth": "max-width/lg",
       "mobileMargin": "16px (max-w-[calc(100%-2rem)])"
     },
-    "header": { "gap": "spacing/2", "mediaGap": "spacing/6", "mediaToTitleMobile": "spacing/2" },
+    "header": {
+      "gap": "spacing/2",
+      "mediaGap": "spacing/6",
+      "mediaToTitleMobile": "spacing/2"
+    },
     "media": {
       "background": "color/muted",
       "icon": "color/foreground",
@@ -51,7 +56,11 @@
       "lineHeight": "text/sm/line-height",
       "fontWeight": "font-weight/normal"
     },
-    "footer": { "gap": "spacing/2", "cancel": "Button outline", "action": "Button default" }
+    "footer": {
+      "gap": "spacing/2",
+      "cancel": "Button outline",
+      "action": "Button default"
+    }
   },
   "breakpoints": {
     "desktop": {
@@ -73,10 +82,10 @@
   },
   "divergences": [
     {
-      "where": "fundo escuro",
+      "where": "fundo atrás do modal",
       "figma": "não existe no Figma",
-      "code": "bg-black/80 com backdrop-blur, sem token",
-      "status": "aberta"
+      "code": "bg-alpha-80 com backdrop-blur, igual ao Dialog",
+      "status": "representação"
     },
     {
       "where": "Breakpoint",

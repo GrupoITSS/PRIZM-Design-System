@@ -69,12 +69,11 @@ describe("AlertDialog × mapa de tokens (alert-dialog.tokens.json)", () => {
     expect(c).toContain("flex-col-reverse");
   });
 
-  it("fundo escuro: sem token, como registrado nas divergências", () => {
-    expect(p.overlay.background).toBeNull();
-    for (const k of classes(p.overlay.code)) expect(classes(alertDialogOverlayStyles)).toContain(k);
-    expect(map.divergences.some((d) => d.where === "fundo escuro" && d.status === "aberta")).toBe(
-      true,
-    );
+  it("fundo atrás do modal: color/alpha-80 com blur, igual ao Dialog", () => {
+    const c = classes(alertDialogOverlayStyles);
+    expect(c).toContain(`bg-${color(p.overlay.background)}`);
+    expect(c).toContain(p.overlay.blur);
+    expect(c.some((k) => k.startsWith("bg-black"))).toBe(false);
   });
 
   it("mídia → título no celular: só o gap do header (spacing/2), sem margem na mídia", () => {
