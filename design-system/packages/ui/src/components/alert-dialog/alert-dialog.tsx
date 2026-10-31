@@ -48,12 +48,22 @@ function AlertDialogRoot({
 }: AlertDialogProps) {
   // Se trigger ou title são passados, usar API simplificada
   const useSimplifiedAPI = trigger !== undefined || title !== undefined;
+  const hasChildren = children != null && children !== false;
+
+  // Na API por props, children não é desenhado (combinação inválida, decisão de 31/10).
+  React.useEffect(() => {
+    if (process.env.NODE_ENV !== "production" && useSimplifiedAPI && hasChildren) {
+      console.warn(
+        "AlertDialog: children é ignorado quando há trigger ou title (API por props). Use só props, ou só composição.",
+      );
+    }
+  }, [useSimplifiedAPI, hasChildren]);
 
   if (useSimplifiedAPI) {
     return (
       <RadixAlertDialog.Root {...props}>
         {Boolean(trigger) && <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>}
-        <AlertDialogContent>
+        <AlertDialogContent onEscapeKeyDown={() => onCancel?.()}>
           <AlertDialogHeader>
             {Boolean(icon) && <AlertDialogMedia>{icon}</AlertDialogMedia>}
             {Boolean(title) && <AlertDialogTitle>{title}</AlertDialogTitle>}
