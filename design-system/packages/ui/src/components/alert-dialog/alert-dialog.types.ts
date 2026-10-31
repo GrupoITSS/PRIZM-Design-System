@@ -23,6 +23,12 @@ export interface AlertDialogProps extends React.ComponentPropsWithoutRef<
    */
   description?: React.ReactNode;
   /**
+   * Decorative icon shown in AlertDialogMedia (64px square, icon at 32px).
+   * Above the title on mobile; to its left from 640px.
+   * @example <Trash2 />
+   */
+  icon?: React.ReactNode;
+  /**
    * Cancel button text. Optional.
    * @default "Cancelar"
    */
@@ -58,6 +64,8 @@ export interface AlertDialogContentProps extends Omit<
 export type AlertDialogHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
 export type AlertDialogFooterProps = React.HTMLAttributes<HTMLDivElement>;
+
+export type AlertDialogMediaProps = React.HTMLAttributes<HTMLDivElement>;
 
 export type AlertDialogTitleProps = React.ComponentPropsWithoutRef<typeof RadixAlertDialog.Title>;
 

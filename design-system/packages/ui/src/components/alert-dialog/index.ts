@@ -6,6 +6,7 @@ export {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogMedia,
   AlertDialogOverlay,
   AlertDialogPortal,
   AlertDialogTitle,
@@ -19,6 +20,7 @@ export type {
   AlertDialogDescriptionProps,
   AlertDialogFooterProps,
   AlertDialogHeaderProps,
+  AlertDialogMediaProps,
   AlertDialogTitleProps,
   AlertDialogTriggerProps,
 } from "./alert-dialog.types";
