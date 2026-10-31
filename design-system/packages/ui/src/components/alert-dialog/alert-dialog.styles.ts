@@ -33,6 +33,9 @@ export const alertDialogTitleStyles =
 
 export const alertDialogDescriptionStyles = "text-sm text-muted-foreground";
 
-/** Mídia: quadrado width/16 em color/muted, radius/md, ícone de 32px em color/foreground. */
+/**
+ * Mídia: quadrado width/16 em color/muted, radius/md, ícone de 32px em color/foreground.
+ * No celular, spacing/2 até o título (o gap do header), como no Figma.
+ */
 export const alertDialogMediaStyles =
-  "mb-2 inline-flex size-16 items-center justify-center rounded-md bg-muted text-foreground sm:row-span-2 *:[svg:not([class*='size-'])]:size-8";
+  "inline-flex size-16 items-center justify-center rounded-md bg-muted text-foreground sm:row-span-2 *:[svg:not([class*='size-'])]:size-8";

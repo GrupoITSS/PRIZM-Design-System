@@ -30,7 +30,7 @@
       "maxWidth": "max-width/lg",
       "mobileMargin": "16px (max-w-[calc(100%-2rem)])"
     },
-    "header": { "gap": "spacing/2", "mediaGap": "spacing/6" },
+    "header": { "gap": "spacing/2", "mediaGap": "spacing/6", "mediaToTitleMobile": "spacing/2" },
     "media": {
       "background": "color/muted",
       "icon": "color/foreground",
@@ -83,12 +83,6 @@
       "figma": "variante desktop · mobile",
       "code": "sem prop: o layout muda a partir de 640px",
       "status": "representação"
-    },
-    {
-      "where": "mídia → título no mobile",
-      "figma": "spacing/2 (8px), itemSpacing do header",
-      "code": "mb-2 na mídia + gap-2 do header (16px)",
-      "status": "aberta"
     },
     {
       "where": "texto de exemplo",

@@ -77,8 +77,8 @@ describe("AlertDialog × mapa de tokens (alert-dialog.tokens.json)", () => {
     );
   });
 
-  it("mídia → título no mobile: divergência registrada enquanto o código usar mb-2", () => {
-    const aberta = map.divergences.some((d) => d.where === "mídia → título no mobile");
-    expect(classes(alertDialogMediaStyles).includes("mb-2")).toBe(aberta);
+  it("mídia → título no celular: só o gap do header (spacing/2), sem margem na mídia", () => {
+    expect(map.parts.header.mediaToTitleMobile).toBe(p.header.gap);
+    expect(classes(alertDialogMediaStyles).some((c) => /^m[btyl]?-/.test(c))).toBe(false);
   });
 });
