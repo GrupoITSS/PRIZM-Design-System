@@ -1,21 +1,9 @@
 import type * as React from "react";
 import type { AlertDialog as RadixAlertDialog } from "radix-ui";
 
-export interface AlertDialogProps extends React.ComponentPropsWithoutRef<
+interface AlertDialogBaseProps extends React.ComponentPropsWithoutRef<
   typeof RadixAlertDialog.Root
 > {
-  /**
-   * Trigger element that opens the dialog (e.g. a Button).
-   * **Required** when using simplified API.
-   * @example <Button variant="destructive">Delete</Button>
-   */
-  trigger?: React.ReactNode;
-  /**
-   * Dialog title. **Required for accessibility** (ARIA).
-   * Should be a clear, concise question or statement.
-   * @example "Are you sure?"
-   */
-  title?: React.ReactNode;
   /**
    * Dialog description. **Highly recommended for accessibility**.
    * Provides context and consequences of the action.
@@ -44,11 +32,36 @@ export interface AlertDialogProps extends React.ComponentPropsWithoutRef<
    */
   onAction?: () => void;
   /**
-   * Callback when cancel button is clicked. Optional.
+   * Callback when the dialog is cancelled: Cancel button or Escape. Optional.
    * Dialog will close automatically after execution.
    */
   onCancel?: () => void;
 }
+
+/**
+ * Simplified API (props) or composition (children).
+ * With `trigger`, `title` is required: without it the dialog has no accessible name.
+ */
+export type AlertDialogProps = AlertDialogBaseProps &
+  (
+    | {
+        /**
+         * Trigger element that opens the dialog (e.g. a Button).
+         * @example <Button variant="destructive">Delete</Button>
+         */
+        trigger?: React.ReactNode;
+        /**
+         * Dialog title. **Required** in the simplified API: it names the dialog (ARIA).
+         * Should be a clear, concise question or statement.
+         * @example "Are you sure?"
+         */
+        title: React.ReactNode;
+      }
+    | {
+        trigger?: undefined;
+        title?: undefined;
+      }
+  );
 
 export type AlertDialogTriggerProps = React.ComponentPropsWithoutRef<
   typeof RadixAlertDialog.Trigger

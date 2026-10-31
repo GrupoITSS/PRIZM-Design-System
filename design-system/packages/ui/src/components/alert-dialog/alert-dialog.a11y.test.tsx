@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import * as React from "react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Button } from "../button";
 import {
   AlertDialog,
@@ -112,5 +112,54 @@ describe("AlertDialog · teclado e nomes", () => {
     expect(acao).toHaveFocus();
     fireEvent.click(acao);
     expect(screen.getByRole("alertdialog")).toBeInTheDocument();
+  });
+});
+
+describe("AlertDialog · combinações inválidas", () => {
+  it("Esc chama onCancel, como o botão Cancelar", async () => {
+    const onCancel = vi.fn();
+    render(<AlertDialog defaultOpen title="Excluir projeto?" onCancel={onCancel} />);
+    const dlg = await screen.findByRole("alertdialog");
+    fireEvent.keyDown(dlg, { key: "Escape" });
+    await waitFor(() => expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument());
+    expect(onCancel).toHaveBeenCalledTimes(1);
+  });
+
+  it("Cancelar chama onCancel uma vez", async () => {
+    const onCancel = vi.fn();
+    render(<AlertDialog defaultOpen title="Excluir projeto?" onCancel={onCancel} />);
+    fireEvent.click(await screen.findByRole("button", { name: "Cancelar" }));
+    expect(onCancel).toHaveBeenCalledTimes(1);
+  });
+
+  it("avisa no console quando children vem junto da API por props", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(
+      <AlertDialog defaultOpen title="Excluir projeto?">
+        <span>ignorado</span>
+      </AlertDialog>,
+    );
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("children é ignorado"));
+    warn.mockRestore();
+  });
+
+  it("não avisa na composição nem na API por props sem children", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(<AlertDialog defaultOpen title="Excluir projeto?" />);
+    render(
+      <AlertDialog defaultOpen>
+        <AlertDialogContent>
+          <AlertDialogTitle>Título</AlertDialogTitle>
+        </AlertDialogContent>
+      </AlertDialog>,
+    );
+    expect(warn).not.toHaveBeenCalledWith(expect.stringContaining("children é ignorado"));
+    warn.mockRestore();
+  });
+
+  it("trigger sem title não compila", () => {
+    // @ts-expect-error: com trigger, title é obrigatório (o diálogo precisa de nome)
+    const semTitulo = <AlertDialog trigger={<Button>Excluir</Button>} />;
+    expect(semTitulo).toBeTruthy();
   });
 });
