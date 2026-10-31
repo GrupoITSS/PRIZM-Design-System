@@ -15,16 +15,26 @@ import {
 import { Trash2 } from "@grupoitss/prizm-ui/icons";
 import * as React from "react";
 
+// Traceability: the component set in [PRIZM] Componentes, the documentation frame and the
+// CMS article. The token map lives next to the component (alert-dialog.tokens.json) and is
+// checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=83-122";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25767-2011";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=fe5ac0c3-f27b-47a2-9ba9-a6de1ee0fae1&version=v1";
+
 const meta: Meta<typeof AlertDialog> = {
-  title: "Compositions/AlertDialog",
+  title: "Primários/AlertDialog",
   component: AlertDialog,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Alert Dialog do design system PRIZM. Uso recomendado: `<AlertDialog trigger={} title={} description={} actionText={} cancelText={} onAction={} onCancel={} />`. Baseado em shadcn/ui (Radix).\n\n**Documentação:** <a href="https://ui.shadcn.com/docs/components/radix/alert-dialog" target="_blank" rel="noopener noreferrer">Alert Dialog — shadcn/ui (Radix)</a>',
+          "Alert Dialog do design system PRIZM: confirma uma ação que não se desfaz. Uso recomendado: `<AlertDialog trigger={} title={} description={} icon={} actionText={} onAction={} onCancel={} />`. Com `trigger`, `title` é obrigatório. Para trocar a variante da ação ou esperar uma ação que demora, use a composição com o Button.\n\n" +
+          'Não fecha clicando fora: só por Cancelar, pela ação ou pelo Esc (que também chama `onCancel`). Ao abrir, o foco vai para Cancelar.\n\n**Documentação:** <a href="https://ui.shadcn.com/docs/components/radix/alert-dialog" target="_blank" rel="noopener noreferrer">Alert Dialog — shadcn/ui (Radix)</a>' +
+          `\n\n[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
@@ -36,13 +46,12 @@ type Story = StoryObj<typeof AlertDialog>;
 export const Default: Story = {
   render: () => (
     <AlertDialog
-      trigger={<Button variant="outline">Open</Button>}
-      title="Are you sure?"
-      description="This action cannot be undone. This will permanently delete the item."
-      cancelText="Cancel"
-      actionText="Continue"
-      onAction={() => console.log("Continued")}
-      onCancel={() => console.log("Cancelled")}
+      trigger={<Button variant="outline">Abrir</Button>}
+      title="Tem certeza?"
+      description="Esta ação não pode ser desfeita. O item será excluído."
+      actionText="Continuar"
+      onAction={() => console.log("Continuou")}
+      onCancel={() => console.log("Cancelou")}
     />
   ),
 };
@@ -50,13 +59,12 @@ export const Default: Story = {
 export const Primary: Story = {
   render: () => (
     <AlertDialog
-      trigger={<Button variant="default">Continue</Button>}
-      title="Are you sure?"
-      description="This action cannot be undone. This will permanently delete the item."
-      cancelText="Cancel"
-      actionText="Continue"
-      onAction={() => console.log("Continued")}
-      onCancel={() => console.log("Cancelled")}
+      trigger={<Button variant="default">Publicar</Button>}
+      title="Publicar alterações?"
+      description="A nova versão fica visível para todos."
+      actionText="Publicar"
+      onAction={() => console.log("Publicou")}
+      onCancel={() => console.log("Cancelou")}
     />
   ),
 };
