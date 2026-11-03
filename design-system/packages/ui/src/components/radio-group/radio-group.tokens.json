@@ -1,0 +1,105 @@
+{
+  "component": "RadioGroup",
+  "description": "Mapa de tokens do RadioGroup: o que o círculo, o ponto, os textos e o cartão usam do [PRIZM] Design Tokens_Core em cada estado. Extraído das ligações do component set RadioButton no Figma em 03/11/2026 (20 variantes, nenhuma ligação local). O radio-group.tokens.test.tsx confere o mapa contra as classes do código.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=65-326",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25852-3524",
+    "code": "design-system/packages/ui/src/components/radio-group/radio-group.tsx",
+    "story": "design-system/apps/docs/stories/radio-group.stories.tsx",
+    "jira": ["GIES-1728", "GIES-1725"]
+  },
+  "types": {
+    "Default": "o item, com rótulo e descrição",
+    "Box": "cartão: FieldLabel envolvendo Field, com RadioGroupItem"
+  },
+  "checked": {
+    "no": {
+      "background": "color/input-background",
+      "border": "color/input-strong"
+    },
+    "yes": {
+      "background": "color/input-background",
+      "border": "color/primary",
+      "dot": "color/primary"
+    }
+  },
+  "states": {
+    "focus": {
+      "ring": "color/ring",
+      "ringWidth": 2,
+      "ringOffset": "color/ring-offset",
+      "ringOffsetWidth": 2,
+      "note": "Só no foco por teclado: o item é um botão no HTML. A borda não muda."
+    },
+    "error": {
+      "border": "color/destructive",
+      "attribute": "aria-invalid, no grupo ou no item",
+      "note": "Vence a borda do marcado; o ponto continua color/primary."
+    },
+    "errorFocus": {
+      "border": "color/destructive",
+      "ring": "color/ring",
+      "ringWidth": 2
+    },
+    "disabled": {
+      "opacity": "opacity/50",
+      "labelOpacity": "opacity/70",
+      "attribute": "disabled"
+    },
+    "hover": {
+      "note": "Sem hover, como os campos."
+    }
+  },
+  "parts": {
+    "circle": {
+      "width": "width/4",
+      "radius": "radius/full",
+      "borderWidth": "border-width/1"
+    },
+    "dot": {
+      "width": "width/2"
+    },
+    "label": {
+      "color": "color/foreground",
+      "fontSize": "text/sm",
+      "fontWeight": "font-weight/medium"
+    },
+    "description": {
+      "color": "color/muted-foreground",
+      "fontSize": "text/sm"
+    },
+    "card": {
+      "radius": "radius/md",
+      "padding": "spacing/4",
+      "border": "color/border",
+      "checkedBorder": "color/primary",
+      "checkedBackground": "color/primary",
+      "checkedBackgroundOpacity": "opacity/5"
+    }
+  },
+  "spacing": {
+    "circleToText": "spacing/2",
+    "labelToDescription": "spacing/1-5",
+    "betweenItems": "spacing/2"
+  },
+  "divergences": [
+    {
+      "where": "Peso do rótulo",
+      "figma": "font-weight/medium",
+      "code": "font-light",
+      "status": "aberta: o PR #161 passa o rótulo a font-medium"
+    },
+    {
+      "where": "Área de clique",
+      "figma": "sem camada: a área de 24px não aparece no Figma",
+      "code": "after:-inset-1",
+      "status": "aberta"
+    },
+    {
+      "where": "Tamanho",
+      "figma": "sem Size",
+      "code": "sem size; o Checkbox tem default e sm",
+      "status": "aberta: diferença da família, registrada em 03/11"
+    }
+  ]
+}
