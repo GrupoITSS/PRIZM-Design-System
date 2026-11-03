@@ -1,0 +1,80 @@
+{
+  "component": "Command",
+  "description": "Mapa de tokens do Command: o que o contêiner, a busca, o título de grupo e o item usam do [PRIZM] Design Tokens_Core. Extraído das ligações dos sets no Figma em 03/11/2026 (nenhuma ligação local). O command.tokens.test.ts confere o mapa contra as classes do código.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=204-1144",
+    "figmaItem": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=345-8657",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25907-3157",
+    "code": "design-system/packages/ui/src/components/command/command.tsx",
+    "story": "design-system/apps/docs/stories/command.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=49ee41fe-ce7a-4540-bfd4-b7366cdb309e&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/165"],
+    "jira": ["GIES-1728", "GIES-1725"]
+  },
+  "variants": {
+    "Suggestions": "groups com itens",
+    "Empty": "emptyMessage, quando a busca não acha nada"
+  },
+  "parts": {
+    "container": {
+      "background": "color/popover",
+      "text": "color/popover-foreground",
+      "border": "color/border",
+      "radius": "radius/lg",
+      "shadow": "nenhuma; quem flutua (Dialog) dá a sombra"
+    },
+    "input": {
+      "height": "height/12",
+      "paddingX": "spacing/4",
+      "border": "color/border",
+      "placeholder": "color/muted-foreground",
+      "icon": "color/muted-foreground"
+    },
+    "heading": {
+      "color": "color/muted-foreground",
+      "fontSize": "text/xs",
+      "fontWeight": "font-weight/medium",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/1-5"
+    },
+    "item": {
+      "text": "color/popover-foreground",
+      "radius": "radius/sm",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/1-5",
+      "gap": "spacing/2",
+      "fontSize": "text/sm"
+    },
+    "shortcut": {
+      "color": "color/muted-foreground",
+      "fontSize": "text/xs"
+    }
+  },
+  "states": {
+    "highlighted": {
+      "background": "color/accent",
+      "text": "color/accent-foreground",
+      "shortcut": "color/accent-foreground",
+      "attribute": "data-selected (mouse e setas)",
+      "exception": "color/accent sobre color/popover: 1,09 a 1,46:1, como no Select e no Combobox. Exceção registrada em 03/11."
+    },
+    "disabled": {
+      "opacity": "opacity/50",
+      "attribute": "disabled"
+    }
+  },
+  "divergences": [
+    {
+      "where": "Itens no CommandDialog",
+      "figma": "mesmo item de 32px",
+      "code": "commandDialogStyles: px-3 py-3.5 gap-3, ícones de 20px",
+      "status": "aberta: o Dialog usa item maior, como no shadcn"
+    },
+    {
+      "where": "Texto de exemplo",
+      "figma": "em inglês, como no kit",
+      "code": "textos padrão em pt-BR",
+      "status": "regra de 28/10"
+    }
+  ]
+}
