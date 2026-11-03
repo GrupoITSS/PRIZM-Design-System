@@ -8,6 +8,9 @@ import { cva, type VariantProps } from "class-variance-authority";
  * Figma Button outline (`input-background`, `input` border, `shadow-xs`). Other
  * colors come from `className`, as in shadcn's "Custom Colors" (e.g. `bg-info-weak text-info-strong`).
  *
+ * Pill shape: `rounded-full` (`radius/full`) in every variant and size, with the same padding
+ * (decision of 03/11/2026).
+ *
  * The Badge is static: no hover and no focus, only the default state (Figma, 21/10/2026).
  * Inside a filled Button it inverts its colors (see the base classes below).
  *
@@ -15,7 +18,7 @@ import { cva, type VariantProps } from "class-variance-authority";
  */
 export const badgeVariants = cva(
   [
-    "inline-flex w-fit items-center whitespace-nowrap rounded-md border font-semibold leading-none",
+    "inline-flex w-fit items-center whitespace-nowrap rounded-full border font-semibold leading-none",
     "px-2 py-0.5",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0",
     // Inside a filled Button (default, destructive) the badge inverts: the
@@ -49,7 +52,7 @@ export const badgeVariants = cva(
       // `number` is the Figma "Badge Number": a round counter (min 20px wide) for digits.
       shape: {
         default: "",
-        number: "min-w-5 justify-center rounded-full px-1 tabular-nums",
+        number: "min-w-5 justify-center px-1 tabular-nums",
       },
     },
     defaultVariants: {
