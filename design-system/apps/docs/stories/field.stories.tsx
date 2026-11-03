@@ -92,11 +92,8 @@ export const CompositionRequiredFields: Story = {
       <FieldLegend>Account information</FieldLegend>
       <FieldGroup>
         <Field {...args}>
-          <FieldLabel htmlFor="email">
+          <FieldLabel htmlFor="email" required>
             Email
-            <span className="text-destructive ml-0.5" aria-hidden="true">
-              *
-            </span>
           </FieldLabel>
           <Input id="email" type="email" required placeholder="you@example.com" />
           <FieldDescription>
@@ -104,11 +101,8 @@ export const CompositionRequiredFields: Story = {
           </FieldDescription>
         </Field>
         <Field {...args}>
-          <FieldLabel htmlFor="password">
+          <FieldLabel htmlFor="password" required>
             Password
-            <span className="text-destructive ml-0.5" aria-hidden="true">
-              *
-            </span>
           </FieldLabel>
           <Input id="password" type="password" required aria-invalid="true" />
           <FieldError>This field is required.</FieldError>

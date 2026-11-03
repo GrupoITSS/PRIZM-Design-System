@@ -35,7 +35,7 @@ const Label = ({
   >
     {children}
     {required ? (
-      <span className="ml-0.5 text-destructive" aria-hidden="true">
+      <span data-slot="label-required" className="ml-0.5 text-destructive" aria-hidden="true">
         *
       </span>
     ) : null}
