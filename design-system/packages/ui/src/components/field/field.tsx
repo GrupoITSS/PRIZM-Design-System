@@ -42,7 +42,7 @@ function FieldLegend({ className, variant = "legend", ...props }: FieldLegendPro
       data-slot="field-legend"
       data-variant={variant}
       className={cn(
-        "mb-3 font-light",
+        "mb-3 font-medium",
         "data-[variant=legend]:text-base",
         "data-[variant=label]:text-sm",
         className,
@@ -107,7 +107,7 @@ function FieldTitle({ className, ...props }: FieldTitleProps) {
     <div
       data-slot="field-label"
       className={cn(
-        "flex w-fit items-center gap-2 text-sm font-light text-foreground leading-snug group-data-[disabled=true]/field:font-medium group-data-[disabled=true]/field:opacity-100",
+        "flex w-fit items-center gap-2 text-sm font-medium text-foreground leading-snug group-data-[disabled=true]/field:opacity-100",
         className,
       )}
       {...props}

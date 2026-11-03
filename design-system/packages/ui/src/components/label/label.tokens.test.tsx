@@ -29,9 +29,8 @@ describe("Label × mapa de tokens (label.tokens.json)", () => {
     expect(asterisco).toHaveClass(`ml-${suffix(map.parts.asterisk.gap).replace("-", ".")}`);
   });
 
-  it("peso: a divergência com o Figma segue registrada", () => {
-    const peso = map.divergences.find((d) => d.where === "Peso do rótulo");
-    expect(peso?.status).toBe("aberta");
-    expect(classes).toContain(peso?.code);
+  it("peso: o do mapa, sem divergência com o Figma", () => {
+    expect(classes).toContain(`font-${suffix(map.parts.text.fontWeight)}`);
+    expect(map.divergences).toEqual([]);
   });
 });

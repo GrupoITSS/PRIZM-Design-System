@@ -32,18 +32,12 @@
   "parts": {
     "text": {
       "fontSize": "text/sm",
-      "fontFamily": "font/sans"
+      "fontFamily": "font/sans",
+      "fontWeight": "font-weight/medium"
     },
     "asterisk": {
       "gap": "spacing/0-5"
     }
   },
-  "divergences": [
-    {
-      "where": "Peso do rótulo",
-      "figma": "font-weight/medium",
-      "code": "font-light",
-      "status": "aberta"
-    }
-  ]
+  "divergences": []
 }

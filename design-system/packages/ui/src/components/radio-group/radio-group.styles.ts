@@ -39,6 +39,6 @@ export const radioItemControlClasses = [
   "data-[state=checked]:border-primary data-[state=checked]:bg-primary/10 data-[state=checked]:text-primary",
 ].join(" ");
 
-export const radioItemLabelClasses = "font-light leading-none text-foreground";
+export const radioItemLabelClasses = "font-medium leading-none text-foreground";
 
 export const radioItemDescriptionClasses = "mt-1 text-xs text-muted-foreground leading-snug";
