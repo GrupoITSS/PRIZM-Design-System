@@ -1,7 +1,7 @@
 import { cn } from "../../lib/cn";
 import { buttonVariants } from "../button";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Ellipsis } from "../icons";
-import type * as React from "react";
+import * as React from "react";
 import {
   paginationEllipsisVariants,
   paginationListVariants,
@@ -89,6 +89,21 @@ function Pagination({
       ? "sm"
       : "default";
   const pageSize = size;
+
+  // Combinações inválidas (decisão de 03/11): avisos só em desenvolvimento.
+  const vazio = iconsOnly && !showPrevNext;
+  const inerte = !onPageChange && !getHref;
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
+    if (vazio) {
+      console.warn(
+        "Pagination: iconsOnly com showPrevNext={false} não mostra nada. Deixe as setas, ou não renderize o Pagination.",
+      );
+    }
+    if (inerte) {
+      console.warn("Pagination: sem onPageChange e sem getHref, os botões não fazem nada.");
+    }
+  }, [vazio, inerte]);
 
   const go = (target: number) => (e: React.MouseEvent) => {
     if (target === page || target < 1 || target > totalPages) {
