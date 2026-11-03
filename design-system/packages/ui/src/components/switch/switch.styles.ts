@@ -6,13 +6,22 @@ import { cva, type VariantProps } from "class-variance-authority";
  *
  * Baseado no componente Switch do shadcn/ui (Radix).
  */
-const switchRootBase =
-  "peer inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input";
+const switchRootBase = [
+  "peer relative inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors",
+  // Foco igual ao do Checkbox: anel separado por 2px de ring-offset
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset",
+  "disabled:cursor-not-allowed disabled:opacity-50",
+  // Trilho desligado em input, como os campos (exceção ao 3:1 decidida em 03/11)
+  "data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
+  // Erro: a borda de 2px fica destructive, também ligado; o anel continua ring
+  "aria-invalid:border-destructive",
+].join(" ");
 
 export const switchRootVariants = cva(switchRootBase, {
   variants: {
     size: {
-      sm: "h-5 w-9",
+      // 20px de altura; o after: dá 24px de alvo de ponteiro (WCAG 2.5.8)
+      sm: "h-5 w-9 after:absolute after:-inset-0.5 after:content-['']",
       default: "h-6 w-11",
       lg: "h-7 w-12",
     },
@@ -23,7 +32,7 @@ export const switchRootVariants = cva(switchRootBase, {
 });
 
 const switchThumbBase =
-  "pointer-events-none block rounded-full bg-background shadow-lg ring-0 transition-transform";
+  "pointer-events-none block rounded-full bg-background ring-0 transition-transform";
 
 export const switchThumbVariants = cva(switchThumbBase, {
   variants: {
