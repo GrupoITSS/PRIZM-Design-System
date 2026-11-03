@@ -166,3 +166,29 @@ describe("Pagination: acessibilidade (pendências de 03/11/2026)", () => {
     );
   });
 });
+
+describe("Pagination: combinações inválidas (decisão de 03/11/2026)", () => {
+  it("avisa no console com iconsOnly e showPrevNext={false}", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(
+      <Pagination page={1} totalPages={5} iconsOnly showPrevNext={false} onPageChange={() => {}} />,
+    );
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("não mostra nada"));
+    warn.mockRestore();
+  });
+
+  it("avisa no console sem onPageChange e sem getHref", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(<Pagination page={1} totalPages={5} />);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("não fazem nada"));
+    warn.mockRestore();
+  });
+
+  it("não avisa no uso normal", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(<Pagination page={1} totalPages={5} onPageChange={() => {}} />);
+    render(<Pagination page={1} totalPages={5} getHref={(p) => `?page=${p}`} />);
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+});

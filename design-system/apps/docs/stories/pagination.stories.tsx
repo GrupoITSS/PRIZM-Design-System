@@ -21,16 +21,25 @@ const minimalTableData: MockPayment[] = [
   { id: "11", amount: 1100, status: "failed", email: "k@x.com" },
 ];
 
+// Traceability: the component set in [PRIZM] Componentes, the documentation frame and the
+// CMS article. The token map lives next to the component (pagination.tokens.json) and is
+// checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=208-1651";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25825-2133";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=b5975f0a-93e8-4199-bc3c-722c27d5e187&version=v1";
+
 const meta: Meta<typeof Pagination> = {
   title: "Primários/Pagination",
   component: Pagination,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Paginação do design system PRIZM. API 100% baseada em props: informe `page`, `totalPages` e opcionalmente `onPageChange` ou `getHref`. Os itens são o Button do Prizm: ghost nas páginas e nas setas, outline na página atual (`aria-current="page"`). Anterior/Próxima, Primeira/Última opcionais, `size` default · sm · icon · icon-sm (quadrados) e `iconsOnly` para tabelas.\n\n**Documentação de referência:** <a href="https://ui.shadcn.com/docs/components/pagination" target="_blank" rel="noopener noreferrer">Pagination — shadcn/ui</a>',
+          'Paginação do design system PRIZM. API 100% baseada em props: informe `page`, `totalPages` e opcionalmente `onPageChange` ou `getHref`. Os itens são o Button do Prizm: ghost nas páginas e nas setas, outline na página atual (`aria-current="page"`). Anterior/Próxima, Primeira/Última opcionais, `size` default · sm · icon · icon-sm (quadrados) e `iconsOnly` para tabelas.\n\n**Documentação de referência:** <a href="https://ui.shadcn.com/docs/components/pagination" target="_blank" rel="noopener noreferrer">Pagination — shadcn/ui</a>' +
+          `\n\n[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
