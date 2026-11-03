@@ -150,4 +150,12 @@ describe("Select: decisões de 26/10/2026", () => {
     expect(selectItemStyles.split(" ")).toContain("rounded-sm");
     expect(selectItemStyles.split(" ")).not.toContain("rounded-md");
   });
+
+  it("required com label: asterisco do Label, fora do nome acessível", () => {
+    render(<Select label="Organização" required placeholder="Selecione" options={options} />);
+    const asterisco = screen.getByText("*");
+    expect(asterisco).toHaveAttribute("data-slot", "label-required");
+    expect(asterisco).toHaveClass("text-destructive-strong");
+    expect(screen.getByRole("combobox", { name: "Organização" })).toBeInTheDocument();
+  });
 });
