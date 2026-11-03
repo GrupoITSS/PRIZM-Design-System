@@ -67,10 +67,11 @@ describe("Badge (PRIZM / Figma)", () => {
     expect(screen.getByText("Tamanho")).toHaveClass("h-7", "gap-2", "text-sm");
   });
 
-  it("segue o Figma: raio md, peso semibold, padding de 8px e 20px de altura", () => {
+  it("segue o Figma: pill (raio full), peso semibold, padding de 8px e 20px de altura", () => {
     render(<Badge variant="default">Figma</Badge>);
+    expect(screen.getByText("Figma")).not.toHaveClass("rounded-md");
     expect(screen.getByText("Figma")).toHaveClass(
-      "rounded-md",
+      "rounded-full",
       "font-semibold",
       "px-2",
       "py-0.5",
