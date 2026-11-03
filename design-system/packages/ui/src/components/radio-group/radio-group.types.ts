@@ -39,7 +39,7 @@ export type RadioGroupPrimitiveRootProps = React.ComponentPropsWithoutRef<
 
 export interface RadioGroupProps extends Omit<
   RadioGroupPrimitiveRootProps,
-  "value" | "defaultValue" | "onValueChange" | "children" | "orientation"
+  "value" | "defaultValue" | "onValueChange" | "orientation"
 > {
   /**
    * Valor controlado do grupo.
@@ -56,9 +56,10 @@ export interface RadioGroupProps extends Omit<
   /**
    * Itens do grupo, usados para renderização baseada em props.
    *
-   * **API principal recomendada**: o componente não expõe subcomponentes.
+   * **API principal recomendada.** Sem `items`, o grupo renderiza os `children`
+   * (`RadioGroupItem` em composição com `Field`).
    */
-  items: RadioGroupOption[];
+  items?: RadioGroupOption[];
   /**
    * Orientação do grupo.
    * @default "vertical"
@@ -70,3 +71,6 @@ export interface RadioGroupProps extends Omit<
    */
   spacing?: RadioGroupSpacing;
 }
+
+/** Item para composição: as props do `RadixRadioGroup.Item`. */
+export type RadioGroupItemProps = React.ComponentPropsWithoutRef<typeof RadixRadioGroup.Item>;
