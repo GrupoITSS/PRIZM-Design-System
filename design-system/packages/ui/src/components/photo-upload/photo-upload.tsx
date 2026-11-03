@@ -232,7 +232,7 @@ export const PhotoUpload = ({
           <p className="text-sm font-light text-foreground leading-5">
             {label}
             {required ? (
-              <span className="ml-0.5 text-destructive" aria-hidden>
+              <span className="text-destructive ml-0.5" aria-hidden>
                 *
               </span>
             ) : null}
