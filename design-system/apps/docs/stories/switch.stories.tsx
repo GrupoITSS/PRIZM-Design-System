@@ -13,6 +13,8 @@ import { Switch } from "@grupoitss/prizm-ui/switch";
 
 const FIGMA_COMPONENT = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=60-450";
 const FIGMA_DOC = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25876-2405";
+const CMS_ARTICLE =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=f88f5584-793b-4103-9f19-a2372932bb9e&version=v1";
 
 const meta: Meta<typeof Switch> = {
   title: "Primários/Switch",
@@ -22,7 +24,7 @@ const meta: Meta<typeof Switch> = {
     docs: {
       description: {
         component:
-          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC})\n\n` +
+          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC}) · [Artigo no CMS](${CMS_ARTICLE})\n\n` +
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
           "Switch do design system PRIZM: liga ou desliga algo com efeito imediato.\n\n" +
           "- Controle com `checked`, `defaultChecked` e `onCheckedChange` (o `onChange` segue funcionando, obsoleto).\n" +
