@@ -5,7 +5,14 @@
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25789-2017",
     "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25790-2423",
     "code": "design-system/packages/ui/src/components/label/label.tsx",
-    "story": "design-system/apps/docs/stories/label.stories.tsx"
+    "story": "design-system/apps/docs/stories/label.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=ff93a9a3-9c47-4362-b421-5b02d6ed0375&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/158"
+    ],
+    "jira": [
+      "GIES-1725"
+    ]
   },
   "states": {
     "default": {
