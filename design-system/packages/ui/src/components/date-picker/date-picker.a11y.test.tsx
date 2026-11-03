@@ -61,6 +61,27 @@ describe("DatePicker: decisões de 27/10/2026", () => {
     expect(document.activeElement?.getAttribute("aria-label")).toMatch(/27 de outubro de 2026/);
   });
 
+  it("pendência 2: abre no mês da data escolhida, mesmo longe de hoje", async () => {
+    // Data fixa num mês que não é o atual: antes, o calendário abria no mês de hoje.
+    render(<DatePicker aria-label="Data" value={new Date(2024, 2, 15)} />);
+    fireEvent.click(screen.getByRole("button", { name: "Data" }));
+    await screen.findByRole("dialog");
+    expect(document.activeElement?.getAttribute("aria-label")).toMatch(/15 de março de 2024/);
+  });
+
+  it("intervalo: abre no mês do início do intervalo", async () => {
+    render(
+      <DatePicker
+        mode="range"
+        aria-label="Período"
+        value={{ from: new Date(2024, 2, 10), to: new Date(2024, 2, 20) }}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Período" }));
+    await screen.findByRole("dialog");
+    expect(screen.getByText(/março 2024/i)).toBeInTheDocument();
+  });
+
   it("pendências 3 e 4: dias fora do mês sem opacidade e foco do dia no anel do sistema", () => {
     expect(calendarRootStyles).not.toContain("--rdp-outside-opacity");
     expect(calendarClassNames.outside).toContain("text-muted-foreground");
