@@ -183,6 +183,8 @@ const DatePicker = ({
             {...calendarProps}
             locale={calendarProps?.locale}
             autoFocus={calendarProps?.autoFocus ?? true}
+            // Abre no mês do início do intervalo escolhido, não no mês de hoje.
+            defaultMonth={calendarProps?.defaultMonth ?? props.value?.from}
             mode="range"
             selected={props.value}
             onSelect={handleRangeSelect}
@@ -194,6 +196,8 @@ const DatePicker = ({
             {...calendarProps}
             locale={calendarProps?.locale}
             autoFocus={calendarProps?.autoFocus ?? true}
+            // Abre no mês da data escolhida, não no mês de hoje (o foco inicial vai para ela).
+            defaultMonth={calendarProps?.defaultMonth ?? props.value}
             mode="single"
             selected={props.value}
             onSelect={handleSingleSelect}
