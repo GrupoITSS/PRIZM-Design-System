@@ -1,0 +1,43 @@
+{
+  "component": "Pagination",
+  "description": "Mapa de tokens do Pagination: o que cada item usa do [PRIZM] Design Tokens_Core. Extraído das ligações do component set Pagination / PaginationItem e da composição Pagination no Figma em 03/11/2026 (28 variantes: Type × Size × Active, todas no Core) e conferido contra pagination.tsx e pagination.styles.ts pelo teste pagination.tokens.test.tsx. Os itens são o Button do Prizm: fundo, texto, borda, foco e estados vêm do button.tokens.json. Nomes no formato do Figma (control-height/md); no código viram classes Tailwind (h-control-height-md).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=208-1651",
+    "figmaComposition": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=208-1701",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25825-2133",
+    "code": "design-system/packages/ui/src/components/pagination/pagination.tsx",
+    "story": "design-system/apps/docs/stories/pagination.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=b5975f0a-93e8-4199-bc3c-722c27d5e187&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/159",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/160"
+    ],
+    "jira": ["GIES-1725"]
+  },
+  "parts": {
+    "list": { "gap": "spacing/1" },
+    "page": { "button": "ghost", "minWidth": { "default": "control-height/md", "sm": "control-height/sm" } },
+    "currentPage": { "button": "outline", "attribute": "aria-current=page" },
+    "arrows": { "button": "ghost", "icons": { "first": "ChevronsLeft", "previous": "ChevronLeft", "next": "ChevronRight", "last": "ChevronsRight" } },
+    "ellipsis": { "text": "color/muted-foreground", "size": { "default": "control-height/md", "sm": "control-height/sm", "icon": "control-height/md", "icon-sm": "control-height/sm" }, "iconSize": { "default": "width/4", "sm": "width/3-5" } }
+  },
+  "sizes": {
+    "default": { "page": "Button default", "arrows": "Button default (ícone + texto)" },
+    "sm": { "page": "Button sm", "arrows": "Button sm (ícone + texto)" },
+    "icon": { "page": "Button icon (quadrado control-height/md)", "arrows": "Button icon (só ícone)" },
+    "icon-sm": { "page": "Button icon-sm (quadrado control-height/sm)", "arrows": "Button icon-sm (só ícone)" }
+  },
+  "states": {
+    "hover": "Button",
+    "focus": "Button",
+    "pressed": "Button",
+    "unavailable": { "attribute": "aria-disabled", "note": "Anterior e Primeira na primeira página; Próxima e Última na última." },
+    "note": "O Pagination não tem estado próprio: o State do Figma é o do Button exposto."
+  },
+  "divergences": [
+    { "where": "contorno da página atual", "figma": "Button Outline (color/input, 1,16 a 1,47:1)", "code": "outline", "status": "exceção decidida (03/11)" },
+    { "where": "ícone por botão", "figma": "Show Left Icon / Show Trailing em cada Button exposto", "code": "showIcons vale para os quatro botões", "status": "representação" },
+    { "where": "DataTable", "figma": "—", "code": "o rodapé da tabela tem paginação própria", "status": "aberta (trocar na documentação da tabela)" },
+    { "where": "texto de exemplo", "figma": "inglês, como no kit (Previous, Next)", "code": "padrões em pt-BR (Anterior, Próxima)", "status": "representação" }
+  ]
+}

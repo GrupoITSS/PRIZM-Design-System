@@ -1,61 +1,56 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
 /**
- * PRIZM Pagination — styles use design tokens from @grupoitss/prizm-tokens.
+ * PRIZM Pagination — the items are the Prizm Button (`buttonVariants`): ghost for pages and
+ * arrows, outline for the current page (decisions of 03/11/2026). Focus, hover, pressed and
+ * disabled come from the Button. These styles only add what the Button doesn't have.
  */
 
-const navBase = "mx-auto flex w-full justify-center";
-
-export const paginationNavVariants = cva(navBase, {
+export const paginationNavVariants = cva("mx-auto flex w-full justify-center", {
   variants: {},
   defaultVariants: {},
 });
 
-const listBase = "flex flex-row items-center gap-1";
-
-export const paginationListVariants = cva(listBase, {
+export const paginationListVariants = cva("flex flex-row items-center gap-1", {
   variants: {},
   defaultVariants: {},
 });
 
-/** Link/button used for each page number and for prev/next. Aligned with button ghost/outline. */
-const linkBase =
-  "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset";
+/**
+ * Pagination size, as in Figma (Size = default · sm · icon · icon-sm). `icon` and `icon-sm`
+ * make everything square: page numbers and arrows (icon only).
+ */
+export const paginationSizes = ["default", "sm", "icon", "icon-sm"] as const;
+export type PaginationSize = (typeof paginationSizes)[number];
 
-export const paginationLinkVariants = cva(linkBase, {
-  variants: {
-    variant: {
-      default:
-        "border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
-      ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
-    },
-    size: {
-      default: "h-control-height-md min-w-control-height-md px-4 py-2 has-[>svg]:px-3",
-      sm: "h-control-height-sm min-w-control-height-sm rounded-md px-3 text-sm has-[>svg]:px-2.5",
-      icon: "size-control-height-md",
-      "icon-sm": "size-control-height-sm",
-    },
-  },
-  defaultVariants: {
-    variant: "ghost",
-    size: "default",
-  },
-});
-
-const ellipsisBase =
-  "flex h-9 w-9 items-center justify-center text-muted-foreground [&_svg]:size-4";
-
-export const paginationEllipsisVariants = cva(ellipsisBase, {
+/** Page number: never narrower than tall (`min-w-control-height-*`); square in icon sizes. */
+export const paginationPageVariants = cva("", {
   variants: {
     size: {
-      default: "h-9 w-9",
-      sm: "h-8 w-8 [&_svg]:size-3.5",
+      default: "min-w-control-height-md",
+      sm: "min-w-control-height-sm",
+      icon: "",
+      "icon-sm": "",
     },
   },
-  defaultVariants: {
-    size: "default",
-  },
+  defaultVariants: { size: "default" },
 });
 
-/** Public API: only size is exposed; variant is internal (active vs ghost). */
-export type PaginationVariantProps = Pick<VariantProps<typeof paginationLinkVariants>, "size">;
+/** Ellipsis: the control height of the brand, icon in muted-foreground (not clickable). */
+export const paginationEllipsisVariants = cva(
+  "flex shrink-0 items-center justify-center text-muted-foreground [&_svg]:pointer-events-none",
+  {
+    variants: {
+      size: {
+        default: "size-control-height-md [&_svg]:size-4",
+        sm: "size-control-height-sm [&_svg]:size-3.5",
+        icon: "size-control-height-md [&_svg]:size-4",
+        "icon-sm": "size-control-height-sm [&_svg]:size-3.5",
+      },
+    },
+    defaultVariants: { size: "default" },
+  },
+);
+
+/** Public API: only size is exposed. */
+export type PaginationVariantProps = { size?: VariantProps<typeof paginationPageVariants>["size"] };

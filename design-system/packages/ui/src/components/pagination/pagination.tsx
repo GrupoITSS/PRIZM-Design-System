@@ -1,11 +1,13 @@
 import { cn } from "../../lib/cn";
-import { ChevronLeft, ChevronRight, Ellipsis } from "../icons";
+import { buttonVariants } from "../button";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Ellipsis } from "../icons";
 import * as React from "react";
 import {
   paginationEllipsisVariants,
-  paginationLinkVariants,
   paginationListVariants,
   paginationNavVariants,
+  paginationPageVariants,
+  type PaginationSize,
 } from "./pagination.styles";
 import type { PaginationProps } from "./pagination.types";
 
@@ -32,9 +34,25 @@ function getPageItems(
   return out;
 }
 
+const isSmall = (size: PaginationSize) => size === "sm" || size === "icon-sm";
+
+type Nav = "first" | "previous" | "next" | "last";
+
+const NAV_ARIA: Record<Nav, string> = {
+  first: "Ir para a primeira página",
+  previous: "Ir para a página anterior",
+  next: "Ir para a próxima página",
+  last: "Ir para a última página",
+};
+
 /**
- * Pagination do design system PRIZM. API 100% baseada em props: informa página atual, total de páginas e callbacks/links.
- * Suporta modo simples (apenas números), com prev/next, primeiro/último e modo só ícones (útil para tabelas).
+ * Pagination do design system PRIZM. API 100% baseada em props: informe a página atual, o total de
+ * páginas e `onPageChange` ou `getHref`. Os itens são o Button do Prizm (ghost; outline na atual).
+ *
+ * - `size`: `default` | `sm` | `icon` | `icon-sm`. Em `icon` e `icon-sm`, números quadrados e setas só com ícone.
+ * - `iconsOnly`: só as setas, com ícone (tabelas). `showIcons={false}`: setas só com texto.
+ * - A página atual tem `aria-current="page"` e não é desabilitada. Setas nas pontas ficam com
+ *   `aria-disabled` (o foco não se perde).
  *
  * @see [Pagination — shadcn/ui](https://ui.shadcn.com/docs/components/pagination) — Documentação de referência.
  */
@@ -46,194 +64,167 @@ function Pagination({
   showPrevNext = true,
   showFirstLast = false,
   iconsOnly = false,
+  showIcons = true,
   siblingCount = 1,
-  prevLabel = "Previous",
-  nextLabel = "Next",
-  firstLabel = "First",
-  lastLabel = "Last",
-  size = "default",
+  prevLabel = "Anterior",
+  nextLabel = "Próxima",
+  firstLabel = "Primeira",
+  lastLabel = "Última",
+  size: sizeProp,
   className,
-  "aria-label": ariaLabel = "pagination",
+  "aria-label": ariaLabel = "Paginação",
   ...navProps
 }: PaginationProps) {
+  const size: PaginationSize = sizeProp ?? "default";
   const pageItems = iconsOnly ? [] : getPageItems(totalPages, page, siblingCount);
   const isFirst = page <= 1;
   const isLast = page >= totalPages;
-  const ellipsisSize = size === "sm" || size === "icon-sm" ? "sm" : "default";
+  // Arrows are icon only in iconsOnly and in the icon sizes (Figma: Size = icon · icon-sm).
+  const arrowsIconOnly = iconsOnly || size === "icon" || size === "icon-sm";
+  const arrowSize = arrowsIconOnly
+    ? isSmall(size)
+      ? "icon-sm"
+      : "icon"
+    : isSmall(size)
+      ? "sm"
+      : "default";
+  const pageSize = size;
 
-  const handleClick = (nextPage: number) => (e: React.MouseEvent) => {
-    if (getHref) return; // navigation via href
+  // Combinações inválidas (decisão de 03/11): avisos só em desenvolvimento.
+  const vazio = iconsOnly && !showPrevNext;
+  const inerte = !onPageChange && !getHref;
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
+    if (vazio) {
+      console.warn(
+        "Pagination: iconsOnly com showPrevNext={false} não mostra nada. Deixe as setas, ou não renderize o Pagination.",
+      );
+    }
+    if (inerte) {
+      console.warn("Pagination: sem onPageChange e sem getHref, os botões não fazem nada.");
+    }
+  }, [vazio, inerte]);
+
+  const go = (target: number) => (e: React.MouseEvent) => {
+    if (target === page || target < 1 || target > totalPages) {
+      e.preventDefault();
+      return;
+    }
+    if (getHref && !onPageChange) return; // plain navigation via href
     e.preventDefault();
-    onPageChange?.(nextPage);
+    onPageChange?.(target);
   };
 
-  const linkContent = (
-    label: React.ReactNode,
-    icon: React.ReactNode,
-    iconPosition: "start" | "end",
-  ) => (
-    <>
-      {iconPosition === "start" && icon}
-      {label}
-      {iconPosition === "end" && icon}
-    </>
-  );
-
-  const renderLink = (p: number, content: React.ReactNode, isActive: boolean) => {
+  const renderPage = (p: number) => {
+    const isActive = p === page;
+    const className = cn(
+      buttonVariants({ variant: isActive ? "outline" : "ghost", size: pageSize }),
+      paginationPageVariants({ size: pageSize }),
+    );
     const href = getHref?.(p);
-    const common = {
-      "aria-current": isActive ? ("page" as const) : undefined,
-      className: cn(
-        paginationLinkVariants({
-          variant: isActive ? "default" : "ghost",
-          size: size === "icon" || size === "icon-sm" ? "icon" : size,
-        }),
-      ),
-    };
     if (href != null) {
       return (
         <a
           href={href}
-          onClick={
-            onPageChange
-              ? (e) => {
-                  handleClick(p)(e);
-                }
-              : undefined
-          }
-          {...common}
+          aria-current={isActive ? "page" : undefined}
+          className={className}
+          onClick={go(p)}
         >
-          {content}
+          {p}
         </a>
       );
     }
     return (
-      <button type="button" onClick={handleClick(p)} disabled={isActive} {...common}>
+      <button
+        type="button"
+        aria-current={isActive ? "page" : undefined}
+        className={className}
+        onClick={go(p)}
+      >
+        {p}
+      </button>
+    );
+  };
+
+  const renderNav = (kind: Nav) => {
+    const target =
+      kind === "first"
+        ? 1
+        : kind === "previous"
+          ? page - 1
+          : kind === "next"
+            ? page + 1
+            : totalPages;
+    const unavailable = kind === "first" || kind === "previous" ? isFirst : isLast;
+    const Icon = {
+      first: ChevronsLeft,
+      previous: ChevronLeft,
+      next: ChevronRight,
+      last: ChevronsRight,
+    }[kind];
+    const label = { first: firstLabel, previous: prevLabel, next: nextLabel, last: lastLabel }[
+      kind
+    ];
+    const iconAtStart = kind === "first" || kind === "previous";
+    const icon = arrowsIconOnly || showIcons ? <Icon aria-hidden="true" /> : null;
+    const text = arrowsIconOnly ? null : <span>{label}</span>;
+    const content = iconAtStart ? (
+      <>
+        {icon}
+        {text}
+      </>
+    ) : (
+      <>
+        {text}
+        {icon}
+      </>
+    );
+    const className = buttonVariants({ variant: "ghost", size: arrowSize });
+    const href = !unavailable ? getHref?.(target) : undefined;
+    if (href != null) {
+      return (
+        <a href={href} aria-label={NAV_ARIA[kind]} className={className} onClick={go(target)}>
+          {content}
+        </a>
+      );
+    }
+    // aria-disabled, not disabled: at the edges the button keeps the focus (WCAG 2.4.3) and
+    // is announced as unavailable; the click is ignored.
+    return (
+      <button
+        type="button"
+        aria-label={NAV_ARIA[kind]}
+        aria-disabled={unavailable || undefined}
+        className={className}
+        onClick={unavailable ? (e) => e.preventDefault() : go(target)}
+      >
         {content}
       </button>
     );
   };
 
-  const navClassName = cn(paginationNavVariants(), className);
-  const listClassName = paginationListVariants();
-
   return (
-    <nav role="navigation" aria-label={ariaLabel} className={navClassName} {...navProps}>
-      <ul className={listClassName}>
-        {showFirstLast && totalPages > 1 && (
-          <li>{renderLink(1, linkContent(firstLabel, null, "end"), page === 1)}</li>
-        )}
-        {showPrevNext && (
-          <li>
-            {getHref && !isFirst ? (
-              <a
-                href={getHref(page - 1)}
-                aria-label="Go to previous page"
-                className={cn(
-                  paginationLinkVariants({
-                    variant: "ghost",
-                    size: size === "icon" || size === "icon-sm" ? "default" : size,
-                  }),
-                  "gap-1 pl-2.5",
-                )}
-                onClick={
-                  onPageChange
-                    ? (e) => {
-                        e.preventDefault();
-                        onPageChange(page - 1);
-                      }
-                    : undefined
-                }
-              >
-                <ChevronLeft className="h-4 w-4" />
-                {!iconsOnly && <span>{prevLabel}</span>}
-              </a>
-            ) : (
-              <button
-                type="button"
-                aria-label="Go to previous page"
-                disabled={isFirst}
-                className={cn(
-                  paginationLinkVariants({
-                    variant: "ghost",
-                    size: size === "icon" || size === "icon-sm" ? "default" : size,
-                  }),
-                  "gap-1 pl-2.5",
-                )}
-                onClick={handleClick(page - 1)}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                {!iconsOnly && <span>{prevLabel}</span>}
-              </button>
-            )}
-          </li>
-        )}
+    <nav aria-label={ariaLabel} className={cn(paginationNavVariants(), className)} {...navProps}>
+      <ul className={paginationListVariants()}>
+        {showFirstLast && totalPages > 1 && <li>{renderNav("first")}</li>}
+        {showPrevNext && <li>{renderNav("previous")}</li>}
 
         {pageItems.map((item, i) =>
           item === "ellipsis" ? (
             // eslint-disable-next-line @eslint-react/no-array-index-key -- positional list, items have no stable id
             <li key={`ellipsis-${i}`}>
-              <span aria-hidden className={cn(paginationEllipsisVariants({ size: ellipsisSize }))}>
-                <Ellipsis className="h-4 w-4" />
-                <span className="sr-only">More pages</span>
+              <span className={paginationEllipsisVariants({ size })}>
+                <Ellipsis aria-hidden="true" />
+                <span className="sr-only">Mais páginas</span>
               </span>
             </li>
           ) : (
-            <li key={item}>{renderLink(item, item, page === item)}</li>
+            <li key={item}>{renderPage(item)}</li>
           ),
         )}
 
-        {showPrevNext && (
-          <li>
-            {getHref && !isLast ? (
-              <a
-                href={getHref(page + 1)}
-                aria-label="Go to next page"
-                className={cn(
-                  paginationLinkVariants({
-                    variant: "ghost",
-                    size: size === "icon" || size === "icon-sm" ? "default" : size,
-                  }),
-                  "gap-1 pr-2.5",
-                )}
-                onClick={
-                  onPageChange
-                    ? (e) => {
-                        e.preventDefault();
-                        onPageChange(page + 1);
-                      }
-                    : undefined
-                }
-              >
-                {!iconsOnly && <span>{nextLabel}</span>}
-                <ChevronRight className="h-4 w-4" />
-              </a>
-            ) : (
-              <button
-                type="button"
-                aria-label="Go to next page"
-                disabled={isLast}
-                className={cn(
-                  paginationLinkVariants({
-                    variant: "ghost",
-                    size: size === "icon" || size === "icon-sm" ? "default" : size,
-                  }),
-                  "gap-1 pr-2.5",
-                )}
-                onClick={handleClick(page + 1)}
-              >
-                {!iconsOnly && <span>{nextLabel}</span>}
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            )}
-          </li>
-        )}
-
-        {showFirstLast && totalPages > 1 && (
-          <li>
-            {renderLink(totalPages, linkContent(lastLabel, null, "end"), page === totalPages)}
-          </li>
-        )}
+        {showPrevNext && <li>{renderNav("next")}</li>}
+        {showFirstLast && totalPages > 1 && <li>{renderNav("last")}</li>}
       </ul>
     </nav>
   );

@@ -39,6 +39,8 @@ export {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   ChevronsUpDown,
   ChevronUp,
   Circle,

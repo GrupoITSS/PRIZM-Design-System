@@ -30,7 +30,7 @@ const Label = ({
   <RadixLabel.Root
     ref={ref}
     data-slot="label"
-    className={cn(className, labelVariants())}
+    className={cn(labelVariants(), className)}
     {...props}
   >
     {children}
