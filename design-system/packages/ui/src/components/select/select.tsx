@@ -154,13 +154,8 @@ function SelectImpl({
     if (!resolvedLabel) return control;
     return (
       <Field className={cn("w-auto min-w-0 gap-1.5", className)}>
-        <FieldLabel htmlFor={loading ? undefined : triggerId}>
+        <FieldLabel htmlFor={loading ? undefined : triggerId} required={required}>
           {resolvedLabel}
-          {required ? (
-            <span className="ml-0.5 text-destructive" aria-hidden="true">
-              *
-            </span>
-          ) : null}
         </FieldLabel>
         {control}
       </Field>

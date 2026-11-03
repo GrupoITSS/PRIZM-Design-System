@@ -61,6 +61,15 @@ describe("Checkbox × mapa de tokens (checkbox.tokens.json)", () => {
     expect(classes("sm")).toContain(`size-${size(map.sizes.sm.width)}`);
   });
 
+  it("rótulo: cor, tamanho e peso do mapa", () => {
+    render(<Checkbox label="Aceito os termos" />);
+    const rotulo = screen.getByText("Aceito os termos");
+    const l = map.parts.label;
+    expect(rotulo).toHaveClass(`text-${color(l.color)}`);
+    expect(rotulo).toHaveClass(`text-${suffix(l.fontSize)}`);
+    expect(rotulo).toHaveClass(`font-${suffix(l.fontWeight)}`);
+  });
+
   it("Type Box: o FieldLabel que envolve um Field vira o cartão do mapa", () => {
     const { container } = render(
       <FieldLabel>
