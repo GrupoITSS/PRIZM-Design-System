@@ -14,6 +14,8 @@ import { Calendar } from "@grupoitss/prizm-ui/icons";
 
 const FIGMA_COMPONENT = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=204-1144";
 const FIGMA_DOC = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25907-3157";
+const CMS_ARTICLE =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=49ee41fe-ce7a-4540-bfd4-b7366cdb309e&version=v1";
 
 const meta: Meta<typeof Command> = {
   title: "Primários/Command",
@@ -23,7 +25,7 @@ const meta: Meta<typeof Command> = {
     docs: {
       description: {
         component:
-          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC})\n\n` +
+          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC}) · [Artigo no CMS](${CMS_ARTICLE})\n\n` +
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + `cmdk`, com tokens PRIZM.\n\n" +
           "Command do design system PRIZM: lista de ações com busca. A pessoa digita para filtrar e escolhe pelo mouse ou pelo teclado.\n\n" +
           "- **API por props:** `groups`, `placeholder`, `emptyMessage` e `label` (nome da busca, padrão \"Buscar comandos\").\n" +
