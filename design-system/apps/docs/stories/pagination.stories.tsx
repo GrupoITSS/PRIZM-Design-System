@@ -30,7 +30,7 @@ const meta: Meta<typeof Pagination> = {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Paginação do design system PRIZM. API 100% baseada em props: informe `page`, `totalPages` e opcionalmente `onPageChange` ou `getHref`. Suporta modo simples (apenas números), com prev/next, primeiro/último e modo só ícones (útil para tabelas).\n\n**Documentação de referência:** <a href="https://ui.shadcn.com/docs/components/pagination" target="_blank" rel="noopener noreferrer">Pagination — shadcn/ui</a>',
+          'Paginação do design system PRIZM. API 100% baseada em props: informe `page`, `totalPages` e opcionalmente `onPageChange` ou `getHref`. Os itens são o Button do Prizm: ghost nas páginas e nas setas, outline na página atual (`aria-current="page"`). Anterior/Próxima, Primeira/Última opcionais, `size` default · sm · icon · icon-sm (quadrados) e `iconsOnly` para tabelas.\n\n**Documentação de referência:** <a href="https://ui.shadcn.com/docs/components/pagination" target="_blank" rel="noopener noreferrer">Pagination — shadcn/ui</a>',
       },
     },
   },
@@ -41,44 +41,50 @@ const meta: Meta<typeof Pagination> = {
     showFirstLast: false,
     iconsOnly: false,
     siblingCount: 1,
-    prevLabel: "Previous",
-    nextLabel: "Next",
-    firstLabel: "First",
-    lastLabel: "Last",
+    showIcons: true,
+    prevLabel: "Anterior",
+    nextLabel: "Próxima",
+    firstLabel: "Primeira",
+    lastLabel: "Última",
     size: "default",
   },
   argTypes: {
     page: {
       control: { type: "number", min: 1 },
-      description: "Current page (1-based)",
+      description: "Página atual (começa em 1)",
     },
     totalPages: {
       control: { type: "number", min: 1 },
-      description: "Total number of pages",
+      description: "Total de páginas",
     },
     onPageChange: {
       action: "pageChange",
-      description: "Called when user selects a page (SPA)",
+      description: "Chamado ao escolher uma página (SPA)",
     },
     showPrevNext: {
       control: "boolean",
-      description: "Show Previous / Next buttons",
+      description: "Mostra Anterior e Próxima",
     },
     showFirstLast: {
       control: "boolean",
-      description: "Show First / Last page buttons",
+      description: "Mostra Primeira e Última (com ChevronsLeft e ChevronsRight)",
     },
     iconsOnly: {
       control: "boolean",
-      description: "Only Previous and Next (no page numbers); useful for data tables",
+      description: "Só as setas, com ícone, sem números; para tabelas",
+    },
+    showIcons: {
+      control: "boolean",
+      description: "Ícones nas setas e em Primeira/Última; false deixa só o texto",
     },
     siblingCount: {
       control: { type: "number", min: 0 },
-      description: "Page numbers on each side of current before ellipsis",
+      description: "Páginas de cada lado da atual antes das reticências",
     },
     size: {
       control: "select",
       options: ["default", "sm", "icon", "icon-sm"],
+      description: "icon e icon-sm: números quadrados e setas só com ícone",
     },
   },
 };
@@ -231,5 +237,44 @@ export const InDataTable: Story = {
           "O **DataTable** usa o componente Pagination em modo `iconsOnly` quando `showPagination={true}`. Ver [Table/DataTable](?path=/story/prizm-components-table-datatable--with-pagination) para a story completa.",
       },
     },
+  },
+};
+
+/** Tamanhos do Figma: icon e icon-sm deixam os números quadrados e as setas só com ícone. */
+export const Sizes: Story = {
+  name: "Tamanhos",
+  render: function SizesStory() {
+    const [page, setPage] = useState(2);
+    return (
+      <div className="flex flex-col items-center gap-4">
+        {(["default", "sm", "icon", "icon-sm"] as const).map((size) => (
+          <Pagination
+            key={size}
+            aria-label={`Paginação ${size}`}
+            page={page}
+            totalPages={10}
+            onPageChange={setPage}
+            size={size}
+          />
+        ))}
+      </div>
+    );
+  },
+};
+
+/** showIcons={false}: Anterior, Próxima, Primeira e Última só com texto. */
+export const SemIcones: Story = {
+  name: "Sem ícones",
+  render: function SemIconesStory() {
+    const [page, setPage] = useState(5);
+    return (
+      <Pagination
+        page={page}
+        totalPages={20}
+        onPageChange={setPage}
+        showFirstLast
+        showIcons={false}
+      />
+    );
   },
 };

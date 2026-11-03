@@ -198,6 +198,18 @@
       "origin": "lucide"
     },
     {
+      "name": "ChevronsLeft",
+      "figma": "Icon / ChevronsLeft",
+      "figmaNode": "5197:4016",
+      "origin": "lucide"
+    },
+    {
+      "name": "ChevronsRight",
+      "figma": "Icon / ChevronsRight",
+      "figmaNode": "5197:4014",
+      "origin": "lucide"
+    },
+    {
       "name": "ChevronsUpDown",
       "figma": "Icon / ChevronsUpDown",
       "figmaNode": "5197:4013",

@@ -21,48 +21,54 @@ export interface PaginationProps
    */
   getHref?: (page: number) => string;
   /**
-   * Show Previous / Next buttons.
+   * Show the Previous / Next buttons.
    * @default true
    */
   showPrevNext?: boolean;
   /**
-   * Show First / Last page buttons.
+   * Show the First / Last buttons (icons ChevronsLeft / ChevronsRight).
    * @default false
    */
   showFirstLast?: boolean;
   /**
-   * When true, only Previous and Next are shown (no page numbers). Useful for data tables with a rows-per-page selector.
+   * When true, only the arrows are shown, as icons (no page numbers). Useful for data tables with a rows-per-page selector.
    * @default false
    */
   iconsOnly?: boolean;
+  /**
+   * Show the chevron icons on Previous, Next, First and Last. With `false`, they show only the text.
+   * Ignored in `iconsOnly` and in the `icon` / `icon-sm` sizes, where the arrows are icon only.
+   * @default true
+   */
+  showIcons?: boolean;
   /**
    * Number of page numbers to show on each side of the current page (before ellipsis).
    * @default 1
    */
   siblingCount?: number;
   /**
-   * Label for the Previous button (text or node). When `iconsOnly` is true, only the icon is shown; this can be used for aria-label.
-   * @default "Previous"
+   * Text of the Previous button. Hidden in `iconsOnly` and in the icon sizes (the button keeps its aria-label).
+   * @default "Anterior"
    */
   prevLabel?: React.ReactNode;
   /**
-   * Label for the Next button.
-   * @default "Next"
+   * Text of the Next button.
+   * @default "Próxima"
    */
   nextLabel?: React.ReactNode;
   /**
-   * Label for the First button (e.g. "First" or "1").
-   * @default "First"
+   * Text of the First button.
+   * @default "Primeira"
    */
   firstLabel?: React.ReactNode;
   /**
-   * Label for the Last button.
-   * @default "Last"
+   * Text of the Last button.
+   * @default "Última"
    */
   lastLabel?: React.ReactNode;
   /**
-   * Accessible label for the navigation landmark.
-   * @default "pagination"
+   * Accessible name of the navigation landmark.
+   * @default "Paginação"
    */
   "aria-label"?: string;
 }

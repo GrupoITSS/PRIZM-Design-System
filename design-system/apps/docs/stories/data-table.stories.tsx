@@ -101,7 +101,7 @@ const meta: Meta<typeof DataTable<MockPayment, unknown>> = {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'DataTable do design system PRIZM — integração completa com **TanStack Table** para tabelas avançadas.\n\n**Features suportadas:**\n- ✅ Pagination (paginação de dados) — usa o componente <a href="?path=/story/prizm-components-pagination--default" target="_self">Pagination</a> em modo `iconsOnly`\n- ✅ Sorting (ordenação de colunas)\n- ✅ Filtering (filtro por coluna)\n- ✅ Column Visibility (toggle de colunas)\n- ✅ Row Selection (seleção com checkboxes)\n- ✅ Cell Formatting (formatação customizada)\n- ✅ Row Actions (ações por linha)\n\n**Documentação e API de referência:**\n- <a href="https://tanstack.com/table/latest" target="_blank" rel="noopener noreferrer">TanStack Table</a>\n- <a href="https://ui.shadcn.com/docs/components/data-table" target="_blank" rel="noopener noreferrer">Data Table — shadcn/ui</a>',
+          'DataTable do design system PRIZM — integração completa com **TanStack Table** para tabelas avançadas.\n\n**Features suportadas:**\n- ✅ Pagination (paginação de dados) — rodapé próprio ("Página X de Y" com anterior e próxima); ainda não usa o componente Pagination\n- ✅ Sorting (ordenação de colunas)\n- ✅ Filtering (filtro por coluna)\n- ✅ Column Visibility (toggle de colunas)\n- ✅ Row Selection (seleção com checkboxes)\n- ✅ Cell Formatting (formatação customizada)\n- ✅ Row Actions (ações por linha)\n\n**Documentação e API de referência:**\n- <a href="https://tanstack.com/table/latest" target="_blank" rel="noopener noreferrer">TanStack Table</a>\n- <a href="https://ui.shadcn.com/docs/components/data-table" target="_blank" rel="noopener noreferrer">Data Table — shadcn/ui</a>',
       },
     },
   },
@@ -141,15 +141,15 @@ export const Basic: Story = {
 };
 
 /**
- * **2. Pagination** — Paginação automática com o componente **Pagination** (modo `iconsOnly`).
- * Por padrão, pagina em blocos de 10 linhas. Ver também: PRIZM/v1/Pagination.
+ * **2. Pagination** — Paginação automática, com rodapé próprio ("Página X de Y").
+ * Por padrão, pagina em blocos de 10 linhas. Ainda não usa o componente Pagination (troca prevista na documentação da tabela).
  */
 export const WithPagination: Story = {
   parameters: {
     docs: {
       description: {
         story:
-          "Os controles de página são o componente **Pagination** em modo só ícones (Previous/Next). Ver [PRIZM/v1/Pagination](?path=/story/prizm-components-pagination--icons-only) para mais variantes.",
+          "Os controles de página são um rodapé próprio da tabela: \"Página X de Y\" com anterior e próxima. Ainda não usam o componente [Pagination](?path=/docs/primários-pagination--docs); a troca fica para a documentação da tabela.",
       },
     },
   },
@@ -448,14 +448,14 @@ export const WithRowActions: Story = {
 /**
  * **9. Complete Example** — Todas as features ativadas.
  * Pagination + Sorting + Filtering + Column Visibility + Row Selection + Cell Formatting + Actions.
- * A paginação usa o componente **Pagination** (PRIZM/v1/Pagination).
+ * A paginação é o rodapé próprio da tabela (ainda não usa o componente Pagination).
  */
 export const CompleteExample: Story = {
   parameters: {
     docs: {
       description: {
         story:
-          "Inclui **Pagination** (iconsOnly) no rodapé. Ver [Pagination](?path=/story/prizm-components-pagination--default) para a API completa.",
+          "Inclui a paginação no rodapé (rodapé próprio da tabela, \"Página X de Y\"). O componente [Pagination](?path=/docs/primários-pagination--docs) ainda não é usado aqui.",
       },
     },
   },
