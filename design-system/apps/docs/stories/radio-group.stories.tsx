@@ -16,6 +16,8 @@ import type { RadioGroupOption } from "@grupoitss/prizm-ui/radio-group";
 
 const FIGMA_COMPONENT = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=65-326";
 const FIGMA_DOC = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25852-3524";
+const CMS_ARTICLE =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=2e856b5c-4d78-463d-b168-e5c09b90a5ce&version=v1";
 
 const meta: Meta<typeof RadioGroup> = {
   title: "Primários/RadioGroup",
@@ -25,7 +27,7 @@ const meta: Meta<typeof RadioGroup> = {
     docs: {
       description: {
         component:
-          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC})\n\n` +
+          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC}) · [Artigo no CMS](${CMS_ARTICLE})\n\n` +
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
           "Grupo de botões de opção (radio) do design system PRIZM: escolha única entre poucas opções, todas visíveis.\n\n" +
           "- **API por props:** `items`, `value`, `defaultValue` e `onValueChange`.\n" +

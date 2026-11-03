@@ -6,6 +6,8 @@
     "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25852-3524",
     "code": "design-system/packages/ui/src/components/radio-group/radio-group.tsx",
     "story": "design-system/apps/docs/stories/radio-group.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=2e856b5c-4d78-463d-b168-e5c09b90a5ce&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/162"],
     "jira": ["GIES-1728", "GIES-1725"]
   },
   "types": {
