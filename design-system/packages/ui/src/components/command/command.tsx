@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle } from "../dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "../dialog";
 import { cn } from "../../lib/cn";
 import { Command as CommandPrimitive } from "cmdk";
 import { Search } from "../icons";
@@ -34,8 +34,8 @@ import type {
  * ```tsx
  * <Command
  *   className="max-w-sm rounded-lg border"
- *   placeholder="Type a command or search..."
- *   emptyMessage="No results found."
+ *   placeholder="Digite um comando ou busque…"
+ *   emptyMessage="Nenhum resultado encontrado."
  *   groups={[
  *     {
  *       heading: "Suggestions",
@@ -80,8 +80,9 @@ import type {
  */
 const Command = function Command({
   className,
-  placeholder = "Type a command or search...",
-  emptyMessage = "No results found.",
+  placeholder = "Digite um comando ou busque…",
+  emptyMessage = "Nenhum resultado encontrado.",
+  label = "Buscar comandos",
   groups,
   children,
   ref,
@@ -92,14 +93,24 @@ const Command = function Command({
   if (!useSimplifiedAPI) {
     // Composição avançada (fallback)
     return (
-      <CommandPrimitive ref={ref} className={cn(commandRootStyles, className)} {...props}>
+      <CommandPrimitive
+        ref={ref}
+        label={label}
+        className={cn(commandRootStyles, className)}
+        {...props}
+      >
         {children}
       </CommandPrimitive>
     );
   }
 
   return (
-    <CommandPrimitive ref={ref} className={cn(commandRootStyles, className)} {...props}>
+    <CommandPrimitive
+        ref={ref}
+        label={label}
+        className={cn(commandRootStyles, className)}
+        {...props}
+      >
       <CommandInput placeholder={placeholder} />
       <CommandList>
         <CommandEmpty>{emptyMessage}</CommandEmpty>
@@ -125,11 +136,18 @@ const Command = function Command({
 
 type CommandDialogProps = React.ComponentPropsWithoutRef<typeof Dialog>;
 
-const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
+const CommandDialog = ({ children, trigger, ...props }: CommandDialogProps) => {
+  // O trigger vai pela composição: passado ao Dialog, ele ativa a API por props, que monta
+  // o próprio conteúdo e ignora o Command dos children.
   return (
     <Dialog {...props}>
+      {Boolean(trigger) && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent showCloseButton={false} className="overflow-hidden p-0 shadow-lg sm:max-w-xl">
         <DialogTitle className="sr-only">Buscar</DialogTitle>
+        {/* Nome e instrução para o leitor de tela (WCAG 4.1.2, pendência 2) */}
+        <DialogDescription className="sr-only">
+          Digite para filtrar e use as setas para escolher.
+        </DialogDescription>
         <Command className={cn(commandRootStyles, commandDialogStyles)}>{children}</Command>
       </DialogContent>
     </Dialog>

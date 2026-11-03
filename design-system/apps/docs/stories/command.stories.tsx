@@ -7,19 +7,29 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
+  CommandShortcut,
 } from "@grupoitss/prizm-ui/command";
 import { Calendar } from "@grupoitss/prizm-ui/icons";
 
+const FIGMA_COMPONENT = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=204-1144";
+const FIGMA_DOC = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25907-3157";
+
 const meta: Meta<typeof Command> = {
-  title: "Compositions/Command",
+  title: "Primários/Command",
   component: Command,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
-          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Command do design system PRIZM. Menu de comandos / palette de busca construído sobre `cmdk`.\n\n**Uso recomendado (props diretas):** configurar grupos e itens via `groups`, com `placeholder` e `emptyMessage` por props. A API de composição com subcomponentes continua disponível apenas como escape hatch para cenários avançados.\n\n**Documentação base:** <a href="https://github.com/dip/cmdk" target="_blank" rel="noopener noreferrer">cmdk — GitHub</a> · <a href="https://ui.shadcn.com/docs/components/command" target="_blank" rel="noopener noreferrer">Command — shadcn/ui</a>',
+          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC})\n\n` +
+          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + `cmdk`, com tokens PRIZM.\n\n" +
+          "Command do design system PRIZM: lista de ações com busca. A pessoa digita para filtrar e escolhe pelo mouse ou pelo teclado.\n\n" +
+          "- **API por props:** `groups`, `placeholder`, `emptyMessage` e `label` (nome da busca, padrão \"Buscar comandos\").\n" +
+          "- **Composição:** `CommandInput`, `CommandList`, `CommandGroup`, `CommandItem`, `CommandShortcut` e `CommandSeparator`.\n" +
+          "- **CommandDialog:** o mesmo Command num Dialog, aberto por um gatilho.\n\n" +
+          '**Documentação base:** <a href="https://github.com/dip/cmdk" target="_blank" rel="noopener noreferrer">cmdk — GitHub</a> · <a href="https://ui.shadcn.com/docs/components/command" target="_blank" rel="noopener noreferrer">Command — shadcn/ui</a>',
       },
     },
   },
@@ -32,43 +42,68 @@ type Story = StoryObj<typeof Command>;
 export const Basic: Story = {
   render: () => (
     <Command
-      className="max-w-sm rounded-lg border"
-      placeholder="Type a command or search..."
-      emptyMessage="No results found."
+      className="max-w-sm border"
       groups={[
         {
-          heading: "Suggestions",
+          heading: "Sugestões",
           items: [
-            { icon: <Calendar />, label: "Calendar", shortcut: "⌘K" },
-            { label: "Search Emoji" },
-            { label: "Calculator" },
+            { icon: <Calendar />, label: "Calendário", shortcut: "⌘K" },
+            { label: "Buscar emoji" },
+            { label: "Calculadora" },
           ],
         },
         {
-          heading: "Settings",
-          items: [{ label: "Profile" }, { label: "Billing" }, { label: "Settings" }],
+          heading: "Configurações",
+          items: [{ label: "Perfil" }, { label: "Cobrança" }, { label: "Preferências" }],
         },
       ]}
     />
   ),
 };
 
+export const Composition: Story = {
+  name: "Composição",
+  render: () => (
+    <Command className="max-w-sm border" label="Buscar páginas">
+      <CommandInput placeholder="Buscar página…" />
+      <CommandList>
+        <CommandEmpty>Nenhuma página encontrada.</CommandEmpty>
+        <CommandGroup heading="Páginas">
+          <CommandItem>
+            <Calendar />
+            Agenda
+            <CommandShortcut>⌘A</CommandShortcut>
+          </CommandItem>
+          <CommandItem>Relatórios</CommandItem>
+          <CommandItem disabled>Arquivo (sem acesso)</CommandItem>
+        </CommandGroup>
+        <CommandSeparator />
+        <CommandGroup heading="Conta">
+          <CommandItem>Perfil</CommandItem>
+          <CommandItem>Sair</CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  ),
+};
+
 export const InDialog: Story = {
+  name: "No Dialog",
   render: () => (
     <CommandDialog
       trigger={
         <button className="inline-flex items-center rounded-md border px-3 py-2 text-sm">
-          Open Command
+          Abrir comandos
         </button>
       }
     >
-      <CommandInput placeholder="Type a command or search..." />
+      <CommandInput placeholder="Digite um comando ou busque…" />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Suggestions">
-          <CommandItem>Calendar</CommandItem>
-          <CommandItem>Search Emoji</CommandItem>
-          <CommandItem>Calculator</CommandItem>
+        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
+        <CommandGroup heading="Sugestões">
+          <CommandItem>Calendário</CommandItem>
+          <CommandItem>Buscar emoji</CommandItem>
+          <CommandItem>Calculadora</CommandItem>
         </CommandGroup>
       </CommandList>
     </CommandDialog>

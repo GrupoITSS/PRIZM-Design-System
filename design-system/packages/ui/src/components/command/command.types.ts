@@ -77,15 +77,21 @@ export interface CommandProps extends CommandRootProps {
   /**
    * Placeholder text for the search input.
    *
-   * @default "Type a command or search..."
+   * @default "Digite um comando ou busque…"
    */
   placeholder?: string;
   /**
    * Message displayed when there are no results.
    *
-   * @default "No results found."
+   * @default "Nenhum resultado encontrado."
    */
   emptyMessage?: React.ReactNode;
+  /**
+   * Nome acessível da busca, lido pelo leitor de tela (não aparece na tela).
+   *
+   * @default "Buscar comandos"
+   */
+  label?: string;
   /**
    * Groups and items to render using the simplified API.
    *
