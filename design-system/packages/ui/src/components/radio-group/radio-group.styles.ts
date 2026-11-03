@@ -48,6 +48,6 @@ export const radioItemDotClasses = "size-2 fill-current";
 
 export const radioItemContentClasses = "flex flex-col gap-1.5";
 
-export const radioItemLabelClasses = "font-light leading-none text-foreground";
+export const radioItemLabelClasses = "font-medium leading-none text-foreground";
 
 export const radioItemDescriptionClasses = "text-sm text-muted-foreground leading-snug";

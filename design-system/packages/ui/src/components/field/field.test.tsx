@@ -82,4 +82,16 @@ describe("Field (PRIZM / shadcn)", () => {
     expect(screen.getByText("Título")).toBeInTheDocument();
     expect(screen.getByText("Descrição")).toBeInTheDocument();
   });
+
+  it("FieldLabel required: asterisco do Label, puxado para spacing/0-5 do texto", () => {
+    render(
+      <FieldLabel htmlFor="email" required>
+        Email
+      </FieldLabel>,
+    );
+    const asterisco = screen.getByText("*");
+    expect(asterisco).toHaveAttribute("data-slot", "label-required");
+    expect(asterisco).toHaveClass("text-destructive");
+    expect(screen.getByText("Email")).toHaveClass("[&>[data-slot=label-required]]:-ml-1.5");
+  });
 });

@@ -9,6 +9,7 @@ import {
   radioItemControlClasses,
   radioItemDescriptionClasses,
   radioItemDotClasses,
+  radioItemLabelClasses,
   radioItemWrapperClasses,
 } from "./radio-group.styles";
 import map from "./radio-group.tokens.json";
@@ -60,6 +61,7 @@ describe("RadioGroup × mapa de tokens (radio-group.tokens.json)", () => {
   });
 
   it("textos e espaçamento do mapa", () => {
+    expect(radioItemLabelClasses.split(" ")).toContain(`font-${suffix(map.parts.label.fontWeight)}`);
     expect(radioItemDescriptionClasses.split(" ")).toContain(`text-${suffix(map.parts.description.fontSize)}`);
     expect(radioItemDescriptionClasses.split(" ")).toContain(`text-${color(map.parts.description.color)}`);
     expect(radioItemContentClasses.split(" ")).toContain(`gap-${size(map.spacing.labelToDescription)}`);

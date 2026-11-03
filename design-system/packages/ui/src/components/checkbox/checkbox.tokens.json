@@ -71,7 +71,8 @@
     },
     "label": {
       "color": "color/foreground",
-      "fontSize": "text/sm"
+      "fontSize": "text/sm",
+      "fontWeight": "font-weight/medium"
     },
     "description": {
       "color": "color/muted-foreground",
@@ -104,12 +105,6 @@
     }
   },
   "divergences": [
-    {
-      "where": "Peso do rótulo",
-      "figma": "font-weight/medium",
-      "code": "font-light",
-      "status": "aberta"
-    },
     {
       "where": "Borda do cartão sem marcar",
       "figma": "color/border",

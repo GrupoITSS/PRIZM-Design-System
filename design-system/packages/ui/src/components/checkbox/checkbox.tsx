@@ -73,7 +73,7 @@ const Checkbox = function Checkbox({
         {root}
         <Label
           htmlFor={id}
-          className="cursor-pointer text-sm font-light text-foreground leading-none group-has-disabled/checkbox:cursor-not-allowed group-has-disabled/checkbox:opacity-70"
+          className="cursor-pointer text-sm font-medium text-foreground leading-none group-has-disabled/checkbox:cursor-not-allowed group-has-disabled/checkbox:opacity-70"
         >
           {label}
         </Label>

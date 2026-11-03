@@ -1,0 +1,44 @@
+{
+  "component": "Label",
+  "description": "Mapa de tokens do Label: o que o texto, o asterisco e o estado disabled usam do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 30/10/2026. O label.tokens.test.tsx confere o mapa contra as classes do código.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25789-2017",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25790-2423",
+    "code": "design-system/packages/ui/src/components/label/label.tsx",
+    "story": "design-system/apps/docs/stories/label.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=ff93a9a3-9c47-4362-b421-5b02d6ed0375&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/158"
+    ],
+    "jira": [
+      "GIES-1725"
+    ]
+  },
+  "states": {
+    "default": {
+      "color": "color/foreground"
+    },
+    "required": {
+      "color": "color/foreground",
+      "asterisk": "color/destructive",
+      "exception": "4,22:1 no Docnix escuro e 4,43:1 no Digitrol claro, abaixo de 4,5:1. Exceção do time, 03/11/2026: o asterisco fica no mesmo vermelho do erro.",
+      "attribute": "required"
+    },
+    "disabled": {
+      "color": "color/foreground",
+      "opacity": "opacity/70",
+      "attribute": "peer-disabled"
+    }
+  },
+  "parts": {
+    "text": {
+      "fontSize": "text/sm",
+      "fontFamily": "font/sans",
+      "fontWeight": "font-weight/medium"
+    },
+    "asterisk": {
+      "gap": "spacing/0-5"
+    }
+  },
+  "divergences": []
+}
