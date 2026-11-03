@@ -10,14 +10,17 @@ import type { SwitchProps } from "./switch.types";
  * API **100% baseada em props**, sem subcomponentes:
  *
  * ```tsx
- * const [enabled, setEnabled] = React.useState(false);
+ * const [ativo, setAtivo] = React.useState(false);
  *
  * <Switch
- *   checked={enabled}
- *   onChange={setEnabled}
- *   aria-label="Airplane mode"
+ *   checked={ativo}
+ *   onCheckedChange={setAtivo}
+ *   aria-label="Modo avião"
  * />
  * ```
+ *
+ * Com rótulo, descrição ou erro, use a composição com `Field` e `FieldLabel`.
+ * O Switch precisa de nome: `FieldLabel` ligado pelo `id`, ou `aria-label`.
  *
  * Internamente usa Radix `Switch`, mantendo acessibilidade e comportamento
  * padrão do shadcn/ui, mas toda a composição é encapsulada.
@@ -28,23 +31,48 @@ function SwitchImpl({
   size = "default",
   checked,
   defaultChecked,
+  onCheckedChange,
   onChange,
   className,
   ref,
   ...rootProps
 }: SwitchProps & { ref?: React.Ref<React.ElementRef<typeof RadixSwitch.Root>> }) {
+  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
+
+  const setRefs = React.useCallback(
+    (node: HTMLButtonElement | null) => {
+      buttonRef.current = node;
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
   const handleChange = React.useCallback(
     (value: boolean) => {
-      if (onChange) {
-        onChange(value);
-      }
+      onCheckedChange?.(value);
+      onChange?.(value);
     },
-    [onChange],
+    [onCheckedChange, onChange],
   );
+
+  // Sem nome, o leitor de tela anuncia só "botão de alternância" (WCAG 4.1.2, pendência 3).
+  const ariaLabel = rootProps["aria-label"];
+  const ariaLabelledBy = rootProps["aria-labelledby"];
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
+    const named =
+      Boolean(ariaLabel ?? ariaLabelledBy) || (buttonRef.current?.labels?.length ?? 0) > 0;
+    if (!named) {
+      console.warn(
+        "Switch: sem nome acessível. Ligue um FieldLabel pelo id ou passe aria-label.",
+      );
+    }
+  }, [ariaLabel, ariaLabelledBy]);
 
   return (
     <RadixSwitch.Root
-      ref={ref}
+      ref={setRefs}
       data-slot="switch"
       data-size={size}
       className={cn(switchRootVariants({ size, className }))}
@@ -53,7 +81,7 @@ function SwitchImpl({
       onCheckedChange={handleChange}
       {...rootProps}
     >
-      <RadixSwitch.Thumb className={switchThumbVariants({ size })} />
+      <RadixSwitch.Thumb data-slot="switch-thumb" className={switchThumbVariants({ size })} />
     </RadixSwitch.Root>
   );
 }

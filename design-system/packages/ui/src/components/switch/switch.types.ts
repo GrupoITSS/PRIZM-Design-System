@@ -8,7 +8,7 @@ type RadixSwitchRootProps = React.ComponentPropsWithoutRef<typeof RadixSwitch.Ro
  * Props do componente Switch do design system PRIZM.
  *
  * API simplificada baseada em props:
- * - `checked` / `defaultChecked` + `onChange` para controle;
+ * - `checked` / `defaultChecked` + `onCheckedChange` para controle (`onChange` segue, obsoleto);
  * - `size` para variações visuais;
  * - Suporta todos os atributos nativos do Switch Radix (exceto `asChild` e `children`).
  *
@@ -31,7 +31,12 @@ export interface SwitchProps
    */
   defaultChecked?: boolean;
   /**
+   * Callback disparado quando o valor muda, como no Radix e no Checkbox.
+   */
+  onCheckedChange?: (checked: boolean) => void;
+  /**
    * Callback disparado quando o valor muda.
+   * @deprecated Use `onCheckedChange`, como no Radix e no Checkbox. Continua funcionando.
    */
   onChange?: (checked: boolean) => void;
   /**
