@@ -20,7 +20,8 @@
     },
     "required": {
       "color": "color/foreground",
-      "asterisk": "color/destructive-strong",
+      "asterisk": "color/destructive",
+      "exception": "4,22:1 no Docnix escuro e 4,43:1 no Digitrol claro, abaixo de 4,5:1. Exceção do time, 03/11/2026: o asterisco fica no mesmo vermelho do erro.",
       "attribute": "required"
     },
     "disabled": {
