@@ -91,7 +91,7 @@ describe("Field (PRIZM / shadcn)", () => {
     );
     const asterisco = screen.getByText("*");
     expect(asterisco).toHaveAttribute("data-slot", "label-required");
-    expect(asterisco).toHaveClass("text-destructive-strong");
+    expect(asterisco).toHaveClass("text-destructive");
     expect(screen.getByText("Email")).toHaveClass("[&>[data-slot=label-required]]:-ml-1.5");
   });
 });
