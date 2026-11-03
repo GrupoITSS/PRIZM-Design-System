@@ -65,6 +65,14 @@ describe("Switch: decisões de 03/11/2026", () => {
     expect(thumb?.className).not.toMatch(/shadow/);
   });
 
+  it("no escuro, a alça desligada fica em foreground", () => {
+    const { container } = render(<Switch aria-label="Avisos" />);
+    expect(container.querySelector("[data-slot=switch-thumb]")).toHaveClass(
+      "bg-background",
+      "in-data-[mode=dark]:data-[state=unchecked]:bg-foreground",
+    );
+  });
+
   it("aria-invalid pinta a borda de destructive (D7)", () => {
     render(<Switch aria-label="Termos" aria-invalid />);
     const s = screen.getByRole("switch");

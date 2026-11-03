@@ -31,8 +31,10 @@ export const switchRootVariants = cva(switchRootBase, {
   },
 });
 
+// No escuro, a alça desligada em background some sobre o trilho input: fica em foreground,
+// como no shadcn. O modo vem do data-mode="dark" de um elemento acima.
 const switchThumbBase =
-  "pointer-events-none block rounded-full bg-background ring-0 transition-transform";
+  "pointer-events-none block rounded-full bg-background ring-0 transition-transform in-data-[mode=dark]:data-[state=unchecked]:bg-foreground";
 
 export const switchThumbVariants = cva(switchThumbBase, {
   variants: {

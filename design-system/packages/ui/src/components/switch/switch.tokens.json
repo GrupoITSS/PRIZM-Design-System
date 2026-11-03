@@ -7,8 +7,13 @@
     "code": "design-system/packages/ui/src/components/switch/switch.tsx",
     "story": "design-system/apps/docs/stories/switch.stories.tsx",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=f88f5584-793b-4103-9f19-a2372932bb9e&version=v1",
-    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/164"],
-    "jira": ["GIES-1728", "GIES-1725"]
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/164"
+    ],
+    "jira": [
+      "GIES-1728",
+      "GIES-1725"
+    ]
   },
   "types": {
     "Default": "o Switch, com rótulo e descrição por Field",
@@ -18,7 +23,9 @@
     "no": {
       "track": "color/input",
       "thumb": "color/background",
-      "exception": "1,16 a 1,47:1 contra a página, abaixo de 3:1. Exceção do time, 03/11/2026, como a borda dos campos."
+      "exception": "1,16 a 1,47:1 contra a página, abaixo de 3:1. Exceção do time, 03/11/2026, como a borda dos campos.",
+      "thumbDark": "color/foreground",
+      "thumbFigma": "color/white"
     },
     "yes": {
       "track": "color/primary",
@@ -83,22 +90,35 @@
     "trackToText": "spacing/3"
   },
   "sizes": {
-    "sm": { "width": "width/9", "height": "height/5", "thumb": "width/4", "target": "24px, com área invisível" },
-    "default": { "width": "width/11", "height": "height/6", "thumb": "width/5" },
-    "lg": { "width": "width/12", "height": "height/7", "thumb": "width/6" }
+    "sm": {
+      "width": "width/9",
+      "height": "height/5",
+      "thumb": "width/4",
+      "target": "24px, com área invisível"
+    },
+    "default": {
+      "width": "width/11",
+      "height": "height/6",
+      "thumb": "width/5"
+    },
+    "lg": {
+      "width": "width/12",
+      "height": "height/7",
+      "thumb": "width/6"
+    }
   },
   "divergences": [
+    {
+      "where": "Alça desligada",
+      "figma": "color/white: o Core não tem token que valha background no claro e foreground no escuro",
+      "code": "bg-background; no escuro, bg-foreground (in-data-[mode=dark])",
+      "status": "aberta: mesmo visual nos dois modos, nome diferente"
+    },
     {
       "where": "Área de clique do sm",
       "figma": "sem camada: a área de 24px não aparece no Figma",
       "code": "after:-inset-0.5",
       "status": "aberta"
-    },
-    {
-      "where": "Alça no escuro, desligado",
-      "figma": "color/background sobre color/input: quase some",
-      "code": "igual",
-      "status": "aberta: o shadcn usa foreground na alça desligada no escuro"
     },
     {
       "where": "Rótulo",

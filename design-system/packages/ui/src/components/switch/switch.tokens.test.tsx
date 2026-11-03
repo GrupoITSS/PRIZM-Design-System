@@ -28,6 +28,7 @@ describe("Switch × mapa de tokens (switch.tokens.json)", () => {
   it("alça do mapa, sem sombra", () => {
     expect(thumb()).toContain(`bg-${color(map.checked.no.thumb)}`);
     expect(thumb().some((c) => c.startsWith("shadow"))).toBe(false);
+    expect(thumb()).toContain(`in-data-[mode=dark]:data-[state=unchecked]:bg-${color(map.checked.no.thumbDark)}`);
   });
 
   it("trilho: raio e borda do mapa", () => {
