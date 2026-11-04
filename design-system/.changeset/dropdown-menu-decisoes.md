@@ -4,7 +4,7 @@
 
 **DropdownMenu: decisões de 04/11/2026**
 
-- **Item destrutivo**: `variant="destructive"` no `DropdownMenuItem` e `variant: "destructive"` nos `items`. Texto e ícone em `text-destructive-strong` em repouso (7,73 a 8,31:1 sobre o menu) e em `text-destructive` no destaque, sobre `bg-accent` (exceção do time: 2,24 a 4,43:1).
+- **Item destrutivo**: `variant="destructive"` no `DropdownMenuItem` e `variant: "destructive"` nos `items`. Texto e ícone em `text-destructive`, em repouso e no destaque sobre `bg-accent` (exceção do time: 3,24:1 no Docnix escuro e 2,24 a 4,43:1 sobre `accent`).
 - **Rótulo**: sai `text-muted-foreground`; herda o `text-popover-foreground` do menu, como os itens.
 - **Separador**: `bg-border` (era `bg-muted`). Regra F1: divisores usam `border`.
 - **Atalho**: `text-muted-foreground` (era `opacity-60`), `accent-foreground` no destaque.

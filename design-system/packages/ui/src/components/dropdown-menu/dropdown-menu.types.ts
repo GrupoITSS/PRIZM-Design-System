@@ -99,7 +99,7 @@ export type DropdownMenuItemProps = React.ComponentPropsWithoutRef<
 > & {
   inset?: boolean;
   /**
-   * `destructive`: texto e ícone em `destructive-strong` (em `destructive` no destaque).
+   * `destructive`: texto e ícone em `destructive`, também no destaque.
    *
    * @default "default"
    */

@@ -41,7 +41,7 @@ const abrir = async (name = "Ações") => {
 };
 
 describe("DropdownMenu: decisões de 04/11/2026", () => {
-  it("1: variant destructive no item e nos items, com destructive-strong em repouso", async () => {
+  it("1: variant destructive no item e nos items, em destructive (repouso e destaque)", async () => {
     render(
       <DropdownMenu
         trigger={<Button>Ações</Button>}
@@ -58,7 +58,8 @@ describe("DropdownMenu: decisões de 04/11/2026", () => {
       "default",
     );
     const c = cls(dropdownMenuItemStyles);
-    expect(c).toContain("data-[variant=destructive]:text-destructive-strong");
+    expect(c).toContain("data-[variant=destructive]:text-destructive");
+    expect(dropdownMenuItemStyles).not.toContain("destructive-strong");
     expect(c).toContain("data-[variant=destructive]:focus:text-destructive");
   });
 
