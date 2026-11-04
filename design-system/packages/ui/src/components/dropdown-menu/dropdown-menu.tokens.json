@@ -9,7 +9,10 @@
     "code": "design-system/packages/ui/src/components/dropdown-menu/dropdown-menu.tsx",
     "story": "design-system/apps/docs/stories/dropdown-menu.stories.tsx",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=216a0231-4880-461e-9336-f519d056f56d&version=v1",
-    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/170"],
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/170",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/171"
+    ],
     "jira": ["GIES-1725"]
   },
   "parts": {
