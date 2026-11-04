@@ -41,10 +41,21 @@
       "paddingX": "spacing/2",
       "paddingY": "spacing/1-5"
     },
-    "separator": { "color": "color/border", "height": "height/px" },
-    "shortcut": { "text": "color/muted-foreground", "fontSize": "text/xs" },
-    "description": { "text": "color/muted-foreground", "fontSize": "text/xs" },
-    "inset": { "paddingLeft": "spacing/8" }
+    "separator": {
+      "color": "color/border",
+      "height": "height/px"
+    },
+    "shortcut": {
+      "text": "color/muted-foreground",
+      "fontSize": "text/xs"
+    },
+    "description": {
+      "text": "color/muted-foreground",
+      "fontSize": "text/xs"
+    },
+    "inset": {
+      "paddingLeft": "spacing/8"
+    }
   },
   "states": {
     "highlighted": {
@@ -54,10 +65,21 @@
       "secondaryText": "color/accent-foreground",
       "note": "Hover no Figma; no código, data-highlighted (mouse e teclado)."
     },
-    "disabled": { "opacity": "opacity/50", "pointerEvents": "none" },
-    "destructive": { "text": "color/destructive", "icon": "color/destructive" },
-    "destructiveHighlighted": { "background": "color/accent", "text": "color/destructive" },
-    "subTriggerOpen": { "background": "color/accent" }
+    "disabled": {
+      "opacity": "opacity/50",
+      "pointerEvents": "none"
+    },
+    "destructive": {
+      "text": "color/destructive",
+      "icon": "color/destructive"
+    },
+    "destructiveHighlighted": {
+      "background": "color/accent",
+      "text": "color/destructive"
+    },
+    "subTriggerOpen": {
+      "background": "color/accent"
+    }
   },
   "divergences": [
     {
@@ -83,6 +105,18 @@
       "figma": "componentes de composição (menu de conta)",
       "code": "sem par; montado com Avatar e Button",
       "status": "representação (revisar depois de 05/11)"
+    },
+    {
+      "where": "família (ContextMenu e Menubar)",
+      "figma": "mesmas partes do Dropdown Menu",
+      "code": "rótulo, separador, atalho e desabilitado ainda diferentes do Dropdown Menu",
+      "status": "aberta (PRs próprios)"
+    },
+    {
+      "where": "Item › State = Hover",
+      "figma": "variante Hover",
+      "code": "data-highlighted (mouse e teclado), estilizado por focus:",
+      "status": "representação"
     },
     {
       "where": "texto de exemplo",
