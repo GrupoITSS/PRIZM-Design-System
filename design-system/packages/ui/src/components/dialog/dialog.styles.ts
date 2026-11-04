@@ -7,9 +7,9 @@
  * @see https://ui.shadcn.com/docs/components/radix/dialog
  */
 
-/** Overlay: escurece o fundo com leve blur, usando alpha do PRIZM. */
+/** Overlay: color/overlay (quase preto a 80% nos dois modos) com leve blur. */
 export const dialogOverlayStyles =
-  "fixed inset-0 z-50 bg-alpha-80 backdrop-blur-[0.125rem] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0";
+  "fixed inset-0 z-50 bg-overlay backdrop-blur-[0.125rem] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0";
 
 /**
  * Content: modal centralizado com animação de zoom + fade.

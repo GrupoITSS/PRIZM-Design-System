@@ -69,7 +69,7 @@ describe("AlertDialog × mapa de tokens (alert-dialog.tokens.json)", () => {
     expect(c).toContain("flex-col-reverse");
   });
 
-  it("fundo atrás do modal: color/alpha-80 com blur, igual ao Dialog", () => {
+  it("fundo atrás do modal: color/overlay com blur, igual ao Dialog", () => {
     const c = classes(alertDialogOverlayStyles);
     expect(c).toContain(`bg-${color(p.overlay.background)}`);
     expect(c).toContain(p.overlay.blur);
