@@ -30,6 +30,7 @@ export function GridActionMenu({
   return (
     <Popover
       size="sm"
+      contentProps={{ "aria-label": "Ações" }}
       side={position}
       align={align}
       open={open}

@@ -369,6 +369,7 @@ function StatusSummaryWithPopoverCell({
     <div className="flex w-full min-w-0 items-center justify-start">
       <Popover
         size="lg"
+        contentProps={{ "aria-label": "Detalhes" }}
         className="max-h-[min(85vh,32rem)] min-w-0 max-w-[min(calc(100vw-1.5rem),24rem)] overflow-hidden p-2 sm:max-w-[min(calc(100vw-2rem),26rem)] sm:p-3"
         trigger={
           <button
@@ -459,6 +460,7 @@ export function renderPrizmCell<TRow = unknown>({
 
       return popover.trigger === "click" ? (
         <Popover
+          contentProps={{ "aria-label": typeof popover.title === "string" ? popover.title : "Detalhes" }}
           trigger={<span className="cursor-pointer">{triggerNode}</span>}
           content={
             <div className="space-y-2">
