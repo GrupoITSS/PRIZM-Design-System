@@ -2,11 +2,12 @@ import { cn } from "../../lib/cn";
 import { Avatar as RadixAvatar } from "radix-ui";
 import * as React from "react";
 import {
-  avatarBadgeStyles,
+  avatarBadgeVariants,
   avatarFallbackStyles,
   avatarGroupCountStyles,
   avatarGroupStyles,
   avatarImageStyles,
+  avatarStatusLabels,
   avatarVariants,
 } from "./avatar.styles";
 import type {
@@ -82,15 +83,17 @@ function useResolvedAvatarSrc(src?: string) {
  * **Simplified API:** Pass `src`, `alt`, `fallback` as props (e.g. `<Avatar src="..." fallback="CN" />`).
  * Na 1ª carga mostra a letra até o preload; URLs já carregadas reaparecem sem piscada.
  * **Composition API:** Pass AvatarImage and AvatarFallback as children for advanced use.
+ * **Status:** `status` (online, away, busy, offline) mostra o badge, nas duas APIs. Sem `status`, sem badge.
  *
  * @see [Avatar — shadcn/ui (Radix)](https://ui.shadcn.com/docs/components/radix/avatar)
  */
 const Avatar = ({
   className,
-  size = "xl",
+  size = "md",
   src,
   alt,
   fallback,
+  status,
   children,
   ref,
   ...props
@@ -98,6 +101,17 @@ const Avatar = ({
   // Se fallback ou src são fornecidos, usar API simplificada
   const useSimplifiedAPI = fallback !== undefined || src !== undefined;
   const resolvedSrc = useResolvedAvatarSrc(useSimplifiedAPI ? src : undefined);
+  const missingAlt = useSimplifiedAPI && !!src?.trim() && alt === undefined;
+
+  // Decisão de 04/11 (WCAG 1.1.1): avisar em desenvolvimento quando há imagem sem alt.
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
+    if (missingAlt) {
+      console.warn(
+        'Avatar: src sem alt. Passe o nome da pessoa em alt, ou alt="" se o nome já está escrito ao lado.',
+      );
+    }
+  }, [missingAlt]);
 
   return (
     <RadixAvatar.Root
@@ -110,11 +124,22 @@ const Avatar = ({
       {useSimplifiedAPI ? (
         <>
           {resolvedSrc ? <AvatarImage src={resolvedSrc} alt={alt} /> : null}
-          <AvatarFallback>{fallback ?? ""}</AvatarFallback>
+          <AvatarFallback>
+            {alt === undefined ? (
+              (fallback ?? "")
+            ) : (
+              // Com alt, o leitor de tela lê o nome, não as iniciais letra a letra.
+              <>
+                <span aria-hidden="true">{fallback ?? ""}</span>
+                {alt ? <span className="sr-only">{alt}</span> : null}
+              </>
+            )}
+          </AvatarFallback>
         </>
       ) : (
         children
       )}
+      {status ? <AvatarBadge status={status} /> : null}
     </RadixAvatar.Root>
   );
 };
@@ -148,8 +173,17 @@ const AvatarFallback = ({
 );
 AvatarFallback.displayName = RadixAvatar.Fallback.displayName ?? "AvatarFallback";
 
-function AvatarBadge({ className, ...props }: AvatarBadgeProps) {
-  return <span data-slot="avatar-badge" className={cn(avatarBadgeStyles, className)} {...props} />;
+function AvatarBadge({ className, status = "online", children, ...props }: AvatarBadgeProps) {
+  return (
+    <span
+      data-slot="avatar-badge"
+      data-status={status}
+      className={cn(avatarBadgeVariants({ status }), className)}
+      {...props}
+    >
+      {children ?? <span className="sr-only">{avatarStatusLabels[status]}</span>}
+    </span>
+  );
 }
 AvatarBadge.displayName = "AvatarBadge";
 

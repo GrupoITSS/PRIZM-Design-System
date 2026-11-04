@@ -1,6 +1,6 @@
 import type * as React from "react";
 import type { Avatar as RadixAvatar } from "radix-ui";
-import type { AvatarVariantProps } from "./avatar.styles";
+import type { AvatarStatus, AvatarVariantProps } from "./avatar.styles";
 
 export interface AvatarProps
   extends
@@ -13,7 +13,9 @@ export interface AvatarProps
    */
   src?: string;
   /**
-   * Alt text for the image. **Highly recommended for accessibility** when using `src`.
+   * Nome da pessoa. Com o avatar sozinho, passe o nome; com o nome escrito ao lado, passe `""`
+   * (decorativo). Com `alt`, as iniciais ficam ocultas do leitor de tela e ele lê o `alt`.
+   * Com `src` e sem `alt`, há um aviso no console em desenvolvimento.
    * @example "John Doe"
    */
   alt?: string;
@@ -23,6 +25,12 @@ export interface AvatarProps
    * @example "JD"
    */
   fallback?: string;
+  /**
+   * Status da pessoa. Sem `status`, não há badge; com ele, o badge aparece no canto inferior
+   * direito, com o texto do status oculto para o leitor de tela. Funciona na API simplificada e
+   * na composição.
+   */
+  status?: AvatarStatus;
 }
 
 export interface AvatarImageProps extends Omit<
@@ -39,8 +47,14 @@ export interface AvatarFallbackProps extends Omit<
   className?: string;
 }
 
-export type AvatarBadgeProps = React.HTMLAttributes<HTMLDivElement>;
+export interface AvatarBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+  /** Cor e texto oculto do status. Padrão `online`. */
+  status?: AvatarStatus;
+}
 
 export type AvatarGroupProps = React.HTMLAttributes<HTMLDivElement>;
 
-export type AvatarGroupCountProps = React.HTMLAttributes<HTMLDivElement>;
+/** Use `aria-label` para dar contexto ao +N (ex.: "Mais 3 pessoas"). */
+export type AvatarGroupCountProps = React.HTMLAttributes<HTMLSpanElement>;
+
+export type { AvatarStatus };
