@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { avatarImageStyles } from "./avatar.styles";
 import {
   Avatar,
   AvatarBadge,
@@ -199,6 +200,19 @@ describe("Avatar: decisões de 04/11/2026", () => {
   it("3: sem borda", () => {
     render(<Avatar fallback="SB" />);
     expect(root("SB")?.className).not.toMatch(/\bborder\b|border-border/);
+  });
+
+  it("P1: a raiz não corta o badge; o recorte fica na imagem e nas iniciais", () => {
+    const { container } = render(
+      <Avatar status="online">
+        <AvatarImage src="https://example.com/a.png" alt="" />
+        <AvatarFallback>P1</AvatarFallback>
+      </Avatar>,
+    );
+    expect(root("P1")).not.toHaveClass("overflow-hidden");
+    expect(screen.getByText("P1")).toHaveClass("rounded-full");
+    expect(avatarImageStyles.split(" ")).toContain("rounded-full");
+    expect(container.querySelector("[data-slot='avatar-badge']")).toBeInTheDocument();
   });
 
   it("4: iniciais em text-xs (xs, sm) e text-sm (md+)", () => {

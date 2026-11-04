@@ -7,6 +7,7 @@ import {
   avatarFallbackStyles,
   avatarGroupCountStyles,
   avatarGroupStyles,
+  avatarImageStyles,
   avatarStatusLabels,
   avatarVariants,
   type AvatarSize,
@@ -49,6 +50,10 @@ describe("Avatar × mapa de tokens (avatar.tokens.json)", () => {
     expect(c).toContain(`rounded-${step(map.parts.root.radius)}`);
     expect(map.parts.root.border).toBeNull();
     expect(c.some((x) => x === "border" || x.startsWith("border-"))).toBe(false);
+    // Sem recorte na raiz (P1): o raio da imagem e das iniciais faz o círculo.
+    expect(map.parts.root.clip).toBeNull();
+    expect(c).not.toContain("overflow-hidden");
+    expect(classes(avatarImageStyles)).toContain(`rounded-${step(map.parts.image.radius)}`);
     render(<Avatar fallback="PD" />);
     expect(screen.getByText("PD").closest("[data-slot='avatar']")).toHaveAttribute(
       "data-size",

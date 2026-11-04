@@ -17,7 +17,11 @@
     "jira": ["GIES-1725"]
   },
   "parts": {
-    "root": { "radius": "radius/full", "border": null },
+    "root": {
+      "radius": "radius/full",
+      "border": null,
+      "clip": null
+    },
     "fallback": {
       "background": "color/muted",
       "text": "color/muted-foreground",
@@ -40,13 +44,28 @@
       "fontWeight": "font-weight/medium",
       "ring": "color/background",
       "ringWidth": "border-width/2"
+    },
+    "image": {
+      "radius": "radius/full"
     }
   },
   "status": {
-    "online": { "background": "color/success", "label": "Online" },
-    "away": { "background": "color/warning", "label": "Ausente" },
-    "busy": { "background": "color/destructive", "label": "Ocupado" },
-    "offline": { "background": "color/muted-foreground", "label": "Offline" }
+    "online": {
+      "background": "color/success",
+      "label": "Online"
+    },
+    "away": {
+      "background": "color/warning",
+      "label": "Ausente"
+    },
+    "busy": {
+      "background": "color/destructive",
+      "label": "Ocupado"
+    },
+    "offline": {
+      "background": "color/muted-foreground",
+      "label": "Offline"
+    }
   },
   "sizes": {
     "xs": {
@@ -87,12 +106,6 @@
     "note": "O Avatar não é interativo: sem hover, foco nem disabled."
   },
   "divergences": [
-    {
-      "where": "badge e recorte da raiz",
-      "figma": "badge fora do recorte (clipsContent desligado)",
-      "code": "raiz com overflow-hidden e o badge dentro dela",
-      "status": "aberta (conferir no Storybook publicado; decisão P1 de 04/11)"
-    },
     {
       "where": "badge Away",
       "figma": "color/warning",
