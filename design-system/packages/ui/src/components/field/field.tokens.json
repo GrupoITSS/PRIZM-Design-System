@@ -6,8 +6,8 @@
     "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25991-5586",
     "code": "design-system/packages/ui/src/components/field/field.tsx",
     "story": "design-system/apps/docs/stories/field.stories.tsx",
-    "article": null,
-    "pullRequests": [],
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d2e1be9f-70d7-41e7-82fd-bc69b36e6340&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/172"],
     "jira": ["GIES-1728", "GIES-1725"]
   },
   "variants": {

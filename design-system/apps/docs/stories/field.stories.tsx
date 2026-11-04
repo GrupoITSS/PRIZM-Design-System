@@ -17,6 +17,8 @@ import {
 
 const FIGMA_COMPONENT = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18684-15220";
 const FIGMA_DOC = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25991-5586";
+const CMS_ARTICLE =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d2e1be9f-70d7-41e7-82fd-bc69b36e6340&version=v1";
 
 const meta: Meta<typeof Field> = {
   title: "Primários/Field",
@@ -26,7 +28,7 @@ const meta: Meta<typeof Field> = {
     docs: {
       description: {
         component:
-          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC})\n\n` +
+          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC}) · [Artigo no CMS](${CMS_ARTICLE})\n\n` +
           "Base: [shadcn/ui](https://ui.shadcn.com), com tokens PRIZM. O Field é composição: não há API por props.\n\n" +
           "Field do design system PRIZM: monta um campo de formulário com rótulo, controle, descrição e erro.\n\n" +
           "- **Peças:** `FieldSet`, `FieldLegend`, `FieldGroup`, `Field`, `FieldContent`, `FieldLabel`, `FieldTitle`, `FieldDescription`, `FieldSeparator` e `FieldError`.\n" +
