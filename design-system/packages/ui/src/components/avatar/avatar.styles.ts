@@ -9,7 +9,9 @@ import { cva, type VariantProps } from "class-variance-authority";
  *
  * @see [Avatar — shadcn/ui (Radix)](https://ui.shadcn.com/docs/components/radix/avatar)
  */
-const avatarBase = "group/avatar relative flex shrink-0 overflow-hidden rounded-full";
+// Sem overflow-hidden na raiz: o badge fica no canto sem ser cortado. A imagem e as iniciais
+// já são rounded-full (decisão P1 de 04/11/2026, conferida no render do Storybook).
+const avatarBase = "group/avatar relative flex shrink-0 rounded-full";
 
 export const avatarVariants = cva(avatarBase, {
   variants: {
@@ -30,7 +32,7 @@ export type AvatarVariantProps = VariantProps<typeof avatarVariants>;
 export type AvatarSize = NonNullable<AvatarVariantProps["size"]>;
 
 /** AvatarImage: fill container, cover, square aspect (shadcn) */
-export const avatarImageStyles = "aspect-square size-full object-cover";
+export const avatarImageStyles = "aspect-square size-full rounded-full object-cover";
 
 /** AvatarFallback: iniciais em text-xs (xs, sm) e text-sm (md, lg, xl), muted nos dois modos. */
 export const avatarFallbackStyles =
