@@ -30,7 +30,15 @@ export interface DropdownMenuItemData {
    * Handler de clique do item.
    */
   onSelect?: () => void;
+  /**
+   * `destructive` para ações perigosas ou sem volta (Excluir, Remover).
+   *
+   * @default "default"
+   */
+  variant?: DropdownMenuItemVariant;
 }
+
+export type DropdownMenuItemVariant = "default" | "destructive";
 
 export interface DropdownMenuSection {
   /**
@@ -90,6 +98,12 @@ export type DropdownMenuItemProps = React.ComponentPropsWithoutRef<
   typeof RadixDropdownMenu.Item
 > & {
   inset?: boolean;
+  /**
+   * `destructive`: texto e ícone em `destructive-strong` (em `destructive` no destaque).
+   *
+   * @default "default"
+   */
+  variant?: DropdownMenuItemVariant;
 };
 
 export type DropdownMenuCheckboxItemProps = React.ComponentPropsWithoutRef<
