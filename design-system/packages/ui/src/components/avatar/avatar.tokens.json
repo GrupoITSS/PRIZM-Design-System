@@ -1,0 +1,118 @@
+{
+  "component": "Avatar",
+  "description": "Mapa de tokens do Avatar: o que cada parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações dos component sets Avatar, Avatar / Badge, Avatar / Group Count e Avatar Group no Figma em 04/11/2026 (10 + 20 + 5 + 5 variantes, todas no Core) e conferido contra avatar.styles.ts pelo teste avatar.tokens.test.tsx. Nomes no formato do Figma (width/8, color/muted); no código viram classes Tailwind (size-8, bg-muted).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=17100-29935",
+    "figmaBadge": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25968-2008",
+    "figmaGroupCount": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25968-21424",
+    "figmaGroup": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25970-2106",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25984-2039",
+    "code": "design-system/packages/ui/src/components/avatar/avatar.tsx",
+    "story": "design-system/apps/docs/stories/avatar.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d07ef09c-7e8d-4ade-b4d4-14af3af5d19d&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/167"],
+    "jira": ["GIES-1725"]
+  },
+  "parts": {
+    "root": { "radius": "radius/full", "border": null },
+    "fallback": {
+      "background": "color/muted",
+      "text": "color/muted-foreground",
+      "fontWeight": "font-weight/normal"
+    },
+    "badge": {
+      "border": "color/background",
+      "borderWidth": "border-width/2",
+      "radius": "radius/full",
+      "position": "canto inferior direito"
+    },
+    "group": {
+      "overlap": "8px (-space-x-2)",
+      "ring": "color/background",
+      "ringWidth": "border-width/2"
+    },
+    "count": {
+      "background": "color/muted",
+      "text": "color/muted-foreground",
+      "fontWeight": "font-weight/medium",
+      "ring": "color/background",
+      "ringWidth": "border-width/2"
+    }
+  },
+  "status": {
+    "online": { "background": "color/success", "label": "Online" },
+    "away": { "background": "color/warning", "label": "Ausente" },
+    "busy": { "background": "color/destructive", "label": "Ocupado" },
+    "offline": { "background": "color/muted-foreground", "label": "Offline" }
+  },
+  "sizes": {
+    "xs": {
+      "size": "width/5",
+      "fallbackText": "text/xs",
+      "badge": "width/1-5",
+      "countText": "text/xs"
+    },
+    "sm": {
+      "size": "width/6",
+      "fallbackText": "text/xs",
+      "badge": "width/2",
+      "countText": "text/xs"
+    },
+    "md": {
+      "size": "width/8",
+      "fallbackText": "text/sm",
+      "badge": "width/2-5",
+      "countText": "text/sm"
+    },
+    "lg": {
+      "size": "width/10",
+      "fallbackText": "text/sm",
+      "badge": "width/3",
+      "countText": "text/sm"
+    },
+    "xl": {
+      "size": "width/12",
+      "fallbackText": "text/sm",
+      "badge": "width/3-5",
+      "countText": "text/sm"
+    }
+  },
+  "defaultSize": "md",
+  "states": {
+    "loading": "iniciais até o onload da imagem",
+    "error": "iniciais",
+    "note": "O Avatar não é interativo: sem hover, foco nem disabled."
+  },
+  "divergences": [
+    {
+      "where": "badge e recorte da raiz",
+      "figma": "badge fora do recorte (clipsContent desligado)",
+      "code": "raiz com overflow-hidden e o badge dentro dela",
+      "status": "aberta (conferir no Storybook publicado; decisão P1 de 04/11)"
+    },
+    {
+      "where": "badge Away",
+      "figma": "color/warning",
+      "code": "bg-warning",
+      "status": "exceção decidida (04/11): 1,97 a 2,15:1 contra o fundo no claro"
+    },
+    {
+      "where": "anel do grupo",
+      "figma": "traço por fora de border-width/2 em cada Avatar",
+      "code": "ring-2 ring-background nos filhos do AvatarGroup",
+      "status": "representação"
+    },
+    {
+      "where": "Item 4 e Item 5",
+      "figma": "booleanas no Avatar Group",
+      "code": "quantos Avatar há nos children",
+      "status": "representação"
+    },
+    {
+      "where": "texto de exemplo",
+      "figma": "inglês (Online, Away, Busy, Offline; Change Photo)",
+      "code": "texto oculto do status em pt-BR (Online, Ausente, Ocupado, Offline)",
+      "status": "representação"
+    }
+  ]
+}
