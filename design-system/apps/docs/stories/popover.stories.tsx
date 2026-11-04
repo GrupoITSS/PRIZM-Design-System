@@ -8,6 +8,8 @@ import { Popover } from "@grupoitss/prizm-ui/popover";
 
 const FIGMA_COMPONENT = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26059-2317";
 const FIGMA_DOC = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26060-3477";
+const CMS_ARTICLE =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=93ab4612-89fa-4801-b852-d7a190c6cc81&version=v1";
 
 const meta: Meta<typeof Popover> = {
   title: "Primários/Popover",
@@ -17,7 +19,7 @@ const meta: Meta<typeof Popover> = {
     docs: {
       description: {
         component:
-          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC})\n\n` +
+          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC}) · [Artigo no CMS](${CMS_ARTICLE})\n\n` +
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
           "Popover do design system PRIZM: painel flutuante preso a um gatilho, para conteúdo curto e interativo. Uso: `<Popover trigger={...} content={...} />`.\n\n" +
           "- **Tamanhos:** `size` `sm` (224px, menus de ação), `md` (288px, padrão) e `lg` (384px).\n" +
