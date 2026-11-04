@@ -85,8 +85,10 @@ describe("DatePicker: decisões de 27/10/2026", () => {
   it("pendências 3 e 4: dias fora do mês sem opacidade e foco do dia no anel do sistema", () => {
     expect(calendarRootStyles).not.toContain("--rdp-outside-opacity");
     expect(calendarClassNames.outside).toContain("text-muted-foreground");
-    expect(calendarDayButtonStyles).toContain("group-data-[focused=true]/day:ring-2");
-    expect(calendarDayButtonStyles).toContain("group-data-[focused=true]/day:ring-ring");
+    // Foco do dia: o do Button (anel de 3px em ring, offset de 2px), desde o PR #166.
+    // O dia não pode zerar o anel: o ring-0! deixava o dia focado sem sinal visível.
+    expect(calendarDayButtonStyles).not.toMatch(/(^|\s)ring-0!/);
+    expect(calendarDayButtonStyles).toContain("group-data-[focused=true]/day:z-10");
     expect(calendarDayButtonStyles).not.toContain("ring-ring/50");
     expect(calendarClassNames.dropdownRoot).toContain("has-focus:ring-2");
     expect(calendarClassNames.dropdownRoot).not.toContain("ring-ring/50");
