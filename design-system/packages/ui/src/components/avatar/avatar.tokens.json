@@ -10,7 +10,10 @@
     "code": "design-system/packages/ui/src/components/avatar/avatar.tsx",
     "story": "design-system/apps/docs/stories/avatar.stories.tsx",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d07ef09c-7e8d-4ade-b4d4-14af3af5d19d&version=v1",
-    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/167"],
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/167",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/169"
+    ],
     "jira": ["GIES-1725"]
   },
   "parts": {
