@@ -45,10 +45,10 @@ export const calendarClassNames = {
     "[&>svg]:text-muted-foreground flex h-8 items-center gap-1 rounded-md pl-2 pr-1 text-sm [&>svg]:size-3.5",
   table: "w-full border-collapse",
   weekdays: "flex",
-  weekday: "text-muted-foreground flex-1 select-none rounded-md text-[0.8rem] font-normal",
+  weekday: "text-muted-foreground flex-1 select-none rounded-md text-xs font-normal",
   week: "mt-2 flex w-full",
   weekNumberHeader: "select-none w-(--cell-size)",
-  weekNumber: "text-muted-foreground select-none text-[0.8rem]",
+  weekNumber: "text-muted-foreground select-none text-xs",
   dayBase:
     "relative w-full h-full p-0 text-center [&:last-child_[data-range-middle=true]]:rounded-r-md! group/day aspect-square select-none",
   dayRangeMiddleRoundingWithWeekNumber: "[&:nth-child(2)_[data-range-middle=true]]:rounded-l-md!",
@@ -70,17 +70,19 @@ export const calendarDayButtonStyles = [
   // Base size & shape (Figma: 32x32, rounded-md)
   "flex size-(--cell-size) items-center justify-center rounded-md p-0 font-normal leading-none",
 
-  // Ensure our selected styles override react-day-picker default border/ring.
-  "aria-selected:border-0! aria-selected:ring-0! aria-selected:ring-offset-0!",
+  // Ensure our selected styles override react-day-picker default border.
+  "aria-selected:border-0!",
 
   // Selected (single)
-  "data-[selected-single=true]:bg-primary! rounded-md! data-[selected-single=true]:text-primary-foreground! data-[selected-single=true]:hover:bg-primary/80! border-none! ring-0!",
+  "data-[selected-single=true]:bg-primary! rounded-md! data-[selected-single=true]:text-primary-foreground! data-[selected-single=true]:hover:bg-primary/80! border-none!",
 
   // Selected (range)
   "data-[range-start=true]:bg-primary! data-[range-start=true]:text-primary-foreground! data-[range-start=true]:hover:bg-primary/80! rounded-md",
   "data-[range-end=true]:bg-primary! data-[range-end=true]:text-primary-foreground! data-[range-end=true]:hover:bg-primary/80!",
   "data-[range-middle=true]:bg-accent! data-[range-middle=true]:text-accent-foreground! data-[range-middle=true]:rounded-none",
 
-  "group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-2 group-data-[focused=true]/day:ring-ring",
-  "",
+  // Focus ring comes from Button (3px ring + 2px offset in ring-offset), so it
+  // stays visible on primary and accent days. Never zero it here: ring-0! hid
+  // the focused day. The focused day sits above its neighbors so the ring isn't cut.
+  "group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10",
 ].join(" ");
