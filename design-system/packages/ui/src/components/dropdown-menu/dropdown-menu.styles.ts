@@ -26,6 +26,12 @@ export const dropdownMenuCheckboxItemStyles =
 export const dropdownMenuRadioItemStyles =
   "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground focus:[&_.text-muted-foreground]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
 
+/**
+ * SubTrigger (decisão de 04/11/2026): com o submenu aberto, fica com o fundo accent, como o
+ * Active=Yes do Figma. Sem isso, ele perde o destaque quando o foco entra no submenu.
+ */
+export const dropdownMenuSubTriggerStyles = "data-[state=open]:bg-accent";
+
 /** Descrição do item (API por props): text-xs muted, accent-foreground no destaque. */
 export const dropdownMenuItemDescriptionStyles = "text-xs text-muted-foreground";
 

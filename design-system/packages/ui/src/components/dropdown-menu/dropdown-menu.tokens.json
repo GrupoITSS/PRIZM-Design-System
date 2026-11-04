@@ -1,0 +1,130 @@
+{
+  "component": "DropdownMenu",
+  "description": "Mapa de tokens do DropdownMenu: o que cada parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações dos sets DropdownMenu / Menu, Item / Default, Item / Label, Item / Separator e Item / SubTrigger no Figma em 04/11/2026 (todos no Core) e conferido contra dropdown-menu.styles.ts pelo teste dropdown-menu.tokens.test.tsx. Nomes no formato do Figma (color/popover, spacing/1-5); no código viram classes Tailwind (bg-popover, py-1.5).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=330-8549",
+    "figmaMenu": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=105-55",
+    "figmaComposition": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=336-5077",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26023-2857",
+    "code": "design-system/packages/ui/src/components/dropdown-menu/dropdown-menu.tsx",
+    "story": "design-system/apps/docs/stories/dropdown-menu.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=216a0231-4880-461e-9336-f519d056f56d&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/170",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/171"
+    ],
+    "jira": ["GIES-1725"]
+  },
+  "parts": {
+    "content": {
+      "background": "color/popover",
+      "text": "color/popover-foreground",
+      "border": "color/border",
+      "borderWidth": "border-width/1",
+      "radius": "radius/md",
+      "padding": "spacing/1",
+      "shadow": "shadow/md"
+    },
+    "item": {
+      "text": "color/popover-foreground",
+      "fontSize": "text/sm",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/1-5",
+      "gap": "spacing/2",
+      "radius": "radius/sm",
+      "icon": "color/muted-foreground",
+      "iconSize": "width/4"
+    },
+    "label": {
+      "text": "color/popover-foreground",
+      "fontWeight": "font-weight/semibold",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/1-5"
+    },
+    "separator": {
+      "color": "color/border",
+      "height": "height/px"
+    },
+    "shortcut": {
+      "text": "color/muted-foreground",
+      "fontSize": "text/xs"
+    },
+    "description": {
+      "text": "color/muted-foreground",
+      "fontSize": "text/xs"
+    },
+    "inset": {
+      "paddingLeft": "spacing/8"
+    }
+  },
+  "states": {
+    "highlighted": {
+      "background": "color/accent",
+      "text": "color/accent-foreground",
+      "icon": "color/accent-foreground",
+      "secondaryText": "color/accent-foreground",
+      "note": "Hover no Figma; no código, data-highlighted (mouse e teclado)."
+    },
+    "disabled": {
+      "opacity": "opacity/50",
+      "pointerEvents": "none"
+    },
+    "destructive": {
+      "text": "color/destructive",
+      "icon": "color/destructive"
+    },
+    "destructiveHighlighted": {
+      "background": "color/accent",
+      "text": "color/destructive"
+    },
+    "subTriggerOpen": {
+      "background": "color/accent",
+      "text": "color/popover-foreground",
+      "note": "Active=Yes no Figma; no código, data-state=open do SubTrigger."
+    }
+  },
+  "divergences": [
+    {
+      "where": "submenu aberto (SubTrigger Active=Yes)",
+      "figma": "fundo color/accent enquanto o submenu está aberto",
+      "code": "data-[state=open]:bg-accent no SubTrigger; o texto fica em popover-foreground, como no Figma",
+      "status": "corrigida (04/11, PR #171): popover-foreground sobre accent de 9,86 a 18,30:1"
+    },
+    {
+      "where": "item destrutivo",
+      "figma": "color/destructive em repouso e no destaque",
+      "code": "text-destructive",
+      "status": "exceção decidida (04/11): 3,24:1 no Docnix escuro e 2,24 a 4,43:1 sobre accent"
+    },
+    {
+      "where": "destaque do item",
+      "figma": "color/accent",
+      "code": "focus:bg-accent",
+      "status": "exceção da família (04/11): 1,09 a 1,46:1 contra o menu"
+    },
+    {
+      "where": "Item / User e Trigger / Avatar",
+      "figma": "componentes de composição (menu de conta)",
+      "code": "sem par; montado com Avatar e Button",
+      "status": "representação (revisar depois de 05/11)"
+    },
+    {
+      "where": "família (ContextMenu e Menubar)",
+      "figma": "mesmas partes do Dropdown Menu",
+      "code": "rótulo, separador, atalho e desabilitado ainda diferentes do Dropdown Menu",
+      "status": "aberta (PRs próprios)"
+    },
+    {
+      "where": "Item › State = Hover",
+      "figma": "variante Hover",
+      "code": "data-highlighted (mouse e teclado), estilizado por focus:",
+      "status": "representação"
+    },
+    {
+      "where": "texto de exemplo",
+      "figma": "inglês (Profile, Log out)",
+      "code": "sem texto padrão",
+      "status": "representação"
+    }
+  ]
+}

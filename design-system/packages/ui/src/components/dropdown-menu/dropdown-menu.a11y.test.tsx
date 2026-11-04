@@ -140,4 +140,17 @@ describe("DropdownMenu · teclado e nomes (etapa 4, 04/11/2026)", () => {
     expect(item).toHaveAccessibleDescription("Preferências da conta");
     expect(screen.getByText("⌘S")).toHaveAttribute("aria-hidden", "true");
   });
+
+  it("submenu aberto: o SubTrigger mantém o destaque quando o foco entra no submenu", async () => {
+    render(<Composto />);
+    await abrir();
+    const sub = screen.getByRole("menuitem", { name: "Compartilhar" });
+    act(() => {
+      sub.focus();
+    });
+    fireEvent.keyDown(sub, { key: "ArrowRight" });
+    await waitFor(() => expect(screen.getByRole("menuitem", { name: "E-mail" })).toHaveFocus());
+    expect(sub).toHaveAttribute("data-state", "open");
+    expect(sub).toHaveClass("data-[state=open]:bg-accent");
+  });
 });
