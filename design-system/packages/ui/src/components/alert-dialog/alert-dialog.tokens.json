@@ -16,7 +16,7 @@
   },
   "parts": {
     "overlay": {
-      "background": "color/alpha-80",
+      "background": "color/overlay",
       "blur": "backdrop-blur-[0.125rem]",
       "note": "Igual ao Dialog. Só no código: o Figma não desenha o fundo atrás do modal."
     },
@@ -84,7 +84,7 @@
     {
       "where": "fundo atrás do modal",
       "figma": "não existe no Figma",
-      "code": "bg-alpha-80 com backdrop-blur, igual ao Dialog",
+      "code": "bg-overlay com backdrop-blur, igual ao Dialog",
       "status": "representação"
     },
     {
