@@ -5,6 +5,7 @@ import * as React from "react";
 import {
   dropdownMenuCheckboxItemStyles,
   dropdownMenuContentStyles,
+  dropdownMenuItemDescriptionStyles,
   dropdownMenuItemStyles,
   dropdownMenuLabelStyles,
   dropdownMenuRadioItemStyles,
@@ -92,6 +93,7 @@ DropdownMenuContent.displayName = RadixDropdownMenu.Content.displayName ?? "Drop
 const DropdownMenuItem = ({
   className,
   inset,
+  variant = "default",
   ref,
   ...props
 }: DropdownMenuItemProps & {
@@ -99,6 +101,7 @@ const DropdownMenuItem = ({
 }) => (
   <RadixDropdownMenu.Item
     ref={ref}
+    data-variant={variant}
     className={cn(dropdownMenuItemStyles, inset && "pl-8", className)}
     {...props}
   />
@@ -208,7 +211,7 @@ const DropdownMenuSubTrigger = ({
     {...props}
   >
     {children}
-    <ChevronRight className="ml-auto h-4 w-4" aria-hidden="true" />
+    <ChevronRight className="ml-auto size-4 text-current" aria-hidden="true" />
   </RadixDropdownMenu.SubTrigger>
 );
 DropdownMenuSubTrigger.displayName =
@@ -235,6 +238,35 @@ const DropdownMenuPortal = RadixDropdownMenu.Portal;
 const DropdownMenuRadioGroup = RadixDropdownMenu.RadioGroup;
 const DropdownMenuTrigger = RadixDropdownMenu.Trigger;
 
+/**
+ * Item da API por props. O nome acessível é só o rótulo: o atalho fica com `aria-hidden` (é só
+ * mostrado) e a descrição é ligada por `aria-describedby` (decisão 3 de 04/11/2026).
+ */
+function DropdownMenuItemFromData({ item }: { item: DropdownMenuItemData }) {
+  const descriptionId = React.useId();
+  return (
+    <DropdownMenuItem
+      disabled={item.disabled}
+      onSelect={item.onSelect}
+      variant={item.variant}
+      aria-describedby={item.description ? descriptionId : undefined}
+    >
+      {item.icon}
+      <div className="flex flex-1 flex-col text-left">
+        <span>{item.label}</span>
+        {item.description ? (
+          <span id={descriptionId} aria-hidden="true" className={dropdownMenuItemDescriptionStyles}>
+            {item.description}
+          </span>
+        ) : null}
+      </div>
+      {item.shortcut ? (
+        <DropdownMenuShortcut aria-hidden="true">{item.shortcut}</DropdownMenuShortcut>
+      ) : null}
+    </DropdownMenuItem>
+  );
+}
+
 function renderItemsOrSections(data: DropdownMenuProps["items"]): React.ReactNode {
   if (!data) return null;
 
@@ -249,21 +281,11 @@ function renderItemsOrSections(data: DropdownMenuProps["items"]): React.ReactNod
       <React.Fragment key={index}>
         {section.label ? <DropdownMenuLabel>{section.label}</DropdownMenuLabel> : null}
         {section.items.map((item, itemIndex) => (
-          <DropdownMenuItem
+          <DropdownMenuItemFromData
             // eslint-disable-next-line @eslint-react/no-array-index-key -- positional list, items have no stable id
             key={`${index}-${itemIndex}-${toText(item.label)}`}
-            disabled={item.disabled}
-            onSelect={item.onSelect}
-          >
-            {item.icon}
-            <div className="flex flex-1 flex-col text-left">
-              <span>{item.label}</span>
-              {item.description ? (
-                <span className="text-xs text-muted-foreground">{item.description}</span>
-              ) : null}
-            </div>
-            {item.shortcut ? <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut> : null}
-          </DropdownMenuItem>
+            item={item}
+          />
         ))}
         {index < sections.length - 1 ? <DropdownMenuSeparator /> : null}
       </React.Fragment>
@@ -271,21 +293,8 @@ function renderItemsOrSections(data: DropdownMenuProps["items"]): React.ReactNod
   }
 
   return (data as DropdownMenuItemData[]).map((item, index) => (
-    <DropdownMenuItem
-      // eslint-disable-next-line @eslint-react/no-array-index-key -- positional list, items have no stable id
-      key={`${index}-${toText(item.label)}`}
-      disabled={item.disabled}
-      onSelect={item.onSelect}
-    >
-      {item.icon}
-      <div className="flex flex-1 flex-col text-left">
-        <span>{item.label}</span>
-        {item.description ? (
-          <span className="text-xs text-muted-foreground">{item.description}</span>
-        ) : null}
-      </div>
-      {item.shortcut ? <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut> : null}
-    </DropdownMenuItem>
+    // eslint-disable-next-line @eslint-react/no-array-index-key -- positional list, items have no stable id
+    <DropdownMenuItemFromData key={`${index}-${toText(item.label)}`} item={item} />
   ));
 }
 

@@ -19,6 +19,7 @@ export type { DropdownMenuItemData } from "./dropdown-menu";
 export {
   dropdownMenuCheckboxItemStyles,
   dropdownMenuContentStyles,
+  dropdownMenuItemDescriptionStyles,
   dropdownMenuItemStyles,
   dropdownMenuLabelStyles,
   dropdownMenuRadioItemStyles,
@@ -31,6 +32,7 @@ export type {
   DropdownMenuContentProps,
   DropdownMenuSubContentProps,
   DropdownMenuItemProps,
+  DropdownMenuItemVariant,
   DropdownMenuLabelProps,
   DropdownMenuProps,
   DropdownMenuRadioGroupProps,
