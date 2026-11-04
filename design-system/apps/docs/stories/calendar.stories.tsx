@@ -8,6 +8,8 @@ import { Calendar, CalendarDayButton } from "@grupoitss/prizm-ui/calendar";
 
 const FIGMA_COMPONENT = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=17179-197284";
 const FIGMA_DOC = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25918-2446";
+const CMS_ARTICLE =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=0d15d1ec-8e6c-4514-b2c4-d6f958c49233&version=v1";
 
 // Dia com o preço abaixo do número (o fim de semana custa mais).
 function PriceDayButton({
@@ -33,7 +35,7 @@ const meta: Meta<typeof Calendar> = {
     docs: {
       description: {
         component:
-          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC})\n\n` +
+          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC}) · [Artigo no CMS](${CMS_ARTICLE})\n\n` +
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + `react-day-picker`, com tokens PRIZM.\n\n" +
           "Calendar do design system PRIZM: mostra os dias sempre à vista para escolher uma data, várias datas ou um intervalo. Num campo de formulário, use o DatePicker, que abre o mesmo Calendar num Popover.\n\n" +
           '- **Modos:** `mode="single"`, `mode="multiple"` e `mode="range"` (com `numberOfMonths`).\n' +
