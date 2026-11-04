@@ -20,6 +20,7 @@ export {
   dropdownMenuCheckboxItemStyles,
   dropdownMenuContentStyles,
   dropdownMenuItemDescriptionStyles,
+  dropdownMenuSubTriggerStyles,
   dropdownMenuItemStyles,
   dropdownMenuLabelStyles,
   dropdownMenuRadioItemStyles,

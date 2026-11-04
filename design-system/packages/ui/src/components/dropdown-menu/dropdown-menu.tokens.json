@@ -78,15 +78,17 @@
       "text": "color/destructive"
     },
     "subTriggerOpen": {
-      "background": "color/accent"
+      "background": "color/accent",
+      "text": "color/popover-foreground",
+      "note": "Active=Yes no Figma; no código, data-state=open do SubTrigger."
     }
   },
   "divergences": [
     {
       "where": "submenu aberto (SubTrigger Active=Yes)",
       "figma": "fundo color/accent enquanto o submenu está aberto",
-      "code": "fundo só no foco (focus:bg-accent); sem data-[state=open]:bg-accent, o SubTrigger perde o destaque quando o foco entra no submenu",
-      "status": "aberta"
+      "code": "data-[state=open]:bg-accent no SubTrigger; o texto fica em popover-foreground, como no Figma",
+      "status": "corrigida (04/11, PR #171): popover-foreground sobre accent de 9,86 a 18,30:1"
     },
     {
       "where": "item destrutivo",

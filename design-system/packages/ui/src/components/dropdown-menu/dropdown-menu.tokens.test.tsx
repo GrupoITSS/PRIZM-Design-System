@@ -9,6 +9,7 @@ import {
   dropdownMenuSeparatorStyles,
   dropdownMenuShortcutStyles,
   dropdownMenuSubContentStyles,
+  dropdownMenuSubTriggerStyles,
 } from "./dropdown-menu.styles";
 import map from "./dropdown-menu.tokens.json";
 
@@ -97,11 +98,11 @@ describe("DropdownMenu × mapa de tokens (dropdown-menu.tokens.json)", () => {
     }
   });
 
-  it("divergência aberta: submenu aberto sem destaque no código", () => {
-    const aberta = map.divergences.find((d) => d.where.startsWith("submenu aberto"));
-    expect(aberta?.status).toBe("aberta");
-    expect(dropdownMenuItemStyles).not.toContain(
+  it("submenu aberto: SubTrigger com o fundo do Active=Yes", () => {
+    expect(cls(dropdownMenuSubTriggerStyles)).toContain(
       `data-[state=open]:bg-${step(s.subTriggerOpen.background)}`,
     );
+    // Texto na cor do menu, como no Figma: nenhuma classe de texto para o estado aberto.
+    expect(dropdownMenuSubTriggerStyles).not.toContain("data-[state=open]:text-");
   });
 });

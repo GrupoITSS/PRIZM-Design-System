@@ -6,6 +6,7 @@ import {
   dropdownMenuCheckboxItemStyles,
   dropdownMenuContentStyles,
   dropdownMenuItemDescriptionStyles,
+  dropdownMenuSubTriggerStyles,
   dropdownMenuItemStyles,
   dropdownMenuLabelStyles,
   dropdownMenuRadioItemStyles,
@@ -207,7 +208,7 @@ const DropdownMenuSubTrigger = ({
 }) => (
   <RadixDropdownMenu.SubTrigger
     ref={ref}
-    className={cn(dropdownMenuItemStyles, inset && "pl-8", className)}
+    className={cn(dropdownMenuItemStyles, dropdownMenuSubTriggerStyles, inset && "pl-8", className)}
     {...props}
   >
     {children}
