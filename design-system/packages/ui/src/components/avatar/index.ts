@@ -6,7 +6,7 @@ export {
   AvatarGroupCount,
   AvatarImage,
 } from "./avatar";
-export { avatarVariants } from "./avatar.styles";
+export { avatarBadgeVariants, avatarVariants } from "./avatar.styles";
 export type {
   AvatarBadgeProps,
   AvatarFallbackProps,
@@ -14,4 +14,5 @@ export type {
   AvatarGroupProps,
   AvatarImageProps,
   AvatarProps,
+  AvatarStatus,
 } from "./avatar.types";
