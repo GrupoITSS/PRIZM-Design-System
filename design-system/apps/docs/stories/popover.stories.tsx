@@ -6,17 +6,25 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Popover } from "@grupoitss/prizm-ui/popover";
 
+const FIGMA_COMPONENT = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26059-2317";
+const FIGMA_DOC = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26060-3477";
+const CMS_ARTICLE =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=93ab4612-89fa-4801-b852-d7a190c6cc81&version=v1";
+
 const meta: Meta<typeof Popover> = {
   title: "Primários/Popover",
   component: Popover,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
+          `[Componente no Figma](${FIGMA_COMPONENT}) · [Documentação no Figma](${FIGMA_DOC}) · [Artigo no CMS](${CMS_ARTICLE})\n\n` +
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          "Componente de popover do design system PRIZM. Uso recomendado via API simplificada baseada em props: `<Popover trigger={...} content={...} />`.\n\n" +
-          "**Documentação e API de referência:** " +
+          "Popover do design system PRIZM: painel flutuante preso a um gatilho, para conteúdo curto e interativo. Uso: `<Popover trigger={...} content={...} />`.\n\n" +
+          "- **Tamanhos:** `size` `sm` (224px, menus de ação), `md` (288px, padrão) e `lg` (384px).\n" +
+          "- **Nome:** o conteúdo é `role=\"dialog\"`. Passe `aria-label` ou `aria-labelledby` em `contentProps`; sem nome, o Popover avisa no console em desenvolvimento.\n\n" +
+          "**Documentação base:** " +
           '<a href="https://ui.shadcn.com/docs/components/radix/popover" target="_blank" rel="noopener noreferrer">' +
           "Popover — shadcn/ui (Radix)" +
           "</a>",
@@ -24,7 +32,7 @@ const meta: Meta<typeof Popover> = {
     },
   },
   args: {
-    trigger: <Button variant="outline">Open Popover</Button>,
+    trigger: <Button variant="outline">Abrir popover</Button>,
     content: "Conteúdo do popover",
     align: "center",
   },
@@ -68,29 +76,30 @@ type Story = StoryObj<typeof Popover>;
 export const PopoverDemo: Story = {
   render: () => (
     <Popover
-      trigger={<Button variant="outline">Open popover</Button>}
+      contentProps={{ "aria-label": "Dimensões" }}
+      trigger={<Button variant="outline">Abrir popover</Button>}
       content={
         <div className="w-full">
           <div className="grid gap-4">
             <div className="space-y-2">
-              <h4 className="font-medium leading-none">Dimensions</h4>
-              <p className="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
+              <h4 className="font-medium leading-none">Dimensões</h4>
+              <p className="text-sm text-muted-foreground">Defina as dimensões da camada.</p>
             </div>
             <div className="grid gap-2">
               <div className="grid grid-cols-3 items-center gap-4">
-                <Label htmlFor="width">Width</Label>
+                <Label htmlFor="width">Largura</Label>
                 <Input id="width" defaultValue="100%" className="col-span-2 h-8" />
               </div>
               <div className="grid grid-cols-3 items-center gap-4">
-                <Label htmlFor="maxWidth">Max. width</Label>
+                <Label htmlFor="maxWidth">Largura máx.</Label>
                 <Input id="maxWidth" defaultValue="300px" className="col-span-2 h-8" />
               </div>
               <div className="grid grid-cols-3 items-center gap-4">
-                <Label htmlFor="height">Height</Label>
+                <Label htmlFor="height">Altura</Label>
                 <Input id="height" defaultValue="25px" className="col-span-2 h-8" />
               </div>
               <div className="grid grid-cols-3 items-center gap-4">
-                <Label htmlFor="maxHeight">Max. height</Label>
+                <Label htmlFor="maxHeight">Altura máx.</Label>
                 <Input id="maxHeight" defaultValue="none" className="col-span-2 h-8" />
               </div>
             </div>
@@ -109,13 +118,14 @@ export const PopoverDemo: Story = {
 export const Basic: Story = {
   render: () => (
     <Popover
-      trigger={<Button variant="outline">Open Popover</Button>}
+      contentProps={{ "aria-label": "Dimensões" }}
+      trigger={<Button variant="outline">Abrir popover</Button>}
       align="start"
       content={
         <div className="space-y-2">
           <div className="space-y-1">
-            <h4 className="font-medium leading-none">Dimensions</h4>
-            <p className="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
+            <h4 className="font-medium leading-none">Dimensões</h4>
+            <p className="text-sm text-muted-foreground">Defina as dimensões da camada.</p>
           </div>
         </div>
       }
@@ -132,33 +142,36 @@ export const Alignments: Story = {
   render: () => (
     <div className="flex gap-6">
       <Popover
+        contentProps={{ "aria-label": "Alinhamento" }}
         trigger={
           <Button variant="outline" size="sm">
-            Start
+            Início
           </Button>
         }
         align="start"
-        content={<div className="w-40">Aligned to start</div>}
+        content={<div className="w-40">Alinhado ao início</div>}
       />
 
       <Popover
+        contentProps={{ "aria-label": "Alinhamento" }}
         trigger={
           <Button variant="outline" size="sm">
-            Center
+            Centro
           </Button>
         }
         align="center"
-        content={<div className="w-40">Aligned to center</div>}
+        content={<div className="w-40">Alinhado ao centro</div>}
       />
 
       <Popover
+        contentProps={{ "aria-label": "Alinhamento" }}
         trigger={
           <Button variant="outline" size="sm">
-            End
+            Fim
           </Button>
         }
         align="end"
-        content={<div className="w-40">Aligned to end</div>}
+        content={<div className="w-40">Alinhado ao fim</div>}
       />
     </div>
   ),
@@ -173,13 +186,14 @@ export const Alignments: Story = {
 export const WithForm: Story = {
   render: () => (
     <Popover
-      trigger={<Button variant="outline">Open Popover</Button>}
+      contentProps={{ "aria-label": "Dimensões" }}
+      trigger={<Button variant="outline">Abrir popover</Button>}
       align="start"
       content={
         <div className="w-64 space-y-4">
           <div className="space-y-1">
-            <h4 className="font-medium leading-none">Dimensions</h4>
-            <p className="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
+            <h4 className="font-medium leading-none">Dimensões</h4>
+            <p className="text-sm text-muted-foreground">Defina as dimensões da camada.</p>
           </div>
           <FieldGroup className="gap-4">
             <Field orientation="horizontal">
@@ -209,6 +223,7 @@ export const Sizes: Story = {
     <div className="flex flex-wrap items-start gap-6">
       {(["sm", "md", "lg"] as const).map((size) => (
         <Popover
+          contentProps={{ "aria-label": "Tamanho" }}
           key={size}
           size={size}
           trigger={
@@ -233,6 +248,7 @@ export const Sides: Story = {
     <div className="flex flex-wrap items-center justify-center gap-8 py-16">
       {(["top", "right", "bottom", "left"] as const).map((side) => (
         <Popover
+          contentProps={{ "aria-label": "Lado" }}
           key={side}
           side={side}
           trigger={
@@ -253,6 +269,7 @@ export const Sides: Story = {
 export const ActionMenu: Story = {
   render: () => (
     <Popover
+      contentProps={{ "aria-label": "Ações" }}
       size="sm"
       align="end"
       side="bottom"
@@ -303,9 +320,10 @@ export const Controlled: Story = {
           Abrir programaticamente
         </Button>
         <Popover
+          contentProps={{ "aria-label": "Popover controlado" }}
           open={open}
           onOpenChange={setOpen}
-          trigger={<Button variant="secondary">Trigger</Button>}
+          trigger={<Button variant="secondary">Abrir</Button>}
           content={
             <div className="space-y-2">
               <p className="text-sm">Popover controlado</p>

@@ -35,6 +35,19 @@ const Popover = ({
   ref,
   ...rootProps
 }: PopoverProps & { ref?: React.Ref<React.ComponentRef<typeof RadixPopover.Content>> }) => {
+  // O conteúdo é role="dialog": sem nome, o leitor de tela anuncia só "diálogo" (WCAG 4.1.2).
+  const named = Boolean(contentProps?.["aria-label"] ?? contentProps?.["aria-labelledby"]);
+  const onOpenAutoFocus: React.ComponentProps<typeof RadixPopover.Content>["onOpenAutoFocus"] = (
+    event,
+  ) => {
+    if (process.env.NODE_ENV !== "production" && !named) {
+      console.warn(
+        "Popover: painel sem nome acessível. Passe aria-label ou aria-labelledby em contentProps.",
+      );
+    }
+    contentProps?.onOpenAutoFocus?.(event);
+  };
+
   return (
     <RadixPopover.Root {...rootProps}>
       <RadixPopover.Trigger asChild>{trigger}</RadixPopover.Trigger>
@@ -48,6 +61,7 @@ const Popover = ({
           collisionPadding={collisionPadding}
           onEscapeKeyDown={onEscapeKeyDown}
           {...contentProps}
+          onOpenAutoFocus={onOpenAutoFocus}
           className={cn(
             popoverContentVariants({ size }),
             "max-h-[var(--radix-popover-content-available-height)] overflow-y-auto",

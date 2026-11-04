@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { Popover } from "./popover";
 
 describe("Popover (PRIZM / shadcn)", () => {
@@ -51,5 +51,43 @@ describe("Popover (PRIZM / shadcn)", () => {
     const dialog = screen.getByRole("dialog");
     expect(dialog).toHaveAttribute("data-align", "start");
     expect(dialog).toHaveAttribute("data-side", "right");
+  });
+
+  describe("nome do painel (WCAG 4.1.2)", () => {
+    afterEach(() => vi.restoreAllMocks());
+
+    it("avisa no console quando abre sem aria-label nem aria-labelledby", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      render(<Popover trigger={<button type="button">Abrir</button>} content="Conteúdo" />);
+      fireEvent.click(screen.getByText("Abrir"));
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("Popover: painel sem nome"));
+    });
+
+    it("não avisa com aria-label e dá o nome ao diálogo", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      render(
+        <Popover
+          trigger={<button type="button">Abrir</button>}
+          content="Conteúdo"
+          contentProps={{ "aria-label": "Filtros" }}
+        />,
+      );
+      fireEvent.click(screen.getByText("Abrir"));
+      expect(screen.getByRole("dialog", { name: "Filtros" })).toBeInTheDocument();
+      expect(warn).not.toHaveBeenCalledWith(expect.stringContaining("Popover: painel sem nome"));
+    });
+
+    it("chama o onOpenAutoFocus de quem usa", () => {
+      const onOpenAutoFocus = vi.fn();
+      render(
+        <Popover
+          trigger={<button type="button">Abrir</button>}
+          content="Conteúdo"
+          contentProps={{ "aria-label": "Filtros", onOpenAutoFocus }}
+        />,
+      );
+      fireEvent.click(screen.getByText("Abrir"));
+      expect(onOpenAutoFocus).toHaveBeenCalled();
+    });
   });
 });
