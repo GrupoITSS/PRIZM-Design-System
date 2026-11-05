@@ -52,7 +52,7 @@ describe("Badge × mapa de tokens (badge.tokens.json)", () => {
     expect(classes).toContain(`rounded-${step(n.radius)}`);
   });
 
-  it("estados: o mapa registra que o Badge é estático, e o código não tem hover nem foco", () => {
+  it("estados: o Badge estático não tem hover nem foco fora do link", () => {
     expect(map.states.hover).toBeNull();
     expect(map.states.focus).toBeNull();
     for (const variant of Object.keys(map.variants)) {
@@ -60,4 +60,46 @@ describe("Badge × mapa de tokens (badge.tokens.json)", () => {
       expect(classes.some((c) => /^(hover|focus|focus-visible):/.test(c))).toBe(false);
     }
   });
+
+  // Badge link (DS-63): hover and focus only under the [a&]: prefix.
+  for (const [variant, hover] of Object.entries(map.linkStates.hover)) {
+    it(`${variant}: o hover do Badge link no mapa está nas classes [a&]:`, () => {
+      const classes = classesOf(variant);
+      const h = hover as { background?: string; text?: string; overlay?: string; opacity?: number };
+      if (h.overlay) {
+        expect(
+          classes.some(
+            (c) =>
+              c.startsWith("[a&]:hover:bg-[color-mix(") &&
+              c.includes(`--prizm-${h.overlay!.replace("/", "-")})_${String((h.opacity ?? 0) * 100)}%`),
+          ),
+        ).toBe(true);
+      } else if (h.opacity) {
+        expect(classes).toContain(`[a&]:hover:bg-${color(h.background!)}/${String(h.opacity * 100)}`);
+      } else {
+        expect(classes).toContain(`[a&]:hover:bg-${color(h.background!)}`);
+        expect(classes).toContain(`[a&]:hover:text-${color(h.text!)}`);
+      }
+    });
+  }
+
+  it("foco do Badge link: o anel do Button, só com o prefixo [a&]:", () => {
+    const classes = classesOf("default");
+    const f = map.linkStates.focus;
+    expect(classes).toContain(`[a&]:focus-visible:ring-[${String(f.ringWidth)}px]`);
+    expect(classes).toContain(`[a&]:focus-visible:ring-${color(f.ring)}`);
+    expect(classes).toContain(`[a&]:focus-visible:ring-offset-${String(f.ringOffsetWidth)}`);
+    expect(classes).toContain(`[a&]:focus-visible:ring-offset-${color(f.ringOffset)}`);
+  });
+
+  for (const [ctx, c] of Object.entries(map.contexts)) {
+    if (ctx === "note") continue;
+    it(`${ctx}: a inversão dentro do Button usa os tokens do mapa`, () => {
+      const t = c as { background: string; text: string; button: string };
+      const classes = classesOf("default");
+      const prefix = `[[data-slot=button][data-variant=${t.button}]_&]:`;
+      expect(classes).toContain(`${prefix}bg-${color(t.background)}`);
+      expect(classes).toContain(`${prefix}text-${color(t.text)}`);
+    });
+  }
 });

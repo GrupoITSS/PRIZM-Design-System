@@ -1,4 +1,5 @@
 import { Badge } from "@grupoitss/prizm-ui/badge";
+import { Button } from "@grupoitss/prizm-ui/button";
 import { CircleCheckBig, Link } from "@grupoitss/prizm-ui/icons";
 import { Spinner } from "@grupoitss/prizm-ui/spinner";
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -8,6 +9,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 // (badge.tokens.json) and is checked against the classes in a test.
 const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26-169";
 const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25145-2040";
+const FIGMA_LINK_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26156-3255";
 const CMS_URL =
   "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=f8204506-f907-446c-af39-cef645a878e1&version=v1";
 
@@ -21,7 +23,7 @@ const meta: Meta<typeof Badge> = {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
           'Badge do design system PRIZM. Pequeno rótulo para status, contadores ou metadados.\n\nAs variantes são as do componente no Figma: `default`, `secondary`, `outline`, `destructive`, `verified`, `success` e `warning`. Tamanhos `sm` (padrão), `md` e `lg`. `shape="number"` é o "Badge Number" do Figma.\n\n- `startIcon` / `endIcon` para ícones alinhados com `data-icon="inline-start"` / `"inline-end"`\n\nPara outras cores, use `className` com os tokens, como no exemplo "Custom Colors" da doc do shadcn.\n\n**Documentação base:** <a href="https://ui.shadcn.com/docs/components/radix/badge" target="_blank" rel="noopener noreferrer">Badge — shadcn/ui</a>\n\n' +
-          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
+          `[Componente no Figma](${FIGMA_URL}) · [Badge Link no Figma](${FIGMA_LINK_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
@@ -40,6 +42,10 @@ const meta: Meta<typeof Badge> = {
     },
     loading: {
       control: "boolean",
+    },
+    asChild: {
+      control: false,
+      description: "Badge link: renderiza o `<a>` filho com hover e foco. Veja a story Link.",
     },
     children: {
       control: "text",
@@ -155,6 +161,73 @@ export const CustomColorsWithClassName: Story = {
       <Badge variant="default" className="bg-destructive-weak text-destructive-strong">
         Destructive
       </Badge>
+    </div>
+  ),
+};
+
+// Badge link (DS-63): asChild with an <a>. Hover and focus exist only here; use Tab to see the ring.
+export const BadgeLink: Story = {
+  name: "Link",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Badge que leva a outro lugar, como uma tag que abre a tarefa ou filtra a lista. Use `asChild` com um `<a>` (ou o Link do roteador). Hover e foco valem só aqui; o badge comum é estático.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-wrap gap-2">
+      <Badge variant="default" asChild>
+        <a href="#tarefa-42">Tarefa 42</a>
+      </Badge>
+      <Badge variant="secondary" asChild>
+        <a href="#filtro-pendentes">Pendentes</a>
+      </Badge>
+      <Badge variant="outline" asChild>
+        <a href="#filtro-financeiro">Financeiro</a>
+      </Badge>
+      <Badge variant="verified" asChild startIcon={<CircleCheckBig />}>
+        <a href="#auditoria">Auditado</a>
+      </Badge>
+    </div>
+  ),
+};
+
+// The static badge in the Button trailing (DS-63). Inside a filled button it inverts its colors.
+// Never put a Badge link here: the whole button is the action.
+export const InButton: Story = {
+  name: "Dentro do Button",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "No trailing do Button vai o badge estático. Num botão cheio ele inverte as cores sozinho. Não use o Badge link dentro do botão: seria um link dentro de outro controle. Quando o destino é a tarefa, o próprio botão navega (`asChild` do Button).",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-wrap gap-2">
+      <Button>
+        Agendamentos
+        <Badge variant="default">Novo</Badge>
+      </Button>
+      <Button variant="secondary">
+        Agendamentos
+        <Badge variant="default">Novo</Badge>
+      </Button>
+      <Button variant="destructive">
+        Pendências
+        <Badge variant="default" shape="number">
+          3
+        </Badge>
+      </Button>
+      <Button variant="outline" asChild>
+        <a href="#tarefa-42">
+          Ver tarefa
+          <Badge variant="secondary">42</Badge>
+        </a>
+      </Button>
     </div>
   ),
 };

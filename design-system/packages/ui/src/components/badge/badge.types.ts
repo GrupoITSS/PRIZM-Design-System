@@ -12,6 +12,13 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, BadgeV
    */
   shape?: NonNullable<BadgeVariantProps["shape"]>;
   /**
+   * Badge link: renders the single child element (an `<a>`, or a router Link that renders one)
+   * with the badge styles, and turns on hover and focus. Never inside a Button: the button
+   * itself is the action.
+   * @default false
+   */
+  asChild?: boolean;
+  /**
    * When true, marks the badge as loading (a11y only).
    * Visual spinners should be provided via `startIcon`/`endIcon`.
    * @default false
