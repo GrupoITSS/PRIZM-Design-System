@@ -61,7 +61,7 @@ describe("Accordion (PRIZM / shadcn)", () => {
     );
     const trigger = screen.getByRole("button", { name: "Title" });
     // Título: text-sm, à esquerda, com espaço nas laterais e raio para o fundo do hover.
-    expect(trigger).toHaveClass("text-sm", "text-left", "px-2", "rounded-md");
+    expect(trigger).toHaveClass("text-sm", "text-left", "px-2", "rounded-md", "gap-4");
     // Hover (e pressed, igual): fundo accent, texto e chevron em accent-foreground; sem sublinhado.
     expect(trigger).toHaveClass("hover:bg-accent", "hover:text-accent-foreground");
     expect(trigger).toHaveClass("hover:[&>svg]:text-accent-foreground");
