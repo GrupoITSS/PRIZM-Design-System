@@ -1,14 +1,16 @@
 {
   "component": "RadioGroup",
-  "description": "Mapa de tokens do RadioGroup: o que o círculo, o ponto, os textos e o cartão usam do [PRIZM] Design Tokens_Core em cada estado. Extraído das ligações do component set RadioButton no Figma em 03/11/2026 (20 variantes, nenhuma ligação local). O radio-group.tokens.test.tsx confere o mapa contra as classes do código.",
+  "description": "Mapa de tokens do RadioGroup: o que o círculo, o ponto, os textos e o cartão usam do [PRIZM] Design Tokens_Core em cada estado. Extraído das ligações do component set RadioButton no Figma em 03/11/2026 (20 variantes, nenhuma ligação local). A orientação vem do set Radio Group (Orientation, desde 05/11/2026). O radio-group.tokens.test.tsx confere o mapa contra as classes do código.",
   "sources": {
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=65-326",
+    "figmaGroup": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26094-2345",
     "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25852-3524",
     "code": "design-system/packages/ui/src/components/radio-group/radio-group.tsx",
     "story": "design-system/apps/docs/stories/radio-group.stories.tsx",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=2e856b5c-4d78-463d-b168-e5c09b90a5ce&version=v1",
     "pullRequests": [
-      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/162"
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/162",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/174"
     ],
     "jira": [
       "GIES-1728",
@@ -18,6 +20,19 @@
   "types": {
     "Default": "o item, com rótulo e descrição",
     "Box": "cartão: FieldLabel envolvendo Field, com RadioGroupItem"
+  },
+  "orientation": {
+    "Vertical": {
+      "prop": "vertical",
+      "direction": "flex-col",
+      "default": true
+    },
+    "Horizontal": {
+      "prop": "horizontal",
+      "direction": "flex-row"
+    },
+    "betweenItems": "spacing/2",
+    "note": "Orientation do set Radio Group = prop orientation. Muda também as setas do teclado (Radix)."
   },
   "checked": {
     "no": {
