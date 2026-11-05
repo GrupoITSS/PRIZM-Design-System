@@ -46,6 +46,15 @@
       "opacity": "opacity/50",
       "attribute": "disabled",
       "note": "Opacidade 50% na camada, sobre a aparência do default (revisto em 26/10/2026; antes era color/muted, borda transparente e sem sombra)."
+    },
+    "readOnly": {
+      "background": "color/muted",
+      "text": "color/muted-foreground",
+      "placeholder": "color/muted-foreground",
+      "border": "transparente",
+      "shadow": "nenhuma",
+      "attribute": "readOnly",
+      "note": "Valor já preenchido que não se edita direto (DS-64, 05/11/2026). Continua focável, com o anel do foco. No Figma, State=Read-only em Default e Password."
     }
   },
   "parts": {
