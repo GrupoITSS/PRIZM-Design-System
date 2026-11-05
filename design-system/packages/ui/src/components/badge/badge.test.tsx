@@ -151,9 +151,12 @@ describe("Badge (PRIZM / Figma)", () => {
   it("não remove o outline sem um anel no lugar (Critério de acessibilidade, 2.4.7)", () => {
     render(<Badge variant="default">Outline</Badge>);
     const classes = screen.getByText("Outline").className.split(" ");
-    const semOutline = classes.some((c) => c.endsWith("outline-none"));
-    const comAnel = classes.some((c) => c.startsWith("focus-visible:ring"));
-    expect(semOutline && !comAnel).toBe(false);
+    // Compares within the same prefix: the Badge link removes the outline only under [a&]:,
+    // and puts the ring there too.
+    for (const c of classes.filter((x) => x.endsWith("outline-none"))) {
+      const prefix = c.slice(0, -"outline-none".length);
+      expect(classes.some((x) => x.startsWith(`${prefix}focus-visible:ring`))).toBe(true);
+    }
   });
 
   it("dentro de um Button cheio, inverte as cores (fundo na cor do texto do botão)", () => {
@@ -164,5 +167,50 @@ describe("Badge (PRIZM / Figma)", () => {
       "[[data-slot=button][data-variant=destructive]_&]:bg-destructive-foreground",
       "[[data-slot=button][data-variant=destructive]_&]:text-destructive",
     );
+  });
+
+  describe("Badge link (asChild, DS-63)", () => {
+    it("renderiza o <a> filho com as classes do badge e o href", () => {
+      render(
+        <Badge variant="secondary" asChild>
+          <a href="/tarefas/42">Tarefa 42</a>
+        </Badge>,
+      );
+      const link = screen.getByRole("link", { name: "Tarefa 42" });
+      expect(link.tagName).toBe("A");
+      expect(link).toHaveAttribute("href", "/tarefas/42");
+      expect(link).toHaveAttribute("data-slot", "badge");
+      expect(link).toHaveClass("bg-secondary", "rounded-full");
+    });
+
+    it("mantém os ícones de início e fim dentro do link", () => {
+      render(
+        <Badge variant="outline" asChild startIcon={<svg data-testid="ini" />} endIcon={<svg data-testid="fim" />}>
+          <a href="/x">Abrir</a>
+        </Badge>,
+      );
+      const link = screen.getByRole("link", { name: "Abrir" });
+      expect(link).toContainElement(screen.getByTestId("ini"));
+      expect(link).toContainElement(screen.getByTestId("fim"));
+    });
+
+    it("é focável pelo teclado; o badge comum não é", () => {
+      render(
+        <>
+          <Badge variant="default">Estático</Badge>
+          <Badge variant="default" asChild>
+            <a href="/x">Link</a>
+          </Badge>
+        </>,
+      );
+      screen.getByRole("link", { name: "Link" }).focus();
+      expect(screen.getByRole("link", { name: "Link" })).toHaveFocus();
+      expect(screen.getByText("Estático").tabIndex).toBe(-1);
+    });
+
+    it("sem asChild continua sendo um <div>", () => {
+      render(<Badge variant="default">Status</Badge>);
+      expect(screen.getByText("Status").tagName).toBe("DIV");
+    });
   });
 });

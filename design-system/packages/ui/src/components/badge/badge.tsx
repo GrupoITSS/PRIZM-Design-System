@@ -1,5 +1,6 @@
 import { cn } from "../../lib/cn";
 import * as React from "react";
+import { Slot } from "radix-ui";
 import { badgeVariants } from "./badge.styles";
 import type { BadgeProps } from "./badge.types";
 
@@ -9,6 +10,7 @@ import type { BadgeProps } from "./badge.types";
  * - `variant`: `default` | `secondary` | `outline` | `destructive` | `verified` (as in Figma)
  * - `shape`: `default` | `number` (round counter for digits)
  * - `startIcon` / `endIcon`: icons with data-icon="inline-start" / "inline-end"
+ * - `asChild`: Badge link, rendered as the child `<a>`, with hover and focus (DS-63)
  *
  * @see https://ui.shadcn.com/docs/components/radix/badge
  */
@@ -20,12 +22,15 @@ const Badge = ({
   loading,
   startIcon,
   endIcon,
+  asChild = false,
   children,
   ref,
   ...props
 }: BadgeProps & { ref?: React.Ref<HTMLDivElement> }) => {
+  const Comp = asChild ? Slot.Root : "div";
+  const content = asChild ? <Slot.Slottable>{children}</Slot.Slottable> : children;
   return (
-    <div
+    <Comp
       ref={ref}
       data-slot="badge"
       data-variant={variant}
@@ -46,13 +51,13 @@ const Badge = ({
           {startIcon}
         </span>
       )}
-      {children}
+      {content}
       {Boolean(endIcon) && (
         <span data-icon="inline-end" className="inline-flex shrink-0">
           {endIcon}
         </span>
       )}
-    </div>
+    </Comp>
   );
 };
 Badge.displayName = "Badge";

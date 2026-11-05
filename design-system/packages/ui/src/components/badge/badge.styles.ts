@@ -12,7 +12,10 @@ import { cva, type VariantProps } from "class-variance-authority";
  * (decision of 03/11/2026).
  *
  * The Badge is static: no hover and no focus, only the default state (Figma, 21/10/2026).
- * Inside a filled Button it inverts its colors (see the base classes below).
+ * The exception is the Badge link (`asChild` with an `<a>`, DS-63, 05/11/2026): only there
+ * the `[a&]:` classes add hover (the Button rule of the same variant) and the Button focus ring.
+ * Inside a filled Button it inverts its colors (see the base classes below). A Badge link never
+ * goes inside a Button: a link inside a button is nested interaction (WCAG 4.1.2).
  *
  * @see https://ui.shadcn.com/docs/components/radix/badge
  */
@@ -21,6 +24,9 @@ export const badgeVariants = cva(
     "inline-flex w-fit items-center whitespace-nowrap rounded-full border font-semibold leading-none",
     "px-2 py-0.5",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0",
+    // Badge link only (asChild with an <a>): pointer, transition and the Button focus ring.
+    "[a&]:cursor-pointer [a&]:outline-none [a&]:transition-[color,background-color,box-shadow]",
+    "[a&]:focus-visible:ring-[3px] [a&]:focus-visible:ring-ring [a&]:focus-visible:ring-offset-2 [a&]:focus-visible:ring-offset-ring-offset",
     // Inside a filled Button (default, destructive) the badge inverts: the
     // button's text color as background and the button's color as text. A
     // default badge (bg-primary) on a primary button would vanish. On neutral
@@ -33,15 +39,19 @@ export const badgeVariants = cva(
     variants: {
       variant: {
         // Figma "Default" is bound to `color/primary`.
-        default: "border-transparent bg-primary text-primary-foreground",
-        secondary: "border-transparent bg-secondary text-secondary-foreground",
-        destructive: "border-transparent bg-destructive text-destructive-foreground",
+        default: "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/80",
+        // Link hover as in the Button secondary: foreground overlay at 10%.
+        secondary:
+          "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-[color-mix(in_oklab,var(--prizm-color-secondary),var(--prizm-color-foreground)_10%)]",
+        destructive:
+          "border-transparent bg-destructive text-destructive-foreground [a&]:hover:bg-destructive/80",
         // Same tokens as the Figma Button outline.
-        outline: "border-input bg-input-background text-foreground shadow-xs",
+        outline:
+          "border-input bg-input-background text-foreground shadow-xs [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
         // Figma "Verified": the info tone (`color/info`), used with a check icon.
-        verified: "border-transparent bg-info text-info-foreground",
-        success: "border-transparent bg-success text-success-foreground",
-        warning: "border-transparent bg-warning text-warning-foreground",
+        verified: "border-transparent bg-info text-info-foreground [a&]:hover:bg-info/80",
+        success: "border-transparent bg-success text-success-foreground [a&]:hover:bg-success/80",
+        warning: "border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/80",
       },
       // Same sizes in Figma (Size = sm, md, lg): height/5, height/6 and height/7.
       size: {
