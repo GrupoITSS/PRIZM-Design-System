@@ -96,4 +96,20 @@ describe("Input (PRIZM / shadcn)", () => {
     const input = screen.getByPlaceholderText("Desabilitado");
     expect(input).toBeDisabled();
   });
+
+  it("readOnly: continua focável, tem o estilo de somente leitura e não vale para disabled", () => {
+    render(
+      <>
+        <Input aria-label="Somente leitura" readOnly defaultValue="Acme Ltda" />
+        <Input aria-label="Desabilitado" disabled defaultValue="Acme Ltda" />
+      </>,
+    );
+    const ro = screen.getByRole("textbox", { name: "Somente leitura" });
+    expect(ro).toHaveAttribute("readonly");
+    ro.focus();
+    expect(ro).toHaveFocus();
+    expect(ro.className).toContain("[&[readonly]]:bg-muted");
+    // O desabilitado não recebe readonly: o estilo de somente leitura não se aplica a ele.
+    expect(screen.getByRole("textbox", { name: "Desabilitado" })).not.toHaveAttribute("readonly");
+  });
 });

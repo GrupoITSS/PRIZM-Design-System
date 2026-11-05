@@ -48,6 +48,18 @@ describe("Input × mapa de tokens (input.tokens.json)", () => {
     expect(classes.some((c) => /^disabled:(bg|border|shadow)-/.test(c))).toBe(false);
   });
 
+  it("read-only: fundo, texto, borda e sombra do mapa no atributo readonly", () => {
+    const classes = classesOf();
+    const s = map.states.readOnly;
+    expect(classes).toContain(`[&[readonly]]:bg-${color(s.background)}`);
+    expect(classes).toContain(`[&[readonly]]:hover:bg-${color(s.background)}`);
+    expect(classes).toContain(`[&[readonly]]:text-${color(s.text)}`);
+    expect(classes).toContain("[&[readonly]]:border-transparent");
+    expect(classes).toContain("[&[readonly]]:shadow-none");
+    // :read-only pegaria disabled e type="file"; o estilo vai só no atributo.
+    expect(classes.some((c) => c.startsWith("read-only:"))).toBe(false);
+  });
+
   it("File: peso do texto do botão interno do mapa está nas classes", () => {
     const weight = map.parts.fileButton.fontWeight.replace(/^font-weight\//, "");
     expect(classesOf()).toContain(`file:font-${weight}`);

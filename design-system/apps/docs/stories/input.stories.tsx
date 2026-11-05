@@ -133,7 +133,7 @@ export const Disabled: Story = {
     <div className="flex max-w-md flex-col gap-4">
       <Field>
         <FieldLabel htmlFor="input-disabled-plain">Input disabled</FieldLabel>
-        <Input id="input-disabled-plain" defaultValue="Somente leitura" {...args} />
+        <Input id="input-disabled-plain" defaultValue="Valor desabilitado" {...args} />
         <FieldDescription>Prop `disabled` no Input.</FieldDescription>
       </Field>
       <Field data-disabled>
@@ -394,7 +394,7 @@ export const InputInputGroup: Story = {
 };
 
 /**
- * Os 6 estados do Figma lado a lado. Focus e Error (Focus) usam o foco forçado
+ * Os 7 estados do Figma lado a lado. Focus e Error (Focus) usam o foco forçado
  * pelo storybook-addon-pseudo-states; nos outros exemplos, clique no campo ou use Tab.
  */
 export const Estados: Story = {
@@ -408,10 +408,49 @@ export const Estados: Story = {
         { nome: "Default", gatilho: "vazio, sem foco", campo: <Input aria-label="Default" placeholder="Digite seu nome" /> },
         { nome: "Focus", gatilho: ":focus-visible", campo: <Input id="input-estado-focus" aria-label="Focus" placeholder="Digite seu nome" /> },
         { nome: "Filled", gatilho: "com value", campo: <Input aria-label="Filled" defaultValue="Acme Ltda" /> },
-        { nome: "Disabled", gatilho: "disabled", campo: <Input aria-label="Disabled" disabled defaultValue="Somente leitura" /> },
+        { nome: "Disabled", gatilho: "disabled", campo: <Input aria-label="Disabled" disabled defaultValue="Acme Ltda" /> },
+        { nome: "Read-only", gatilho: "readOnly", campo: <Input aria-label="Read-only" readOnly defaultValue="Acme Ltda" /> },
         { nome: "Error", gatilho: "aria-invalid", campo: <Input aria-label="Error" aria-invalid defaultValue="nome@empresa" /> },
         { nome: "Error (Focus)", gatilho: "aria-invalid + :focus-visible", campo: <Input id="input-estado-erro-focus" aria-label="Error (Focus)" aria-invalid defaultValue="nome@empresa" /> },
       ]}
     />
   ),
+};
+
+/**
+ * Read-only (DS-64): valor já preenchido que não se edita direto. O campo continua
+ * focável e vai no formulário. A edição abre por um botão (como no Cockpit) ou por
+ * um clique no campo (como no CMS); os dois são composição, sem prop nova.
+ */
+export const SomenteLeitura: Story = {
+  name: "Somente leitura",
+  render: function Render() {
+    const [editando, setEditando] = useState(false);
+    const [editandoCnpj, setEditandoCnpj] = useState(false);
+    return (
+      <div className="flex max-w-md flex-col gap-6">
+        <Field>
+          <FieldLabel htmlFor="input-ro-botao">Razão social</FieldLabel>
+          <div className="flex items-center gap-2">
+            <Input id="input-ro-botao" readOnly={!editando} defaultValue="Acme Ltda" />
+            <Button variant="outline" onClick={() => setEditando((v) => !v)}>
+              {editando ? "Salvar" : "Editar"}
+            </Button>
+          </div>
+          <FieldDescription>Edição por botão, como no Cockpit.</FieldDescription>
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="input-ro-clique">CNPJ</FieldLabel>
+          <Input
+            id="input-ro-clique"
+            readOnly={!editandoCnpj}
+            defaultValue="12.345.678/0001-90"
+            onClick={() => setEditandoCnpj(true)}
+            onBlur={() => setEditandoCnpj(false)}
+          />
+          <FieldDescription>Edição por clique no campo, como no CMS.</FieldDescription>
+        </Field>
+      </div>
+    );
+  },
 };
