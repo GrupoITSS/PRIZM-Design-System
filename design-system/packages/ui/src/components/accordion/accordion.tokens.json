@@ -1,0 +1,100 @@
+{
+  "component": "Accordion",
+  "description": "Mapa de tokens do Accordion: o que cada parte usa do [PRIZM] Design Tokens_Core em cada estado. Extraído das ligações do set Accordion / AccordionItem no Figma em 05/11/2026 (10 variantes, Active Off e On × Default, Hover, Focus, Pressed e Disabled, todas no Core) e conferido contra accordion.styles.ts pelo teste accordion.tokens.test.tsx. Nomes no formato do Figma (color/accent, spacing/4); no código viram classes Tailwind (bg-accent, py-4).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=22-516",
+    "figmaAccordion": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=22-1330",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26165-2766",
+    "code": "design-system/packages/ui/src/components/accordion/accordion.tsx",
+    "story": "design-system/apps/docs/stories/accordion.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=7a083e3d-f457-4d4b-856d-ae2ac8e6de32&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/176"],
+    "jira": ["GIES-1725"]
+  },
+  "parts": {
+    "item": {
+      "border": "color/border",
+      "borderWidth": "border-width/1",
+      "note": "Só a linha de baixo; o último item fica sem linha."
+    },
+    "trigger": {
+      "text": "color/foreground",
+      "fontSize": "text/sm",
+      "fontWeight": "font-weight/medium",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/4",
+      "gap": "spacing/4",
+      "radius": "radius/md"
+    },
+    "icon": {
+      "color": "color/muted-foreground",
+      "size": "width/4",
+      "note": "No Figma, a ligação de tamanho fica em width/4 (Active=Off) ou height/4 (Active=On): o ícone tem proporção travada e aceita uma só."
+    },
+    "content": {
+      "text": "color/foreground",
+      "fontSize": "text/sm",
+      "fontWeight": "font-weight/normal",
+      "paddingX": "spacing/2",
+      "paddingTop": "spacing/1",
+      "paddingBottom": "spacing/4"
+    }
+  },
+  "states": {
+    "hover": {
+      "background": "color/accent",
+      "text": "color/accent-foreground",
+      "icon": "color/accent-foreground"
+    },
+    "pressed": {
+      "background": "color/accent",
+      "text": "color/accent-foreground",
+      "icon": "color/accent-foreground",
+      "note": "Igual ao hover (decisão D1, 05/11). No código, :active não tem classe própria: vale o hover."
+    },
+    "focus": {
+      "ring": "color/ring",
+      "ringWidth": 2,
+      "ringOffset": "color/ring-offset",
+      "ringOffsetWidth": 2,
+      "note": "No Figma, o título tem fill color/ring-offset no Focus para a sombra do anel aparecer; no código, o fundo fica transparente (ring-offset = background)."
+    },
+    "disabled": {
+      "opacity": "opacity/50",
+      "pointerEvents": "none",
+      "note": "A opacidade vai no item inteiro (data-[disabled] no AccordionItem); o título fica sem clique."
+    }
+  },
+  "divergences": [
+    {
+      "where": "família (Collapsible)",
+      "figma": "—",
+      "code": "o Collapsible tem hover em bg-muted/50 e foco com ring-offset-background",
+      "status": "aberta (PR próprio)"
+    },
+    {
+      "where": "Accordion › Item 3 a Item 8",
+      "figma": "booleanas no componente Accordion",
+      "code": "quantos itens há em items ou nos children",
+      "status": "representação"
+    },
+    {
+      "where": "State = Pressed",
+      "figma": "variante própria, igual ao Hover",
+      "code": "sem classe de :active; vale o hover",
+      "status": "representação"
+    },
+    {
+      "where": "Focus · fundo do título",
+      "figma": "fill color/ring-offset",
+      "code": "transparente",
+      "status": "representação: a sombra do Figma precisa de fill; ring-offset tem o valor de background"
+    },
+    {
+      "where": "texto de exemplo",
+      "figma": "inglês (Trigger Text, This is an accordion content.)",
+      "code": "sem texto padrão",
+      "status": "representação"
+    }
+  ]
+}
