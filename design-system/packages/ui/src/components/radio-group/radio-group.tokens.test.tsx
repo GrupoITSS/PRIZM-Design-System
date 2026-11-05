@@ -69,6 +69,20 @@ describe("RadioGroup × mapa de tokens (radio-group.tokens.json)", () => {
     expect(getRadioGroupRootClasses().split(" ")).toContain(`gap-${size(map.spacing.betweenItems)}`);
   });
 
+  it("Orientation do set Radio Group: a mesma direção e o mesmo espaço no código", () => {
+    const { Vertical, Horizontal, betweenItems } = map.orientation;
+    for (const o of [Vertical, Horizontal]) {
+      const root = getRadioGroupRootClasses(o.prop as "vertical" | "horizontal").split(" ");
+      expect(root).toContain(o.direction);
+      expect(root).toContain(`gap-${size(betweenItems)}`);
+    }
+    // Vertical é o padrão nos dois lados.
+    expect(Vertical.default).toBe(true);
+    expect(getRadioGroupRootClasses().split(" ")).toContain(Vertical.direction);
+    render(<RadioGroup aria-label="Densidade" items={[{ value: "a", label: "A" }]} />);
+    expect(screen.getByRole("radiogroup")).toHaveAttribute("data-orientation", Vertical.prop);
+  });
+
   it("Type Box: o FieldLabel que envolve um Field vira o cartão do mapa", () => {
     const { container } = render(
       <RadioGroup aria-label="Plano" defaultValue="anual">
