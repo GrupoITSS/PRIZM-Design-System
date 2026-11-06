@@ -6,7 +6,7 @@ import * as React from "react";
 import { Dialog } from "@grupoitss/prizm-ui/dialog";
 
 const meta: Meta<typeof Dialog> = {
-  title: "Compositions/Dialog",
+  title: "Primários/Dialog",
   component: Dialog,
   tags: ["autodocs"],
   parameters: {

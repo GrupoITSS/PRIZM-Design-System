@@ -34,11 +34,11 @@ describe("Dialog · teclado e nomes (etapa 4, 06/11/2026)", () => {
     expect(trigger).toHaveFocus();
   });
 
-  it("botão fechar: nome padrão hoje em inglês (Close)", async () => {
+  it("botão fechar: nome padrão Fechar (pendência 2, corrigida)", async () => {
     render(<Example />);
     fireEvent.click(screen.getByRole("button", { name: "Edit profile" }));
     await screen.findByRole("dialog");
-    expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Fechar" })).toBeInTheDocument();
   });
 
   it("closeLabel troca o nome do botão fechar", async () => {

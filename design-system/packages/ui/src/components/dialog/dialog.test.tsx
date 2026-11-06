@@ -57,7 +57,7 @@ describe("Dialog (PRIZM / shadcn)", () => {
     );
 
     const content = screen.getByTestId("content");
-    expect(content).toHaveClass("bg-sidebar");
+    expect(content).toHaveClass("bg-background");
   });
 
   it("permite esconder o botão de fechar com showCloseButton=false", () => {
@@ -75,7 +75,7 @@ describe("Dialog (PRIZM / shadcn)", () => {
     );
 
     // Verifica se o botão padrão de fechar não está presente
-    expect(screen.queryByRole("button", { name: /close/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /fechar/i })).not.toBeInTheDocument();
   });
 
   it("renderiza input de confirmação e valida o valor esperado", () => {
@@ -124,5 +124,39 @@ describe("Dialog (PRIZM / shadcn)", () => {
 
     expect(deleteButton).not.toBeDisabled();
     expect(onConfirmValidityChange).toHaveBeenLastCalledWith(true);
+  });
+});
+
+describe("Dialog · decisões de 06/11/2026", () => {
+  it("conteúdo: fundo background, raio lg, folga no celular, 512px e altura máxima", async () => {
+    render(<Dialog defaultOpen title="Edit profile" body={<p>Body</p>} />);
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveClass(
+      "bg-background",
+      "text-foreground",
+      "rounded-lg",
+      "max-w-[calc(100%-2rem)]",
+      "sm:max-w-lg",
+      "max-h-[calc(100dvh-2rem)]",
+      "overflow-y-auto",
+    );
+    expect(dialog.className).not.toMatch(/bg-sidebar|rounded-2xl/);
+  });
+
+  it("rodapé com gap-2 no celular e a ação principal em cima", async () => {
+    render(
+      <Dialog defaultOpen title="Edit profile" footer={<button type="button">Save</button>} />,
+    );
+    await screen.findByRole("dialog");
+    const footer = document.querySelector("[data-slot=dialog-footer]");
+    expect(footer).toHaveClass("flex-col-reverse", "gap-2", "sm:flex-row", "sm:justify-end");
+  });
+
+  it("botão fechar é o Button ghost icon-sm do Prizm, a 8px do canto", async () => {
+    render(<Dialog defaultOpen title="Edit profile" />);
+    await screen.findByRole("dialog");
+    const close = screen.getByRole("button", { name: "Fechar" });
+    expect(close).toHaveAttribute("data-slot", "dialog-close-button");
+    expect(close).toHaveClass("size-control-height-sm", "absolute", "right-2", "top-2");
   });
 });
