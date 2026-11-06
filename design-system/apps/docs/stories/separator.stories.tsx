@@ -53,3 +53,32 @@ export const Vertical: Story = {
     </div>
   ),
 };
+
+/**
+ * Semântico: `decorative={false}` anuncia a linha como `role="separator"`. Use quando a linha separa
+ * grupos que o leitor de tela precisa perceber; no resto, o padrão (decorativo) basta.
+ */
+export const Semantic: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Com `decorative={false}`, a linha sai com `role="separator"`. O padrão é decorativo (`role="none"`): a separação já vem do título e do espaço.',
+      },
+    },
+  },
+  args: { decorative: false },
+  render: (args) => (
+    <div className="flex w-full max-w-md flex-col gap-3 text-sm">
+      <div>
+        <p className="font-medium">Account</p>
+        <p className="text-muted-foreground">Name, e-mail and password.</p>
+      </div>
+      <Separator {...args} />
+      <div>
+        <p className="font-medium">Preferences</p>
+        <p className="text-muted-foreground">Language and notifications.</p>
+      </div>
+    </div>
+  ),
+};

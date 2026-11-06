@@ -23,8 +23,19 @@ describe("Separator · nomes e papéis (etapa 4, 06/11/2026)", () => {
     expect(screen.getByTestId("s")).toHaveAttribute("aria-orientation", "vertical");
   });
 
-  it("semântico (decorative={false}): hoje sai sem role (D1, corrigir na etapa 5)", () => {
-    render(<Separator data-testid="s" decorative={false} />);
-    expect(screen.getByTestId("s")).not.toHaveAttribute("role");
+  it("semântico (decorative={false}): role=separator (D1, corrigido)", () => {
+    render(<Separator decorative={false} />);
+    expect(screen.getByRole("separator")).toHaveAttribute("data-orientation", "horizontal");
+  });
+
+  it("data-slot=separator, e quem usa pode trocar (ButtonGroup)", () => {
+    render(
+      <div>
+        <Separator data-testid="a" />
+        <Separator data-testid="b" data-slot="button-group-separator" />
+      </div>,
+    );
+    expect(screen.getByTestId("a")).toHaveAttribute("data-slot", "separator");
+    expect(screen.getByTestId("b")).toHaveAttribute("data-slot", "button-group-separator");
   });
 });
