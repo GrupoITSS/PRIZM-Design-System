@@ -15,7 +15,12 @@ export const INPUT_GROUP_BASE_CLASSES =
   "has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>[data-align=block-start]]:[&>input]:pb-3 " +
   "has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3 " +
   // Estado de erro quando o controle interno está inválido
-  "has-[[data-slot][aria-invalid=true]]:border-destructive";
+  "has-[[data-slot][aria-invalid=true]]:border-destructive " +
+  // Read-only (06/11/2026, como o Input do DS-64): quando o campo de dentro tem o atributo
+  // `readonly`, a caixa fica em `muted`, sem borda e sem sombra, e o texto em `muted-foreground`.
+  // Atributo, e não `:read-only`, porque `:read-only` também pega disabled. O foco continua igual.
+  "has-[[data-slot][readonly]]:bg-muted has-[[data-slot][readonly]]:border-transparent has-[[data-slot][readonly]]:shadow-none " +
+  "[&_[data-slot][readonly]]:text-muted-foreground";
 
 export const inputGroupAddonVariants = cva(
   "text-muted-foreground flex h-auto cursor-text select-none items-center justify-center gap-2 py-1.5 text-sm font-medium [&>kbd]:rounded-sm [&>svg:not([class*='size-'])]:size-4",

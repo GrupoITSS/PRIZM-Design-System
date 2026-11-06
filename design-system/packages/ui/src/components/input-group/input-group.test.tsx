@@ -219,4 +219,31 @@ describe("InputGroup: ordem de foco e nome dos botões", () => {
     expect(warn).not.toHaveBeenCalled();
     warn.mockRestore();
   });
+
+  describe("read-only (06/11/2026)", () => {
+    it("passa readOnly ao campo pela API simples e o campo continua focável", () => {
+      const { container } = render(
+        <InputGroup readOnly defaultValue="PAS-2115" addonInlineEnd={<span>x</span>} />,
+      );
+      const input = container.querySelector("input")!;
+      expect(input).toHaveAttribute("readonly");
+      expect(input).not.toBeDisabled();
+      input.focus();
+      expect(input).toHaveFocus();
+    });
+
+    it("funciona com a Textarea", () => {
+      const { container } = render(
+        <InputGroup control="textarea" readOnly defaultValue="Texto" addonBlockEnd={<span>x</span>} />,
+      );
+      expect(container.querySelector("textarea")).toHaveAttribute("readonly");
+    });
+
+    it("disabled não vira read-only", () => {
+      const { container } = render(
+        <InputGroup disabled defaultValue="x" addonInlineEnd={<span>x</span>} />,
+      );
+      expect(container.querySelector("input")).not.toHaveAttribute("readonly");
+    });
+  });
 });

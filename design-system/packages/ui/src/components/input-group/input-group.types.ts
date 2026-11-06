@@ -49,6 +49,11 @@ export interface InputGroupProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   id?: string;
   /** Desabilita o controle e aplica estilos de disabled no grupo (API simplificada). */
   disabled?: boolean;
+  /**
+   * Somente leitura (API simplificada): repassado ao input/textarea. A caixa do grupo fica em
+   * `muted`, sem borda e sem sombra, como o Input read-only. O campo continua focável.
+   */
+  readOnly?: boolean;
   /** Tamanho do Input interno (API simplificada). */
   size?: "sm" | "md" | "lg";
 }
