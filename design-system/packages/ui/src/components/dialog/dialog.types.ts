@@ -46,7 +46,8 @@ export interface DialogProps extends React.ComponentPropsWithoutRef<typeof Radix
   trigger?: React.ReactNode;
 
   /**
-   * Título do dialog. Altamente recomendado para acessibilidade.
+   * Título do dialog. Obrigatório para acessibilidade: é o nome do Dialog para o leitor de tela.
+   * Sem título visível, use um `DialogTitle` com `className="sr-only"` na composição.
    *
    * @example "Edit profile"
    */
@@ -93,10 +94,9 @@ export interface DialogProps extends React.ComponentPropsWithoutRef<typeof Radix
   showCloseButton?: boolean;
 
   /**
-   * Texto usado no `sr-only` do botão de fechar, para acessibilidade,
-   * na API simplificada.
+   * Nome do botão de fechar para o leitor de tela, na API simplificada.
    *
-   * @default "Close"
+   * @default "Fechar"
    */
   closeLabel?: string;
 
@@ -154,9 +154,9 @@ export interface DialogContentProps extends Omit<
    */
   showCloseButton?: boolean;
   /**
-   * Texto usado no `sr-only` do botão de fechar, para acessibilidade.
+   * Nome do botão de fechar para o leitor de tela.
    *
-   * @default "Close"
+   * @default "Fechar"
    */
   closeLabel?: string;
   /**

@@ -13,6 +13,7 @@ export {
 
 export {
   dialogCloseButtonStyles,
+  dialogCloseStyles,
   dialogConfirmLabelStyles,
   dialogConfirmSectionStyles,
   dialogContentStyles,
