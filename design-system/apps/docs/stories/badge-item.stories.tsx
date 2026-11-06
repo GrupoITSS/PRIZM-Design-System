@@ -14,7 +14,7 @@ const meta: Meta<typeof Item> = {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          "Stories focados na variant de badges do Item. Use as props `badges`, `badgesRemovable`, `onBadgesChange` e `onBadgeRemove` diretamente no Item.",
+          "Badges no Item, pela prop `badges` (a variante `badges` saiu em 06/11/2026; use `variant=\"outline\"`). Use as props `badges`, `badgesRemovable`, `onBadgesChange` e `onBadgeRemove` diretamente no Item.",
       },
     },
   },
@@ -36,7 +36,7 @@ function BadgesInteractive({ actions }: { actions?: ReactNode }) {
   return (
     <div className="flex w-full max-w-lg flex-col gap-4">
       <Item
-        variant="badges"
+        variant="outline"
         mediaVariant="icon"
         media={<TagIcon />}
         title="Tech Stack"
@@ -67,7 +67,7 @@ export const Badges: Story = {
       description: {
         story:
           "Badges on the Item component. Each badge can be removed by clicking the X button. " +
-          "In the `badges` variant, the `actions` slot defaults to a small outline Button (you can override it by passing `actions`, or hide it with `actions={null}`). " +
+          "Without `actions`, no button is shown (the default \"Manage\" button was removed on 06/11/2026). " +
           "Use `onBadgesChange` to receive the updated array and `onBadgeRemove` for per-badge removal events.",
       },
     },
@@ -163,19 +163,20 @@ export const BadgesInteractiveRow: Story = {
     docs: {
       description: {
         story:
-          "Exemplo de Item na variant `badges` com prop `interactive` habilitada, para uso como linha clicável (por exemplo, filtro ou seleção).",
+          "Item clicável (`interactive`) com badges só de leitura: no Item clicável, os badges não são removíveis, porque o botão de remover seria um controle dentro de outro.",
       },
     },
   },
   render: () => (
     <div className="flex w-full max-w-lg flex-col gap-4">
       <Item
-        variant="badges"
+        variant="outline"
         mediaVariant="icon"
         media={<TagIcon />}
         title="Tech Stack (interactive)"
         description="Clique para abrir detalhes ou aplicar este conjunto de tags."
         badges={defaultBadges}
+        badgesRemovable={false}
         interactive
         onClick={() => {
           // noop — apenas demonstração

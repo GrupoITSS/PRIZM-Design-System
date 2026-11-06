@@ -70,14 +70,56 @@ describe("Item (PRIZM / shadcn)", () => {
     expect(el?.className ?? "").toContain("hover:bg-accent/80");
   });
 
-  it("usa action default na variant badges quando actions é undefined", () => {
-    render(<Item title="Badges Item" variant="badges" badges={[]} />);
-    expect(screen.getByText("Manage")).toBeInTheDocument();
+  it("sem actions, não aparece botão nenhum (o \"Manage\" padrão saiu em 06/11)", () => {
+    render(<Item title="Badges Item" variant="outline" badges={[]} />);
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
-  it("permite ocultar action default na variant badges com actions={null}", () => {
-    render(<Item title="Badges Item" variant="badges" actions={null} />);
-    expect(screen.queryByText("Manage")).not.toBeInTheDocument();
+  it("interactive sem href vira <button type=\"button\">, focável pelo teclado", () => {
+    const onClick = vi.fn();
+    render(<Item title="Abrir" description="Detalhes" interactive onClick={onClick} />);
+    const btn = screen.getByRole("button", { name: /Abrir/ });
+    expect(btn).toHaveAttribute("type", "button");
+    expect(btn).toHaveAttribute("data-slot", "item");
+    btn.focus();
+    expect(btn).toHaveFocus();
+    fireEvent.click(btn);
+    expect(onClick).toHaveBeenCalled();
+    // Dentro do botão, só conteúdo de frase: as partes viram span.
+    expect(btn.querySelector("div, p")).toBeNull();
+  });
+
+  it("sem interactive nem href continua um div fora da ordem de Tab", () => {
+    render(<Item title="Parado" />);
+    const el = screen.getByText("Parado").closest("[data-slot='item']")!;
+    expect(el.tagName).toBe("DIV");
+    expect((el as HTMLElement).tabIndex).toBe(-1);
+  });
+
+  it("usa o anel de foco do Button, não ring/50", () => {
+    render(<Item title="Link" href="#" />);
+    const el = screen.getByText("Link").closest("[data-slot='item']")!;
+    expect(el).toHaveClass(
+      "focus-visible:ring-[3px]",
+      "focus-visible:ring-ring",
+      "focus-visible:ring-offset-2",
+      "focus-visible:ring-offset-ring-offset",
+    );
+    expect(el.className).not.toContain("ring-ring/50");
+  });
+
+  it("avisa no console quando há um controle em actions num Item clicável", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(<Item title="Ruim" href="#" actions={<button type="button">Editar</button>} />);
+    expect(warn.mock.calls.some((c) => String(c[0]).includes("controle em actions"))).toBe(true);
+    warn.mockRestore();
+  });
+
+  it("não avisa quando actions só tem um ícone decorativo", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(<Item title="Ok" href="#" actions={<svg aria-hidden="true" />} />);
+    expect(warn.mock.calls.some((c) => String(c[0]).includes("controle em actions"))).toBe(false);
+    warn.mockRestore();
   });
 });
 
@@ -104,13 +146,13 @@ describe("Item Badges", () => {
 
   it("renderiza botão de remoção quando badgesRemovable=true (default)", () => {
     render(<Item title="Removable" badges={badges} />);
-    expect(screen.getByLabelText("Remove React")).toBeInTheDocument();
-    expect(screen.getByLabelText("Remove TypeScript")).toBeInTheDocument();
+    expect(screen.getByLabelText("Remover React")).toBeInTheDocument();
+    expect(screen.getByLabelText("Remover TypeScript")).toBeInTheDocument();
   });
 
   it("não renderiza botão de remoção quando badgesRemovable=false", () => {
     render(<Item title="Readonly" badges={badges} badgesRemovable={false} />);
-    expect(screen.queryByLabelText("Remove React")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Remover React")).not.toBeInTheDocument();
   });
 
   it("chama onBadgesChange e onBadgeRemove ao remover badge", () => {
@@ -126,7 +168,7 @@ describe("Item Badges", () => {
       />,
     );
 
-    fireEvent.click(screen.getByLabelText("Remove React"));
+    fireEvent.click(screen.getByLabelText("Remover React"));
 
     expect(onBadgesChange).toHaveBeenCalledWith([
       { id: "ts", label: "TypeScript", variant: "default" },
@@ -217,5 +259,12 @@ describe("item.utils", () => {
     it("handles zero", () => {
       expect(formatFileSize(0)).toBe("0 B");
     });
+  });
+});
+
+describe("Item Badges · alvo do remover (2.5.8)", () => {
+  it("o botão de remover tem área de toque de 24px pelo ::after", () => {
+    render(<Item title="Tags" badges={[{ id: "a", label: "A" }]} />);
+    expect(screen.getByLabelText("Remover A")).toHaveClass("relative", "after:absolute", "after:-inset-1.5");
   });
 });

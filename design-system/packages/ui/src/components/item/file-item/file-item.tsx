@@ -52,8 +52,9 @@ const FileItem = ({
   fileTypeLabel: fileTypeLabelProp,
   media: mediaProp,
   actions: actionsProp,
-  variant = "file",
+  variant = "outline",
   size = "sm",
+  className,
   ref,
   ...rest
 }: FileItemProps & { ref?: React.Ref<HTMLElement> }) => {
@@ -95,6 +96,8 @@ const FileItem = ({
       ref={ref}
       variant={variant}
       size={size}
+      // FileItem surface: card background over the outline border (was Item variant "file").
+      className={cn("bg-card", rest.interactive ? "hover:bg-accent/60" : undefined, className)}
       media={mediaProp ?? defaultMedia}
       title={
         <div className={fileItemTitleContainerStyles}>

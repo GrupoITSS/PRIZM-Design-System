@@ -4,6 +4,10 @@ import { cva, type VariantProps } from "class-variance-authority";
  * PRIZM Item — a versatile row container (media + content + actions).
  * Styles use design tokens from @grupoitss/prizm-tokens and support light/dark themes.
  *
+ * Decisions of 06/11/2026 (Leonardo): variants default, outline and muted, as in Figma (badges and
+ * file left the variant: badges is the `badges` prop, FileItem sets its own surface). Focus with
+ * the Button ring (3px `ring`, 2px `ring-offset`): `ring/50` passed 3:1 in 1 of 12 themes.
+ *
  * @see https://ui.shadcn.com/docs/components/item
  */
 export const itemVariants = cva(
@@ -12,7 +16,7 @@ export const itemVariants = cva(
     "flex flex-wrap items-center space-between",
     "rounded-md border border-transparent",
     "text-sm outline-none transition-colors duration-100",
-    "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+    "focus-visible:ring-[3px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset",
   ].join(" "),
   {
     variants: {
@@ -20,8 +24,6 @@ export const itemVariants = cva(
         default: "bg-transparent",
         outline: "border-border bg-transparent",
         muted: "bg-muted/50",
-        badges: "border-border bg-transparent",
-        file: "border-border bg-card",
       },
       size: {
         default: "gap-4 p-4",
@@ -37,6 +39,9 @@ export const itemVariants = cva(
 );
 
 export type ItemVariantProps = VariantProps<typeof itemVariants>;
+
+/** Interactive Item without href renders as a <button>: reset the native button look. */
+export const itemButtonStyles = "w-full cursor-pointer text-left font-[inherit]";
 
 export const itemMediaVariants = cva(
   ["flex shrink-0 items-center justify-center gap-2", "[&_svg]:pointer-events-none"].join(" "),

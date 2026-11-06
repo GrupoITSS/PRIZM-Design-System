@@ -50,7 +50,7 @@ const meta: Meta<typeof Item> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "outline", "muted", "badges"],
+      options: ["default", "outline", "muted"],
     },
     size: {
       control: "select",
