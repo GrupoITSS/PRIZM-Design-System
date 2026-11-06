@@ -1,8 +1,19 @@
 import "@testing-library/jest-dom/vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { Button } from "../button";
-import { Tooltip } from "./tooltip";
+import { Tooltip, TooltipProvider } from "./tooltip";
+
+// A seta do Radix (Tooltip.Arrow) mede o tamanho com ResizeObserver, que o jsdom não tem.
+beforeAll(() => {
+  if (!("ResizeObserver" in globalThis)) {
+    (globalThis as unknown as { ResizeObserver: unknown }).ResizeObserver = class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    };
+  }
+});
 
 function hoverTrigger(trigger: HTMLElement) {
   fireEvent.pointerEnter(trigger);
@@ -53,5 +64,102 @@ describe("Tooltip (PRIZM / shadcn)", () => {
     );
     hoverTrigger(screen.getByRole("button"));
     expect(await screen.findByRole("tooltip", { name: "Bottom tip" })).toBeInTheDocument();
+  });
+});
+
+describe("Tooltip · decisões de 06/11/2026", () => {
+  it("balão em tooltip/tooltip-foreground, text-xs, sem sombra nem borda, max-w-sm", async () => {
+    render(
+      <Tooltip content="Hint" defaultOpen>
+        <button type="button">Trigger</button>
+      </Tooltip>,
+    );
+    await screen.findByRole("tooltip");
+    const content = document.querySelector("[data-slot=tooltip-content]") as HTMLElement;
+    expect(content).toHaveClass(
+      "bg-tooltip",
+      "text-tooltip-foreground",
+      "text-xs",
+      "font-normal",
+      "max-w-sm",
+      "rounded-md",
+      "px-3",
+      "py-1.5",
+    );
+    expect(content.className).not.toMatch(/shadow|border|bg-popover/);
+  });
+
+  it("tem seta na cor do balão", async () => {
+    render(
+      <Tooltip content="Hint" defaultOpen>
+        <button type="button">Trigger</button>
+      </Tooltip>,
+    );
+    await screen.findByRole("tooltip");
+    const arrow = document.querySelector("[data-slot=tooltip-arrow]");
+    expect(arrow).toHaveClass("bg-tooltip", "fill-tooltip", "size-2.5");
+  });
+});
+
+describe("TooltipProvider", () => {
+  afterEach(() => vi.useRealTimers());
+
+  const open = (name: string) => {
+    const t = screen.getByRole("button", { name });
+    fireEvent.pointerMove(t, { pointerType: "mouse" });
+  };
+
+  it("sem provider: o Tooltip espera os 200ms padrão", () => {
+    vi.useFakeTimers();
+    render(
+      <Tooltip content="Bold tip">
+        <button type="button">Bold</button>
+      </Tooltip>,
+    );
+    open("Bold");
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+    act(() => {
+      vi.advanceTimersByTime(150);
+    });
+    expect(screen.getByRole("tooltip", { name: "Bold tip" })).toBeInTheDocument();
+  });
+
+  it("dentro do provider: usa o atraso do provider, não cria o próprio", () => {
+    vi.useFakeTimers();
+    render(
+      <TooltipProvider delayDuration={0}>
+        <Tooltip content="Bold tip">
+          <button type="button">Bold</button>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+    open("Bold");
+    act(() => {
+      vi.advanceTimersByTime(10);
+    });
+    expect(screen.getByRole("tooltip", { name: "Bold tip" })).toBeInTheDocument();
+  });
+
+  it("dentro do provider: delayDuration no Tooltip vale só para ele", () => {
+    vi.useFakeTimers();
+    render(
+      <TooltipProvider delayDuration={0}>
+        <Tooltip content="Slow tip" delayDuration={500}>
+          <button type="button">Slow</button>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+    open("Slow");
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+    act(() => {
+      vi.advanceTimersByTime(450);
+    });
+    expect(screen.getByRole("tooltip", { name: "Slow tip" })).toBeInTheDocument();
   });
 });

@@ -1,8 +1,8 @@
 import { Button } from "@grupoitss/prizm-ui/button";
 import { Kbd } from "@grupoitss/prizm-ui/kbd";
-import { Save } from "@grupoitss/prizm-ui/icons";
+import { Bold, Italic, Save, Underline } from "@grupoitss/prizm-ui/icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Tooltip } from "@grupoitss/prizm-ui/tooltip";
+import { Tooltip, TooltipProvider } from "@grupoitss/prizm-ui/tooltip";
 
 const meta: Meta<typeof Tooltip> = {
   title: "Primários/Tooltip",
@@ -13,7 +13,7 @@ const meta: Meta<typeof Tooltip> = {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Tooltip do design system PRIZM. **API por props:** use `content` (obrigatório) e `children` (trigger). Ex.: `<Tooltip content="Salvar"> <Button>Hover</Button> </Tooltip>`. Não é necessário `TooltipProvider` na raiz: cada `<Tooltip>` inclui seu próprio provider. Nos apps (auth, cockpit, assistant) pode-se opcionalmente envolver o root com `TooltipProvider` do Radix para delay global.\n\n**Documentação:** <a href="https://ui.shadcn.com/docs/components/tooltip" target="_blank" rel="noopener noreferrer">Tooltip — shadcn/ui (Radix)</a>',
+          'Tooltip do design system PRIZM. **API por props:** use `content` (obrigatório) e `children` (trigger). Ex.: `<Tooltip content="Salvar"> <Button>Hover</Button> </Tooltip>`. Balão escuro em `color/tooltip`, com seta, `text-xs` e largura máxima `max-w-sm`. Sem `TooltipProvider`, cada `<Tooltip>` cria o próprio provider. Com `TooltipProvider` em volta de uma região (uma barra, o app), os Tooltips de dentro usam ele, e o atraso curto entre vizinhos funciona.\n\n**Documentação:** <a href="https://ui.shadcn.com/docs/components/tooltip" target="_blank" rel="noopener noreferrer">Tooltip — shadcn/ui (Radix)</a>',
       },
     },
   },
@@ -70,23 +70,69 @@ export const WithKeyboardShortcut: Story = {
       }
       contentClassName="pr-1.5"
     >
-      <Button variant="outline" size="icon">
+      <Button variant="outline" size="icon" aria-label="Save">
         <Save className="size-4" />
       </Button>
     </Tooltip>
   ),
 };
 
-/** Tooltip em botão desabilitado: envolva o botão em um `<span>` para o trigger receber eventos. */
-export const DisabledButton: Story = {
+/**
+ * Botão desabilitado: não use tooltip. Com `disabled`, o botão sai do Tab e quem usa teclado (ou o
+ * celular) nunca vê a dica. Mostre o motivo em texto visível.
+ */
+export const DisabledReason: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Não use tooltip em botão desabilitado: o botão sai do Tab e a dica não chega a quem usa teclado ou o celular. O motivo vai em texto visível, ao lado ou abaixo.",
+      },
+    },
+  },
   render: () => (
-    <Tooltip content="This feature is currently unavailable">
-      <span className="inline-block w-fit">
-        <Button variant="outline" disabled>
-          Disabled
-        </Button>
-      </span>
-    </Tooltip>
+    <div className="flex flex-col items-start gap-1">
+      <Button variant="outline" disabled>
+        Export
+      </Button>
+      <p className="text-xs text-muted-foreground">Available on the Pro plan.</p>
+    </div>
+  ),
+};
+
+/**
+ * Barra de ferramentas com `TooltipProvider`: ao passar de um botão para o vizinho, o segundo tooltip
+ * abre sem esperar.
+ */
+export const Toolbar: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Com `TooltipProvider` em volta, o primeiro tooltip espera 200ms e os vizinhos abrem na hora por 300ms (`skipDelayDuration`). O tooltip é a descrição; o nome do botão vem do `aria-label`.",
+      },
+    },
+  },
+  render: () => (
+    <TooltipProvider>
+      <div className="flex gap-1">
+        <Tooltip content="Bold">
+          <Button variant="ghost" size="icon" aria-label="Bold">
+            <Bold />
+          </Button>
+        </Tooltip>
+        <Tooltip content="Italic">
+          <Button variant="ghost" size="icon" aria-label="Italic">
+            <Italic />
+          </Button>
+        </Tooltip>
+        <Tooltip content="Underline">
+          <Button variant="ghost" size="icon" aria-label="Underline">
+            <Underline />
+          </Button>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
   ),
 };
 

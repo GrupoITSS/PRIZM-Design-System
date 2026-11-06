@@ -1,9 +1,20 @@
 import "@testing-library/jest-dom/vitest";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { Button } from "../button";
 import { Kbd } from "../kbd";
 import { Tooltip } from "./tooltip";
+
+// A seta do Radix (Tooltip.Arrow) mede o tamanho com ResizeObserver, que o jsdom não tem.
+beforeAll(() => {
+  if (!("ResizeObserver" in globalThis)) {
+    (globalThis as unknown as { ResizeObserver: unknown }).ResizeObserver = class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    };
+  }
+});
 
 describe("Tooltip · teclado e nomes (etapa 4, 06/11/2026)", () => {
   it("abre no foco de teclado e liga o gatilho ao balão por aria-describedby", async () => {
@@ -47,7 +58,7 @@ describe("Tooltip · teclado e nomes (etapa 4, 06/11/2026)", () => {
     expect(btn).not.toHaveFocus();
   });
 
-  it("Kbd dentro do balão procura [data-slot=tooltip-content] (estado atual)", async () => {
+  it("Kbd dentro do balão: o conteúdo tem data-slot=tooltip-content (pendência 2, corrigida)", async () => {
     render(
       <Tooltip
         content={
@@ -60,10 +71,11 @@ describe("Tooltip · teclado e nomes (etapa 4, 06/11/2026)", () => {
         <Button>Save</Button>
       </Tooltip>,
     );
-    const tip = await screen.findByRole("tooltip");
-    const content = document.querySelector("[data-side]");
-    expect(tip).toBeInTheDocument();
-    // registra o estado atual: o conteúdo não tem o data-slot que o Kbd espera
-    expect(content?.getAttribute("data-slot")).toBeNull();
+    await screen.findByRole("tooltip");
+    expect(
+      document.querySelector(
+        "[data-slot=tooltip-content] kbd, [data-slot=tooltip-content] [data-slot=kbd]",
+      ),
+    ).toBeTruthy();
   });
 });
