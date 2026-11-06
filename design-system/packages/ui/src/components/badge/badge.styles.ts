@@ -39,7 +39,8 @@ export const badgeVariants = cva(
     variants: {
       variant: {
         // Figma "Default" is bound to `color/primary`.
-        default: "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/80",
+        default:
+          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/80",
         // Link hover as in the Button secondary: foreground overlay at 10%.
         secondary:
           "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-[color-mix(in_oklab,var(--prizm-color-secondary),var(--prizm-color-foreground)_10%)]",
@@ -49,9 +50,12 @@ export const badgeVariants = cva(
         outline:
           "border-input bg-input-background text-foreground shadow-xs [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
         // Figma "Verified": the info tone (`color/info`), used with a check icon.
-        verified: "border-transparent bg-info text-info-foreground [a&]:hover:bg-info/80",
-        success: "border-transparent bg-success text-success-foreground [a&]:hover:bg-success/80",
-        warning: "border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/80",
+        verified:
+          "border-transparent bg-info text-info-foreground [a&]:hover:bg-info/80",
+        success:
+          "border-transparent bg-success text-success-foreground [a&]:hover:bg-success/80",
+        warning:
+          "border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/80",
       },
       // Same sizes in Figma (Size = sm, md, lg): height/5, height/6 and height/7.
       size: {
@@ -63,6 +67,8 @@ export const badgeVariants = cva(
       shape: {
         default: "",
         number: "min-w-5 justify-center px-1 tabular-nums",
+        // The dot has its own classes (badgeDotVariants); this value only names the shape.
+        dot: "",
       },
     },
     defaultVariants: {
@@ -72,5 +78,42 @@ export const badgeVariants = cva(
     },
   },
 );
+
+/**
+ * Badge dot (`shape="dot"`, DS-66, 06/11/2026): an 8px point with no visible content, for an unread
+ * notification (`default`), a service in progress (`success`), an action running (`warning`) or an
+ * error (`destructive`). Figma: the Badge Dot set.
+ *
+ * - The 2px ring in `background` is always there: it separates the dot from any surface. On the
+ *   colored sidebars of Docnix and Digitrol the tones alone fall to 1,00–2,96:1 (WCAG 1.4.11).
+ * - `warning` uses `warning-strong`: `warning` is 1,97–2,15:1 against the light background.
+ * - There is no `secondary` or `outline` dot: 1,09–1,37:1, the point would not show.
+ * - The text goes in `children`, read only by screen readers (see Badge).
+ */
+export const badgeDotVariants = cva(
+  "relative inline-block size-2 shrink-0 rounded-full ring-2 ring-background",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary",
+        destructive: "bg-destructive",
+        success: "bg-success",
+        warning: "bg-warning-strong",
+        verified: "bg-info",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
+
+/** The pulse halo: the dot color, growing and fading. Gone with reduced motion (WCAG 2.3.3). */
+export const badgeDotPulse =
+  "pointer-events-none absolute inset-0 rounded-full bg-inherit opacity-75 motion-safe:animate-ping";
+
+export type BadgeDotVariant = NonNullable<
+  VariantProps<typeof badgeDotVariants>["variant"]
+>;
 
 export type BadgeVariantProps = VariantProps<typeof badgeVariants>;
