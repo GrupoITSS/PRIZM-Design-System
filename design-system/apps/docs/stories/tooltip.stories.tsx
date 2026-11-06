@@ -4,16 +4,25 @@ import { Bold, Italic, Save, Underline } from "@grupoitss/prizm-ui/icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Tooltip, TooltipProvider } from "@grupoitss/prizm-ui/tooltip";
 
+// Traceability: the Tooltip component set in [PRIZM] Componentes, the documentation frame and the
+// CMS article. The token map lives next to the component (tooltip.tokens.json) and is checked
+// against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=17103-809";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26303-2086";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=a9d24bea-20a1-43b9-ba39-30f49f7fbd02&version=v1";
+
 const meta: Meta<typeof Tooltip> = {
   title: "Primários/Tooltip",
   component: Tooltip,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Tooltip do design system PRIZM. **API por props:** use `content` (obrigatório) e `children` (trigger). Ex.: `<Tooltip content="Salvar"> <Button>Hover</Button> </Tooltip>`. Balão escuro em `color/tooltip`, com seta, `text-xs` e largura máxima `max-w-sm`. Sem `TooltipProvider`, cada `<Tooltip>` cria o próprio provider. Com `TooltipProvider` em volta de uma região (uma barra, o app), os Tooltips de dentro usam ele, e o atraso curto entre vizinhos funciona.\n\n**Documentação:** <a href="https://ui.shadcn.com/docs/components/tooltip" target="_blank" rel="noopener noreferrer">Tooltip — shadcn/ui (Radix)</a>',
+          'Tooltip do design system PRIZM. **API por props:** use `content` (obrigatório) e `children` (trigger). Ex.: `<Tooltip content="Salvar"> <Button>Hover</Button> </Tooltip>`. Balão escuro em `color/tooltip`, com seta, `text-xs` e largura máxima `max-w-sm`. Sem `TooltipProvider`, cada `<Tooltip>` cria o próprio provider. Com `TooltipProvider` em volta de uma região (uma barra, o app), os Tooltips de dentro usam ele, e o atraso curto entre vizinhos funciona.' +
+          `\n\n**Rastreabilidade:** <a href="${FIGMA_URL}" target="_blank" rel="noopener noreferrer">Componente no Figma</a> · <a href="${FIGMA_DOC_URL}" target="_blank" rel="noopener noreferrer">Documentação no Figma</a> · <a href="${CMS_URL}" target="_blank" rel="noopener noreferrer">Artigo no CMS</a> · <a href="https://ui.shadcn.com/docs/components/tooltip" target="_blank" rel="noopener noreferrer">Tooltip — shadcn/ui</a>`,
       },
     },
   },

@@ -1,0 +1,65 @@
+{
+  "component": "Tooltip",
+  "description": "Mapa de tokens do Tooltip: o que cada parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do set Tooltip no Figma em 06/11/2026 (4 variantes, Side Top, Bottom, Left e Right, todas no Core e iguais entre si) e conferido contra tooltip.styles.ts pelo teste tooltip.tokens.test.ts. Nomes no formato do Figma (color/tooltip, spacing/3); no código viram classes Tailwind (bg-tooltip, px-3).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=17103-809",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26303-2086",
+    "code": "design-system/packages/ui/src/components/tooltip/tooltip.tsx",
+    "story": "design-system/apps/docs/stories/tooltip.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=a9d24bea-20a1-43b9-ba39-30f49f7fbd02&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/184"]
+  },
+  "parts": {
+    "bubble": {
+      "background": "color/tooltip",
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/1-5",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "maxWidth": "max-width/sm",
+      "note": "Sem sombra e sem borda, nos 4 lados."
+    },
+    "text": {
+      "color": "color/tooltip-foreground",
+      "fontSize": "text/xs",
+      "fontWeight": "font-weight/normal",
+      "fontFamily": "font/sans"
+    },
+    "arrow": {
+      "background": "color/tooltip",
+      "size": "width/2-5",
+      "note": "Quadrado de 10px girado 45°, nos 4 lados."
+    },
+    "shortcut": {
+      "component": "Kbd",
+      "note": "No Figma, KbdGroup (Show KbdGroup). No código, um <Kbd /> dentro do content; o Kbd usa text-current e bg-current/20 dentro de [data-slot=tooltip-content]."
+    }
+  },
+  "behavior": {
+    "side": ["top", "bottom", "left", "right"],
+    "defaultSide": "top",
+    "sideOffset": 4,
+    "delayDuration": 200,
+    "skipDelayDuration": 300
+  },
+  "divergences": [
+    {
+      "where": "Side",
+      "figma": "variante por lado, a seta fixa na borda do balão",
+      "code": "side posiciona o balão em relação ao gatilho; o Radix move a seta e troca o lado quando falta espaço",
+      "status": "representação"
+    },
+    {
+      "where": "distância do gatilho",
+      "figma": "—",
+      "code": "sideOffset = 4",
+      "status": "representação: no Figma o balão não tem gatilho"
+    },
+    {
+      "where": "texto de exemplo",
+      "figma": "inglês (This is a tooltip)",
+      "code": "sem texto padrão",
+      "status": "aceita"
+    }
+  ]
+}
