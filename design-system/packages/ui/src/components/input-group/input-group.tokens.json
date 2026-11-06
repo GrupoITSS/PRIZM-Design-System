@@ -1,6 +1,6 @@
 {
   "component": "InputGroup",
-  "description": "Mapa de tokens do InputGroup: o que cada estado, tamanho e parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 22/10/2026 e conferido contra input-group.styles.ts, input-group.hooks.ts e a renderização pelo teste input-group.tokens.test.ts. Nomes no formato do Figma (color/input); no código viram classes Tailwind (border-input). O InputGroup não tem variantes de cor: Type (Input ou Textarea) corresponde à prop control, e só o Input tem Size.",
+  "description": "Mapa de tokens do InputGroup: o que cada estado, tamanho e parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do component set no Figma em 22/10/2026 e conferido contra input-group.styles.ts, input-group.hooks.ts e a renderização pelo teste input-group.tokens.test.ts. Nomes no formato do Figma (color/input); no código viram classes Tailwind (border-input). O InputGroup não tem variantes de cor: Type (Input ou Textarea) corresponde à prop control, e só o Input tem Size. Read-only em 06/11/2026.",
   "sources": {
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18672-226415",
     "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25239-2930",
@@ -44,6 +44,14 @@
       "opacity": "opacity/50",
       "attribute": "disabled",
       "note": "Opacidade 50% na camada, sobre a aparência do default (revisto em 26/10/2026; antes era color/muted, borda transparente e sem sombra)."
+    },
+    "readOnly": {
+      "background": "color/muted",
+      "text": "color/muted-foreground",
+      "border": "color/transparent",
+      "shadow": null,
+      "attribute": "readonly",
+      "note": "Mesma aparência do Input read-only (DS-64). A ação que mudaria o valor (enviar, limpar) fica desabilitada; a que só lê (copiar) continua ativa. Figma: State=Read-only, 06/11/2026."
     }
   },
   "parts": {

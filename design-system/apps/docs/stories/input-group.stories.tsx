@@ -1,6 +1,6 @@
 import { Button } from "@grupoitss/prizm-ui/button";
 import { Field, FieldDescription, FieldError, FieldLabel } from "@grupoitss/prizm-ui/field";
-import { ExternalLink, Search } from "@grupoitss/prizm-ui/icons";
+import { Copy, ExternalLink, Search } from "@grupoitss/prizm-ui/icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { InputGroup } from "@grupoitss/prizm-ui/input-group";
 
@@ -151,6 +151,49 @@ export const Disabled: Story = {
       disabled
       addonInlineEnd={<Search className="size-4" />}
     />
+  ),
+};
+
+// Read-only (06/11/2026): the value is shown and can be copied, but not edited.
+// The action that would change the value is disabled; the one that only reads stays active.
+export const ReadOnly: Story = {
+  name: "Somente leitura",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Com `readOnly`, a caixa fica em `muted`, sem borda e sem sombra, como o Input. O campo continua focável e copiável. Desabilite a ação que mudaria o valor (enviar, limpar). A que só lê, como copiar, continua ativa.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex w-96 flex-col gap-4">
+      <InputGroup
+        readOnly
+        defaultValue="PAS-2115"
+        aria-label="Código do chamado"
+        addonInlineEnd={
+          <Button type="button" size="icon-xs" variant="ghost" aria-label="Copiar código">
+            <Copy />
+          </Button>
+        }
+      />
+      <InputGroup
+        control="textarea"
+        readOnly
+        rows={3}
+        aria-label="Mensagem enviada"
+        defaultValue="Mensagem já enviada ao cliente."
+        addonBlockEnd={
+          <>
+            <span className="text-muted-foreground text-sm">31/280</span>
+            <Button type="button" size="sm" variant="ghost" disabled>
+              Enviar
+            </Button>
+          </>
+        }
+      />
+    </div>
   ),
 };
 

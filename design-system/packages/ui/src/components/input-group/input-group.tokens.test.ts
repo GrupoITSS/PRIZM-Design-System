@@ -79,6 +79,16 @@ describe("InputGroup × mapa de tokens (input-group.tokens.json)", () => {
     expect(classes).not.toContain("bg-muted");
   });
 
+  it("read-only: com o atributo readonly no campo, a caixa usa os tokens do mapa", () => {
+    const s = map.states.readOnly;
+    expect(base).toContain(`has-[[data-slot][readonly]]:bg-${color(s.background)}`);
+    expect(base).toContain(`has-[[data-slot][readonly]]:border-${color(s.border)}`);
+    expect(base).toContain("has-[[data-slot][readonly]]:shadow-none");
+    expect(base).toContain(`[&_[data-slot][readonly]]:text-${color(s.text)}`);
+    // Atributo, nunca a pseudo-classe :read-only, que também pega disabled.
+    expect(base.some((c) => c.includes("read-only:"))).toBe(false);
+  });
+
   describe("botão do complemento", () => {
     const classesOf = (size: "xs" | "sm" | "icon-xs" | "icon-sm") =>
       inputGroupButtonVariants({ size }).split(" ");
