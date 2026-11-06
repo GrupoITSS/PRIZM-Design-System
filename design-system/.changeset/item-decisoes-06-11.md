@@ -10,3 +10,4 @@ Item: decisões de 06/11/2026.
 - Foco com o anel do Button (`ring` de 3px e `ring-offset` de 2px). O `ring/50` passava 3:1 em 1 de 12 temas.
 - Aviso no console quando há um controle em `actions` num Item clicável.
 - Remover badge: rótulo "Remover …" e área de toque de 24px.
+- No `xs`, título e descrição passam a `text-xs`, como no Figma (antes ficavam em `text-sm`).

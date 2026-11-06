@@ -65,9 +65,11 @@ export const itemHeaderStyles = "flex basis-full items-center justify-between ga
 export const itemFooterStyles = "flex basis-full items-center justify-between gap-2";
 export const itemContentStyles =
   "flex flex-1 space-between flex-col gap-1 [&+[data-slot=item-meta]]:flex-none";
-export const itemTitleStyles = "flex w-full items-center gap-2 text-sm font-medium leading-snug";
+// Title and description follow the Item size: text/sm, and text/xs in size xs (Figma, 06/11/2026).
+export const itemTitleStyles =
+  "flex w-full items-center gap-2 text-sm font-medium leading-snug group-data-[size=xs]/item:text-xs";
 export const itemDescriptionStyles = [
-  "text-muted-foreground line-clamp-2 text-balance text-sm font-normal leading-normal",
+  "text-muted-foreground line-clamp-2 text-balance text-sm font-normal leading-normal group-data-[size=xs]/item:text-xs",
   "[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4",
 ].join(" ");
 export const itemMetaStyles = "flex flex-none flex-col text-center";
