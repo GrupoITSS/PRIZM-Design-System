@@ -1,15 +1,25 @@
 import { Badge } from "@grupoitss/prizm-ui/badge";
 import { Button } from "@grupoitss/prizm-ui/button";
-import { CircleCheckBig, Link } from "@grupoitss/prizm-ui/icons";
+import {
+  Bell,
+  CircleCheckBig,
+  Link,
+  MessageSquare,
+} from "@grupoitss/prizm-ui/icons";
 import { Spinner } from "@grupoitss/prizm-ui/spinner";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 // Traceability: the component sets in [PRIZM] Componentes (Badge and Badge Number), the
 // documentation frame and the CMS article. The token map lives next to the component
 // (badge.tokens.json) and is checked against the classes in a test.
-const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26-169";
-const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25145-2040";
-const FIGMA_LINK_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26156-3255";
+const FIGMA_URL =
+  "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26-169";
+const FIGMA_DOC_URL =
+  "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25145-2040";
+const FIGMA_DOT_URL =
+  "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26273-2460";
+const FIGMA_LINK_URL =
+  "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26156-3255";
 const CMS_URL =
   "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=f8204506-f907-446c-af39-cef645a878e1&version=v1";
 
@@ -23,14 +33,22 @@ const meta: Meta<typeof Badge> = {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
           'Badge do design system PRIZM. Pequeno rótulo para status, contadores ou metadados.\n\nAs variantes são as do componente no Figma: `default`, `secondary`, `outline`, `destructive`, `verified`, `success` e `warning`. Tamanhos `sm` (padrão), `md` e `lg`. `shape="number"` é o "Badge Number" do Figma.\n\n- `startIcon` / `endIcon` para ícones alinhados com `data-icon="inline-start"` / `"inline-end"`\n\nPara outras cores, use `className` com os tokens, como no exemplo "Custom Colors" da doc do shadcn.\n\n**Documentação base:** <a href="https://ui.shadcn.com/docs/components/radix/badge" target="_blank" rel="noopener noreferrer">Badge — shadcn/ui</a>\n\n' +
-          `[Componente no Figma](${FIGMA_URL}) · [Badge Link no Figma](${FIGMA_LINK_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
+          `[Componente no Figma](${FIGMA_URL}) · [Badge Link no Figma](${FIGMA_LINK_URL}) · [Badge Dot no Figma](${FIGMA_DOT_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "secondary", "outline", "destructive", "verified", "success", "warning"],
+      options: [
+        "default",
+        "secondary",
+        "outline",
+        "destructive",
+        "verified",
+        "success",
+        "warning",
+      ],
     },
     size: {
       control: "select",
@@ -38,14 +56,20 @@ const meta: Meta<typeof Badge> = {
     },
     shape: {
       control: "select",
-      options: ["default", "number"],
+      options: ["default", "number", "dot"],
     },
     loading: {
       control: "boolean",
     },
+    pulse: {
+      control: "boolean",
+      description:
+        "Só no dot: halo para o que está em andamento. Some com redução de movimento.",
+    },
     asChild: {
       control: false,
-      description: "Badge link: renderiza o `<a>` filho com hover e foco. Veja a story Link.",
+      description:
+        "Badge link: renderiza o `<a>` filho com hover e foco. Veja a story Link.",
     },
     children: {
       control: "text",
@@ -118,7 +142,10 @@ export const NumberBadge: Story = {
 export const WithIcon: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge variant="secondary" startIcon={<CircleCheckBig className="size-3" />}>
+      <Badge
+        variant="secondary"
+        startIcon={<CircleCheckBig className="size-3" />}
+      >
         Verified
       </Badge>
       <Badge variant="outline" endIcon={<Link className="size-3" />}>
@@ -158,7 +185,10 @@ export const CustomColorsWithClassName: Story = {
       <Badge variant="default" className="bg-warning-weak text-warning-strong">
         Warning
       </Badge>
-      <Badge variant="default" className="bg-destructive-weak text-destructive-strong">
+      <Badge
+        variant="default"
+        className="bg-destructive-weak text-destructive-strong"
+      >
         Destructive
       </Badge>
     </div>
@@ -228,6 +258,55 @@ export const InButton: Story = {
           <Badge variant="secondary">42</Badge>
         </a>
       </Button>
+    </div>
+  ),
+};
+
+// Badge dot (DS-66): an 8px point, the text only for screen readers.
+export const Dot: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Ponto sem conteúdo visível: notificação não lida (`default`), atendimento em andamento (`success`), ação em curso (`warning`) ou erro (`destructive`). O texto em `children` é lido só pelo leitor de tela e é obrigatório. O anel de 2px em `background` separa o ponto de qualquer superfície. `pulse` liga o halo, que some com redução de movimento.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-wrap items-center gap-8">
+      <div className="relative inline-flex">
+        <Button variant="ghost" size="icon" aria-label="Notificações">
+          <Bell />
+        </Button>
+        <Badge variant="default" shape="dot" className="absolute top-1 right-1">
+          Há notificações não lidas
+        </Badge>
+      </div>
+      <div className="relative inline-flex">
+        <Button variant="ghost" size="icon" aria-label="Atendimentos">
+          <MessageSquare />
+        </Button>
+        <Badge
+          variant="success"
+          shape="dot"
+          pulse
+          className="absolute top-1 right-1"
+        >
+          Atendimento em andamento
+        </Badge>
+      </div>
+      <span className="inline-flex items-center gap-2 text-sm font-medium">
+        Atendimentos
+        <Badge variant="destructive" shape="dot">
+          Com erro
+        </Badge>
+      </span>
+      <span className="inline-flex items-center gap-2 text-sm font-medium">
+        Exportação
+        <Badge variant="warning" shape="dot" pulse>
+          Em curso
+        </Badge>
+      </span>
     </div>
   ),
 };

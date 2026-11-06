@@ -1,13 +1,17 @@
 import type * as React from "react";
 import type { BadgeVariantProps } from "./badge.styles";
 
-export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, BadgeVariantProps {
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>, BadgeVariantProps {
   /**
    * Semantic color, as in the Figma component. Required.
    */
   variant: NonNullable<BadgeVariantProps["variant"]>;
   /**
    * `number` renders a round counter (min 20px wide) for digits, as in the Figma "Badge Number".
+   * `dot` renders an 8px point (Figma "Badge Dot"): `children` becomes screen-reader-only text,
+   * and is required. The dot exists in `default`, `destructive`, `success`, `warning` and
+   * `verified`.
    * @default "default"
    */
   shape?: NonNullable<BadgeVariantProps["shape"]>;
@@ -18,6 +22,11 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, BadgeV
    * @default false
    */
   asChild?: boolean;
+  /**
+   * Dot only: a halo that grows and fades, for something in progress. Off with reduced motion.
+   * @default false
+   */
+  pulse?: boolean;
   /**
    * When true, marks the badge as loading (a11y only).
    * Visual spinners should be provided via `startIcon`/`endIcon`.

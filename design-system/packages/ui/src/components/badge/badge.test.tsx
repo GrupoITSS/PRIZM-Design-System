@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Badge } from "./badge";
 
 describe("Badge (PRIZM / Figma)", () => {
@@ -11,12 +11,18 @@ describe("Badge (PRIZM / Figma)", () => {
 
   it("aplica variant default em color/primary, como no Figma", () => {
     render(<Badge variant="default">Default</Badge>);
-    expect(screen.getByText("Default")).toHaveClass("bg-primary", "text-primary-foreground");
+    expect(screen.getByText("Default")).toHaveClass(
+      "bg-primary",
+      "text-primary-foreground",
+    );
   });
 
   it("aplica as variants secondary e destructive", () => {
     const { rerender } = render(<Badge variant="secondary">Secondary</Badge>);
-    expect(screen.getByText("Secondary")).toHaveClass("bg-secondary", "text-secondary-foreground");
+    expect(screen.getByText("Secondary")).toHaveClass(
+      "bg-secondary",
+      "text-secondary-foreground",
+    );
 
     rerender(<Badge variant="destructive">Destructive</Badge>);
     expect(screen.getByText("Destructive")).toHaveClass(
@@ -37,17 +43,26 @@ describe("Badge (PRIZM / Figma)", () => {
 
   it("verified usa o tom info", () => {
     render(<Badge variant="verified">Verified</Badge>);
-    expect(screen.getByText("Verified")).toHaveClass("bg-info", "text-info-foreground");
+    expect(screen.getByText("Verified")).toHaveClass(
+      "bg-info",
+      "text-info-foreground",
+    );
   });
 
   it("success usa bg-success e o texto success-foreground", () => {
     render(<Badge variant="success">Success</Badge>);
-    expect(screen.getByText("Success")).toHaveClass("bg-success", "text-success-foreground");
+    expect(screen.getByText("Success")).toHaveClass(
+      "bg-success",
+      "text-success-foreground",
+    );
   });
 
   it("warning usa bg-warning e o texto warning-foreground", () => {
     render(<Badge variant="warning">Warning</Badge>);
-    expect(screen.getByText("Warning")).toHaveClass("bg-warning", "text-warning-foreground");
+    expect(screen.getByText("Warning")).toHaveClass(
+      "bg-warning",
+      "text-warning-foreground",
+    );
   });
 
   it("tamanhos sm (padrão), md e lg, como no Figma", () => {
@@ -58,7 +73,11 @@ describe("Badge (PRIZM / Figma)", () => {
         Tamanho
       </Badge>,
     );
-    expect(screen.getByText("Tamanho")).toHaveClass("h-6", "gap-1.5", "text-xs");
+    expect(screen.getByText("Tamanho")).toHaveClass(
+      "h-6",
+      "gap-1.5",
+      "text-xs",
+    );
     rerender(
       <Badge variant="default" size="lg">
         Tamanho
@@ -142,7 +161,9 @@ describe("Badge (PRIZM / Figma)", () => {
       const { unmount } = render(<Badge variant={variant}>Estático</Badge>);
       const classes = screen.getByText("Estático").className.split(" ");
       expect(
-        classes.filter((c) => /^(hover|focus|focus-visible|active):|^transition/.test(c)),
+        classes.filter((c) =>
+          /^(hover|focus|focus-visible|active):|^transition/.test(c),
+        ),
       ).toEqual([]);
       unmount();
     }
@@ -155,12 +176,18 @@ describe("Badge (PRIZM / Figma)", () => {
     // and puts the ring there too.
     for (const c of classes.filter((x) => x.endsWith("outline-none"))) {
       const prefix = c.slice(0, -"outline-none".length);
-      expect(classes.some((x) => x.startsWith(`${prefix}focus-visible:ring`))).toBe(true);
+      expect(
+        classes.some((x) => x.startsWith(`${prefix}focus-visible:ring`)),
+      ).toBe(true);
     }
   });
 
   it("dentro de um Button cheio, inverte as cores (fundo na cor do texto do botão)", () => {
-    render(<Badge variant="default" shape="number">8</Badge>);
+    render(
+      <Badge variant="default" shape="number">
+        8
+      </Badge>,
+    );
     expect(screen.getByText("8")).toHaveClass(
       "[[data-slot=button][data-variant=default]_&]:bg-primary-foreground",
       "[[data-slot=button][data-variant=default]_&]:text-primary",
@@ -185,7 +212,12 @@ describe("Badge (PRIZM / Figma)", () => {
 
     it("mantém os ícones de início e fim dentro do link", () => {
       render(
-        <Badge variant="outline" asChild startIcon={<svg data-testid="ini" />} endIcon={<svg data-testid="fim" />}>
+        <Badge
+          variant="outline"
+          asChild
+          startIcon={<svg data-testid="ini" />}
+          endIcon={<svg data-testid="fim" />}
+        >
           <a href="/x">Abrir</a>
         </Badge>,
       );
@@ -211,6 +243,67 @@ describe("Badge (PRIZM / Figma)", () => {
     it("sem asChild continua sendo um <div>", () => {
       render(<Badge variant="default">Status</Badge>);
       expect(screen.getByText("Status").tagName).toBe("DIV");
+    });
+  });
+
+  describe('Badge dot (shape="dot", DS-66)', () => {
+    it("renderiza o ponto com o texto só para o leitor de tela", () => {
+      render(
+        <Badge variant="default" shape="dot">
+          Notificação não lida
+        </Badge>,
+      );
+      const text = screen.getByText("Notificação não lida");
+      expect(text).toHaveClass("sr-only");
+      const dot = text.parentElement!;
+      expect(dot).toHaveAttribute("data-shape", "dot");
+      expect(dot).toHaveClass(
+        "size-2",
+        "rounded-full",
+        "ring-2",
+        "ring-background",
+        "bg-primary",
+      );
+    });
+
+    it("warning usa warning-strong", () => {
+      render(
+        <Badge variant="warning" shape="dot">
+          Em curso
+        </Badge>,
+      );
+      expect(screen.getByText("Em curso").parentElement).toHaveClass(
+        "bg-warning-strong",
+      );
+    });
+
+    it("pulse põe o halo, fora da leitura", () => {
+      const { container } = render(
+        <Badge variant="success" shape="dot" pulse>
+          Atendimento em andamento
+        </Badge>,
+      );
+      const halo = container.querySelector("[data-slot=badge-pulse]");
+      expect(halo).toHaveAttribute("aria-hidden", "true");
+      expect(halo).toHaveClass("motion-safe:animate-ping");
+    });
+
+    it("avisa no console quando falta o texto ou a variante não tem dot", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      render(<Badge variant="secondary" shape="dot" />);
+      const msgs = warn.mock.calls.map((c) => String(c[0]));
+      expect(msgs.some((m) => m.includes('variant="secondary"'))).toBe(true);
+      expect(msgs.some((m) => m.includes("sem texto"))).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("sem shape dot, pulse não muda nada", () => {
+      const { container } = render(
+        <Badge variant="default" pulse>
+          Status
+        </Badge>,
+      );
+      expect(container.querySelector("[data-slot=badge-pulse]")).toBeNull();
     });
   });
 });

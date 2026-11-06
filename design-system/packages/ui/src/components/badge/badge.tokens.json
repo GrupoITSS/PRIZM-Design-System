@@ -1,6 +1,6 @@
 {
   "component": "Badge",
-  "description": "Mapa de tokens do Badge: o que cada variante, tamanho e forma usa do [PRIZM] Design Tokens_Core. Extraído das ligações dos component sets Badge e Badge Number no Figma em 21/10/2026 (raio do Badge revisto em 03/11/2026: pill, radius/full; Badge link e contextos sobre botão em 05/11/2026, DS-63) e conferido contra badge.styles.ts pelo teste badge.tokens.test.ts. Nomes no formato do Figma (color/primary); no código viram classes Tailwind (bg-primary).",
+  "description": "Mapa de tokens do Badge: o que cada variante, tamanho e forma usa do [PRIZM] Design Tokens_Core. Extraído das ligações dos component sets Badge e Badge Number no Figma em 21/10/2026 (raio do Badge revisto em 03/11/2026: pill, radius/full; Badge link e contextos sobre botão em 05/11/2026, DS-63; dot em 06/11/2026, DS-66) e conferido contra badge.styles.ts pelo teste badge.tokens.test.ts. Nomes no formato do Figma (color/primary); no código viram classes Tailwind (bg-primary).",
   "sources": {
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26-169",
     "figmaComponentNumber": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=17100-10130",
@@ -12,10 +12,12 @@
       "https://github.com/GrupoITSS/PRIZM-Design-System/pull/103"
     ],
     "jira": [
-      "https://grupoitss.atlassian.net/browse/GIES-2062"
+      "https://grupoitss.atlassian.net/browse/GIES-2062",
+      "https://grupoitss.atlassian.net/browse/GIES-2065"
     ],
     "figmaComponentLink": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26156-3255",
-    "figmaButtonTrailing": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25293-2832"
+    "figmaButtonTrailing": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=25293-2832",
+    "figmaComponentDot": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26273-2460"
   },
   "variants": {
     "default": {
@@ -154,6 +156,25 @@
       "minWidth": "width/5",
       "paddingX": "spacing/1",
       "radius": "radius/full"
+    },
+    "dot": {
+      "size": "width/2",
+      "radius": "radius/full",
+      "ring": "color/background",
+      "ringWidth": 2,
+      "variants": {
+        "default": "color/primary",
+        "destructive": "color/destructive",
+        "success": "color/success",
+        "warning": "color/warning-strong",
+        "verified": "color/info"
+      },
+      "pulse": {
+        "color": "a cor do dot",
+        "opacity": 0.3,
+        "note": "No Figma, halo parado de 16px a 30% (Pulse=On). No código, animate-ping com motion-safe."
+      },
+      "note": "Sem secondary e sem outline: 1,09 a 1,37:1 contra o fundo. Warning em warning-strong: o warning fica em 1,97 a 2,15:1 no claro."
     }
   },
   "divergences": [
