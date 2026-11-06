@@ -29,8 +29,8 @@ const meta: Meta<typeof Collapsible> = {
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
           "Collapsible do design system PRIZM. Conteúdo expansível com trigger.\n\n" +
           "**Uso recomendado (API por props):** `trigger`, `triggerIcon`, `children` (conteúdo). " +
-          "Use `trigger={(isOpen) => ...}` para trigger que depende do estado (ex.: troca de ícone).\n\n" +
-          "**Composição (escape hatch):** omita `trigger` e use CollapsibleTrigger + CollapsibleContent como children.\n\n" +
+          "O ícone de `triggerIcon` gira 180° com o painel aberto. Use `trigger={(isOpen) => ...}` para trigger que depende do estado (ex.: troca de ícone).\n\n" +
+          "**Composição (escape hatch):** omita `trigger` e use CollapsibleTrigger + CollapsibleContent como children. Com `asChild`, o gatilho é o Button do Prizm, com o estilo dele.\n\n" +
           '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/collapsible" target="_blank" rel="noopener noreferrer">Collapsible — shadcn/ui</a> | ' +
           '<a href="https://www.radix-ui.com/docs/primitives/components/collapsible" target="_blank" rel="noopener noreferrer">Radix Collapsible</a>',
       },
@@ -52,11 +52,8 @@ export const Basic: Story = {
       <CardContent>
         <Collapsible
           trigger="Product details"
-          triggerIcon={
-            <ChevronDown className="size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
-          }
-          triggerClassName="w-full group"
-          contentClassName="flex flex-col items-start gap-2 p-2.5 pt-0 text-sm"
+          triggerIcon={<ChevronDown />}
+          contentClassName="flex flex-col items-start gap-2 px-2 pb-4 text-sm"
           className="rounded-md data-[state=open]:bg-muted"
         >
           <div>This panel can be expanded or collapsed to reveal additional content.</div>
@@ -163,10 +160,7 @@ export const OpenByDefault: Story = {
   args: {
     defaultOpen: true,
     trigger: "Content is open by default",
-    triggerIcon: (
-      <ChevronDown className="size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
-    ),
-    triggerClassName: "w-full group",
+    triggerIcon: <ChevronDown />,
   },
   render: (args) => (
     <Collapsible {...args} className="w-full max-w-md rounded-lg border border-border p-2">
@@ -177,21 +171,16 @@ export const OpenByDefault: Story = {
   ),
 };
 
-/** Trigger com variant ghost (sem background no hover). */
-export const TriggerVariantGhost: Story = {
+/** Gatilho desabilitado: a 50%, sem abrir. */
+export const Disabled: Story = {
   args: {
-    trigger: "Ghost trigger",
-    triggerVariant: "ghost",
-    triggerIcon: (
-      <ChevronDown className="size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
-    ),
-    triggerClassName: "w-full group py-1",
+    disabled: true,
+    trigger: "Product details",
+    triggerIcon: <ChevronDown />,
   },
   render: (args) => (
     <Collapsible {...args} className="w-full max-w-md">
-      <div className="pt-2 text-sm text-muted-foreground">
-        Trigger with variant="ghost" has no background hover.
-      </div>
+      <div className="px-2 pb-4 text-sm">This content is not reachable while disabled.</div>
     </Collapsible>
   ),
 };

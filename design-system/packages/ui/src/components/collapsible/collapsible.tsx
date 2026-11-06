@@ -1,7 +1,11 @@
 import { cn } from "../../lib/cn";
 import { Collapsible as RadixCollapsible } from "radix-ui";
 import * as React from "react";
-import { collapsibleContentStyles, collapsibleTriggerVariants } from "./collapsible.styles";
+import {
+  collapsibleContentStyles,
+  collapsibleIconStyles,
+  collapsibleTriggerStyles,
+} from "./collapsible.styles";
 import type {
   CollapsibleContentProps,
   CollapsibleProps,
@@ -12,7 +16,7 @@ import type {
  * Collapsible root. Controls open state for expand/collapse content.
  *
  * **Simplified API (recommended):** pass `trigger` and `children` (content) to avoid subcomponents.
- * Use `triggerIcon` for a chevron; use `trigger={(isOpen) => ...}` for state-dependent trigger (e.g. icon swap).
+ * Use `triggerIcon` for a chevron (it rotates 180° when open); use `trigger={(isOpen) => ...}` for state-dependent trigger (e.g. icon swap).
  *
  * **Composition API:** omit `trigger` and pass CollapsibleTrigger + CollapsibleContent as children.
  *
@@ -38,7 +42,6 @@ const Collapsible = function Collapsible({
   triggerIcon,
   triggerClassName,
   contentClassName,
-  triggerVariant = "default",
   children,
   open: openProp,
   defaultOpen,
@@ -71,10 +74,14 @@ const Collapsible = function Collapsible({
       >
         <RadixCollapsible.Trigger
           data-slot="collapsible-trigger"
-          className={cn(collapsibleTriggerVariants({ variant: triggerVariant }), triggerClassName)}
+          className={cn(collapsibleTriggerStyles, triggerClassName)}
         >
           {typeof trigger === "function" ? trigger(open) : trigger}
-          {triggerIcon != null ? <span className="ml-auto [&]:shrink-0">{triggerIcon}</span> : null}
+          {triggerIcon != null ? (
+            <span data-slot="collapsible-icon" aria-hidden="true" className={collapsibleIconStyles}>
+              {triggerIcon}
+            </span>
+          ) : null}
         </RadixCollapsible.Trigger>
         <RadixCollapsible.Content
           data-slot="collapsible-content"
@@ -102,9 +109,13 @@ const Collapsible = function Collapsible({
 };
 Collapsible.displayName = RadixCollapsible.Root.displayName ?? "Collapsible";
 
+/**
+ * Gatilho da composição. Com `asChild` (o Button do Prizm), o estilo é o do filho: o gatilho não
+ * soma as classes dele por cima.
+ */
 const CollapsibleTrigger = ({
   className,
-  variant = "default",
+  asChild,
   ref,
   ...props
 }: CollapsibleTriggerProps & {
@@ -113,7 +124,8 @@ const CollapsibleTrigger = ({
   <RadixCollapsible.Trigger
     ref={ref}
     data-slot="collapsible-trigger"
-    className={cn(collapsibleTriggerVariants({ variant }), className)}
+    asChild={asChild}
+    className={asChild ? className : cn(collapsibleTriggerStyles, className)}
     {...props}
   />
 );
