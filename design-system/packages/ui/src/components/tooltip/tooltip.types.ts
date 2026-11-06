@@ -37,13 +37,15 @@ export interface TooltipProps
    */
   children: React.ReactNode;
   /**
-   * Optional delay in ms before showing the tooltip. Applied via internal Provider.
-   * @default 200 (Radix default)
+   * Optional delay in ms before showing the tooltip. Inside a `TooltipProvider`, overrides the
+   * provider's delay for this tooltip only.
+   * @default 200
    */
   delayDuration?: number;
   /**
-   * Optional delay in ms before hiding when moving to next trigger (skip delay).
-   * @default 300 (Radix default)
+   * Optional delay in ms before hiding when moving to next trigger (skip delay). Only applies when
+   * the Tooltip creates its own provider; inside a `TooltipProvider`, set it on the provider.
+   * @default 300
    */
   skipDelayDuration?: number;
   /**
@@ -56,3 +58,9 @@ export interface TooltipProps
    */
   portalContainer?: HTMLElement | null;
 }
+
+/**
+ * Provider dos tooltips de uma região. `delayDuration` (padrão 200) e `skipDelayDuration` (padrão
+ * 300) valem para todos os Tooltips dentro dele.
+ */
+export type TooltipProviderProps = React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Provider>;

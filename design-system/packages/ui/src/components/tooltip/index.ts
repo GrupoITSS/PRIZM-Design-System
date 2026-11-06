@@ -1,3 +1,3 @@
-export { Tooltip } from "./tooltip";
-export { tooltipContentStyles } from "./tooltip.styles";
-export type { TooltipContentProps, TooltipProps } from "./tooltip.types";
+export { Tooltip, TooltipProvider } from "./tooltip";
+export { tooltipArrowStyles, tooltipContentStyles } from "./tooltip.styles";
+export type { TooltipContentProps, TooltipProps, TooltipProviderProps } from "./tooltip.types";
