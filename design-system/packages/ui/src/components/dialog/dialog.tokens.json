@@ -27,7 +27,10 @@
     },
     "header": {
       "gap": "spacing/1-5",
-      "align": { "lg": "esquerda", "sm": "centro" }
+      "align": {
+        "lg": "esquerda",
+        "sm": "centro"
+      }
     },
     "title": {
       "color": "color/foreground",
@@ -58,7 +61,10 @@
     }
   },
   "sizes": {
-    "lg": { "width": "max-width/lg", "note": "512px, a partir de 640px (sm: no Tailwind)" },
+    "lg": {
+      "width": "max-width/lg",
+      "note": "512px, a partir de 640px (sm: no Tailwind)"
+    },
     "sm": {
       "width": "343px no Figma",
       "note": "No código, a tela menos 32px (max-w-[calc(100%-2rem)])"
@@ -97,9 +103,9 @@
     },
     {
       "where": "set Dialog / Close Icon (5056:13504)",
-      "figma": "set do kit, sem uso depois do Button ghost icon-sm",
+      "figma": "set do kit; o Dialog não usa mais (botão fechar é o Button ghost icon-sm), mas o Sidebar 13. (5198:1987) ainda usa",
       "code": "—",
-      "status": "aberta: apagar ou manter, a decidir"
+      "status": "mantida: trocar no Sidebar pelo Button ghost icon-sm quando o Sidebar for documentado, e então apagar o set"
     },
     {
       "where": "texto de exemplo",
