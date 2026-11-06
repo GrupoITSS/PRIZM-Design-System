@@ -43,9 +43,11 @@
       "note": "Sem estilo próprio: só overflow-hidden e a animação de altura. O espaço e o texto são de quem usa; no Figma, a variante API=Props mostra o exemplo da story Basic."
     },
     "composition": {
-      "header": "slot Header (título, ações e o Collapsible / Toggle)",
+      "leading": "slot Leading (alça de arrastar), oculto por padrão (Show Leading=false)",
+      "toggle": "Collapsible / Toggle fixo no cabeçalho, com o Open do Collapsible",
+      "header": "slot Header (nome, badge e ações), depois do toggle",
       "content": "slot Content (CollapsibleContent), oculto com Open=No",
-      "note": "No set Collapsible, API=Composition tem os slots Header e Content; o conteúdo padrão (Order #4189, Shipping address) é exemplo, não estilo do componente."
+      "note": "No set Collapsible, API=Composition. O conteúdo padrão (Order #4189, Shipping address) é exemplo, não estilo do componente. Borda, raio e espaço do cartão são de quem usa."
     }
   },
   "states": {
