@@ -1,0 +1,111 @@
+{
+  "component": "Dialog",
+  "description": "Mapa de tokens do Dialog: o que cada parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do set Dialog no Figma em 06/11/2026 (Breakpoint lg e sm, todas no Core e iguais entre si, menos a largura e o alinhamento do cabeçalho) e conferido contra dialog.styles.ts pelo teste dialog.tokens.test.ts. Nomes no formato do Figma (color/background, spacing/6); no código viram classes Tailwind (bg-background, p-6).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=112-602",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26345-2157",
+    "code": "design-system/packages/ui/src/components/dialog/dialog.tsx",
+    "story": "design-system/apps/docs/stories/dialog.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=ec8d2380-ceb3-4867-842d-76750f80dcfc&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/186"]
+  },
+  "parts": {
+    "content": {
+      "background": "color/background",
+      "text": "color/foreground",
+      "border": "color/border",
+      "borderWidth": "border-width/1",
+      "radius": "radius/lg",
+      "padding": "spacing/6",
+      "gap": "spacing/4",
+      "shadow": "shadow/lg",
+      "maxWidth": "max-width/lg"
+    },
+    "overlay": {
+      "background": "color/overlay",
+      "note": "Só no código, com desfoque de 2px (backdrop-blur-[0.125rem]). No Figma, o set não tem overlay."
+    },
+    "header": {
+      "gap": "spacing/1-5",
+      "align": { "lg": "esquerda", "sm": "centro" }
+    },
+    "title": {
+      "color": "color/foreground",
+      "fontSize": "text/lg",
+      "fontWeight": "font-weight/semibold",
+      "fontFamily": "font/sans",
+      "lineHeight": "100%"
+    },
+    "description": {
+      "color": "color/muted-foreground",
+      "fontSize": "text/sm",
+      "fontWeight": "font-weight/normal",
+      "fontFamily": "font/sans"
+    },
+    "footer": {
+      "gap": "spacing/2",
+      "layout": {
+        "lg": "linha, à direita, ação principal por último",
+        "sm": "coluna, ação principal em cima"
+      },
+      "actions": "Button do Prizm (Outline e Default)"
+    },
+    "close": {
+      "component": "Button ghost icon-sm",
+      "size": "control-height/sm",
+      "offset": "spacing/2",
+      "note": "A 8px do canto, para o X de 16px ficar a 16px do canto."
+    }
+  },
+  "sizes": {
+    "lg": { "width": "max-width/lg", "note": "512px, a partir de 640px (sm: no Tailwind)" },
+    "sm": {
+      "width": "343px no Figma",
+      "note": "No código, a tela menos 32px (max-w-[calc(100%-2rem)])"
+    }
+  },
+  "divergences": [
+    {
+      "where": "Breakpoint",
+      "figma": "variante lg e sm",
+      "code": "não é prop: a largura, o cabeçalho e o rodapé seguem a tela (sm: do Tailwind, 640px)",
+      "status": "representação"
+    },
+    {
+      "where": "largura no celular",
+      "figma": "343px fixos",
+      "code": "max-w-[calc(100%-2rem)]",
+      "status": "representação: 343px é 375px menos 32px"
+    },
+    {
+      "where": "altura máxima",
+      "figma": "—",
+      "code": "max-h-[calc(100dvh-2rem)], com rolagem por dentro",
+      "status": "representação: no Figma o Dialog não tem tela em volta"
+    },
+    {
+      "where": "overlay",
+      "figma": "—",
+      "code": "color/overlay com desfoque de 2px",
+      "status": "representação"
+    },
+    {
+      "where": "confirmInput",
+      "figma": "—",
+      "code": "campo de confirmação por digitação",
+      "status": "aceita: só no código (decisão da etapa 1); no Figma, monta-se no slot Body"
+    },
+    {
+      "where": "set Dialog / Close Icon (5056:13504)",
+      "figma": "set do kit, sem uso depois do Button ghost icon-sm",
+      "code": "—",
+      "status": "aberta: apagar ou manter, a decidir"
+    },
+    {
+      "where": "texto de exemplo",
+      "figma": "inglês (Dialog title, Save changes)",
+      "code": "sem texto padrão; closeLabel \"Fechar\"",
+      "status": "aceita"
+    }
+  ]
+}

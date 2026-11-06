@@ -5,19 +5,28 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import * as React from "react";
 import { Dialog } from "@grupoitss/prizm-ui/dialog";
 
+// Traceability: the Dialog component set in [PRIZM] Componentes, the documentation frame and the
+// CMS article. The token map lives next to the component (dialog.tokens.json) and is checked
+// against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=112-602";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26345-2157";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=ec8d2380-ceb3-4867-842d-76750f80dcfc&version=v1";
+
 const meta: Meta<typeof Dialog> = {
   title: "Primários/Dialog",
   component: Dialog,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
           "Dialog do design system PRIZM. Janela modal genérica baseada em Radix Dialog, usando tokens de `@grupoitss/prizm-tokens` e **API simplificada por props** (`trigger`, `title`, `description`, `body`, `footer`).\n\n" +
-          "O botão de fechar (X) usa `dialogCloseButtonStyles` com inset `right-6 top-6` das bordas do modal — o mesmo token é reutilizado no Sheet.\n\n" +
+          'O botão de fechar (X) é o `Button` ghost `icon-sm` do Prizm, a 8px do canto (`dialogCloseStyles`), com o nome "Fechar" para o leitor de tela (`closeLabel`).\n\n' +
           "Subcomponentes (`DialogContent`, `DialogHeader`, etc.) existem apenas como escape hatch para composição avançada — os exemplos principais usam sempre props.\n\n" +
-          '**Documentação base:** <a href="https://www.radix-ui.com/docs/primitives/components/dialog" target="_blank" rel="noopener noreferrer">Radix Dialog</a>',
+          '**Documentação base:** <a href="https://www.radix-ui.com/docs/primitives/components/dialog" target="_blank" rel="noopener noreferrer">Radix Dialog</a>' +
+          `\n\n**Rastreabilidade:** <a href="${FIGMA_URL}" target="_blank" rel="noopener noreferrer">Componente no Figma</a> · <a href="${FIGMA_DOC_URL}" target="_blank" rel="noopener noreferrer">Documentação no Figma</a> · <a href="${CMS_URL}" target="_blank" rel="noopener noreferrer">Artigo no CMS</a> · <a href="https://ui.shadcn.com/docs/components/radix/dialog" target="_blank" rel="noopener noreferrer">Dialog — shadcn/ui</a>`,
       },
     },
   },
