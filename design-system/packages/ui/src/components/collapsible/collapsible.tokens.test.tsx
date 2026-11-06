@@ -36,8 +36,16 @@ describe("Collapsible × mapa de tokens (collapsible.tokens.json)", () => {
     expect(c).toContain(`hover:${ICON}:text-${step(s.hover.icon)}`);
   });
 
-  it("foco: anel ring de 2px com offset ring-offset de 2px", () => {
+  it("pressed: classes próprias de :active, iguais ao hover", () => {
     const c = cls(collapsibleTriggerStyles);
+    expect(c).toContain(`active:bg-${step(s.pressed.background)}`);
+    expect(c).toContain(`active:text-${step(s.pressed.text)}`);
+    expect(c).toContain(`active:${ICON}:text-${step(s.pressed.icon)}`);
+  });
+
+  it("foco: fundo ring-offset e anel ring de 2px com offset ring-offset de 2px", () => {
+    const c = cls(collapsibleTriggerStyles);
+    expect(c).toContain(`focus-visible:bg-${step(s.focus.background)}`);
     expect(c).toContain(`focus-visible:ring-${s.focus.ringWidth}`);
     expect(c).toContain(`focus-visible:ring-${step(s.focus.ring)}`);
     expect(c).toContain(`focus-visible:ring-offset-${s.focus.ringOffsetWidth}`);
