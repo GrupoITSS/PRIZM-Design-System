@@ -1,17 +1,25 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Separator } from "@grupoitss/prizm-ui/separator";
 
+// Traceability: the Separator component set in [PRIZM] Componentes, the documentation frame and
+// the CMS article. The token map lives next to the component (separator.tokens.json) and is checked
+// against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=118-2690";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26328-1980";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=4af276cf-3d05-42ad-8e37-cb5eb88a472a&version=v1";
+
 const meta: Meta<typeof Separator> = {
   title: "Primários/Separator",
   component: Separator,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
           "Separator do design system PRIZM. Separa visualmente seções de conteúdo.\n\n" +
-          '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/radix/separator" target="_blank" rel="noopener noreferrer">Separator — shadcn/ui (Radix)</a>',
+          `**Rastreabilidade:** <a href="${FIGMA_URL}" target="_blank" rel="noopener noreferrer">Componente no Figma</a> · <a href="${FIGMA_DOC_URL}" target="_blank" rel="noopener noreferrer">Documentação no Figma</a> · <a href="${CMS_URL}" target="_blank" rel="noopener noreferrer">Artigo no CMS</a> · <a href="https://ui.shadcn.com/docs/components/radix/separator" target="_blank" rel="noopener noreferrer">Separator — shadcn/ui</a>`,
       },
     },
   },
