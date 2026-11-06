@@ -21,6 +21,11 @@ const meta: Meta<typeof InputGroup> = {
       description: "Altura do Input interno, em control-height. Não vale para o Textarea.",
     },
     disabled: { control: "boolean" },
+    readOnly: {
+      control: "boolean",
+      description:
+        "Somente leitura: a caixa fica em `muted`, sem borda e sem sombra. O campo continua focável.",
+    },
   },
   parameters: {
     docs: {
