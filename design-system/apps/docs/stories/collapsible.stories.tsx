@@ -18,10 +18,18 @@ import { Input } from "@grupoitss/prizm-ui/input";
 import { ChevronDown } from "@grupoitss/prizm-ui/icons";
 import { ChevronsUpDown, Maximize2, Minimize2 } from "@grupoitss/prizm-ui/icons";
 
+// Traceability: the Collapsible / Trigger component set in [PRIZM] Componentes, the documentation
+// frame and the CMS article. The token map lives next to the component (collapsible.tokens.json)
+// and is checked against the classes in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26250-3011";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26251-2005";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=de046740-d9be-4dda-9a79-de9a38552fe0&version=v1";
+
 const meta: Meta<typeof Collapsible> = {
   title: "Primários/Collapsible",
   component: Collapsible,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
@@ -31,8 +39,7 @@ const meta: Meta<typeof Collapsible> = {
           "**Uso recomendado (API por props):** `trigger`, `triggerIcon`, `children` (conteúdo). " +
           "O ícone de `triggerIcon` gira 180° com o painel aberto. Use `trigger={(isOpen) => ...}` para trigger que depende do estado (ex.: troca de ícone).\n\n" +
           "**Composição (escape hatch):** omita `trigger` e use CollapsibleTrigger + CollapsibleContent como children. Com `asChild`, o gatilho é o Button do Prizm, com o estilo dele.\n\n" +
-          '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/collapsible" target="_blank" rel="noopener noreferrer">Collapsible — shadcn/ui</a> | ' +
-          '<a href="https://www.radix-ui.com/docs/primitives/components/collapsible" target="_blank" rel="noopener noreferrer">Radix Collapsible</a>',
+          `**Rastreabilidade:** <a href="${FIGMA_URL}" target="_blank" rel="noopener noreferrer">Componente no Figma</a> · <a href="${FIGMA_DOC_URL}" target="_blank" rel="noopener noreferrer">Documentação no Figma</a> · <a href="${CMS_URL}" target="_blank" rel="noopener noreferrer">Artigo no CMS</a> · <a href="https://ui.shadcn.com/docs/components/collapsible" target="_blank" rel="noopener noreferrer">Collapsible — shadcn/ui</a> · <a href="https://www.radix-ui.com/docs/primitives/components/collapsible" target="_blank" rel="noopener noreferrer">Radix Collapsible</a>`,
       },
     },
   },

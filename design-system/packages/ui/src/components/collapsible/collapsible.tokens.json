@@ -1,0 +1,88 @@
+{
+  "component": "Collapsible",
+  "description": "Mapa de tokens do Collapsible: o que cada parte usa do [PRIZM] Design Tokens_Core em cada estado. Extraído das ligações dos sets Collapsible / Trigger (10 variantes, Open No e Yes × Default, Hover, Focus, Pressed e Disabled) e Collapsible (composição, Open No e Yes) no Figma em 06/11/2026, todas no Core, e conferido contra collapsible.styles.ts pelo teste collapsible.tokens.test.tsx. Nomes no formato do Figma (color/accent, spacing/4); no código viram classes Tailwind (bg-accent, py-4).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26250-3011",
+    "figmaComposition": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18597-96515",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26251-2005",
+    "code": "design-system/packages/ui/src/components/collapsible/collapsible.tsx",
+    "story": "design-system/apps/docs/stories/collapsible.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=de046740-d9be-4dda-9a79-de9a38552fe0&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/179"]
+  },
+  "parts": {
+    "trigger": {
+      "text": "color/foreground",
+      "fontFamily": "font/sans",
+      "fontSize": "text/sm",
+      "fontWeight": "font-weight/medium",
+      "paddingX": "spacing/2",
+      "paddingY": "spacing/4",
+      "gap": "spacing/4",
+      "radius": "radius/md"
+    },
+    "icon": {
+      "color": "color/muted-foreground",
+      "size": "width/4",
+      "openRotation": 180,
+      "note": "No Figma, a ligação de tamanho fica em width/4 (Open=No) ou height/4 (Open=Yes): o ícone tem proporção travada e aceita uma só."
+    },
+    "content": {
+      "note": "Sem estilo próprio: só overflow-hidden e a animação de altura. O espaço e o texto são de quem usa."
+    },
+    "composition": {
+      "trigger": "Button ghost size icon (control-height/md), com os tokens do Button",
+      "note": "No set Collapsible, o exemplo de composição (título em font-weight/semibold, caixas em color/background com borda color/border) é conteúdo de exemplo, não estilo do componente."
+    }
+  },
+  "states": {
+    "hover": {
+      "background": "color/accent",
+      "text": "color/accent-foreground",
+      "icon": "color/accent-foreground"
+    },
+    "pressed": {
+      "background": "color/accent",
+      "text": "color/accent-foreground",
+      "icon": "color/accent-foreground",
+      "note": "Igual ao hover (decisão de 06/11). No código, :active não tem classe própria: vale o hover."
+    },
+    "focus": {
+      "ring": "color/ring",
+      "ringWidth": 2,
+      "ringOffset": "color/ring-offset",
+      "ringOffsetWidth": 2,
+      "note": "No Figma, o gatilho tem fill color/ring-offset no Focus para a sombra do anel aparecer; no código, o fundo fica transparente (ring-offset = background)."
+    },
+    "disabled": {
+      "opacity": "opacity/50",
+      "pointerEvents": "none"
+    }
+  },
+  "divergences": [
+    {
+      "where": "State = Pressed",
+      "figma": "variante própria, igual ao Hover",
+      "code": "sem classe de :active; vale o hover",
+      "status": "representação"
+    },
+    {
+      "where": "Focus · fundo do gatilho",
+      "figma": "fill color/ring-offset",
+      "code": "transparente",
+      "status": "representação: a sombra do Figma precisa de fill; ring-offset tem o valor de background"
+    },
+    {
+      "where": "texto de exemplo",
+      "figma": "inglês (Trigger Text, Order #4189)",
+      "code": "sem texto padrão",
+      "status": "representação"
+    },
+    {
+      "where": "conteúdo",
+      "figma": "o set Collapsible / Trigger não tem o conteúdo; o set Collapsible mostra um exemplo",
+      "code": "CollapsibleContent sem estilo",
+      "status": "representação"
+    }
+  ]
+}
