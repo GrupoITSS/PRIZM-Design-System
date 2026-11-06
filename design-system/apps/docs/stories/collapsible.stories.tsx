@@ -8,15 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@grupoitss/prizm-ui/card";
+import { Badge } from "@grupoitss/prizm-ui/badge";
 import {
   Collapsible,
   CollapsibleContent,
+  CollapsibleToggle,
   CollapsibleTrigger,
 } from "@grupoitss/prizm-ui/collapsible";
 import { Field, FieldGroup, FieldLabel } from "@grupoitss/prizm-ui/field";
 import { Input } from "@grupoitss/prizm-ui/input";
 import { ChevronDown } from "@grupoitss/prizm-ui/icons";
-import { ChevronsUpDown, Maximize2, Minimize2 } from "@grupoitss/prizm-ui/icons";
+import { GripVertical, Maximize2, Minimize2, Plus } from "@grupoitss/prizm-ui/icons";
 
 // Traceability: the Collapsible / Trigger component set in [PRIZM] Componentes, the documentation
 // frame and the CMS article. The token map lives next to the component (collapsible.tokens.json)
@@ -127,7 +129,8 @@ export const SettingsPanel: Story = {
 };
 
 /**
- * **Order details** — Título e trigger na mesma linha; conteúdo expansível. Usa composição para layout exato.
+ * **Order details** — Título e `CollapsibleToggle` na mesma linha; conteúdo expansível. No Figma, é a
+ * variante API=Composition do set Collapsible, com os slots Header e Content.
  */
 export const OrderDetails: Story = {
   render: function OrderDetailsStory() {
@@ -136,12 +139,7 @@ export const OrderDetails: Story = {
       <Collapsible open={isOpen} onOpenChange={setIsOpen} className="flex w-[350px] flex-col gap-2">
         <div className="flex items-center justify-between gap-4 px-4">
           <h4 className="text-sm font-semibold">Order #4189</h4>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="icon" className="size-8">
-              <ChevronsUpDown className="size-4" />
-              <span className="sr-only">Toggle details</span>
-            </Button>
-          </CollapsibleTrigger>
+          <CollapsibleToggle aria-label="Toggle order details" />
         </div>
         <div className="flex items-center justify-between rounded-md border px-4 py-2 text-sm">
           <span className="text-muted-foreground">Status</span>
@@ -190,4 +188,54 @@ export const Disabled: Story = {
       <div className="px-2 pb-4 text-sm">This content is not reachable while disabled.</div>
     </Collapsible>
   ),
+};
+
+/**
+ * **Category header** — Cabeçalho com outras ações ao lado (alça, nome, badge, Editar, Inativar,
+ * Excluir) e só o `CollapsibleToggle` abre e fecha. Caso do Catálogo do Pricing.
+ */
+export const CategoryHeader: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Composição com `CollapsibleToggle`: o Button ghost icon-sm com ChevronRight, que gira 90° aberto. As outras ações do cabeçalho continuam clicáveis sem abrir o painel. Dê ao toggle o nome do que abre.",
+      },
+    },
+  },
+  render: function CategoryHeaderStory() {
+    const [isOpen, setIsOpen] = React.useState(true);
+    return (
+      <Collapsible
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        className="w-full max-w-2xl rounded-lg border border-border"
+      >
+        <div className="flex items-center gap-2 px-2 py-2">
+          <GripVertical aria-hidden="true" className="size-4 cursor-grab text-muted-foreground" />
+          <CollapsibleToggle aria-label="Show Beverages products" />
+          <span className="text-sm font-medium">Beverages</span>
+          <Badge variant="secondary">Monthly</Badge>
+          <div className="ml-auto flex items-center gap-1">
+            <Button variant="ghost" size="sm">
+              Edit
+            </Button>
+            <Button variant="ghost" size="sm">
+              Deactivate
+            </Button>
+            <Button variant="ghost" size="sm">
+              Delete
+            </Button>
+          </div>
+        </div>
+        <CollapsibleContent className="flex flex-col gap-2 border-t border-border px-4 py-3 text-sm">
+          <div className="rounded-md border border-border px-4 py-2">Sparkling water</div>
+          <div className="rounded-md border border-border px-4 py-2">Orange juice</div>
+          <Button variant="outline" size="sm" className="self-start">
+            <Plus /> Add product
+          </Button>
+        </CollapsibleContent>
+      </Collapsible>
+    );
+  },
 };

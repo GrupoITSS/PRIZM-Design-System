@@ -28,6 +28,13 @@ export const collapsibleIconStyles =
   "ml-auto inline-flex shrink-0 transition-transform duration-200 [&_svg]:size-4 group-data-[state=open]/collapsible:rotate-180";
 
 /**
+ * Gatilho só com ícone (`CollapsibleToggle`): o Button ghost icon-sm do Prizm com ChevronRight, que
+ * gira 90° (vira ChevronDown) com o painel aberto. Os estados são os do Button.
+ */
+export const collapsibleToggleStyles =
+  "[&_svg]:transition-transform [&_svg]:duration-200 data-[state=open]:[&_svg]:rotate-90";
+
+/**
  * @deprecated Desde 06/11/2026 o gatilho não tem variantes (a ghost saiu). Use
  * `collapsibleTriggerStyles`. Mantido para quem importava a função.
  */
