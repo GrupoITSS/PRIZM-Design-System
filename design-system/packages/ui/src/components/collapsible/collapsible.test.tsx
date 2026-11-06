@@ -62,15 +62,61 @@ describe("Collapsible (PRIZM / shadcn)", () => {
     expect(screen.queryByText("Hidden until open")).not.toBeInTheDocument();
   });
 
-  it("applies trigger variant class (composition)", () => {
+  it("decisões de 06/11/2026: gatilho alinhado ao Accordion", () => {
+    render(<Collapsible trigger="Details">Content</Collapsible>);
+    const trigger = screen.getByRole("button", { name: "Details" });
+    expect(trigger).toHaveClass(
+      "w-full",
+      "px-2",
+      "py-4",
+      "gap-4",
+      "rounded-md",
+      "text-sm",
+      "text-left",
+    );
+    expect(trigger).toHaveClass("hover:bg-accent", "hover:text-accent-foreground");
+    expect(trigger.className).not.toContain("muted/50");
+    expect(trigger).toHaveClass("focus-visible:ring-offset-ring-offset");
+    expect(trigger.className).not.toContain("ring-offset-background");
+    expect(trigger).toHaveClass("disabled:pointer-events-none", "disabled:opacity-50");
+  });
+
+  it("o ícone gira com o painel aberto e fica fora do nome", () => {
+    render(
+      <Collapsible trigger="Details" triggerIcon={<svg data-testid="icon" />}>
+        Content
+      </Collapsible>,
+    );
+    const icon = screen.getByTestId("icon").parentElement;
+    expect(icon).toHaveAttribute("data-slot", "collapsible-icon");
+    expect(icon).toHaveAttribute("aria-hidden", "true");
+    expect(icon).toHaveClass("group-data-[state=open]/collapsible:rotate-180");
+  });
+
+  it("composição com asChild: o estilo é o do filho (Button)", () => {
     render(
       <Collapsible>
-        <CollapsibleTrigger variant="ghost">Ghost</CollapsibleTrigger>
+        <CollapsibleTrigger asChild>
+          <button type="button" className="own">
+            Toggle
+          </button>
+        </CollapsibleTrigger>
         <CollapsibleContent>Content</CollapsibleContent>
       </Collapsible>,
     );
-    const trigger = screen.getByRole("button", { name: /ghost/i });
-    expect(trigger).toHaveClass("hover:bg-transparent");
+    const trigger = screen.getByRole("button", { name: "Toggle" });
+    expect(trigger).toHaveClass("own");
+    expect(trigger.className).not.toContain("hover:bg-accent");
+  });
+
+  it("composição sem asChild: o gatilho tem o estilo do Prizm", () => {
+    render(
+      <Collapsible>
+        <CollapsibleTrigger>Toggle</CollapsibleTrigger>
+        <CollapsibleContent>Content</CollapsibleContent>
+      </Collapsible>,
+    );
+    expect(screen.getByRole("button", { name: "Toggle" })).toHaveClass("hover:bg-accent");
   });
 
   it("simplified API: trigger as function receives open state", () => {

@@ -1,6 +1,5 @@
 import type * as React from "react";
 import type { Collapsible as RadixCollapsible } from "radix-ui";
-import type { CollapsibleTriggerVariantProps } from "./collapsible.styles";
 
 export interface CollapsibleProps extends Omit<
   React.ComponentPropsWithoutRef<typeof RadixCollapsible.Root>,
@@ -20,14 +19,10 @@ export interface CollapsibleProps extends Omit<
    */
   trigger?: React.ReactNode | ((isOpen: boolean) => React.ReactNode);
   /**
-   * Optional icon shown after the trigger text (e.g. ChevronDown). Only used when trigger is not a function.
+   * Optional icon shown after the trigger text (e.g. ChevronDown). It stays out of the button name
+   * (aria-hidden) and rotates 180° when the panel is open.
    */
   triggerIcon?: React.ReactNode;
-  /**
-   * Trigger style variant when using simplified API.
-   * @default "default"
-   */
-  triggerVariant?: CollapsibleTriggerVariantProps["variant"];
   /**
    * Optional className for the trigger when using simplified API.
    */
@@ -40,8 +35,7 @@ export interface CollapsibleProps extends Omit<
 
 export type CollapsibleTriggerProps = React.ComponentPropsWithoutRef<
   typeof RadixCollapsible.Trigger
-> &
-  CollapsibleTriggerVariantProps;
+>;
 
 export type CollapsibleContentProps = React.ComponentPropsWithoutRef<
   typeof RadixCollapsible.Content
