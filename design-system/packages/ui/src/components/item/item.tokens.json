@@ -1,0 +1,123 @@
+{
+  "component": "Item",
+  "description": "Mapa de tokens do Item: o que cada variante, tamanho, estado e parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do set Item e do Item / Media no Figma em 06/11/2026 (nenhuma ligação fora do Core) e conferido contra item.styles.ts pelo teste item.tokens.test.ts. Nomes no formato do Figma (color/border); no código viram classes Tailwind (border-border).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18672-198607",
+    "figmaMedia": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18672-6043",
+    "figmaActions": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18672-218310",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26360-3575",
+    "code": "design-system/packages/ui/src/components/item/item.tsx",
+    "story": "design-system/apps/docs/stories/item.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=528be293-dd75-47a5-a40e-be2111842dc4&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/187"
+    ],
+    "jira": [
+      "GIES-1728"
+    ]
+  },
+  "variants": {
+    "default": {
+      "background": null,
+      "border": "color/transparent"
+    },
+    "outline": {
+      "background": null,
+      "border": "color/border"
+    },
+    "muted": {
+      "background": "color/muted",
+      "backgroundOpacity": 0.5,
+      "border": "color/transparent",
+      "note": "No Figma, camada \"Muted fill\" a 50%."
+    }
+  },
+  "parts": {
+    "title": {
+      "text": "color/foreground",
+      "fontSize": "text/sm",
+      "fontWeight": "font-weight/medium"
+    },
+    "description": {
+      "text": "color/muted-foreground",
+      "fontSize": "text/sm",
+      "fontWeight": "font-weight/normal"
+    },
+    "mediaIcon": {
+      "background": "color/muted",
+      "border": "color/border",
+      "size": "width/8",
+      "radius": "radius/sm"
+    },
+    "mediaImage": {
+      "size": "40px",
+      "radius": "radius/sm"
+    },
+    "container": {
+      "radius": "radius/md",
+      "borderWidth": "border-width/1"
+    }
+  },
+  "sizes": {
+    "default": {
+      "paddingX": "spacing/4",
+      "paddingY": "spacing/4",
+      "gap": "spacing/4",
+      "fontSize": "text/sm"
+    },
+    "sm": {
+      "paddingX": "spacing/4",
+      "paddingY": "spacing/3",
+      "gap": "spacing/2-5",
+      "fontSize": "text/sm"
+    },
+    "xs": {
+      "paddingX": "spacing/3",
+      "paddingY": "spacing/2",
+      "gap": "spacing/2",
+      "fontSize": "text/xs"
+    }
+  },
+  "states": {
+    "hover": {
+      "background": "color/accent",
+      "opacity": 0.8,
+      "when": "interactive",
+      "note": "No Figma, camada \"Hover fill\" a 80%."
+    },
+    "focus": {
+      "ring": "color/ring",
+      "ringWidth": 3,
+      "ringOffset": "color/ring-offset",
+      "ringOffsetWidth": 2,
+      "when": "href ou interactive"
+    },
+    "note": "Sem href nem interactive, o Item não tem estados. Com interactive e sem href, renderiza um <button>."
+  },
+  "divergences": [
+    {
+      "where": "Mídia Image",
+      "figma": "40px sem ligação de tamanho",
+      "code": "size-10",
+      "status": "aberta"
+    },
+    {
+      "where": "Avatar e Avatar Group na mídia",
+      "figma": "variantes \"(composição)\" do Item / Media",
+      "code": "media={<Avatar />} com mediaVariant default",
+      "status": "decidida (D3)"
+    },
+    {
+      "where": "ItemGroup",
+      "figma": "componente ItemGroup",
+      "code": "lista com Separator, sem componente",
+      "status": "decidida (D4)"
+    },
+    {
+      "where": "Header, footer, meta e badges",
+      "figma": "não há",
+      "code": "props header, footer, meta e badges",
+      "status": "só no código"
+    }
+  ]
+}

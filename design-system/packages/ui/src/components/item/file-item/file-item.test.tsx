@@ -67,10 +67,11 @@ describe("FileItem", () => {
     expect(screen.getByText("Aguardando")).toBeInTheDocument();
   });
 
-  it("usa variant file como padrão", () => {
+  it("usa a variante outline com fundo de card como padrão", () => {
     render(<FileItem file={pdfFile} />);
     const el = document.querySelector("[data-slot='item']");
-    expect(el).toHaveAttribute("data-variant", "file");
+    expect(el).toHaveAttribute("data-variant", "outline");
+    expect(el).toHaveClass("bg-card");
   });
 
   it("não é interativo por padrão", () => {

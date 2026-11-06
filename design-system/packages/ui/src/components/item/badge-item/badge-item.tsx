@@ -32,7 +32,7 @@ const ItemBadges = ({
             badgesRemovable ? (
               <button
                 type="button"
-                aria-label={`Remove ${badge.label}`}
+                aria-label={`Remover ${badge.label}`}
                 className={itemBadgeRemoveStyles}
                 onClick={(e) => {
                   e.stopPropagation();

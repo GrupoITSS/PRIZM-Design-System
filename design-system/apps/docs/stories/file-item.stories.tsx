@@ -229,7 +229,6 @@ export const FileItemInteractive: Story = {
     <div className="flex w-full max-w-md flex-col gap-3">
       <FileItem
         file={sampleFiles[0]}
-        removable
         interactive
         onClick={() => {
           // noop — apenas demonstração

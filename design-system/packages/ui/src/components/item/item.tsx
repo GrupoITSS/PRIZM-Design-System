@@ -1,4 +1,3 @@
-import { Button } from "../button";
 import { cn } from "../../lib/cn";
 import { Slot } from "radix-ui";
 import * as React from "react";
@@ -12,6 +11,7 @@ import {
   itemHeaderStyles,
   itemMediaVariants,
   itemMetaStyles,
+  itemButtonStyles,
   itemTitleStyles,
   itemVariants,
 } from "./item.styles";
@@ -51,17 +51,31 @@ const Item = ({
   ref,
   ...props
 }: ItemProps & { ref?: React.Ref<HTMLElement> }) => {
-  const Comp = asChild ? Slot.Root : href ? "a" : "div";
+  // Interactive without href is a real <button> (06/11/2026): before it was a div the keyboard
+  // never reached (WCAG 2.1.1, 4.1.2). Inside a button only phrasing content is valid, so the
+  // inner parts become spans.
+  const asButton = interactive && !href && !asChild;
+  const Comp = asChild ? Slot.Root : href ? "a" : asButton ? "button" : "div";
+  const Part = asButton ? "span" : "div";
+  const Desc = asButton ? "span" : "p";
   const computedRel = mergeRelForBlankTarget(target, rel);
   const hasDescription = description != null;
-  const actions =
-    actionsProp === undefined && variant === "badges" ? (
-      <Button size="sm" variant="outline">
-        Manage
-      </Button>
-    ) : (
-      actionsProp
+  const actions = actionsProp;
+  const clickable = interactive || href != null;
+  // A decorative icon (e.g. a chevron) in actions is fine; a control is not.
+  const actionsRef = React.useRef<HTMLElement>(null);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production" || !clickable) return;
+    const control = actionsRef.current?.querySelector(
+      "button, a[href], input, select, textarea, [tabindex]",
     );
+    if (control) {
+      console.warn(
+        "Item: controle em actions dentro de um Item clicável (href ou interactive) é um controle dentro de outro. Tire o botão ou o clique do Item.",
+      );
+    }
+  });
   const { hasBadges, handleRemoveBadge } = useItemBadges(badges, onBadgesChange, onBadgeRemove);
 
   return (
@@ -75,11 +89,8 @@ const Item = ({
       data-has-description={hasDescription ? "" : undefined}
       className={cn(
         itemVariants({ variant, size }),
-        interactive
-          ? variant === "file"
-            ? "hover:bg-accent/60 cursor-pointer"
-            : "hover:bg-accent/80 cursor-pointer"
-          : undefined,
+        interactive ? "hover:bg-accent/80 cursor-pointer" : undefined,
+        asButton ? itemButtonStyles : undefined,
         classes?.root,
         className,
       )}
@@ -90,16 +101,17 @@ const Item = ({
             rel: computedRel,
           }
         : null)}
+      {...(asButton ? { type: "button" as const } : null)}
       {...props}
     >
       {header != null && (
-        <div data-slot="item-header" className={cn(itemHeaderStyles, classes?.header)}>
+        <Part data-slot="item-header" className={cn(itemHeaderStyles, classes?.header)}>
           {header}
-        </div>
+        </Part>
       )}
 
       {media != null && (
-        <div
+        <Part
           data-slot="item-media"
           data-variant={mediaVariant}
           className={cn(
@@ -109,33 +121,35 @@ const Item = ({
           )}
         >
           {media}
-        </div>
+        </Part>
       )}
 
-      <div data-slot="item-content" className={cn(itemContentStyles, classes?.content)}>
-        <div data-slot="item-title" className={cn(itemTitleStyles, classes?.title)}>
+      <Part data-slot="item-content" className={cn(itemContentStyles, classes?.content)}>
+        <Part data-slot="item-title" className={cn(itemTitleStyles, classes?.title)}>
           {title}
-        </div>
+        </Part>
         {hasDescription && (
-          <p
+          <Desc
             data-slot="item-description"
             className={cn(itemDescriptionStyles, classes?.description)}
           >
             {description}
-          </p>
+          </Desc>
         )}
-      </div>
+      </Part>
 
       {meta != null && (
-        <div data-slot="item-meta" className={cn(itemMetaStyles, classes?.meta)}>
+        <Part data-slot="item-meta" className={cn(itemMetaStyles, classes?.meta)}>
           {meta}
-        </div>
+        </Part>
       )}
 
       {actions != null && (
-        <div data-slot="item-actions" className={cn(itemActionsStyles, classes?.actions)}>
+        <Part
+          ref={actionsRef as React.Ref<HTMLDivElement & HTMLSpanElement>}
+          data-slot="item-actions" className={cn(itemActionsStyles, classes?.actions)}>
           {actions}
-        </div>
+        </Part>
       )}
 
       {hasBadges && (
@@ -149,9 +163,9 @@ const Item = ({
       )}
 
       {footer != null && (
-        <div data-slot="item-footer" className={cn(itemFooterStyles, classes?.footer)}>
+        <Part data-slot="item-footer" className={cn(itemFooterStyles, classes?.footer)}>
           {footer}
-        </div>
+        </Part>
       )}
     </Comp>
   );

@@ -28,16 +28,27 @@ import {
 } from "@grupoitss/prizm-ui/icons";
 import { Item } from "@grupoitss/prizm-ui/item";
 
+// Traceability: the Item set in [PRIZM] Componentes, the documentation frame and the CMS article.
+// The token map lives next to the component (item.tokens.json) and is checked in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18672-198607";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26360-3575";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=528be293-dd75-47a5-a40e-be2111842dc4&version=v1";
+
 const meta: Meta<typeof Item> = {
   title: "Primários/Item",
   component: Item,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
-          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Item — componente versátil para exibir media, título, descrição e ações. **API props-based** (sem subcomponentes).\n\n**Documentação e API de referência:** <a href="https://ui.shadcn.com/docs/components/item" target="_blank" rel="noopener noreferrer">Item — shadcn/ui</a>',
+          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com), com tokens PRIZM.\n\n" +
+          "Linha versátil com mídia, título, descrição e ações, para listas de configurações, notificações, arquivos e membros. Variantes `default`, `outline` e `muted`; tamanhos `default`, `sm` e `xs`.\n\n" +
+          "- Com `href`, o Item é um `<a>`; com `interactive` e sem `href`, um `<button>`. Os dois ganham hover e foco.\n" +
+          "- Num Item clicável, `actions` não leva botão: seria um controle dentro de outro (o Item avisa no console).\n\n" +
+          '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/item" target="_blank" rel="noopener noreferrer">Item — shadcn/ui</a>\n\n' +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
@@ -50,7 +61,7 @@ const meta: Meta<typeof Item> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "outline", "muted", "badges"],
+      options: ["default", "outline", "muted"],
     },
     size: {
       control: "select",
@@ -65,6 +76,11 @@ const meta: Meta<typeof Item> = {
     },
     interactive: {
       control: "boolean",
+      description: "Hover e foco. Sem `href`, o Item renderiza um `<button>`.",
+    },
+    href: {
+      control: "text",
+      description: "Renderiza o Item como `<a>`.",
     },
   },
 };
