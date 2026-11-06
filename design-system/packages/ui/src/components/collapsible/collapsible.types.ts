@@ -1,5 +1,6 @@
 import type * as React from "react";
 import type { Collapsible as RadixCollapsible } from "radix-ui";
+import type { ButtonProps } from "../button";
 
 export interface CollapsibleProps extends Omit<
   React.ComponentPropsWithoutRef<typeof RadixCollapsible.Root>,
@@ -40,3 +41,15 @@ export type CollapsibleTriggerProps = React.ComponentPropsWithoutRef<
 export type CollapsibleContentProps = React.ComponentPropsWithoutRef<
   typeof RadixCollapsible.Content
 >;
+
+/**
+ * Gatilho só com ícone, para cabeçalhos com outras ações ao lado (título, badge, botões). É o Button
+ * ghost icon-sm do Prizm; variante e tamanho são fixos.
+ */
+export interface CollapsibleToggleProps extends Omit<ButtonProps, "variant" | "size" | "asChild"> {
+  /**
+   * Nome do botão. Dê o nome do que abre, ex.: "Mostrar produtos de Bebidas".
+   * @default "Mostrar ou ocultar"
+   */
+  "aria-label"?: string;
+}

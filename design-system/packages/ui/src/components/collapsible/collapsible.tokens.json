@@ -1,6 +1,6 @@
 {
   "component": "Collapsible",
-  "description": "Mapa de tokens do Collapsible: o que cada parte usa do [PRIZM] Design Tokens_Core em cada estado. Extraído das ligações dos sets Collapsible / Trigger (10 variantes, Open No e Yes × Default, Hover, Focus, Pressed e Disabled) e Collapsible (API Composition e Props × Open No e Yes) no Figma em 06/11/2026, todas no Core, e conferido contra collapsible.styles.ts pelo teste collapsible.tokens.test.tsx. Nomes no formato do Figma (color/accent, spacing/4); no código viram classes Tailwind (bg-accent, py-4).",
+  "description": "Mapa de tokens do Collapsible: o que cada parte usa do [PRIZM] Design Tokens_Core em cada estado. Extraído das ligações dos sets Collapsible / Trigger (10 variantes, Open No e Yes × Default, Hover, Focus, Pressed e Disabled) e Collapsible (API Composition e Props × Open No e Yes) e Collapsible / Toggle (Open No e Yes × 5 estados) no Figma em 06/11/2026, todas no Core, e conferido contra collapsible.styles.ts pelo teste collapsible.tokens.test.tsx. Nomes no formato do Figma (color/accent, spacing/4); no código viram classes Tailwind (bg-accent, py-4).",
   "sources": {
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26250-3011",
     "figmaComposition": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18597-96515",
@@ -8,7 +8,11 @@
     "code": "design-system/packages/ui/src/components/collapsible/collapsible.tsx",
     "story": "design-system/apps/docs/stories/collapsible.stories.tsx",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=de046740-d9be-4dda-9a79-de9a38552fe0&version=v1",
-    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/179"]
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/179",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/180"
+    ],
+    "figmaToggle": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26268-4203"
   },
   "parts": {
     "trigger": {
@@ -27,12 +31,21 @@
       "openRotation": 180,
       "note": "No Figma, a ligação de tamanho fica em width/4 (Open=No) ou height/4 (Open=Yes): o ícone tem proporção travada e aceita uma só."
     },
+    "toggle": {
+      "button": "Button ghost icon-sm",
+      "size": "control-height/sm",
+      "icon": "ChevronRight",
+      "openIcon": "ChevronDown",
+      "openRotation": 90,
+      "note": "CollapsibleToggle no código e Collapsible / Toggle no Figma (Open No e Yes × Default, Hover, Focus, Pressed e Disabled), com os estados do Button. No código, o ChevronRight gira 90° com o painel aberto; no Figma, o Open=Yes troca o ícone pelo ChevronDown."
+    },
     "content": {
       "note": "Sem estilo próprio: só overflow-hidden e a animação de altura. O espaço e o texto são de quem usa; no Figma, a variante API=Props mostra o exemplo da story Basic."
     },
     "composition": {
-      "trigger": "Button ghost size icon (control-height/md), com os tokens do Button",
-      "note": "No set Collapsible, o exemplo de composição (título em font-weight/semibold, caixas em color/background com borda color/border) é conteúdo de exemplo, não estilo do componente."
+      "header": "slot Header (título, ações e o Collapsible / Toggle)",
+      "content": "slot Content (CollapsibleContent), oculto com Open=No",
+      "note": "No set Collapsible, API=Composition tem os slots Header e Content; o conteúdo padrão (Order #4189, Shipping address) é exemplo, não estilo do componente."
     }
   },
   "states": {
@@ -66,6 +79,12 @@
       "figma": "inglês (Trigger Text, Order #4189)",
       "code": "sem texto padrão; stories em inglês (Product details, Order #4189)",
       "status": "aceita (decisão de 06/11): pode ser diferente nos dois"
+    },
+    {
+      "where": "Collapsible / Toggle · ícone aberto",
+      "figma": "Open=Yes troca o ícone pelo ChevronDown",
+      "code": "o ChevronRight gira 90° (mesmo desenho, com animação)",
+      "status": "representação"
     }
   ]
 }

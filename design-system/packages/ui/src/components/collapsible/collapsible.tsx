@@ -1,14 +1,18 @@
 import { cn } from "../../lib/cn";
 import { Collapsible as RadixCollapsible } from "radix-ui";
 import * as React from "react";
+import { Button } from "../button";
+import { ChevronRight } from "../icons";
 import {
   collapsibleContentStyles,
   collapsibleIconStyles,
+  collapsibleToggleStyles,
   collapsibleTriggerStyles,
 } from "./collapsible.styles";
 import type {
   CollapsibleContentProps,
   CollapsibleProps,
+  CollapsibleToggleProps,
   CollapsibleTriggerProps,
 } from "./collapsible.types";
 
@@ -147,4 +151,40 @@ const CollapsibleContent = ({
 );
 CollapsibleContent.displayName = RadixCollapsible.Content.displayName ?? "CollapsibleContent";
 
-export { Collapsible, CollapsibleTrigger, CollapsibleContent };
+/**
+ * Gatilho só com ícone, para a composição: o Button ghost icon-sm do Prizm com ChevronRight, que gira
+ * 90° com o painel aberto (vira ChevronDown). Use num cabeçalho com outras ações ao lado; só ele abre
+ * e fecha. Os estados (hover, foco, pressed, disabled) são os do Button.
+ *
+ * @example
+ * <Collapsible>
+ *   <div className="flex items-center gap-2">
+ *     <CollapsibleToggle aria-label="Mostrar produtos de Bebidas" />
+ *     <span>Bebidas</span>
+ *     <Button variant="ghost" size="sm">Editar</Button>
+ *   </div>
+ *   <CollapsibleContent>…</CollapsibleContent>
+ * </Collapsible>
+ */
+const CollapsibleToggle = ({
+  className,
+  children,
+  "aria-label": ariaLabel = "Mostrar ou ocultar",
+  ...props
+}: CollapsibleToggleProps) => (
+  <RadixCollapsible.Trigger asChild>
+    <Button
+      data-slot="collapsible-toggle"
+      variant="ghost"
+      size="icon-sm"
+      aria-label={ariaLabel}
+      className={cn(collapsibleToggleStyles, className)}
+      {...props}
+    >
+      {children ?? <ChevronRight aria-hidden="true" />}
+    </Button>
+  </RadixCollapsible.Trigger>
+);
+CollapsibleToggle.displayName = "CollapsibleToggle";
+
+export { Collapsible, CollapsibleTrigger, CollapsibleToggle, CollapsibleContent };
