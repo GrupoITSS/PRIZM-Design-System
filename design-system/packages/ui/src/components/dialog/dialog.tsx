@@ -1,10 +1,11 @@
+import { Button } from "../button";
 import { Input } from "../input";
 import { cn } from "../../lib/cn";
 import { X } from "../icons";
 import { Dialog as RadixDialog } from "radix-ui";
 import * as React from "react";
 import {
-  dialogCloseButtonStyles,
+  dialogCloseStyles,
   dialogConfirmLabelStyles,
   dialogConfirmSectionStyles,
   dialogContentStyles,
@@ -204,7 +205,7 @@ const DialogContent = ({
   children,
   portalProps,
   showCloseButton = true,
-  closeLabel = "Close",
+  closeLabel = "Fechar",
   overlayClassName,
   ref,
   ...props
@@ -219,9 +220,16 @@ const DialogContent = ({
     >
       {children}
       {showCloseButton && (
-        <DialogClose className={cn(dialogCloseButtonStyles)}>
-          <X className="h-4 w-4" aria-hidden="true" />
-          <span className="sr-only">{closeLabel}</span>
+        <DialogClose asChild>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={closeLabel}
+            data-slot="dialog-close-button"
+            className={dialogCloseStyles}
+          >
+            <X aria-hidden="true" />
+          </Button>
         </DialogClose>
       )}
     </RadixDialog.Content>
