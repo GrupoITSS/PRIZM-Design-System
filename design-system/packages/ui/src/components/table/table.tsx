@@ -48,15 +48,20 @@ function Table<T extends Record<string, unknown>>({
   ...tableProps
 }: TableProps<T> & { ref?: React.Ref<HTMLTableElement> }) {
   return (
-    <div className={cn(tableWrapper, className)}>
-      <table ref={ref} className={cn(tableBase, tableClassName)} {...tableProps}>
-        {caption != null && <caption className={tableCaption}>{caption}</caption>}
-        <thead className={tableHeader}>
-          <tr className={tableRow}>
+    <div data-slot="table-container" className={cn(tableWrapper, className)}>
+      <table ref={ref} data-slot="table" className={cn(tableBase, tableClassName)} {...tableProps}>
+        {caption != null && (
+          <caption data-slot="table-caption" className={tableCaption}>
+            {caption}
+          </caption>
+        )}
+        <thead data-slot="table-header" className={tableHeader}>
+          <tr data-slot="table-row" className={tableRow}>
             {columns.map((col) => {
               const widthIsClass = typeof col.width === "string" && col.width.startsWith("w-");
               return (
                 <th
+                  data-slot="table-head"
                   key={col.key}
                   className={cn(
                     tableHead,
@@ -72,10 +77,11 @@ function Table<T extends Record<string, unknown>>({
             })}
           </tr>
         </thead>
-        <tbody className={tableBody}>
+        <tbody data-slot="table-body" className={tableBody}>
           {rows.length === 0 && emptyMessage != null ? (
-            <tr className={tableRow}>
+            <tr data-slot="table-row" className={tableRow}>
               <td
+                data-slot="table-cell"
                 colSpan={columns.length}
                 className={cn(tableCell, alignCenter, "text-muted-foreground")}
               >
@@ -84,7 +90,7 @@ function Table<T extends Record<string, unknown>>({
             </tr>
           ) : (
             rows.map((row, index) => (
-              <tr key={getRowKey(row, index)} className={tableRow}>
+              <tr key={getRowKey(row, index)} data-slot="table-row" className={tableRow}>
                 {columns.map((col) => {
                   const value = (row as Record<string, unknown>)[col.key];
                   const content = col.render
@@ -117,6 +123,7 @@ function Table<T extends Record<string, unknown>>({
                       : (value as React.ReactNode);
                   return (
                     <td
+                      data-slot="table-cell"
                       key={col.key}
                       className={cn(
                         tableCell,
@@ -133,12 +140,13 @@ function Table<T extends Record<string, unknown>>({
           )}
         </tbody>
         {footerRows != null && footerRows.length > 0 && (
-          <tfoot className={tableFooter}>
+          <tfoot data-slot="table-footer" className={tableFooter}>
             {footerRows.map((footerRow, rowIndex) => (
               // eslint-disable-next-line @eslint-react/no-array-index-key -- positional list, items have no stable id
-              <tr key={rowIndex} className={tableRow}>
+              <tr key={rowIndex} data-slot="table-row" className={tableRow}>
                 {footerRow.map((cell, cellIndex) => (
                   <td
+                    data-slot="table-cell"
                     // eslint-disable-next-line @eslint-react/no-array-index-key -- positional list, items have no stable id
                     key={cellIndex}
                     colSpan={cell.colSpan}

@@ -3,6 +3,7 @@ import { fireEvent } from "@testing-library/react";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Table } from "./table";
+import { TableBody, TableCell, TableHead, TableHeader, TableRoot, TableRow } from "./table-primitives";
 import { ContentRenderType } from "./table-cell-renderers.types";
 
 type Row = { id: string; name: string; value: number };
@@ -109,5 +110,123 @@ describe("Table (PRIZM / prop-based)", () => {
     fireEvent.click(screen.getByText("2"));
     expect(screen.getByText("Popover content")).toBeInTheDocument();
     expect(within(screen.getByRole("dialog")).getByText("Plans")).toBeInTheDocument();
+  });
+});
+
+describe("Table · decisões de 06/11/2026", () => {
+  it("cabeçalho com 40px, 8px dos lados, foreground e sem quebra; célula com 8px", () => {
+    render(<Table<Row> columns={columns} rows={rows} />);
+    const th = screen.getByRole("columnheader", { name: /id/i });
+    expect(th).toHaveClass("h-10", "px-2", "text-foreground", "whitespace-nowrap");
+    expect(th).not.toHaveClass("h-12", "px-4", "text-muted-foreground");
+    const td = screen.getByText("Alpha").closest("td")!;
+    expect(td).toHaveClass("p-2");
+    expect(td).not.toHaveClass("p-4", "whitespace-nowrap");
+  });
+
+  it("todas as peças da Table por props têm data-slot, como no shadcn", () => {
+    const { container } = render(
+      <Table<Row>
+        columns={columns}
+        rows={rows}
+        caption="Legenda"
+        footerRows={[[{ content: "Total", colSpan: 3 }]]}
+      />,
+    );
+    for (const slot of [
+      "table-container",
+      "table",
+      "table-caption",
+      "table-header",
+      "table-body",
+      "table-footer",
+      "table-row",
+      "table-head",
+      "table-cell",
+    ]) {
+      expect(container.querySelector(`[data-slot="${slot}"]`)).not.toBeNull();
+    }
+  });
+
+  it("as primitivas têm data-slot, e o TableRoot tem border-collapse", () => {
+    const { container } = render(
+      <TableRoot>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Nome</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell>Ana</TableCell>
+          </TableRow>
+        </TableBody>
+      </TableRoot>,
+    );
+    expect(container.querySelector('[data-slot="table"]')).toHaveClass("border-collapse");
+    expect(container.querySelector('[data-slot="table-container"]')).not.toBeNull();
+    expect(container.querySelector('[data-slot="table-head"]')).toHaveTextContent("Nome");
+    expect(container.querySelector('[data-slot="table-cell"]')).toHaveTextContent("Ana");
+  });
+});
+
+describe("Table · renderizadores e acessibilidade (06/11/2026)", () => {
+  type R = { id: string; plans: string };
+  const hoverCol = (trigger: "click" | "hover") => [
+    {
+      key: "plans",
+      header: "Plans",
+      contentRenderType: ContentRenderType.HOVER,
+      renderPopover: {
+        title: "Plans",
+        trigger,
+        position: "bottom" as const,
+        content: () => <div>Popover content</div>,
+      },
+    },
+  ];
+
+  it("o gatilho do renderizador hover é um botão focável, nos dois tipos de gatilho", () => {
+    for (const trigger of ["click", "hover"] as const) {
+      const { unmount } = render(<Table<R> columns={hoverCol(trigger)} rows={[{ id: "1", plans: "2" }]} />);
+      const btn = screen.getByRole("button", { name: "2" });
+      expect(btn).toHaveAttribute("type", "button");
+      btn.focus();
+      expect(btn).toHaveFocus();
+      unmount();
+    }
+  });
+
+  it("a imagem do text-image é decorativa (alt vazio): o nome já está ao lado", () => {
+    type I = { id: string; company: { imageUrl: string; text: string } };
+    const { container } = render(
+      <Table<I>
+        columns={[{ key: "company", header: "Empresa", contentRenderType: ContentRenderType.TEXT_IMAGE }]}
+        rows={[{ id: "1", company: { imageUrl: "logo.png", text: "ACME" } }]}
+      />,
+    );
+    expect(container.querySelector("img")).toHaveAttribute("alt", "");
+    expect(screen.getByText("ACME")).toBeInTheDocument();
+  });
+
+  it("links e botões dos renderizadores usam o anel de foco do Button", () => {
+    type L = { id: string; name: string; plans: string };
+    render(
+      <Table<L>
+        columns={[
+          { key: "name", header: "Nome", link: "/empresas/{id}" },
+          ...hoverCol("click"),
+        ]}
+        rows={[{ id: "1", name: "ACME", plans: "2" }]}
+      />,
+    );
+    for (const el of [screen.getByRole("link", { name: "ACME" }), screen.getByRole("button", { name: "2" })]) {
+      expect(el).toHaveClass(
+        "focus-visible:ring-[3px]",
+        "focus-visible:ring-ring",
+        "focus-visible:ring-offset-2",
+        "focus-visible:ring-offset-ring-offset",
+      );
+    }
   });
 });
