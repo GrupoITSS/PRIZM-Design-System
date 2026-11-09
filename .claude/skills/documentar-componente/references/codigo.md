@@ -81,4 +81,10 @@ Commits pequenos no padrão do histórico: `fix(ui): …`, `feat(tokens): …`, 
 
 **Nunca mergeie sem pedido.** Quem mergeia é o dono do DS. Depois do merge, a doc (Figma e artigo) cita o número do PR.
 
-Uma mudança que entrou numa branch cujo PR já foi mergeado não chega à main: precisa de PR novo.
+Uma mudança que entrou numa branch cujo PR já foi mergeado não chega à main: precisa de PR novo. O dono do DS pode mergear enquanto você ainda trabalha na branch, então confira o estado antes de cada push:
+
+```bash
+gh pr view <número> --json state -q .state
+```
+
+Se voltar `MERGED`, crie uma branch nova a partir de `origin/main`, leve os commits que faltam com `git cherry-pick` e abra outro PR. Foi o que aconteceu com a Table (09/11): o #190 foi mergeado com o primeiro commit, e o mapa de tokens, a story e o renderizador `actions` ficaram na branch.

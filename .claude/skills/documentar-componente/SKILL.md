@@ -189,6 +189,8 @@ Cada uma custou horas no piloto. Leia antes da etapa 2.
 
 **Controle dentro de controle (05–06/11, Badge link e Item).** Link dentro de botão, ou botão dentro de Item clicável, é um interativo dentro de outro (WCAG 4.1.2). O padrão do Item: o componente não monta o aninhamento (clicável sem `href` vira `<button>`, com as partes em `span`) e avisa no console, em desenvolvimento, quando recebe um controle onde não cabe. Código do aviso em `references/codigo.md`.
 
+**PR mergeado no meio da etapa (09/11, Table).** O dono do DS pode mergear enquanto você ainda trabalha na branch. O #190 foi mergeado com o primeiro commit; o mapa de tokens, a story e o renderizador `actions`, empurrados depois, ficaram fora da main. Antes de cada push numa branch com PR, confira `gh pr view <número> --json state -q .state`. Se já foi mergeado, leve os commits para uma branch nova a partir de `origin/main` e abra outro PR (ver `references/codigo.md`).
+
 **Story: id com acento, e o Storybook publicado só depois do merge (05–09/11).** O título `Primários/<Nome>` gera ids com acento (`primários-<nome>--<story>`): copie o id do Storybook local em vez de montar à mão. O publicado só mostra a story nova depois do merge; antes, confira no Storybook local do worktree.
 
 Outras, menores:
