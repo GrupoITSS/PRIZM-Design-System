@@ -11,10 +11,17 @@ import {
   CardTitle,
 } from "@grupoitss/prizm-ui/card";
 
+// Traceability: the Card component in [PRIZM] Componentes, the documentation frame and the CMS article.
+// The token map lives next to the component (card.tokens.json) and is checked in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=17374-183180";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26446-4644";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=925e1f7e-c80c-487a-8974-ffa269effbe6&version=v1";
+
 const meta: Meta<typeof Card> = {
   title: "Primários/Card",
   component: Card,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
@@ -22,7 +29,8 @@ const meta: Meta<typeof Card> = {
           "Caixa que agrupa conteúdo relacionado com cabeçalho, corpo e rodapé. Base: [shadcn/ui](https://ui.shadcn.com) + tokens PRIZM.\n\n" +
           "API documentada: composição (`CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`, `CardFooter`). " +
           "As props `title`, `description`, `action` e `footer` são atalho compatível.\n\n" +
-          '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/card" target="_blank" rel="noopener noreferrer">Card — shadcn/ui</a>',
+          '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/card" target="_blank" rel="noopener noreferrer">Card — shadcn/ui</a>\n\n' +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
