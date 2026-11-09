@@ -25,6 +25,7 @@ Template: frame `25019:4489` "Button — Documentação Prizm", na página "Butt
 | `custom/bg-background…` | `color/background` (com opacidade de camada, se havia alfa) |
 | `custom/*` restantes | o papel equivalente: `color/input-background`, `color/accent`, `color/destructive` |
 | `alpha/90`, `alpha/80` | `color/alpha-10`, `color/alpha-20` (no Core o número é a opacidade) |
+| fill em dois paints, `base/X` + `alpha/N` (o hover `muted/50` da Table) | camada "Hover fill" ou "Muted fill" com `color/X` a 100% e `node.opacity` = N% (a opacidade vai na camada, ver Armadilhas no SKILL.md) |
 | `border-radius/rounded-md`, `rounded-sm` | `radius/md`, `radius/sm` |
 | `spacing/N` | `spacing/N` |
 | `width/w-N`, `height/h-N` | `width/N`, `height/N` |
@@ -37,7 +38,7 @@ Template: frame `25019:4489` "Button — Documentação Prizm", na página "Butt
 | sombra local | `style/shadow/xs` (estilo do Core) |
 
 5. Com o ok, rode `scripts/rebind-core.js` primeiro com `__DRY__ = true`, mostre `unmapped` e `manual`, depois com `false`. Inclua nos `__ROOTS__` as dependências (ícones, Spinner, Kbd…) **e os componentes de apoio da página** (item de lista, busca, menus de exemplo, avatar dentro do set). No Combobox (27/10), só o set principal foi religado: o Menu Item, a busca, os quatro Command Menus e o avatar ficaram no kit, e o artigo afirmou o contrário.
-6. Os nós em `manual` (overrides em instância aninhada, id `I…;…`): quando o valor do override é o mesmo do componente principal, que já está no Core, `resetOverrides()` na instância grava e passa a herdar (os 30 chevrons do Combobox). Trocar o paint do nó `I…` pode não gravar; liste esses para conferir à mão.
+6. Os nós em `manual` (overrides em instância aninhada, id `I…;…`): quando o valor do override é o mesmo do componente principal, que já está no Core, `resetOverrides()` na instância grava e passa a herdar (os 30 chevrons do Combobox). Trocar o paint do nó `I…` pode não gravar; liste esses para conferir à mão. Filtre o reset pelo componente de origem: só as instâncias do que você está religando. Na Table (06/11), um reset em todas as células apagou o conteúdo de 8 instâncias de Progress e Toggle Group, que são de outro componente, e o plugin não traz de volta.
 7. Recontar as variáveis locais em todas as raízes da página numa chamada nova. O que sobrar tem de vir de outro componente ainda não religado (no Combobox, o Checkbox e o título de grupo do Command): registre quais, no frame e no artigo.
 8. Confira 2 ou 3 variantes em temas diferentes pelo `get_screenshot` (ver Armadilhas no SKILL.md).
 
@@ -65,7 +66,7 @@ Crie o frame "<Componente> — Documentação Prizm" na página do componente, a
 | 01 | Cabeçalho | Nome, uma frase do que faz, versão, base (shadcn/ui), links Figma/código/CMS. |
 | 02 | Playground por tema | Grade 5 marcas (PAS, PAS · CMS, Docnix, ITSS · AFIPE, ITSS · Digitrol) × claro/escuro. Cada célula é um frame com **modo explícito** nas coleções Theme e Mode do Core (`setExplicitVariableModeForCollection`), fundo `color/background`. Não troque cor à mão: só o modo. Se a instância md não cabe na célula (InputOTP), use o tamanho sm e diga no subtítulo. |
 | 03 | Variantes | Uma instância de cada variante do component set, com as decisões da etapa 1, tamanho padrão, rótulo com o nome do código. Com mais de um eixo, uma grade com as combinações. |
-| 04 | Quando usar | Sempre no formato do Input (seção `25189:2021`, ver "Quando usar" abaixo). Copie a seção e troque o conteúdo; não monte outro layout. |
+| 04 | Quando usar | Sempre no formato do Popover. Copie a seção do Item (`26360:3672`, ver "Quando usar" abaixo) e troque o conteúdo; não monte outro layout. |
 | 05 | API | Gerada de `componentPropertyDefinitions` do set: propriedade Figma, tipo, valores, padrão. Confira com as props do código e marque o que só existe de um lado (a tabela de paridade da etapa 1). |
 | 06 | Anatomia | Instância com marcadores numerados nas partes (ícone, rótulo, atalho…). |
 | 07 | Tamanhos | Gerado das ligações: altura (`control-height/*`), padding, gap, ícone, texto. Tabela de `control-height` por marca (Digitrol é um degrau abaixo). |
@@ -74,15 +75,19 @@ Crie o frame "<Componente> — Documentação Prizm" na página do componente, a
 | 10 | Acessibilidade | Resultado da etapa 4: tabela de contraste por marca·modo e os 4 blocos. |
 | 11 | Changelog | Versão, data, mudança. Junte dependências aqui, se houver. |
 
+**Acréscimo a um componente já documentado (05–06/11: Badge dot e link, read-only no Input e no InputGroup).** O que é novo (variante, forma, estado) entra no set, na grade e em toda seção do frame que lista o que existe: Variantes, Quando usar, API, Tokens, Estados, Acessibilidade e Changelog. No Badge, o Dot ficou de fora do Quando usar até o dono do DS procurar. Os exemplos vão dentro do frame de doc, numa seção própria, nunca soltos na página. E pergunte se o acréscimo vale para os irmãos da família: o read-only do Input foi pedido também no InputGroup.
+
 ### Quando usar
 
-A seção tem um formato só, o da doc do Input (`25189:2021`, página Input, frame `25188:1959`), decidido em 23/10/2026. Até então cada doc saiu de um jeito (Button com hierarquia, Badge com listas em duas colunas, InputGroup com grade de cards), porque cada sessão copiava a doc anterior mais parecida. Copie a seção do Input para o frame novo (`clone()` e `insertChild` no lugar da seção) e troque só o conteúdo:
+A seção tem um formato só, o do Popover (frame `26060:3477`), adotado em 04–05/11/2026. Ele substituiu o do Input (`25189:2021`, de 23/10), e o InputGroup já foi refeito nele. Antes disso, cada doc saiu de um jeito (Button com hierarquia, Badge com listas em duas colunas, InputGroup com grade de cards), porque cada sessão copiava a doc anterior mais parecida. O modelo para copiar é a seção do Item (`26360:3672`, frame `26360:3575`); a da Table (`26381:2566`) também está no formato. Copie a seção para o frame novo (`clone()` e `insertChild` no lugar da seção) e troque só o conteúdo:
 
 1. **Subtítulo:** uma frase do que o componente é e do que ele não é.
 2. **Tabela "Preciso de… / Use":** 4 a 6 linhas, cada uma uma necessidade e o componente que a atende, este e os irmãos da família (etapa 1). É ela que tira a dúvida "uso este ou outro?".
-3. **Pares Faça / Evite:** 2 ou 3 linhas, cada uma com um card Faça e um Evite sobre o mesmo tema, lado a lado. Cada card tem título "Faça · <tema>" ou "Evite · <tema>", uma ou duas frases do porquê e o bloco "Exemplo" com instância real do component set (nada desenhado por fora). Para uma linha a mais, clone a linha inteira.
+3. **Linhas Faça e evite:** 2 ou 3 linhas. Em cada uma, lado a lado, um card Faça (fundo e título verdes, "Faça · <tema>") e um card Evite (fundo e título vermelhos, "Evite · <tema>"). Cada card tem uma ou duas frases do porquê e o painel branco "Exemplo", com instâncias reais do component set: nada desenhado por fora, e o texto de exemplo em inglês, como no kit. Para uma linha a mais, clone a linha inteira.
+   - **Os exemplos são diferentes.** O Faça e o Evite mostram situações diferentes, nunca o mesmo painel duas vezes mudando só o título.
+   - **Todo Evite mostra a alternativa certa.** Embaixo da instância errada, a legenda "Em vez disso: …" e a instância certa. Quando a alternativa é outro componente, use a instância dele, se existir no arquivo, ou nomeie na legenda ("Em vez disso: Field com FieldLabel e Input").
 
-Componente com ênfases (Button, Badge) ganha a hierarquia num bloco antes da tabela, com os níveis em ordem; o resto do formato não muda.
+Componente com ênfases (Button, Badge) ganha a hierarquia num bloco antes da tabela, com os níveis em ordem; o resto do formato não muda. Frame clonado de uma doc com outro formato de Quando usar: troque a seção inteira pela do Item.
 
 Quando houver decisões em aberto, crie uma seção "Propostas para decidir" logo após o cabeçalho, borda `color/primary`, e mostre as alternativas lado a lado. Quando o dono do DS decidir, ela vira "Decisões de <data>".
 
@@ -96,7 +101,7 @@ Regra de hover por tipo de fundo (decidida em 20/10/2026), aplicar no Figma e no
 | Texto em tom (text) | Fundo `-weak` do tom | Fill `color/<tom>-weak` |
 | Link | Sublinhado de 2px | Decoração de texto |
 
-Regra de foco (decidida em 20/10/2026): o anel é sempre `color/ring`, em todas as variantes, inclusive as de tom (destructive, text). O foco é um sinal do sistema, não da variante; anel vermelho é a convenção de erro; e anel translúcido na cor da variante reprova o 3:1 da WCAG 1.4.11 em todas as marcas (destructive a 20% fica em 1,16–1,37:1). No Figma, o anel é um DROP_SHADOW de spread 5 em `color/ring` sobre outro de spread 2 em `color/ring-offset`. Confira se nenhuma variante Focus herdou um anel de outra cor do kit.
+Regra de foco (decidida em 20/10/2026): o anel é sempre `color/ring`, em todas as variantes, inclusive as de tom (destructive, text). O foco é um sinal do sistema, não da variante; anel vermelho é a convenção de erro; e anel translúcido na cor da variante reprova o 3:1 da WCAG 1.4.11 em todas as marcas (destructive a 20% fica em 1,16–1,37:1). No Figma, o anel é um DROP_SHADOW de spread 5 em `color/ring` sobre outro de spread 2 em `color/ring-offset`. O spread só aparece com `clipsContent = true` no frame da variante, e o frame precisa de fill: sem fundo, use branco com opacidade 0.0001 (Badge link e Item, ver Armadilhas no SKILL.md). Confira se nenhuma variante Focus herdou um anel de outra cor do kit. No código, o anel do Button é `focus-visible:ring-[3px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset`.
 
 Outras regras que valem: texto na cor de um tom sobre o fundo da página ou sobre `-weak` usa `-strong`. Papéis de superfície (secondary, muted, accent, `-weak`) ficam um degrau acima do background da marca; no Digitrol claro o fundo é `neutral/100`, então eles vão para `neutral/200`.
 
@@ -118,3 +123,5 @@ Confira lendo `set.descriptionMarkdown` de volta: o link tem de sair com `&versi
 Se o set apontava para o shadcn, o shadcn passa a ficar só na seção Rastreabilidade do artigo. Dev resources (links no Dev Mode) não se criam pelo plugin.
 
 Ponha o mesmo link nos outros sets da página (o slot do InputOTP, o Menu Item do Combobox). Para fechar: acrescente 🟣 ao nome da página (é como se vê, na lista de páginas, o que já passou por este fluxo) e confira se o frame de exemplo do kit tem o selo "Legado do kit · não usar como referência" no topo; se não tiver, clone o selo de outra página já documentada (o do DatePicker, dentro do frame `17086:199333`).
+
+Nos painéis claro e escuro desse frame de exemplo do kit, ponha os modos explícitos do Core (`setExplicitVariableModeForCollection`): Theme PAS nos dois, Mode Light num e Dark no outro. Confira o nome dos painéis: no Item, o segundo também se chamava "Light" e foi renomeado para "Dark". Foi feito assim em Field, Popover, Item e Table (04–09/11).

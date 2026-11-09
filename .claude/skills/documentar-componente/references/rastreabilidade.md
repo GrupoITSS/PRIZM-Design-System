@@ -60,7 +60,9 @@ Confira o link que já existe em cada story. No Button ele apontava para o arqui
 
 Acrescente também a tag `documentado` ao `tags` do `meta` (`tags: ["autodocs", "documentado"]`) e confira que o `title` está em `Primários/<Nome>`. A tag marca no filtro do Storybook os componentes que já passaram por este fluxo; os que não a têm ainda precisam ser revisados e documentados. Button, Badge e Input já têm.
 
-O lint e o `tsc` do app `docs` dão erros de tipo locais porque `@grupoitss/prizm-ui` não está compilado. Antes de concluir que a mudança quebrou algo, rode o mesmo comando no arquivo da main e compare; só conta o erro que a main não tem.
+Os links das stories no artigo usam o id que o Storybook gera, e o título `Primários/<Nome>` põe acento nele (`primários-<nome>--<story>`). Copie o id do Storybook local em vez de montar à mão. O Storybook publicado só mostra a story nova depois do merge; até lá, confira no local do worktree.
+
+O lint e o `tsc` do app `docs` dão erros de tipo locais quando `@grupoitss/prizm-ui` não está compilado. Compile antes (ver `codigo.md`, Verificar) e rode de novo: com o pacote compilado, a story tem de passar limpa.
 
 ## 4. Seção no artigo
 

@@ -54,3 +54,11 @@ Caso que custou tempo no Button: com `disabled`, o navegador tira o foco do bot�
 ## Entregar as pendências
 
 Monte uma lista numerada para o dono do DS decidir (ver Papéis no SKILL.md). Para cada item: critério WCAG, o que falha (com número), onde (marca · modo · variante), opções de correção (token, código ou Figma) e a recomendação. Pare aqui e espere a decisão. Decisões de token mudam todos os componentes que usam o token: diga quais.
+
+Decisões anteriores que servem de recomendação (o dono do DS decide de novo em cada componente):
+
+- Link ou botão dentro de outro componente sem anel próprio, só com o contorno do navegador: anel do Button (Badge link, Item e renderizadores da Table, 05–09/11).
+- Elemento clicável que não é botão nem link (`div` com `onClick`, gatilho em `span`): vira `<button type="button">`, com as partes internas em `span` (Item e renderizador `hover` da Table).
+- Alvo de ponteiro menor que 24 × 24px: área de toque de 24px com `::after`, sem mudar o visual (remover do Badge no Item).
+- Imagem ao lado de um texto que já dá o nome: `alt=""` (renderizador `text-image` da Table).
+- Controle dentro de controle (4.1.2): não montar o aninhamento e avisar no console em desenvolvimento (Item; ver `codigo.md`).
