@@ -15,8 +15,13 @@ import {
 /**
  * Subcomponentes da tabela para uso com TanStack Table ou composição manual.
  * Estes componentes são wrappers dos elementos HTML com estilos PRIZM.
+ *
+ * @deprecated (06/11/2026) Duplicam as primitivas de `table-primitives` e não têm uso no
+ * repositório. Use `TableRoot`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`,
+ * `TableHead`, `TableCell` e `TableCaption`. Saem na próxima versão com quebra.
  */
 
+/** @deprecated Use a primitiva de `table-primitives`. */
 const TableWrapper = ({
   className,
   ref,
@@ -26,6 +31,7 @@ const TableWrapper = ({
 );
 TableWrapper.displayName = "TableWrapper";
 
+/** @deprecated Use a primitiva de `table-primitives`. */
 const TableElement = ({
   className,
   ref,
@@ -35,6 +41,7 @@ const TableElement = ({
 );
 TableElement.displayName = "TableElement";
 
+/** @deprecated Use a primitiva de `table-primitives`. */
 const TableHeader = ({
   className,
   ref,
@@ -44,6 +51,7 @@ const TableHeader = ({
 }) => <thead ref={ref} className={cn(tableHeader, className)} {...props} />;
 TableHeader.displayName = "TableHeader";
 
+/** @deprecated Use a primitiva de `table-primitives`. */
 const TableBody = ({
   className,
   ref,
@@ -53,6 +61,7 @@ const TableBody = ({
 }) => <tbody ref={ref} className={cn(tableBody, className)} {...props} />;
 TableBody.displayName = "TableBody";
 
+/** @deprecated Use a primitiva de `table-primitives`. */
 const TableFooter = ({
   className,
   ref,
@@ -62,6 +71,7 @@ const TableFooter = ({
 }) => <tfoot ref={ref} className={cn(tableFooter, className)} {...props} />;
 TableFooter.displayName = "TableFooter";
 
+/** @deprecated Use a primitiva de `table-primitives`. */
 const TableRow = ({
   className,
   ref,
@@ -71,6 +81,7 @@ const TableRow = ({
 );
 TableRow.displayName = "TableRow";
 
+/** @deprecated Use a primitiva de `table-primitives`. */
 const TableHead = ({
   className,
   ref,
@@ -80,6 +91,7 @@ const TableHead = ({
 );
 TableHead.displayName = "TableHead";
 
+/** @deprecated Use a primitiva de `table-primitives`. */
 const TableCell = ({
   className,
   ref,
@@ -89,6 +101,7 @@ const TableCell = ({
 );
 TableCell.displayName = "TableCell";
 
+/** @deprecated Use a primitiva de `table-primitives`. */
 const TableCaption = ({
   className,
   ref,

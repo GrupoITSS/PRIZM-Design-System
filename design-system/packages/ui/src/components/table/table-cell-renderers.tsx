@@ -16,6 +16,11 @@ import {
 import { formatTableText, resolveLinkTemplate, toSide } from "./table-cell-renderers.utils";
 import { toText } from "../../lib/to-text";
 
+// Links and buttons inside cells use the Button focus ring (decision of 06/11/2026); before, the
+// browser outline. rounded-sm keeps the ring around the text.
+const RENDERER_FOCUS =
+  "rounded-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset";
+
 const STATUS_VARIANT: Record<string, React.ComponentProps<typeof Badge>["variant"]> = {
   PENDING: "secondary",
   IN_PROGRESS: "warning",
@@ -106,7 +111,7 @@ function TextCell({
   return (
     <div className="truncate text-sm/6">
       {link ? (
-        <a className="hover:underline hover:underline-offset-4" href={link}>
+        <a className={cn("hover:underline hover:underline-offset-4", RENDERER_FOCUS)} href={link}>
           {text}
         </a>
       ) : (
@@ -131,7 +136,10 @@ function TextButtonCell({
       <button
         type="button"
         onClick={onClick}
-        className="truncate text-sm/6 w-full text-left hover:underline hover:cursor-pointer hover:underline-offset-4"
+        className={cn(
+          "truncate text-sm/6 w-full text-left hover:underline hover:cursor-pointer hover:underline-offset-4",
+          RENDERER_FOCUS,
+        )}
       >
         {text}
       </button>
@@ -152,24 +160,23 @@ function TextImageCell({
     <div className="flex items-center gap-2 truncate">
       <div className="shrink-0 rounded-lg overflow-hidden bg-muted w-7 h-7">
         {value.imageUrl && (
-          <img
-            src={value.imageUrl}
-            title={value.text}
-            alt={value.text}
-            className="h-full w-full object-cover"
-          />
+          // Decorative: the name is right next to it. alt={value.text} read it twice (WCAG 1.1.1).
+          <img src={value.imageUrl} alt="" className="h-full w-full object-cover" />
         )}
       </div>
       <div className="text-sm/6 truncate">
         {link ? (
-          <a className="font-normal hover:underline hover:underline-offset-4" href={link}>
+          <a
+            className={cn("font-normal hover:underline hover:underline-offset-4", RENDERER_FOCUS)}
+            href={link}
+          >
             {value.text}
           </a>
         ) : onClick ? (
           <button
             type="button"
             onClick={onClick}
-            className="hover:underline hover:underline-offset-4"
+            className={cn("hover:underline hover:underline-offset-4", RENDERER_FOCUS)}
           >
             {value.text}
           </button>
@@ -236,7 +243,7 @@ function BadgeOverflowTrigger({
       trigger={
         <button
           type="button"
-          className="inline-flex shrink-0"
+          className={cn("inline-flex shrink-0", RENDERER_FOCUS)}
           aria-label={`Mostrar mais ${hiddenCount}`}
           onClick={stopRowClick}
           onPointerDown={stopRowClick}
@@ -374,7 +381,10 @@ function StatusSummaryWithPopoverCell({
         trigger={
           <button
             type="button"
-            className="inline-flex max-w-full cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className={cn(
+              "inline-flex max-w-full cursor-pointer items-center justify-center border-0 bg-transparent p-0",
+              RENDERER_FOCUS,
+            )}
             aria-haspopup="dialog"
           >
             <Badge variant={summaryVariant} size="sm" className="max-w-full truncate">
@@ -455,13 +465,23 @@ export function renderPrizmCell<TRow = unknown>({
       const triggerNode = <span className="truncate text-sm/6">{toText(value)}</span>;
 
       if (!popover) return triggerNode;
+      // The trigger is a real button (06/11/2026): a span never received focus, so the keyboard
+      // could not open the Popover or the HoverCard (WCAG 2.1.1 and 4.1.2).
+      const triggerButton = (cursor: string) => (
+        <button
+          type="button"
+          className={cn("max-w-full truncate text-left text-sm/6", cursor, RENDERER_FOCUS)}
+        >
+          {toText(value)}
+        </button>
+      );
       const side = toSide(popover.position);
       const content = popover.content({ row, value, getValue });
 
       return popover.trigger === "click" ? (
         <Popover
           contentProps={{ "aria-label": typeof popover.title === "string" ? popover.title : "Detalhes" }}
-          trigger={<span className="cursor-pointer">{triggerNode}</span>}
+          trigger={triggerButton("cursor-pointer")}
           content={
             <div className="space-y-2">
               {popover.title ? <div className="text-sm font-medium">{popover.title}</div> : null}
@@ -473,7 +493,7 @@ export function renderPrizmCell<TRow = unknown>({
         />
       ) : (
         <HoverCard
-          trigger={<span className="cursor-help">{triggerNode}</span>}
+          trigger={triggerButton("cursor-help")}
           content={
             <div className="space-y-2">
               {popover.title ? <div className="text-sm font-medium">{popover.title}</div> : null}
