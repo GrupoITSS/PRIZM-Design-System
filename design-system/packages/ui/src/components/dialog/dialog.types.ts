@@ -55,6 +55,14 @@ export interface DialogProps extends React.ComponentPropsWithoutRef<typeof Radix
   title?: React.ReactNode;
 
   /**
+   * Elemento ao lado do título, na mesma linha: status ou ação, como um `Switch` "Ativo" ou um
+   * `Badge`. Fica fora do `DialogTitle`, então não entra no nome do Dialog para o leitor de tela.
+   *
+   * @example titleAdornment={<><Switch id="ativo" defaultChecked /><Label htmlFor="ativo">Ativo</Label></>}
+   */
+  titleAdornment?: React.ReactNode;
+
+  /**
    * Descrição do dialog. Recomendada para explicar o contexto.
    *
    * @example "Make changes to your profile here. Click save when you're done."
@@ -186,6 +194,8 @@ export interface DialogContentProps extends Omit<
 export type DialogHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
 export type DialogFooterProps = React.HTMLAttributes<HTMLDivElement>;
+
+export type DialogTitleRowProps = React.HTMLAttributes<HTMLDivElement>;
 
 export type DialogTitleProps = React.ComponentPropsWithoutRef<typeof RadixDialog.Title>;
 

@@ -1,6 +1,6 @@
 {
   "component": "Dialog",
-  "description": "Mapa de tokens do Dialog: o que cada parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do set Dialog no Figma em 06/11/2026 e atualizado em 09/11/2026 com a propriedade Size (sm, md, lg, xl, 2xl, 3xl, 4xl e full; todas no Core e iguais entre si, menos a largura máxima e, no full, o layout do celular). Conferido contra dialog.styles.ts pelo teste dialog.tokens.test.ts. Nomes no formato do Figma (color/background, spacing/6); no código viram classes Tailwind (bg-background, p-6).",
+  "description": "Mapa de tokens do Dialog: o que cada parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do set Dialog no Figma em 06/11/2026 e atualizado em 09/11/2026 com a propriedade Size (sm, md, lg, xl, 2xl, 3xl, 4xl e full; todas no Core e iguais entre si, menos a largura máxima e, no full, o layout do celular). Em 09/11/2026, também a linha do título com o slot Title Adornment. Conferido contra dialog.styles.ts pelo teste dialog.tokens.test.ts. Nomes no formato do Figma (color/background, spacing/6); no código viram classes Tailwind (bg-background, p-6).",
   "sources": {
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=112-602",
     "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26345-2157",
@@ -35,6 +35,15 @@
         "aPartirDe640": "esquerda",
         "celular": "centro"
       }
+    },
+    "titleRow": {
+      "gap": "spacing/3",
+      "wrapGap": "spacing/2",
+      "align": {
+        "aPartirDe640": "esquerda",
+        "celular": "centro"
+      },
+      "adornment": "slot Title Adornment (Figma), titleAdornment ou DialogTitleRow (código); vazio e oculto por padrão (Show Title Adornment)"
     },
     "title": {
       "color": "color/foreground",

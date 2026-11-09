@@ -13,6 +13,7 @@ import {
   dialogFooterStyles,
   dialogHeaderStyles,
   dialogOverlayStyles,
+  dialogTitleRowStyles,
   dialogTitleStyles,
 } from "./dialog.styles";
 import type {
@@ -25,6 +26,7 @@ import type {
   DialogPortalProps,
   DialogProps,
   DialogTitleProps,
+  DialogTitleRowProps,
   DialogTriggerProps,
 } from "./dialog.types";
 import { matchesConfirmText } from "./dialog.utils";
@@ -67,6 +69,7 @@ import { matchesConfirmText } from "./dialog.utils";
 function DialogRoot({
   trigger,
   title,
+  titleAdornment,
   description,
   body,
   footer,
@@ -87,6 +90,7 @@ function DialogRoot({
   const useSimplifiedAPI =
     trigger !== undefined ||
     title !== undefined ||
+    titleAdornment !== undefined ||
     description !== undefined ||
     body !== undefined ||
     footer !== undefined ||
@@ -124,9 +128,18 @@ function DialogRoot({
           size={size}
           className={contentClassName}
         >
-          {Boolean(title || description) && (
+          {Boolean(title || description || titleAdornment) && (
             <DialogHeader>
-              {Boolean(title) && <DialogTitle>{title}</DialogTitle>}
+              {titleAdornment ? (
+                <DialogTitleRow>
+                  {Boolean(title) && <DialogTitle>{title}</DialogTitle>}
+                  <div data-slot="dialog-title-adornment" className="flex items-center gap-2">
+                    {titleAdornment}
+                  </div>
+                </DialogTitleRow>
+              ) : (
+                Boolean(title) && <DialogTitle>{title}</DialogTitle>
+              )}
               {Boolean(description) && <DialogDescription>{description}</DialogDescription>}
             </DialogHeader>
           )}
@@ -246,6 +259,15 @@ const DialogHeader = ({ className, ...props }: DialogHeaderProps) => (
 );
 DialogHeader.displayName = "DialogHeader";
 
+/**
+ * Linha do título, para pôr um status ou uma ação ao lado do `DialogTitle` na composição.
+ * Na API por props, use `titleAdornment`.
+ */
+const DialogTitleRow = ({ className, ...props }: DialogTitleRowProps) => (
+  <div data-slot="dialog-title-row" className={cn(dialogTitleRowStyles, className)} {...props} />
+);
+DialogTitleRow.displayName = "DialogTitleRow";
+
 const DialogFooter = ({ className, ...props }: DialogFooterProps) => (
   <div data-slot="dialog-footer" className={cn(dialogFooterStyles, className)} {...props} />
 );
@@ -291,5 +313,6 @@ export {
   DialogOverlay,
   DialogPortal,
   DialogTitle,
+  DialogTitleRow,
   DialogTrigger,
 };

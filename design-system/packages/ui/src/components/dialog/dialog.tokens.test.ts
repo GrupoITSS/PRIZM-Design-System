@@ -7,6 +7,7 @@ import {
   dialogFooterStyles,
   dialogHeaderStyles,
   dialogOverlayStyles,
+  dialogTitleRowStyles,
   dialogTitleStyles,
 } from "./dialog.styles";
 import map from "./dialog.tokens.json";
@@ -50,6 +51,21 @@ describe("Dialog × mapa de tokens (dialog.tokens.json)", () => {
     const c = cls(dialogHeaderStyles);
     expect(c).toContain(`space-y-${step(p.header.gap)}`);
     expect(c).toEqual(expect.arrayContaining(["text-center", "sm:text-left"]));
+  });
+
+  it("linha do título: spacing/3 ao lado, spacing/2 ao quebrar, centro no celular", () => {
+    const c = cls(dialogTitleRowStyles);
+    expect(c).toContain(`gap-x-${step(p.titleRow.gap)}`);
+    expect(c).toContain(`gap-y-${step(p.titleRow.wrapGap)}`);
+    expect(c).toEqual(
+      expect.arrayContaining([
+        "flex",
+        "flex-wrap",
+        "items-center",
+        "justify-center",
+        "sm:justify-start",
+      ]),
+    );
   });
 
   it("título: cor, tamanho, peso e altura de linha 100%", () => {

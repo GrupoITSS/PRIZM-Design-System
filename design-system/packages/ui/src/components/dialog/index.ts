@@ -8,6 +8,7 @@ export {
   DialogOverlay,
   DialogPortal,
   DialogTitle,
+  DialogTitleRow,
   DialogTrigger,
 } from "./dialog";
 
@@ -23,6 +24,7 @@ export {
   dialogHeaderStyles,
   dialogOverlayStyles,
   dialogSizes,
+  dialogTitleRowStyles,
   dialogTitleStyles,
 } from "./dialog.styles";
 
@@ -41,5 +43,6 @@ export type {
   DialogPortalProps,
   DialogProps,
   DialogTitleProps,
+  DialogTitleRowProps,
   DialogTriggerProps,
 } from "./dialog.types";
