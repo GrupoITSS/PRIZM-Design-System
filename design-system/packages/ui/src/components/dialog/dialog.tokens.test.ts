@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   dialogCloseStyles,
   dialogContentStyles,
+  dialogContentVariants,
   dialogDescriptionStyles,
   dialogFooterStyles,
   dialogHeaderStyles,
@@ -30,7 +31,15 @@ describe("Dialog × mapa de tokens (dialog.tokens.json)", () => {
     expect(c).toContain(`p-${step(p.content.padding)}`);
     expect(c).toContain(`gap-${step(p.content.gap)}`);
     expect(c).toContain(`shadow-${step(p.content.shadow)}`);
-    expect(c).toContain(`sm:max-w-${step(p.content.maxWidth)}`);
+  });
+
+  it("tamanhos: cada size limita com o max-width/* do mapa; lg é o padrão", () => {
+    for (const [size, def] of Object.entries(map.sizes)) {
+      const c = cls(dialogContentVariants({ size: size as keyof typeof map.sizes }));
+      expect(c).toContain(def.maxWidth === null ? "max-w-none" : `max-w-${step(def.maxWidth)}`);
+      expect(c).toContain("w-[calc(100%-2rem)]");
+    }
+    expect(cls(dialogContentVariants())).toContain(`max-w-${step(p.content.maxWidth)}`);
   });
 
   it("overlay: color/overlay", () => {

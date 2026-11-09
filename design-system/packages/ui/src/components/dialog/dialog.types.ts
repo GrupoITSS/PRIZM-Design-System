@@ -1,5 +1,6 @@
 import type * as React from "react";
 import type { Dialog as RadixDialog } from "radix-ui";
+import type { DialogSize } from "./dialog.styles";
 
 /**
  * Campo de confirmação opcional exibido entre o cabeçalho e o rodapé do dialog.
@@ -101,6 +102,16 @@ export interface DialogProps extends React.ComponentPropsWithoutRef<typeof Radix
   closeLabel?: string;
 
   /**
+   * Largura máxima, na escala `max-width/*` do Core: `sm` 384px, `md` 448px, `lg` 512px,
+   * `xl` 576px, `2xl` 672px, `3xl` 768px, `4xl` 896px, `full` sem limite. A largura é sempre a
+   * tela menos 32px; o `size` só limita.
+   *
+   * @default "lg"
+   * @example size="xl"
+   */
+  size?: DialogSize;
+
+  /**
    * Classe CSS aplicada ao `DialogContent` quando usando a API simplificada.
    * Útil para ajustar tamanho do modal em cenários específicos (ex.: textarea
    * expandida ocupando grande parte da tela).
@@ -159,6 +170,12 @@ export interface DialogContentProps extends Omit<
    * @default "Fechar"
    */
   closeLabel?: string;
+  /**
+   * Largura máxima, na escala `max-width/*` do Core. Ver `DialogProps.size`.
+   *
+   * @default "lg"
+   */
+  size?: DialogSize;
   /**
    * Classes adicionais no overlay (após o estilo padrão), por exemplo
    * `absolute inset-0` em diálogos ancorados a um container em vez do viewport.

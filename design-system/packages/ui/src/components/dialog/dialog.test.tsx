@@ -128,15 +128,15 @@ describe("Dialog (PRIZM / shadcn)", () => {
 });
 
 describe("Dialog · decisões de 06/11/2026", () => {
-  it("conteúdo: fundo background, raio lg, folga no celular, 512px e altura máxima", async () => {
+  it("conteúdo: fundo background, raio lg, folga de 16px, 512px e altura máxima", async () => {
     render(<Dialog defaultOpen title="Edit profile" body={<p>Body</p>} />);
     const dialog = await screen.findByRole("dialog");
     expect(dialog).toHaveClass(
       "bg-background",
       "text-foreground",
       "rounded-lg",
-      "max-w-[calc(100%-2rem)]",
-      "sm:max-w-lg",
+      "w-[calc(100%-2rem)]",
+      "max-w-lg",
       "max-h-[calc(100dvh-2rem)]",
       "overflow-y-auto",
     );
@@ -158,5 +158,52 @@ describe("Dialog · decisões de 06/11/2026", () => {
     const close = screen.getByRole("button", { name: "Fechar" });
     expect(close).toHaveAttribute("data-slot", "dialog-close-button");
     expect(close).toHaveClass("size-control-height-sm", "absolute", "right-2", "top-2");
+  });
+});
+
+describe("Dialog · size (09/11/2026)", () => {
+  const larguras = {
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-lg",
+    xl: "max-w-xl",
+    "2xl": "max-w-2xl",
+    "3xl": "max-w-3xl",
+    "4xl": "max-w-4xl",
+    full: "max-w-none",
+  } as const;
+
+  it("padrão lg, com data-size", async () => {
+    render(<Dialog defaultOpen title="Edit profile" />);
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveAttribute("data-size", "lg");
+    expect(dialog).toHaveClass("max-w-lg", "w-[calc(100%-2rem)]");
+  });
+
+  it.each(Object.entries(larguras))("size=%s limita com %s", async (size, classe) => {
+    render(<Dialog defaultOpen title="Edit profile" size={size as keyof typeof larguras} />);
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveAttribute("data-size", size);
+    expect(dialog).toHaveClass(classe, "w-[calc(100%-2rem)]");
+    const outras = Object.values(larguras).filter((c) => c !== classe);
+    for (const c of outras) expect(dialog).not.toHaveClass(c);
+  });
+
+  it("composição: size no DialogContent", async () => {
+    render(
+      <Dialog defaultOpen>
+        <DialogContent size="4xl">
+          <DialogTitle>Produto</DialogTitle>
+        </DialogContent>
+      </Dialog>,
+    );
+    expect(await screen.findByRole("dialog")).toHaveClass("max-w-4xl");
+  });
+
+  it("contentClassName ainda troca a largura", async () => {
+    render(<Dialog defaultOpen title="Texto" contentClassName="w-[96vw] max-w-6xl" />);
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveClass("w-[96vw]", "max-w-6xl");
+    expect(dialog).not.toHaveClass("max-w-lg", "w-[calc(100%-2rem)]");
   });
 });

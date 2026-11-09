@@ -8,7 +8,7 @@ import {
   dialogCloseStyles,
   dialogConfirmLabelStyles,
   dialogConfirmSectionStyles,
-  dialogContentStyles,
+  dialogContentVariants,
   dialogDescriptionStyles,
   dialogFooterStyles,
   dialogHeaderStyles,
@@ -72,6 +72,7 @@ function DialogRoot({
   footer,
   showCloseButton,
   closeLabel,
+  size,
   contentClassName,
   confirmInput,
   onConfirmValidityChange,
@@ -120,6 +121,7 @@ function DialogRoot({
         <DialogContent
           showCloseButton={showCloseButton}
           closeLabel={closeLabel}
+          size={size}
           className={contentClassName}
         >
           {Boolean(title || description) && (
@@ -206,6 +208,7 @@ const DialogContent = ({
   portalProps,
   showCloseButton = true,
   closeLabel = "Fechar",
+  size = "lg",
   overlayClassName,
   ref,
   ...props
@@ -215,7 +218,8 @@ const DialogContent = ({
     <RadixDialog.Content
       ref={ref}
       data-slot="dialog-content"
-      className={cn(dialogContentStyles, className)}
+      data-size={size}
+      className={cn(dialogContentVariants({ size }), className)}
       {...props}
     >
       {children}
