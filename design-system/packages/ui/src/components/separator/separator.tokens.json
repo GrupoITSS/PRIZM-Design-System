@@ -1,0 +1,37 @@
+{
+  "component": "Separator",
+  "description": "Mapa de tokens do Separator: o que a linha usa do [PRIZM] Design Tokens_Core. Extraído das ligações do set Separator no Figma em 06/11/2026 (Orientation Horizontal e Vertical, todas no Core) e conferido contra separator.styles.ts pelo teste separator.tokens.test.ts. Nomes no formato do Figma (color/border); no código viram classes Tailwind (bg-border).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=118-2690",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26328-1980",
+    "code": "design-system/packages/ui/src/components/separator/separator.tsx",
+    "story": "design-system/apps/docs/stories/separator.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=4af276cf-3d05-42ad-8e37-cb5eb88a472a&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/185"]
+  },
+  "parts": {
+    "line": {
+      "color": "color/border",
+      "thickness": "border-width/1",
+      "note": "No Figma, traço (stroke) de border-width/1; no código, preenchimento de 1px (h-px na horizontal, w-px na vertical)."
+    }
+  },
+  "orientations": {
+    "horizontal": { "thickness": "h-px", "length": "w-full", "figmaLength": "339px fixo" },
+    "vertical": { "thickness": "w-px", "length": "h-full", "figmaLength": "height/5" }
+  },
+  "divergences": [
+    {
+      "where": "linha",
+      "figma": "traço (stroke) color/border, border-width/1",
+      "code": "preenchimento bg-border de 1px",
+      "status": "representação (decisão D3)"
+    },
+    {
+      "where": "comprimento",
+      "figma": "fixo: 339px na horizontal, height/5 (20px) na vertical",
+      "code": "w-full ou h-full: o tamanho do pai",
+      "status": "representação (decisão D4)"
+    }
+  ]
+}

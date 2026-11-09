@@ -16,16 +16,16 @@ const Separator = ({
   className,
   orientation = "horizontal",
   decorative = true,
-  role,
   ref,
   ...props
 }: SeparatorProps & { ref?: React.Ref<React.ComponentRef<typeof RadixSeparator.Root>> }) => (
+  // O Radix decide o papel: role="none" decorativo; role="separator" (e aria-orientation no
+  // vertical) semântico. Não passar role por cima, senão o semântico perde o papel.
   <RadixSeparator.Root
     ref={ref}
+    data-slot="separator"
     decorative={decorative}
     orientation={orientation ?? "horizontal"}
-    role={decorative ? "none" : role}
-    data-orientation={orientation ?? "horizontal"}
     className={cn(separatorVariants({ orientation: orientation ?? "horizontal" }), className)}
     {...props}
   />
