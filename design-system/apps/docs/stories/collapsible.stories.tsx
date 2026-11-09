@@ -129,17 +129,17 @@ export const SettingsPanel: Story = {
 };
 
 /**
- * **Order details** — Título e `CollapsibleToggle` na mesma linha; conteúdo expansível. No Figma, é a
- * variante API=Composition do set Collapsible, com os slots Header e Content.
+ * **Order details** — `CollapsibleToggle` e título na mesma linha; conteúdo expansível. No Figma, é a
+ * variante API=Composition do set Collapsible: o toggle fixo antes do slot Header, e o slot Content.
  */
 export const OrderDetails: Story = {
   render: function OrderDetailsStory() {
     const [isOpen, setIsOpen] = React.useState(false);
     return (
       <Collapsible open={isOpen} onOpenChange={setIsOpen} className="flex w-[350px] flex-col gap-2">
-        <div className="flex items-center justify-between gap-4 px-4">
-          <h4 className="text-sm font-semibold">Order #4189</h4>
+        <div className="flex items-center gap-2 px-4">
           <CollapsibleToggle aria-label="Toggle order details" />
+          <h4 className="text-sm font-semibold">Order #4189</h4>
         </div>
         <div className="flex items-center justify-between rounded-md border px-4 py-2 text-sm">
           <span className="text-muted-foreground">Status</span>
