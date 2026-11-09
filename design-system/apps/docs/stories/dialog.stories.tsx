@@ -3,7 +3,7 @@ import { Field, FieldGroup, FieldLabel } from "@grupoitss/prizm-ui/field";
 import { Input } from "@grupoitss/prizm-ui/input";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import * as React from "react";
-import { Dialog } from "@grupoitss/prizm-ui/dialog";
+import { Dialog, dialogSizes } from "@grupoitss/prizm-ui/dialog";
 
 // Traceability: the Dialog component set in [PRIZM] Componentes, the documentation frame and the
 // CMS article. The token map lives next to the component (dialog.tokens.json) and is checked
@@ -60,6 +60,82 @@ export const Basic: Story = {
             Cancel
           </Button>
           <Button type="submit">Save changes</Button>
+        </>
+      }
+    />
+  ),
+};
+
+const larguraPorSize = {
+  sm: "384px",
+  md: "448px",
+  lg: "512px · padrão",
+  xl: "576px",
+  "2xl": "672px",
+  "3xl": "768px",
+  "4xl": "896px",
+  full: "sem limite",
+} as const;
+
+/**
+ * `size` limita a largura na escala `max-width/*` do Core. A largura é sempre a tela menos 32px:
+ * numa tela menor que o size, o Dialog fica com 16px de folga de cada lado.
+ */
+export const Sizes: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-2">
+      {dialogSizes.map((size) => (
+        <Dialog
+          key={size}
+          size={size}
+          trigger={<Button variant="outline">size=&quot;{size}&quot;</Button>}
+          title={`size="${size}"`}
+          description={`Largura máxima: ${larguraPorSize[size]}.`}
+          footer={<Button type="button">Ok</Button>}
+        />
+      ))}
+    </div>
+  ),
+};
+
+/** Formulário em duas colunas num `size="4xl"` (896px), como o cadastro de produto do Pricing. */
+export const TwoColumnForm: Story = {
+  render: () => (
+    <Dialog
+      size="4xl"
+      trigger={<Button variant="outline">Cadastrar produto</Button>}
+      title="Cadastrar produto"
+      description="Preencha os dados do produto e das variantes."
+      body={
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="produto-nome">Nome</FieldLabel>
+              <Input id="produto-nome" />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="produto-codigo">Código</FieldLabel>
+              <Input id="produto-codigo" />
+            </Field>
+          </FieldGroup>
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="produto-variante">Variante</FieldLabel>
+              <Input id="produto-variante" />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="produto-preco">Preço</FieldLabel>
+              <Input id="produto-preco" inputMode="decimal" />
+            </Field>
+          </FieldGroup>
+        </div>
+      }
+      footer={
+        <>
+          <Button type="button" variant="outline">
+            Cancelar
+          </Button>
+          <Button type="submit">Salvar</Button>
         </>
       }
     />

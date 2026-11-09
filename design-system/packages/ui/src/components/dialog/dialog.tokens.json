@@ -1,6 +1,6 @@
 {
   "component": "Dialog",
-  "description": "Mapa de tokens do Dialog: o que cada parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do set Dialog no Figma em 06/11/2026 (Breakpoint lg e sm, todas no Core e iguais entre si, menos a largura e o alinhamento do cabeçalho) e conferido contra dialog.styles.ts pelo teste dialog.tokens.test.ts. Nomes no formato do Figma (color/background, spacing/6); no código viram classes Tailwind (bg-background, p-6).",
+  "description": "Mapa de tokens do Dialog: o que cada parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do set Dialog no Figma em 06/11/2026 e atualizado em 09/11/2026 com a propriedade Size (sm, md, lg, xl, 2xl, 3xl, 4xl e full; todas no Core e iguais entre si, menos a largura máxima e, no full, o layout do celular). Conferido contra dialog.styles.ts pelo teste dialog.tokens.test.ts. Nomes no formato do Figma (color/background, spacing/6); no código viram classes Tailwind (bg-background, p-6).",
   "sources": {
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=112-602",
     "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26345-2157",
@@ -19,7 +19,8 @@
       "padding": "spacing/6",
       "gap": "spacing/4",
       "shadow": "shadow/lg",
-      "maxWidth": "max-width/lg"
+      "maxWidth": "max-width/lg",
+      "width": "a tela menos 32px (w-[calc(100%-2rem)]), limitada pelo size"
     },
     "overlay": {
       "background": "color/overlay",
@@ -28,8 +29,8 @@
     "header": {
       "gap": "spacing/1-5",
       "align": {
-        "lg": "esquerda",
-        "sm": "centro"
+        "aPartirDe640": "esquerda",
+        "celular": "centro"
       }
     },
     "title": {
@@ -48,8 +49,8 @@
     "footer": {
       "gap": "spacing/2",
       "layout": {
-        "lg": "linha, à direita, ação principal por último",
-        "sm": "coluna, ação principal em cima"
+        "aPartirDe640": "linha, à direita, ação principal por último",
+        "celular": "coluna, ação principal em cima"
       },
       "actions": "Button do Prizm (Outline e Default)"
     },
@@ -61,26 +62,52 @@
     }
   },
   "sizes": {
-    "lg": {
-      "width": "max-width/lg",
-      "note": "512px, a partir de 640px (sm: no Tailwind)"
-    },
     "sm": {
-      "width": "343px no Figma",
-      "note": "No código, a tela menos 32px (max-w-[calc(100%-2rem)])"
+      "maxWidth": "max-width/sm",
+      "px": 384
+    },
+    "md": {
+      "maxWidth": "max-width/md",
+      "px": 448
+    },
+    "lg": {
+      "maxWidth": "max-width/lg",
+      "px": 512,
+      "default": true
+    },
+    "xl": {
+      "maxWidth": "max-width/xl",
+      "px": 576
+    },
+    "2xl": {
+      "maxWidth": "max-width/2xl",
+      "px": 672
+    },
+    "3xl": {
+      "maxWidth": "max-width/3xl",
+      "px": 768
+    },
+    "4xl": {
+      "maxWidth": "max-width/4xl",
+      "px": 896
+    },
+    "full": {
+      "maxWidth": null,
+      "px": null,
+      "note": "Sem limite: a tela menos 32px. No Figma, 343px, com o layout do celular."
     }
   },
   "divergences": [
     {
-      "where": "Breakpoint",
-      "figma": "variante lg e sm",
-      "code": "não é prop: a largura, o cabeçalho e o rodapé seguem a tela (sm: do Tailwind, 640px)",
+      "where": "Size=full",
+      "figma": "343px, com o layout do celular (cabeçalho no centro, rodapé empilhado)",
+      "code": "size=\"full\" só tira o limite; o layout do celular vem da tela abaixo de 640px, em qualquer size",
       "status": "representação"
     },
     {
       "where": "largura no celular",
-      "figma": "343px fixos",
-      "code": "max-w-[calc(100%-2rem)]",
+      "figma": "Size=full, 343px",
+      "code": "todo size fica na tela menos 32px quando a tela é menor que ele",
       "status": "representação: 343px é 375px menos 32px"
     },
     {

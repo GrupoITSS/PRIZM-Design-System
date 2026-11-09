@@ -17,14 +17,18 @@ export {
   dialogConfirmLabelStyles,
   dialogConfirmSectionStyles,
   dialogContentStyles,
+  dialogContentVariants,
   dialogDescriptionStyles,
   dialogFooterStyles,
   dialogHeaderStyles,
   dialogOverlayStyles,
+  dialogSizes,
   dialogTitleStyles,
 } from "./dialog.styles";
 
 export { matchesConfirmText, normalizeConfirmText } from "./dialog.utils";
+
+export type { DialogContentVariantProps, DialogSize } from "./dialog.styles";
 
 export type {
   DialogCloseProps,
