@@ -16,6 +16,8 @@ Por isso a skill para em pontos de validação (marcados **⏸**). Em cada um, m
 
 O que nunca acontece sem pedido explícito, nesta conversa: publicar no CMS (`publish_article`), mergear PR, publicar a biblioteca do Core, alterar outro componente além do pedido.
 
+Comentário no Jira: mostre o texto ao dono do DS e espere o ok antes de escrever. Releia os comentários do ticket logo antes de gravar, porque outra pessoa ou sessão pode ter escrito no intervalo.
+
 ## Requisitos
 
 Confira antes da etapa 1 e diga o que falta:
@@ -36,6 +38,8 @@ O nome do componente, como no código (`button`, `input`, `badge`, `combobox`…
 ## Escrita
 
 Tudo que o time vai ler (Figma, artigo, PR, changeset, mensagens) é em português do Brasil, frases curtas, sem emoji. Números no formato brasileiro (4,53:1). Nome de token, prop e classe em `código`.
+
+A exceção é o texto de exemplo dentro dos componentes do Figma: fica em inglês, como no kit ("Placeholder", "Action"). O frame de doc, o artigo, as stories e os textos padrão do código seguem em pt-BR (ver `references/figma.md`). No artigo, escreva "textos padrão", nunca "padrões".
 
 ## Plano
 
@@ -68,7 +72,7 @@ Se não estiver: levante as ligações, monte o mapa local → Core, **⏸ valid
 
 ### 3. Doc no Figma
 
-Monte o frame "<Componente> — Documentação Prizm" com as 11 seções do template do Button. Variantes, tamanhos, props e estados seguem o component set com as decisões da etapa 1; o que está em uso e ainda não tem decisão entra em "Propostas para decidir". As seções: cabeçalho, playground por tema (5 marcas × claro/escuro, com modo explícito), variantes, quando usar (hierarquia, faça/evite), API (gerada de `componentPropertyDefinitions` e conferida com o código), anatomia, tamanhos (gerado das ligações + `control-height` por marca), tokens por variante (gerado), estados, acessibilidade e changelog. Como montar cada uma, a regra de hover, a regra de foco e as regras de token em `references/figma.md`.
+Monte o frame "<Componente> — Documentação Prizm" com as 11 seções do template do Button. Variantes, tamanhos, props e estados seguem o component set com as decisões da etapa 1; o que está em uso e ainda não tem decisão entra em "Propostas para decidir". As seções: cabeçalho, playground por tema (5 marcas × claro/escuro, com modo explícito), variantes, quando usar (no formato do Popover: tabela "Preciso de… / Use" e pares Faça / Evite com exemplos diferentes, e a alternativa certa em cada Evite), API (gerada de `componentPropertyDefinitions` e conferida com o código), anatomia, tamanhos (gerado das ligações + `control-height` por marca), tokens por variante (gerado), estados, acessibilidade e changelog. Como montar cada uma, a regra de hover, a regra de foco e as regras de token em `references/figma.md`.
 
 Divergências que pedem decisão (variante que só existe de um lado, token que falha, regra que o kit não segue) vão para uma seção "Propostas para decidir". **⏸ O dono do DS valida o frame e decide as propostas.**
 
@@ -106,7 +110,7 @@ Os arquivos de código vão em worktree e PR, como na etapa 5. Divergências que
 
 ### 8. Figma → link
 
-**⏸ Com o ok**, atualize `description` e `documentationLinks` do component set (e dos outros sets da página) apontando para o artigo, acrescente 🟣 ao nome da página e confira o selo "Legado do kit" no frame de exemplo do kit (ver `references/figma.md`).
+**⏸ Com o ok**, atualize `description` e `documentationLinks` do component set (e dos outros sets da página) apontando para o artigo, acrescente 🟣 ao nome da página, confira o selo "Legado do kit" no frame de exemplo do kit e ponha os modos do Core (Theme PAS, Mode Light e Dark) nos painéis dele (ver `references/figma.md`).
 
 Ao terminar, resuma: o que mudou no Figma (ids), PRs abertos, artigo (código e id, rascunho), divergências do mapa, pendências que ficaram e o que depende do dono do DS (publicar o Core, mergear, publicar o artigo, ajustes à mão no Figma).
 
@@ -142,7 +146,7 @@ Cada uma custou horas no piloto. Leia antes da etapa 2.
 
 **"No changes" ao publicar o Core não quer dizer que a mudança não subiu (26/10, accent do escuro).** O botão Publish fica desabilitado também quando a biblioteca já foi publicada com a mudança, inclusive quando a variável alterada é oculta da publicação (`palette/*`). Antes de concluir, compare o id da variável ligada num nó (`VariableID:<key>/<versão>`) com o de `figma.variables.importVariableByKeyAsync(key)`: se forem diferentes e a versão nova tiver o valor novo, o Core está publicado e falta só o `upgrade-core.js`.
 
-**Clonar o frame de doc de um irmão da família economiza a etapa 3 (26/10, Textarea a partir do Select).** Clone o frame, troque as instâncias com `swapComponent` (mapeando State e Size) e reescreva os textos seção por seção. Três cuidados: (1) os `hyperlink` do cabeçalho (código, Storybook) vêm junto e continuam apontando para o componente de origem: troque-os; (2) a seção de acessibilidade traz os números do outro componente: esvazie até a etapa 4; (3) procure sobras com `findAll` de TEXT pelo nome do componente de origem antes de mostrar o frame; (4) cartões com número fixo de linhas (decisões, pendências com opções A, B e C) trazem as linhas do outro componente: apague as que sobram em vez de deixar texto sem sentido (no DatePicker, a opção C da pendência 5 apareceu repetida nas pendências 1 a 4).
+**Clonar o frame de doc de um irmão da família economiza a etapa 3 (26/10, Textarea a partir do Select).** Clone o frame, troque as instâncias com `swapComponent` (mapeando State e Size) e reescreva os textos seção por seção. Os cuidados: (1) os `hyperlink` do cabeçalho (código, Storybook) vêm junto e continuam apontando para o componente de origem: troque-os; (2) a seção de acessibilidade traz os números do outro componente: esvazie até a etapa 4; (3) procure sobras com `findAll` de TEXT pelo nome do componente de origem antes de mostrar o frame; (4) cartões com número fixo de linhas (decisões, pendências com opções A, B e C) trazem as linhas do outro componente: apague as que sobram em vez de deixar texto sem sentido (no DatePicker, a opção C da pendência 5 apareceu repetida nas pendências 1 a 4); (5) as células e instâncias herdam a largura e a opacidade do original: no Item, clonado do Popover, os exemplos saíram estreitos e o Focus a 50%, a opacidade do "Fechado" do Popover; (6) o modelo de legenda do original pode estar oculto (`visible = false`; a legenda do Popover, `26060:3622`): confira antes de clonar dele.
 
 **Instância oculta por propriedade booleana não mostra os filhos ao plugin.** Num botão ligado a `Expandable` (padrão `false`), `children` da instância do ícone vem vazio, e a leitura de cor ou ligação falha. Leia da camada que não é instância, ou ligue a propriedade numa instância temporária.
 
@@ -152,7 +156,7 @@ Cada uma custou horas no piloto. Leia antes da etapa 2.
 
 **O Tokens Studio do Core sincroniza com a branch `design`, não com a main.** O workflow `design-acompanha-main.yml` (PR #129) avança a `design` a cada push na main; se ela tiver um sync esperando a PR, não mexe. Com sync no GitHub, o plugin não guarda os tokens no arquivo (`values` = `{}` em `sharedPluginData('tokens')`): para conferir o que ele carregou, olhe na interface do plugin, não no arquivo.
 
-**Skill usada fora do Claude Code (Combobox no Cursor, 27/10).** O código, os testes e o artigo saíram no padrão; o Figma não: subcomponentes no kit, variantes empilhadas, Hover e Pressed mantidos e o mapa afirmando que tudo estava no Core. As regras do Figma estão em `references/figma.md`, não no código, e o agente não as lê se o prompt não mandar. Quem roda a skill em outra ferramenta abre `references/figma.md` antes da etapa 2 e confere a página pelo render no fim.
+**Skill usada fora do Claude Code (Combobox no Cursor, 27/10).** O código, os testes e o artigo saíram no padrão; o Figma não: subcomponentes no kit, variantes empilhadas, Hover e Pressed mantidos e o mapa afirmando que tudo estava no Core. As regras do Figma estão em `references/figma.md`, não no código, e o agente não as lê se o prompt não mandar. Quem roda a skill em outra ferramenta abre `references/figma.md` antes da etapa 2 e confere a página pelo render no fim. No Cursor ou no VS Code, desligue também o formatar ao salvar neste repositório: o prettier sem config reformata arquivos fora do pedido (ver `references/codigo.md`).
 
 **`editComponentProperty({ defaultValue })` pode não gravar.** Em 28/10, o texto padrão do Combobox apareceu trocado na mesma chamada e voltou ao valor antigo na chamada seguinte. Releia numa chamada nova (`set.componentPropertyDefinitions` e os textos das variantes) antes de dizer que mudou.
 
@@ -160,19 +164,50 @@ Cada uma custou horas no piloto. Leia antes da etapa 2.
 
 **Foco que vem de estado do componente não é forçado pelo `storybook-addon-pseudo-states`.** No InputOTP (slot ativo) e no Combobox (`isFocused` na caixa dos chips), o anel vem do JavaScript, não de `:focus-visible`. Na story Estados, documente que esses estados aparecem ao clicar; no artigo, descreva como "foco no campo", que aparece também no clique.
 
+**Anel de foco no Figma (05–06/11, Badge link e Item).** O DROP_SHADOW com spread só aparece no render quando o frame da variante tem `clipsContent = true`. E um frame sem fill projeta a sombra a partir dos filhos, não da caixa: dê a ele um fill branco com opacidade 0.0001. No Badge link, o anel faltava em 6 das 7 linhas; no Item, em todas. Confira as variantes Focus pelo `get_screenshot`.
+
+**`use_figma` desfaz a chamada inteira quando dá erro (06/11, Item).** Nada do que veio antes do erro fica gravado. Depois de um erro, releia o estado numa chamada nova antes de repetir, e mantenha cada chamada num tamanho que dê para refazer.
+
+**`resetOverrides` em lote apaga o que não volta (06/11, Table).** Filtre as instâncias pelo componente de origem e deixe de fora o que não é do pedido. Na Table, um reset em todas as células pegou 8 instâncias de Progress e Toggle Group, ainda do kit, que voltaram ao padrão do kit (barra preta, "B B B"). O plugin não recupera o override apagado.
+
+**Troca de instância (INSTANCE_SWAP) aninhada.**
+
+- Instância aninhada com a propriedade presa a um componente antigo não segue o padrão novo do set. No Item (06/11), as 14 instâncias de Item / Actions continuaram com o Button do kit até "Instance 1" e "Instance 2" serem trocados em cada uma.
+- Numa variante, trocar o estado de uma instância ligada a INSTANCE_SWAP muda o padrão da propriedade, e todas as variantes mudam juntas (Field, 04/11). Solte a ligação do `mainComponent` (`componentPropertyReferences`) antes de trocar.
+
+**Instância com altura fixa corta o conteúdo trocado (04/11, Popover).** Depois de trocar o conteúdo de uma instância em auto-layout, ponha `primaryAxisSizingMode = "AUTO"`.
+
+**Varredura pesada estoura o tempo do conector (06/11, Table, 66 variantes).** Um `findAll` no set inteiro de uma vez caiu por tempo. Divida a varredura por variante ou por seção, em mais de uma chamada.
+
+**Não rode o prettier no repositório (05/11).** Não há config, e as 80 colunas padrão reformatam arquivos que não são do pedido: o #181 entrou com cerca de 46 linhas só de formatação. Antes do commit, `git diff --stat origin/main` tem de listar só os arquivos do pedido. Gerar JSON com `json.dump` também desdobra objetos de uma linha: preserve o formato do arquivo.
+
+**`:read-only` não serve para somente leitura (05/11, InputGroup).** A pseudo-classe também casa com `disabled` e com `type=file`. Use o atributo `[readonly]`; no pai, `has-[[data-slot][readonly]]`.
+
+**Antes de dizer o impacto de uma mudança de classe, veja quem sobrescreve (06/11, Table).** O DataTable passa as próprias classes de cabeçalho e célula, e a densidade nova da Table não chega nele. Procure os consumidores e leia o `className` que cada um passa.
+
+**Comportamento descrito no artigo tem de existir no código (09/11, Table).** O artigo dizia que o renderizador `actions` mostrava um menu. O enum tinha o valor, mas o `switch` não tinha `case`, e nada aparecia. Para cada comportamento que o artigo afirma, ache a linha do código que o faz.
+
+**Controle dentro de controle (05–06/11, Badge link e Item).** Link dentro de botão, ou botão dentro de Item clicável, é um interativo dentro de outro (WCAG 4.1.2). O padrão do Item: o componente não monta o aninhamento (clicável sem `href` vira `<button>`, com as partes em `span`) e avisa no console, em desenvolvimento, quando recebe um controle onde não cabe. Código do aviso em `references/codigo.md`.
+
+**PR mergeado no meio da etapa (09/11, Table).** O dono do DS pode mergear enquanto você ainda trabalha na branch. O #190 foi mergeado com o primeiro commit; o mapa de tokens, a story e o renderizador `actions`, empurrados depois, ficaram fora da main. Antes de cada push numa branch com PR, confira `gh pr view <número> --json state -q .state`. Se já foi mergeado, leve os commits para uma branch nova a partir de `origin/main` e abra outro PR (ver `references/codigo.md`).
+
+**Story: id com acento, e o Storybook publicado só depois do merge (05–09/11).** O título `Primários/<Nome>` gera ids com acento (`primários-<nome>--<story>`): copie o id do Storybook local em vez de montar à mão. O publicado só mostra a story nova depois do merge; antes, confira no Storybook local do worktree.
+
 Outras, menores:
 
 - `packages/tokens/dist/` é ignorado pelo git: o `dist` do checkout pode ser de outro dia. Gere de `origin/main` antes de medir contraste.
 - `pnpm install` falha com outra versão de pnpm que não a do `packageManager` (ver `references/codigo.md`). O pnpm 12 pelo corepack também falha ("Cannot find module …/bin/pnpm.cjs"); `npx -y pnpm@<versão>` funciona.
 - Rótulos do component set com constraint SCALE esticam quando o pai é redimensionado: use `resizeWithoutConstraints`.
 - Variante com proporção travada aceita só uma ligação entre width e height: `unlockAspectRatio()` antes.
-- `clone()` de variante cai na página, não no set: `set.appendChild(clone)`. O clone também perde as `componentPropertyReferences` (texto, booleana, troca de instância): religue nos clones. Ao religar texto, não ligue os textos que não estavam ligados (no Input, o "No file chosen" do File virou "Placeholder").
+- `clone()` de variante cai na página, não no set: `set.appendChild(clone)`. O clone também perde as `componentPropertyReferences` (texto, booleana, troca de instância): religue nos clones, lendo as referências da variante original pelo caminho de cada camada (nomes do topo até o nó) e aplicando no nó de mesmo caminho do clone. Ao religar texto, não ligue os textos que não estavam ligados (no Input, o "No file chosen" do File virou "Placeholder").
 - Ligar o `mainComponent` de uma instância a uma propriedade INSTANCE_SWAP desfaz o override de cor do ícone. Recolora depois de ligar.
 - `set.description` grava o `&` de uma URL como `&amp;`, e o link quebra. Use `set.descriptionMarkdown` com `[texto](url)` (ver `references/figma.md`, etapa 8).
 - Contraste com token de alfa (`input-background` no escuro) exige misturar contra o fundo; o `contraste.mjs` já faz.
 - `get_screenshot` exporta em 1x; `maxDimension` não amplia.
 - Upload de imagem no CMS responde com `url` em localhost (bug): use o `file:<id>`.
 - Título de artigo é único no workspace inteiro.
+- No CMS, negrito em volta de código (`` **`x`:** ``) é gravado como `` **`x`****:** ``. Não ponha código dentro de negrito.
+- Artigo recém-criado pode vir com `lastEditedAt` nulo: nesse caso, escreva sem `expectedLastEditedAt`.
 
 ## Arquivos da skill
 

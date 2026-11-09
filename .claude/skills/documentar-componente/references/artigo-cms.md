@@ -117,11 +117,13 @@ O artigo só vai para o dono do DS revisar com tudo isto:
 - [ ] Combinações inválidas, cada uma com o tratamento
 - [ ] Nome de token do Figma em texto e tabelas; classe do Tailwind nos blocos `tsx`
 - [ ] Acessibilidade com a tabela de contraste por marca e tema
+- [ ] Cada comportamento que o artigo descreve conferido no código: a linha que o faz, não só o tipo ou o enum (na Table, `actions` estava no enum e não tinha `case`)
+- [ ] Impacto em outros componentes conferido nos consumidores (o DataTable sobrescreve as classes da Table)
 - [ ] Rastreabilidade completa (ou marcada para a etapa 7)
 
 Menção a outro artigo: `[Critério de acessibilidade](pas-mention:article/27090792-48ee-49bb-a162-291c7c97c92e?version=9aab337b-ff81-406a-bff1-1de369b6eedd)`. Use `id` e `version.id` do `search`, não o código 0002. Menção a alvo inexistente faz a escrita falhar.
 
-Escrita: português do Brasil, frases curtas, sem emoji. Números com vírgula (4,53:1). Nomes de token e prop em `código`.
+Escrita: português do Brasil, frases curtas, sem emoji. Números com vírgula (4,53:1). Nomes de token e prop em `código`. O texto que o componente traz pronto é "textos padrão", nunca "padrões".
 
 ## Imagens
 
@@ -135,5 +137,10 @@ Não comprima nem redimensione as imagens. Não use o base64 de `images` quando 
 ## Escrever
 
 `create_article` com `title` = nome do componente, `folderId` da pasta Componentes e o Markdown. O artigo nasce rascunho. Mostre o link a quem pediu, para revisão; o dono do DS aprova antes de publicar.
+
+Duas armadilhas da escrita:
+
+- Negrito em volta de código (`` **`x`:** ``) é gravado como `` **`x`****:** ``. Não ponha código dentro de negrito: escreva o termo em `código` fora do negrito.
+- Em artigo recém-criado, o `lastEditedAt` pode vir nulo. Nesse caso, chame `update_article_content` sem `expectedLastEditedAt`. Nos outros, passe sempre o valor da última leitura.
 
 **Nunca chame `publish_article` sem pedido explícito.** O MCP não apaga nem despublica: publicar só se desfaz publicando outra versão por cima.

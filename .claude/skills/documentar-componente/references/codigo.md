@@ -34,9 +34,42 @@ pnpm --filter @grupoitss/prizm-ui typecheck
 pnpm --filter @grupoitss/prizm-tokens test     # se mexeu em token
 ```
 
-Lint e `tsc` do app `docs` (stories) acusam erros de tipo locais porque `@grupoitss/prizm-ui` não está compilado. Rode o mesmo comando no arquivo da main e compare: só conta o erro novo.
+Lint e `tsc` do app `docs` (stories) acusam erros de tipo locais quando `@grupoitss/prizm-ui` não está compilado. Compile antes (`pnpm --filter @grupoitss/prizm-tokens build` e `pnpm --filter @grupoitss/prizm-ui build`) e rode de novo: com o pacote compilado, a story tem de passar limpa.
 
 Escreva o teste que prova a correção (ex.: foco continua no botão em loading; aviso quando falta nome). Se algo não roda, diga qual comando e o erro; não declare verde.
+
+## Formatação
+
+Não rode o prettier no repositório, nem o formatar ao salvar do editor (Cursor, VS Code). Não há config de prettier, e o padrão de 80 colunas reformata arquivos que não são do pedido: o #181 entrou com cerca de 46 linhas só de formatação. Antes de cada commit:
+
+```bash
+git diff --stat origin/main
+```
+
+A lista tem de trazer só os arquivos do pedido. Se aparecer outro, desfaça a mudança nele. Gerar JSON por script (`json.dump` do Python) também desdobra objetos de uma linha: preserve o formato do arquivo.
+
+## Padrões que se repetem
+
+- **`data-slot` em cada peça**, como no shadcn v4. O pai estiliza a peça pelo `data-slot` ou por grupo: `has-[[data-slot][readonly]]` (InputGroup), `group-data-[size=xs]/item:text-xs` (Item).
+- **Somente leitura pelo atributo `[readonly]`**, não por `:read-only`, que também casa com `disabled` e com `type=file`.
+- **Link e botão dentro de outro componente** (renderizadores da Table, link do Badge) usam o anel do Button: `focus-visible:ring-[3px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset`. É o que o dono do DS escolheu nas últimas pendências; proponha como recomendação, não aplique sem decisão.
+- **Aviso no console para combinação inválida que o tipo não trava** (tratamento "avisar no console" do artigo). Só em desenvolvimento, em pt-BR, começando pelo nome do componente e dizendo o que fazer. Modelo do Item:
+
+```tsx
+React.useEffect(() => {
+  if (process.env.NODE_ENV === "production" || !clickable) return;
+  const control = actionsRef.current?.querySelector(
+    "button, a[href], input, select, textarea, [tabindex]",
+  );
+  if (control) {
+    console.warn(
+      "Item: controle em actions dentro de um Item clicável (href ou interactive) é um controle dentro de outro. Tire o botão ou o clique do Item.",
+    );
+  }
+});
+```
+
+- **Impacto em outros componentes.** Antes de escrever no PR ou no changeset que a mudança chega a outro componente, ache os consumidores e leia o `className` que cada um passa. O DataTable sobrescreve as classes de cabeçalho e célula da Table, e a densidade nova não chega nele.
 
 ## Changeset
 
@@ -48,4 +81,10 @@ Commits pequenos no padrão do histórico: `fix(ui): …`, `feat(tokens): …`, 
 
 **Nunca mergeie sem pedido.** Quem mergeia é o dono do DS. Depois do merge, a doc (Figma e artigo) cita o número do PR.
 
-Uma mudança que entrou numa branch cujo PR já foi mergeado não chega à main: precisa de PR novo.
+Uma mudança que entrou numa branch cujo PR já foi mergeado não chega à main: precisa de PR novo. O dono do DS pode mergear enquanto você ainda trabalha na branch, então confira o estado antes de cada push:
+
+```bash
+gh pr view <número> --json state -q .state
+```
+
+Se voltar `MERGED`, crie uma branch nova a partir de `origin/main`, leve os commits que faltam com `git cherry-pick` e abra outro PR. Foi o que aconteceu com a Table (09/11): o #190 foi mergeado com o primeiro commit, e o mapa de tokens, a story e o renderizador `actions` ficaram na branch.
