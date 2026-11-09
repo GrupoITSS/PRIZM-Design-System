@@ -11,3 +11,4 @@ Table: decisões de 06/11/2026.
 - Renderizador `hover`: o gatilho vira `<button>`, e o teclado abre o Popover e o HoverCard.
 - Renderizador `text-image`: a imagem fica decorativa (`alt=""`).
 - Links e botões dos renderizadores com o anel de foco do Button.
+- Renderizador `actions`: com uma lista de ações como valor da célula, mostra o `ActionMenu` (antes, mostrava o valor como texto). Abrir o menu não dispara o clique da linha.

@@ -23,46 +23,46 @@ type InvoiceRow = {
 const invoices: InvoiceRow[] = [
   {
     invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
+    paymentStatus: "Pago",
+    totalAmount: "R$ 250,00",
+    paymentMethod: "Cartão de crédito",
   },
   {
     invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
+    paymentStatus: "Pendente",
+    totalAmount: "R$ 150,00",
+    paymentMethod: "Pix",
   },
   {
     invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
+    paymentStatus: "Não pago",
+    totalAmount: "R$ 350,00",
+    paymentMethod: "Transferência",
   },
   {
     invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
+    paymentStatus: "Pago",
+    totalAmount: "R$ 450,00",
+    paymentMethod: "Cartão de crédito",
   },
 ];
 
 const invoiceColumns: TableColumn<InvoiceRow>[] = [
   {
     key: "invoice",
-    header: "Invoice",
+    header: "Fatura",
     width: "100px",
     cellClassName: "font-medium",
   },
   { key: "paymentStatus", header: "Status" },
-  { key: "paymentMethod", header: "Method" },
-  { key: "totalAmount", header: "Amount", align: "right" },
+  { key: "paymentMethod", header: "Forma de pagamento" },
+  { key: "totalAmount", header: "Valor", align: "right" },
 ];
 
 const invoiceFooter: TableFooterRow[] = [
   [
     { content: "Total", colSpan: 3 },
-    { content: "$2,500.00", align: "right" },
+    { content: "R$ 2.500,00", align: "right" },
   ],
 ];
 
@@ -121,19 +121,27 @@ const organizations: OrgRow[] = [
   },
 ];
 
+// Traceability: the Table components in [PRIZM] Componentes, the documentation frame and the CMS
+// article. The token map lives next to the component (table.tokens.json) and is checked in a test.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=325-388";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26381-2461";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=47362d42-e44e-4171-87f3-d91b3525e0e2&version=v1";
+
 const meta: Meta<typeof Table<OrgRow>> = {
   title: "Primários/Table",
   component: Table,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
-          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          "Tabela do design system PRIZM. API por props: `columns`, `rows`, `caption`, `footerRows`.\n\n" +
-          "Renderizadores PRIZM (`contentRenderType` / `contentFormatType`) são **compatíveis com a meta API do Grid do Cockpit** " +
-          "(STATUS, TEXT_IMAGE, BADGE, HOVER, TEXT_BUTTON, formatação CNPJ/CPF/data etc.).\n\n" +
-          '**Referência:** <a href="https://ui.shadcn.com/docs/components/table" target="_blank" rel="noopener noreferrer">Table — shadcn/ui</a>',
+          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com), com tokens PRIZM.\n\n" +
+          "Tabela de dados em colunas, com cabeçalho, linhas, rodapé e legenda. API por props: `columns`, `rows`, `caption`, `footerRows` e `emptyMessage`. Para composição livre, as primitivas (`TableRoot`, `TableHeader`, `TableRow`…).\n\n" +
+          "Renderizadores PRIZM (`contentRenderType` e `contentFormatType`), compatíveis com a meta API do Grid do Cockpit: `status`, `text-image`, `text-button`, `badge`, `hover`, `status-summary-with-popover` e formatos de CNPJ, CPF, data, moeda e outros.\n\n" +
+          "Dê nome à tabela com `caption` ou `aria-label`. Para ordenar, filtrar, paginar ou selecionar, use o DataTable.\n\n" +
+          '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/table" target="_blank" rel="noopener noreferrer">Table — shadcn/ui</a>\n\n' +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
@@ -268,7 +276,7 @@ export const BasicInvoices: InvoiceStory = {
   args: {
     columns: invoiceColumns,
     rows: invoices,
-    caption: "A list of your recent invoices.",
+    caption: "Faturas recentes.",
     footerRows: invoiceFooter,
     getRowKey: (row) => row.invoice,
   },
@@ -278,7 +286,7 @@ export const WithFooter: InvoiceStory = {
   args: {
     columns: invoiceColumns,
     rows: invoices.slice(0, 3),
-    caption: "A list of your recent invoices.",
+    caption: "Faturas recentes.",
     footerRows: invoiceFooter,
     getRowKey: (row) => row.invoice,
   },
@@ -299,32 +307,32 @@ export const WithRowActions: Story = {
   render: function WithRowActionsStory() {
     type ProductRow = { product: string; price: string };
     const products: ProductRow[] = [
-      { product: "Wireless Mouse", price: "$29.99" },
-      { product: "Mechanical Keyboard", price: "$129.99" },
-      { product: "USB-C Hub", price: "$49.99" },
+      { product: "Mouse sem fio", price: "R$ 129,90" },
+      { product: "Teclado mecânico", price: "R$ 459,90" },
+      { product: "Hub USB-C", price: "R$ 189,90" },
     ];
 
     const columns: TableColumn<ProductRow>[] = [
-      { key: "product", header: "Product", cellClassName: "font-medium" },
-      { key: "price", header: "Price" },
+      { key: "product", header: "Produto", cellClassName: "font-medium" },
+      { key: "price", header: "Preço", align: "right" },
       {
         key: "actions",
-        header: "Actions",
+        header: "Ações",
         align: "right",
         render: () => (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="size-8">
                 <Ellipsis />
-                <span className="sr-only">Open menu</span>
+                <span className="sr-only">Abrir menu</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem>Duplicate</DropdownMenuItem>
+              <DropdownMenuItem>Editar</DropdownMenuItem>
+              <DropdownMenuItem>Duplicar</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive">
-                Delete
+                Excluir
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -391,22 +399,22 @@ export const WithPrizmCellRenderers: Story = {
       },
       {
         key: "company",
-        header: "Company",
+        header: "Empresa",
         contentRenderType: ContentRenderType.TEXT_IMAGE,
         link: "/organization/:id",
         width: "220px",
       },
       {
         key: "plans",
-        header: "Plans",
+        header: "Planos",
         contentRenderType: ContentRenderType.HOVER,
         renderPopover: {
-          title: "Plans",
+          title: "Planos",
           trigger: "click",
           position: "bottom",
           content: ({ row }) => (
             <div className="space-y-1">
-              <div className="text-sm font-medium">Company</div>
+              <div className="text-sm font-medium">Empresa</div>
               <div className="text-sm text-muted-foreground">{row?.company?.text ?? "—"}</div>
             </div>
           ),
@@ -422,7 +430,8 @@ export const WithPrizmCellRenderers: Story = {
       },
       {
         key: "summary",
-        header: "Summary",
+        header: "Resumo",
+        statusSummaryColumnHeaders: { type: "Tipo", item: "Item", status: "Status" },
         contentRenderType: ContentRenderType.STATUS_SUMMARY_WITH_POPOVER,
         width: "120px",
       },
