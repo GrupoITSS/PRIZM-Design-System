@@ -4,6 +4,7 @@ import { Button } from "@grupoitss/prizm-ui/button";
 import {
   Card,
   CardAction,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -18,23 +19,15 @@ const meta: Meta<typeof Card> = {
     docs: {
       description: {
         component:
-          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Card do design system PRIZM. Exibe conteúdo agrupado com header, body e footer.\n\nUso recomendado: `<Card title={} description={} action={} footer={}>children</Card>`.\n\nBaseado em shadcn/ui, com suporte a `size="default" | "sm"` para controlar a densidade.\n\n**Documentação base:** <a href="https://ui.shadcn.com/docs/components/card" target="_blank" rel="noopener noreferrer">Card — shadcn/ui</a>',
+          "Caixa que agrupa conteúdo relacionado com cabeçalho, corpo e rodapé. Base: [shadcn/ui](https://ui.shadcn.com) + tokens PRIZM.\n\n" +
+          "API documentada: composição (`CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`, `CardFooter`). " +
+          "As props `title`, `description`, `action` e `footer` são atalho compatível.\n\n" +
+          '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/card" target="_blank" rel="noopener noreferrer">Card — shadcn/ui</a>',
       },
     },
   },
   args: {
-    size: "default",
-    title: "Card Title",
-    description: "Card Description",
-    footer: "Card Footer",
     className: "mx-auto w-full max-w-sm",
-  },
-  argTypes: {
-    size: {
-      control: "select",
-      options: ["default", "sm"],
-    },
   },
 };
 
@@ -43,24 +36,41 @@ export default meta;
 type Story = StoryObj<typeof Card>;
 
 export const Default: Story = {
-  render: (args) => (
-    <Card {...args} action={<button className="text-xs font-medium">Action</button>}>
-      <p>Card Content</p>
+  render: () => (
+    <Card className="mx-auto w-full max-w-sm">
+      <CardHeader>
+        <CardTitle>Card Title</CardTitle>
+        <CardDescription>Card Description</CardDescription>
+        <CardAction>
+          <button type="button" className="text-xs font-medium">
+            Action
+          </button>
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <p>Card Content</p>
+      </CardContent>
+      <CardFooter>Card Footer</CardFooter>
     </Card>
   ),
 };
 
-export const Size: Story = {
+export const AtalhoPorProps: Story = {
+  name: "Atalho por props",
   render: () => (
-    <div className="mx-auto flex w-full max-w-sm flex-col gap-6">
-      <Card title="Default size" description="Uses default spacing." footer="Footer">
-        <p>Content with default spacing.</p>
-      </Card>
-
-      <Card size="sm" title="Small size" description="Uses smaller spacing." footer="Footer">
-        <p>Content with small spacing.</p>
-      </Card>
-    </div>
+    <Card
+      className="mx-auto w-full max-w-sm"
+      title="Card Title"
+      description="Card Description"
+      action={
+        <button type="button" className="text-xs font-medium">
+          Action
+        </button>
+      }
+      footer="Card Footer"
+    >
+      <p>Card Content</p>
+    </Card>
   ),
 };
 

@@ -1,8 +1,6 @@
 import type * as React from "react";
-import type { CardVariantProps } from "./card.styles";
 
-export interface CardProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "title">, CardVariantProps {
+export interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   /**
    * Title text/content for the card header.
    * When provided, the header is rendered automatically as part of the simplified API.
