@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Badge } from "../badge";
 import { StatusColumnComponent } from "./status-column/status-column";
+import { GridActionMenu, type GridAction } from "./table-action-menu";
 import { HoverCard } from "../hover-card";
 import { Popover } from "../popover";
 import { cn } from "../../lib/cn";
@@ -503,6 +504,19 @@ export function renderPrizmCell<TRow = unknown>({
           side={side}
           align="start"
         />
+      );
+    }
+
+    case ContentRenderType.ACTIONS: {
+      // Decision of 06/11/2026: the value is the row's list of actions, shown in the ActionMenu
+      // (Figma: Dropdown cell). Before, "actions" had no renderer and showed the value as text.
+      const actions = Array.isArray(value) ? (value as GridAction[]) : [];
+      if (!actions.length) return <span className="text-sm text-muted-foreground">—</span>;
+      return (
+        // Opening the menu or choosing an action must not trigger the row click (DataTable).
+        <span className="inline-flex" onClick={(event) => event.stopPropagation()}>
+          <GridActionMenu actions={actions} />
+        </span>
       );
     }
 

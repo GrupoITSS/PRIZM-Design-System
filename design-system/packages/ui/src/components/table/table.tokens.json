@@ -69,7 +69,7 @@
     "Avatar": "text-image",
     "Image": "text-image",
     "Button": "text-button",
-    "Dropdown": "render com ActionMenu",
+    "Dropdown": "actions",
     "Switch": "render",
     "Progress": "render",
     "Input": "render",
@@ -80,14 +80,14 @@
     {
       "where": "contentRenderType=\"actions\"",
       "figma": "célula Dropdown",
-      "code": "no enum e no DataTable, mas o renderPrizmCell não tem caso: mostra o valor como texto",
-      "status": "aberta"
+      "code": "renderizador criado: o valor é a lista de ações, mostrada no ActionMenu",
+      "status": "decidida (06/11): renderizador no código, PR #190"
     },
     {
       "where": "Borda de cima do rodapé",
-      "figma": "sem borda",
+      "figma": "borda color/border em cima",
       "code": "border-t",
-      "status": "aberta"
+      "status": "decidida (06/11): o Figma ganha a borda"
     },
     {
       "where": "Células de Progress, Aspect Ratio e Toggle Group",

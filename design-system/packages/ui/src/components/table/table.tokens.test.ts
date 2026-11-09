@@ -47,7 +47,12 @@ describe("Table × mapa de tokens (table.tokens.json)", () => {
     expect(c).toContain(`mt-${step(l.marginTop)}`);
   });
 
-  it("divergências abertas ficam registradas", () => {
-    expect(map.divergences.some((d) => d.where.includes("actions") && d.status === "aberta")).toBe(true);
+  it("rodapé: borda de cima no mapa e no código", () => {
+    expect(map.parts.footer.border).toBe("color/border");
+    expect(cls(tableFooter)).toContain("border-t");
+  });
+
+  it("a célula Dropdown do Figma corresponde ao renderizador actions", () => {
+    expect(map.cellTypes.Dropdown).toBe("actions");
   });
 });

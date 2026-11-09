@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 import { fireEvent } from "@testing-library/react";
 import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Table } from "./table";
 import { TableBody, TableCell, TableHead, TableHeader, TableRoot, TableRow } from "./table-primitives";
 import { ContentRenderType } from "./table-cell-renderers.types";
@@ -228,5 +228,33 @@ describe("Table · renderizadores e acessibilidade (06/11/2026)", () => {
         "focus-visible:ring-offset-ring-offset",
       );
     }
+  });
+});
+
+describe("Table · renderizador actions (06/11/2026)", () => {
+  type A = { id: string; acoes: { label: string; onClick: () => void }[] };
+
+  it("mostra o ActionMenu quando o valor é a lista de ações da linha", () => {
+    const onClick = vi.fn();
+    render(
+      <Table<A>
+        columns={[{ key: "acoes", header: "Ações", contentRenderType: ContentRenderType.ACTIONS }]}
+        rows={[{ id: "1", acoes: [{ label: "Editar", onClick }] }]}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Abrir menu de ações" }));
+    fireEvent.click(screen.getByRole("button", { name: "Editar" }));
+    expect(onClick).toHaveBeenCalled();
+  });
+
+  it("sem ações, mostra um traço", () => {
+    render(
+      <Table<A>
+        columns={[{ key: "acoes", header: "Ações", contentRenderType: ContentRenderType.ACTIONS }]}
+        rows={[{ id: "1", acoes: [] }]}
+      />,
+    );
+    expect(screen.getByText("—")).toBeInTheDocument();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 });
