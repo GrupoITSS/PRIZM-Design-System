@@ -214,7 +214,7 @@ describe("Table · renderizadores e acessibilidade (06/11/2026)", () => {
     render(
       <Table<L>
         columns={[
-          { key: "name", header: "Nome", link: "/empresas/{id}" },
+          { key: "name", header: "Nome", link: "/empresas/:id" },
           ...hoverCol("click"),
         ]}
         rows={[{ id: "1", name: "ACME", plans: "2" }]}
