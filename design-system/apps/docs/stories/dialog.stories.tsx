@@ -1,6 +1,8 @@
 import { Button } from "@grupoitss/prizm-ui/button";
 import { Field, FieldGroup, FieldLabel } from "@grupoitss/prizm-ui/field";
 import { Input } from "@grupoitss/prizm-ui/input";
+import { Label } from "@grupoitss/prizm-ui/label";
+import { Switch } from "@grupoitss/prizm-ui/switch";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import * as React from "react";
 import { Dialog, dialogSizes } from "@grupoitss/prizm-ui/dialog";
@@ -129,6 +131,43 @@ export const TwoColumnForm: Story = {
             </Field>
           </FieldGroup>
         </div>
+      }
+      footer={
+        <>
+          <Button type="button" variant="outline">
+            Cancelar
+          </Button>
+          <Button type="submit">Salvar</Button>
+        </>
+      }
+    />
+  ),
+};
+
+/**
+ * `titleAdornment`: status ou ação ao lado do título, como o Switch "Ativo" do cadastro de produto
+ * do Pricing. Fica fora do título, então o nome do Dialog continua "Editar produto".
+ */
+export const WithTitleAdornment: Story = {
+  render: () => (
+    <Dialog
+      size="xl"
+      trigger={<Button variant="outline">Editar produto</Button>}
+      title="Editar produto"
+      titleAdornment={
+        <>
+          <Switch id="produto-ativo" defaultChecked />
+          <Label htmlFor="produto-ativo">Ativo</Label>
+        </>
+      }
+      description="Defina o produto, sua categoria e as variantes."
+      body={
+        <FieldGroup>
+          <Field>
+            <FieldLabel htmlFor="produto-nome-adorno">Nome do produto</FieldLabel>
+            <Input id="produto-nome-adorno" defaultValue="Licença Docnix" />
+          </Field>
+        </FieldGroup>
       }
       footer={
         <>

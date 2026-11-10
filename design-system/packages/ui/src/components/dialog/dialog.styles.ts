@@ -59,6 +59,14 @@ export type DialogSize = (typeof dialogSizes)[number];
 /** Header: título e descrição alinhados como no AlertDialog. */
 export const dialogHeaderStyles = "flex flex-col space-y-1.5 text-center sm:text-left";
 
+/**
+ * Linha do título: o título e um elemento ao lado (status ou ação, como um Switch "Ativo"),
+ * a 12px (`spacing/3`), alinhados ao centro. Quebra de linha quando não cabe (8px, `spacing/2`).
+ * Centralizada no celular e à esquerda a partir de 640px, como o cabeçalho. Decisão de 09/11/2026.
+ */
+export const dialogTitleRowStyles =
+  "flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:justify-start";
+
 /** Footer: botões à direita a partir de 640px; no celular, empilhados com a ação principal em cima. */
 export const dialogFooterStyles = "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end";
 

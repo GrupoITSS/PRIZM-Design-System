@@ -10,6 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTitleRow,
   DialogTrigger,
 } from "./dialog";
 
@@ -205,5 +206,45 @@ describe("Dialog · size (09/11/2026)", () => {
     const dialog = await screen.findByRole("dialog");
     expect(dialog).toHaveClass("w-[96vw]", "max-w-6xl");
     expect(dialog).not.toHaveClass("max-w-lg", "w-[calc(100%-2rem)]");
+  });
+});
+
+describe("Dialog · titleAdornment (09/11/2026)", () => {
+  it("põe o elemento na linha do título, fora do nome do Dialog", async () => {
+    render(
+      <Dialog
+        defaultOpen
+        title="Cadastrar produto"
+        titleAdornment={<button type="button">Ativo</button>}
+      />,
+    );
+    const dialog = await screen.findByRole("dialog", { name: "Cadastrar produto" });
+    const row = dialog.querySelector("[data-slot=dialog-title-row]");
+    expect(row).toHaveClass("flex", "flex-wrap", "items-center", "gap-x-3");
+    expect(row).toContainElement(screen.getByRole("heading", { name: "Cadastrar produto" }));
+    expect(row).toContainElement(screen.getByRole("button", { name: "Ativo" }));
+  });
+
+  it("sem titleAdornment, não cria a linha", async () => {
+    render(<Dialog defaultOpen title="Edit profile" />);
+    await screen.findByRole("dialog");
+    expect(document.querySelector("[data-slot=dialog-title-row]")).toBeNull();
+  });
+
+  it("composição: DialogTitleRow", async () => {
+    render(
+      <Dialog defaultOpen>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitleRow>
+              <DialogTitle>Produto</DialogTitle>
+              <span>Ativo</span>
+            </DialogTitleRow>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>,
+    );
+    const row = (await screen.findByRole("dialog")).querySelector("[data-slot=dialog-title-row]");
+    expect(row).toHaveTextContent("ProdutoAtivo");
   });
 });
