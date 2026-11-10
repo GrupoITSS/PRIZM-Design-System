@@ -49,6 +49,7 @@ import {
   SidebarMenuSubItem,
   SidebarProvider,
   SidebarRail,
+  SidebarTrigger,
   useSidebar,
 } from "@grupoitss/prizm-ui/sidebar";
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -60,10 +61,14 @@ const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=5
 const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26475-4838";
 const FIGMA_REF_URL = "https://www.figma.com/design/fdV47vgUG4481ptSHnGT6n?node-id=931-7162";
 
-/** Header global de exemplo, acima da Sidebar (S2). */
+/**
+ * Header global de exemplo, acima da Sidebar (S2). No celular a Sidebar sai da tela: o
+ * SidebarTrigger do header abre a gaveta. No desktop ele some, e o botão fica dentro da Sidebar.
+ */
 function HeaderGlobal({ solucao = "Cockpit" }: { solucao?: string }) {
   return (
     <header className="fixed inset-x-0 top-0 z-20 flex h-12 items-center gap-2 border-b bg-background px-4 text-sm font-medium">
+      <SidebarTrigger className="md:hidden" />
       {solucao}
     </header>
   );
@@ -89,14 +94,12 @@ function Tela({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <HeaderGlobal solucao={solucao} />
-      <div className="pt-12">
-        <SidebarProvider headerHeight="3rem" defaultOpen={defaultOpen}>
-          {children}
-        </SidebarProvider>
-      </div>
-    </>
+    <div className="pt-12">
+      <SidebarProvider headerHeight="3rem" defaultOpen={defaultOpen}>
+        <HeaderGlobal solucao={solucao} />
+        {children}
+      </SidebarProvider>
+    </div>
   );
 }
 
@@ -609,9 +612,9 @@ export const Controlada: Story = {
     const [aberta, setAberta] = React.useState(true);
     return (
       <>
-        <HeaderGlobal />
         <div className="pt-12">
           <SidebarProvider headerHeight="3rem" open={aberta} onOpenChange={setAberta}>
+            <HeaderGlobal />
             <SidebarCockpit />
             <SidebarInset>
               <div className="border-b p-4 text-sm font-medium">Organizações</div>
