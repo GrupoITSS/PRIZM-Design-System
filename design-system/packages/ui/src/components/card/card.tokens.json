@@ -66,7 +66,7 @@
       "where": "gap do cabeçalho",
       "figma": "Card Header spacing/2; grupo Text spacing/1-5",
       "code": "gap-1.5 (spacing/1-5) no CardHeader",
-      "status": "aberta"
+      "status": "representação"
     },
     {
       "where": "Slot (conteúdo e rodapé)",
