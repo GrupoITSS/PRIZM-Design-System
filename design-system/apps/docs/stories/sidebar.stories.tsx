@@ -49,7 +49,6 @@ import {
   SidebarMenuSubItem,
   SidebarProvider,
   SidebarRail,
-  SidebarTrigger,
   useSidebar,
 } from "@grupoitss/prizm-ui/sidebar";
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -601,8 +600,9 @@ export const Carregando: Story = {
 };
 
 /**
- * Controlada de fora, com `open` e `onOpenChange`. Aqui o `SidebarTrigger` fica no conteúdo, para
- * mostrar que o estado pode vir de qualquer ponto da tela.
+ * Controlada: a tela guarda o estado, com `open` e `onOpenChange`, em vez do cookie. Serve, por
+ * exemplo, para recolher a Sidebar ao abrir um editor em tela cheia ou guardar a escolha no
+ * perfil. O botão de recolher continua dentro da Sidebar; a página só lê o estado.
  */
 export const Controlada: Story = {
   render: function Render() {
@@ -612,18 +612,12 @@ export const Controlada: Story = {
         <HeaderGlobal />
         <div className="pt-12">
           <SidebarProvider headerHeight="3rem" open={aberta} onOpenChange={setAberta}>
-            <Sidebar>
-              <SidebarContent>
-                <MenuPlataforma ativo="Acessos" />
-              </SidebarContent>
-            </Sidebar>
+            <SidebarCockpit />
             <SidebarInset>
-              <div className="flex items-center gap-2 border-b p-2">
-                <SidebarTrigger />
-                <span className="text-sm text-muted-foreground">
-                  {aberta ? "Aberta" : "Recolhida"}
-                </span>
-              </div>
+              <div className="border-b p-4 text-sm font-medium">Organizações</div>
+              <p className="p-4 text-sm text-muted-foreground">
+                Estado guardado pela tela: {aberta ? "aberta" : "recolhida"}.
+              </p>
             </SidebarInset>
           </SidebarProvider>
         </div>
