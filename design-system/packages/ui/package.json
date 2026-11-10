@@ -507,6 +507,16 @@
         "default": "./dist/sheet.cjs"
       }
     },
+    "./sidebar": {
+      "import": {
+        "types": "./dist/sidebar.d.mts",
+        "default": "./dist/sidebar.mjs"
+      },
+      "require": {
+        "types": "./dist/sidebar.d.cts",
+        "default": "./dist/sidebar.cjs"
+      }
+    },
     "./skeleton": {
       "import": {
         "types": "./dist/skeleton.d.mts",

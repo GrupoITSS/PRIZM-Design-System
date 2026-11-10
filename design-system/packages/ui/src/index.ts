@@ -60,6 +60,7 @@ export {
   sheetPanelWidthClass,
   sheetPanelWidthClasses,
 } from "./components/sheet/sheet.constants";
+export * from "./components/sidebar";
 export * from "./components/skeleton";
 export * from "./components/slider";
 export * from "./components/sonner";
