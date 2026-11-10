@@ -81,7 +81,7 @@ export const SettingsPanel: Story = {
   render: function SettingsPanelStory() {
     const [isOpen, setIsOpen] = React.useState(false);
     return (
-      <Card className="mx-auto w-full max-w-xs" size="sm">
+      <Card className="mx-auto w-full max-w-xs">
         <CardHeader>
           <CardTitle>Radius</CardTitle>
           <CardDescription>Set the corner radius of the element.</CardDescription>

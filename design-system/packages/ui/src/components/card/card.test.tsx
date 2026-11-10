@@ -1,7 +1,15 @@
 import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./card";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./card";
 
 describe("Card (PRIZM / shadcn)", () => {
   it("renderiza header, conteúdo e footer", () => {
@@ -18,31 +26,44 @@ describe("Card (PRIZM / shadcn)", () => {
     expect(screen.getByText("Card Footer")).toBeInTheDocument();
   });
 
-  it("aplica estilos base do card", () => {
+  it("aplica estilos alinhados ao Figma (radius/xl e título text/base)", () => {
     render(
       <Card>
+        <CardHeader>
+          <CardTitle>Title</CardTitle>
+          <CardDescription>Description</CardDescription>
+        </CardHeader>
         <CardContent>Content</CardContent>
       </Card>,
     );
 
     const card = screen.getByText("Content").closest("[data-slot='card']");
-    expect(card).toHaveClass("rounded-lg");
+    expect(card).toHaveClass("rounded-xl");
     expect(card).toHaveClass("bg-card");
     expect(card).toHaveClass("text-card-foreground");
+
+    const title = screen.getByText("Title");
+    expect(title).toHaveClass("text-base");
+    expect(title).toHaveClass("font-semibold");
+    expect(title).not.toHaveClass("text-2xl");
   });
 
-  it("usa espaçamento menor quando size='sm'", () => {
+  it("coloca CardAction no cabeçalho com data-slot para a grade", () => {
     render(
-      <Card size="sm">
+      <Card>
         <CardHeader>
-          <CardTitle>Small Card</CardTitle>
+          <CardTitle>Title</CardTitle>
+          <CardAction>Action</CardAction>
         </CardHeader>
         <CardContent>Content</CardContent>
         <CardFooter>Footer</CardFooter>
       </Card>,
     );
 
-    const header = screen.getByText("Small Card").closest("[data-slot='card-header']");
-    expect(header).toHaveClass("p-4");
+    const action = screen.getByText("Action");
+    expect(action.closest("[data-slot='card-action']")).toBeTruthy();
+    expect(screen.getByText("Title").closest("[data-slot='card-header']")).toHaveClass(
+      "has-data-[slot=card-action]:grid-cols-[1fr_auto]",
+    );
   });
 });

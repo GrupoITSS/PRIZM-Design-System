@@ -1,9 +1,12 @@
 import { cn } from "../../lib/cn";
 import * as React from "react";
 import {
-  cardContentVariants,
-  cardFooterVariants,
-  cardHeaderVariants,
+  cardActionStyles,
+  cardContentStyles,
+  cardDescriptionStyles,
+  cardFooterStyles,
+  cardHeaderStyles,
+  cardTitleStyles,
   cardVariants,
 } from "./card.styles";
 import type {
@@ -16,21 +19,15 @@ import type {
   CardTitleProps,
 } from "./card.types";
 
-type CardSize = NonNullable<CardProps["size"]>;
-
-const CardSizeContext = React.createContext<CardSize>("default");
-
-function useCardSize(): CardSize {
-  return React.use(CardSizeContext) ?? "default";
-}
-
 /**
- * Card — container used to group related content with optional header and footer.
+ * Card — caixa que agrupa conteúdo relacionado com cabeçalho, corpo e rodapé.
  *
- * The `size` prop controls the density of the header, content and footer.
+ * A API documentada é a composição (`CardHeader`, `CardTitle`, `CardDescription`,
+ * `CardAction`, `CardContent`, `CardFooter`). As props `title`, `description`,
+ * `action` e `footer` são um atalho compatível.
  *
  * @example
- * <Card size="sm">
+ * <Card>
  *   <CardHeader>
  *     <CardTitle>Card Title</CardTitle>
  *     <CardDescription>Card Description</CardDescription>
@@ -44,7 +41,6 @@ function useCardSize(): CardSize {
  */
 const Card = function Card({
   className,
-  size = "default",
   title,
   description,
   action,
@@ -53,39 +49,35 @@ const Card = function Card({
   ref,
   ...props
 }: CardProps & { ref?: React.Ref<HTMLDivElement> }) {
-  const normalizedSize: CardSize = size === "sm" ? "sm" : "default";
   const hasHeaderProps = title !== undefined || description !== undefined || action !== undefined;
   const hasFooterProp = footer !== undefined;
   const useSimplifiedAPI = hasHeaderProps || hasFooterProp;
 
   return (
-    <CardSizeContext value={normalizedSize}>
-      <div
-        ref={ref}
-        data-slot="card"
-        data-size={normalizedSize}
-        className={cn(cardVariants({ size: normalizedSize, className }))}
-        {...props}
-      >
-        {useSimplifiedAPI ? (
-          <>
-            {hasHeaderProps && (
-              <CardHeader>
-                {Boolean(title) && <CardTitle>{title}</CardTitle>}
-                {Boolean(description) && <CardDescription>{description}</CardDescription>}
-                {Boolean(action) && <CardAction>{action}</CardAction>}
-              </CardHeader>
-            )}
+    <div
+      ref={ref}
+      data-slot="card"
+      className={cn(cardVariants(), className)}
+      {...props}
+    >
+      {useSimplifiedAPI ? (
+        <>
+          {hasHeaderProps && (
+            <CardHeader>
+              {Boolean(title) && <CardTitle>{title}</CardTitle>}
+              {Boolean(description) && <CardDescription>{description}</CardDescription>}
+              {Boolean(action) && <CardAction>{action}</CardAction>}
+            </CardHeader>
+          )}
 
-            {Boolean(children) && <CardContent>{children}</CardContent>}
+          {Boolean(children) && <CardContent>{children}</CardContent>}
 
-            {hasFooterProp && <CardFooter>{footer}</CardFooter>}
-          </>
-        ) : (
-          children
-        )}
-      </div>
-    </CardSizeContext>
+          {hasFooterProp && <CardFooter>{footer}</CardFooter>}
+        </>
+      ) : (
+        children
+      )}
+    </div>
   );
 };
 
@@ -94,13 +86,11 @@ const CardHeader = function CardHeader({
   ref,
   ...props
 }: CardHeaderProps & { ref?: React.Ref<HTMLDivElement> }) {
-  const size = useCardSize();
-
   return (
     <div
       ref={ref}
       data-slot="card-header"
-      className={cn(cardHeaderVariants({ size, className }))}
+      className={cn(cardHeaderStyles, className)}
       {...props}
     />
   );
@@ -115,7 +105,7 @@ const CardTitle = function CardTitle({
     <div
       ref={ref}
       data-slot="card-title"
-      className={cn("text-2xl font-semibold leading-none tracking-tight", className)}
+      className={cn(cardTitleStyles, className)}
       {...props}
     />
   );
@@ -130,7 +120,7 @@ const CardDescription = function CardDescription({
     <div
       ref={ref}
       data-slot="card-description"
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn(cardDescriptionStyles, className)}
       {...props}
     />
   );
@@ -141,13 +131,11 @@ const CardContent = function CardContent({
   ref,
   ...props
 }: CardContentProps & { ref?: React.Ref<HTMLDivElement> }) {
-  const size = useCardSize();
-
   return (
     <div
       ref={ref}
       data-slot="card-content"
-      className={cn(cardContentVariants({ size, className }))}
+      className={cn(cardContentStyles, className)}
       {...props}
     />
   );
@@ -158,13 +146,11 @@ const CardFooter = function CardFooter({
   ref,
   ...props
 }: CardFooterProps & { ref?: React.Ref<HTMLDivElement> }) {
-  const size = useCardSize();
-
   return (
     <div
       ref={ref}
       data-slot="card-footer"
-      className={cn(cardFooterVariants({ size, className }))}
+      className={cn(cardFooterStyles, className)}
       {...props}
     />
   );
@@ -179,7 +165,7 @@ const CardAction = function CardAction({
     <div
       ref={ref}
       data-slot="card-action"
-      className={cn("ml-auto flex items-center gap-2", className)}
+      className={cn(cardActionStyles, className)}
       {...props}
     />
   );

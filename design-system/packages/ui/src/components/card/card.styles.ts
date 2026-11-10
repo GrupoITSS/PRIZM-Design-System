@@ -5,70 +5,46 @@ import { cva, type VariantProps } from "class-variance-authority";
  * All styles use design tokens from @grupoitss/prizm-tokens (`bg-card`, `text-card-foreground`, etc.).
  * Compatible with light/dark mode via :root and .dark CSS variables.
  *
+ * Decisions of 09/11/2026 (Leonardo): `radius/xl` (`rounded-xl`), title `text/base`, no `size`
+ * axis (Figma and shadcn have a single density). CardAction sits in the header grid, top-right.
+ *
  * @see https://ui.shadcn.com/docs/components/card
  */
 export const cardVariants = cva(
-  "rounded-lg border border-border bg-card text-card-foreground shadow-sm",
-  {
-    variants: {
-      size: {
-        default: "",
-        /**
-         * Small card: slightly reduced typography and density.
-         */
-        sm: "text-sm",
-      },
-    },
-    defaultVariants: {
-      size: "default",
-    },
-  },
+  "rounded-xl border border-border bg-card text-card-foreground shadow-sm",
 );
 
 export type CardVariantProps = VariantProps<typeof cardVariants>;
 
 /**
- * CardHeader — top section used for title, description and optional action.
- * Padding is controlled by the card size to keep density consistent.
+ * CardHeader — title, description and optional action.
+ * With `CardAction`, the grid places the action in the top-right (shadcn pattern).
  */
-export const cardHeaderVariants = cva("flex flex-col space-y-1.5", {
-  variants: {
-    size: {
-      default: "p-6",
-      sm: "p-4 pb-3",
-    },
-  },
-  defaultVariants: {
-    size: "default",
-  },
-});
+export const cardHeaderStyles =
+  "@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 p-6 has-data-[slot=card-action]:grid-cols-[1fr_auto]";
 
 /**
  * CardContent — main body section of the card.
  */
-export const cardContentVariants = cva("", {
-  variants: {
-    size: {
-      default: "p-6 pt-0",
-      sm: "p-4 pt-0",
-    },
-  },
-  defaultVariants: {
-    size: "default",
-  },
-});
+export const cardContentStyles = "p-6 pt-0";
 
 /**
  * CardFooter — bottom section used for actions and secondary content.
  */
-export const cardFooterVariants = cva("flex items-center", {
-  variants: {
-    size: {
-      default: "p-6 pt-0",
-      sm: "p-4 pt-0",
-    },
-  },
-  defaultVariants: {
-    size: "default",
-  },
-});
+export const cardFooterStyles = "flex items-center p-6 pt-0";
+
+/**
+ * CardAction — top-right of the header when present.
+ */
+export const cardActionStyles =
+  "col-start-2 row-span-2 row-start-1 self-start justify-self-end flex items-center gap-2";
+
+/**
+ * CardTitle — text/base semibold, matching Figma (`text/base` + `font-weight/semibold`).
+ */
+export const cardTitleStyles = "text-base font-semibold leading-none tracking-tight";
+
+/**
+ * CardDescription — text/sm muted.
+ */
+export const cardDescriptionStyles = "text-sm text-muted-foreground";
