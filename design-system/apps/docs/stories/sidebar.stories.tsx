@@ -60,6 +60,8 @@ import * as React from "react";
 const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=5198-1113";
 const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26475-4838";
 const FIGMA_REF_URL = "https://www.figma.com/design/fdV47vgUG4481ptSHnGT6n?node-id=931-7162";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=0c03a023-e958-49af-830e-ee2c3a10dc58&version=v1";
 
 /**
  * Header global de exemplo, acima da Sidebar (S2). No celular a Sidebar sai da tela: o
@@ -207,7 +209,7 @@ function SidebarCockpit() {
 const meta: Meta<typeof Sidebar> = {
   title: "Primários/Sidebar",
   component: Sidebar,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     layout: "fullscreen",
     docs: {
@@ -221,7 +223,7 @@ const meta: Meta<typeof Sidebar> = {
           '- O item da página atual leva `isActive`: fundo `color/sidebar-primary` e `aria-current="page"`.\n' +
           "- Ctrl ou Cmd + B abre e recolhe, menos com o foco num campo editável. Desligue com `keyboardShortcut={false}`.\n\n" +
           "As stories Cockpit, Assistant e Portal do Conhecimento reproduzem as Sidebars dos produtos no Redesign Docnix.\n\n" +
-          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Referência dos produtos](${FIGMA_REF_URL}).`,
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}) · [Referência dos produtos](${FIGMA_REF_URL}).`,
       },
     },
   },
