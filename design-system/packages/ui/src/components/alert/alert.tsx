@@ -2,9 +2,9 @@ import { cn } from "../../lib/cn";
 import * as React from "react";
 import {
   alertActionStyles,
-  alertBodyStyles,
+  alertBodyVariants,
   alertDescriptionStyles,
-  alertMainStyles,
+  alertMainVariants,
   alertRoles,
   alertTitleStyles,
   alertVariants,
@@ -17,6 +17,7 @@ import type { AlertDescriptionProps, AlertProps, AlertTitleProps } from "./alert
  * `destructive` and `warning` render with `role="alert"` (interrupts the screen reader);
  * `default`, `success` and `info` with `role="status"` (polite). Pass `role` to override.
  *
+ * **Action:** `action` sits at the right of the text (`actionPosition="right"`, default) or on its own line below it (`actionPosition="bottom"`).
  * **Simplified API:** Pass `title`, `description`, `icon` and `action` as props (any of them; `title` is optional) (e.g. `<Alert variant="success" title="Saved" description="Changes saved." />`).
  * **Composition API:** Pass AlertTitle and AlertDescription as children for advanced use.
  *
@@ -29,6 +30,7 @@ const Alert = ({
   description,
   icon,
   action,
+  actionPosition = "right",
   children,
   ref,
   ...props
@@ -50,8 +52,12 @@ const Alert = ({
       {useSimplifiedAPI && action != null ? (
         <>
           {icon}
-          <div data-slot="alert-main" className={alertMainStyles}>
-            <div data-slot="alert-body" className={alertBodyStyles}>
+          <div
+            data-slot="alert-main"
+            data-action-position={actionPosition}
+            className={alertMainVariants({ actionPosition })}
+          >
+            <div data-slot="alert-body" className={alertBodyVariants({ actionPosition })}>
               {title != null && <AlertTitle>{title}</AlertTitle>}
               {description != null && <AlertDescription>{description}</AlertDescription>}
               {children}

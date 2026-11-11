@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { alertMainStyles, alertRoles, alertTitleStyles, alertVariants } from "./alert.styles";
+import {
+  alertMainStyles,
+  alertMainVariants,
+  alertRoles,
+  alertTitleStyles,
+  alertVariants,
+} from "./alert.styles";
 import map from "./alert.tokens.json";
 
 // Figma token → Tailwind: "color/destructive-weak" → "destructive-weak", "spacing/4" → "4".
@@ -66,6 +72,12 @@ describe("Alert × mapa de tokens (alert.tokens.json)", () => {
     expect(m).toContain(`gap-x-${step(map.layout.action.gap)}`);
     expect(m).toContain(`gap-y-${step(map.layout.action.wrapGap)}`);
     expect(m).toEqual(expect.arrayContaining(["flex", "flex-wrap", "items-center"]));
+  });
+
+  it("ação abaixo (bottom): spacing/2 do texto, alinhada à esquerda", () => {
+    const m = alertMainVariants({ actionPosition: "bottom" }).split(" ");
+    expect(m).toContain(`gap-${step(map.layout.action.bottom.gap)}`);
+    expect(m).toEqual(expect.arrayContaining(["flex", "flex-col", "items-start"]));
   });
 
   it("estados: sem hover nem foco", () => {

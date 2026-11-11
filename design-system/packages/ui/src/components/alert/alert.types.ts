@@ -1,5 +1,5 @@
 import type * as React from "react";
-import type { AlertVariantProps } from "./alert.styles";
+import type { AlertActionPosition, AlertVariantProps } from "./alert.styles";
 
 export interface AlertProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "title">, AlertVariantProps {
@@ -27,6 +27,13 @@ export interface AlertProps
    * @example <Button variant="outline" size="sm">Recarregar</Button>
    */
   action?: React.ReactNode;
+  /**
+   * Where `action` goes. `right` (default): at the right of the text, moving below it only when it
+   * does not fit. `bottom`: always on its own line below the text, aligned with it — for narrow
+   * containers such as a 312px card. Same as Action position in Figma. Ignored without `action`.
+   * @default "right"
+   */
+  actionPosition?: AlertActionPosition;
 }
 
 /** Title of the alert. Rendered as a `div`, so it does not enter the page heading outline. */

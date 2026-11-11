@@ -37,6 +37,11 @@ const meta: Meta<typeof Alert> = {
     },
     title: { control: "text" },
     description: { control: "text" },
+    actionPosition: {
+      control: "inline-radio",
+      options: ["right", "bottom"],
+      description: "Posição da ação: à direita do texto ou abaixo. Só vale com `action`.",
+    },
   },
 };
 
@@ -131,6 +136,30 @@ export const WithAction: Story = {
       <div className="max-w-xs">
         <Alert {...args} />
       </div>
+    </div>
+  ),
+};
+
+/** Ação abaixo do texto, para containers estreitos (o card Totais do Pricing, de 312px). */
+export const WithActionBottom: Story = {
+  args: {
+    variant: "warning",
+    icon: <TriangleAlert className="size-4" />,
+    title: "Desconto acima do limite",
+    description: "O desconto passa de 15%. Peça aprovação para enviar o orçamento.",
+    action: (
+      <Button variant="outline" size="sm">
+        Pedir aprovação
+      </Button>
+    ),
+    actionPosition: "bottom",
+  },
+  render: (args) => (
+    <div className="flex flex-col gap-4">
+      <div style={{ width: 312 }}>
+        <Alert {...args} />
+      </div>
+      <Alert {...args} />
     </div>
   ),
 };

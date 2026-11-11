@@ -50,11 +50,42 @@ export const alertDescriptionStyles = "text-sm [&_p]:leading-relaxed";
 /**
  * Com `action` (decisão de 11/11/2026): o texto e a ação na mesma linha, a ação à direita e
  * centralizada, a 16px (`spacing/4`). Em largura estreita, a ação desce para baixo do texto, a 8px.
+ * Com `actionPosition="bottom"`, ela fica sempre numa linha própria, a 8px, alinhada ao texto.
  */
 export const alertMainStyles = "flex flex-wrap items-center gap-x-4 gap-y-2";
 
 /** Texto do Alert com ação: ocupa o espaço que sobra e deixa a ação descer quando não cabe. */
 export const alertBodyStyles = "min-w-0 flex-1 basis-48";
+
+/**
+ * Posição da ação (decisão de 11/11/2026, a pedido do Pricing): `right` (padrão) é o
+ * comportamento de `alertMainStyles` e `alertBodyStyles`; `bottom` empilha o texto, com a largura
+ * toda, e a ação abaixo.
+ */
+export const alertMainVariants = cva("", {
+  variants: {
+    actionPosition: {
+      right: alertMainStyles,
+      bottom: "flex flex-col items-start gap-2",
+    },
+  },
+  defaultVariants: { actionPosition: "right" },
+});
+
+export const alertBodyVariants = cva("", {
+  variants: {
+    actionPosition: {
+      right: alertBodyStyles,
+      bottom: "w-full min-w-0",
+    },
+  },
+  defaultVariants: { actionPosition: "right" },
+});
+
+/** As posições da ação, na ordem do Figma (Action position). */
+export const alertActionPositions = ["right", "bottom"] as const;
+
+export type AlertActionPosition = (typeof alertActionPositions)[number];
 
 /** Ação do Alert: um Button Outline sm do Prizm, por padrão. */
 export const alertActionStyles = "flex shrink-0 items-center gap-2";
