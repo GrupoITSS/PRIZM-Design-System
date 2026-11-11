@@ -21,6 +21,12 @@ export interface AlertProps
    * @example <CircleCheckBig className="size-4" />
    */
   icon?: React.ReactNode;
+  /**
+   * Action at the right of the text, vertically centered; on a narrow alert it moves below the
+   * text. Use a Prizm `Button` with `variant="outline"` and `size="sm"`.
+   * @example <Button variant="outline" size="sm">Recarregar</Button>
+   */
+  action?: React.ReactNode;
 }
 
 /** Title of the alert. Rendered as a `div`, so it does not enter the page heading outline. */

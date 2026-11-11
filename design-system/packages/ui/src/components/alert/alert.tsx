@@ -1,6 +1,14 @@
 import { cn } from "../../lib/cn";
 import * as React from "react";
-import { alertDescriptionStyles, alertRoles, alertTitleStyles, alertVariants } from "./alert.styles";
+import {
+  alertActionStyles,
+  alertBodyStyles,
+  alertDescriptionStyles,
+  alertMainStyles,
+  alertRoles,
+  alertTitleStyles,
+  alertVariants,
+} from "./alert.styles";
 import type { AlertDescriptionProps, AlertProps, AlertTitleProps } from "./alert.types";
 
 /**
@@ -9,7 +17,7 @@ import type { AlertDescriptionProps, AlertProps, AlertTitleProps } from "./alert
  * `destructive` and `warning` render with `role="alert"` (interrupts the screen reader);
  * `default`, `success` and `info` with `role="status"` (polite). Pass `role` to override.
  *
- * **Simplified API:** Pass `title`, `description`, `icon` as props (any of them; `title` is optional) (e.g. `<Alert variant="success" title="Saved" description="Changes saved." />`).
+ * **Simplified API:** Pass `title`, `description`, `icon` and `action` as props (any of them; `title` is optional) (e.g. `<Alert variant="success" title="Saved" description="Changes saved." />`).
  * **Composition API:** Pass AlertTitle and AlertDescription as children for advanced use.
  *
  * @see [Alert — shadcn/ui](https://ui.shadcn.com/docs/components/alert)
@@ -20,6 +28,7 @@ const Alert = ({
   title,
   description,
   icon,
+  action,
   children,
   ref,
   ...props
@@ -27,7 +36,7 @@ const Alert = ({
   // API por props quando há title, description ou icon (o Figma permite Alert sem título).
   // Sem nenhum deles, é composição: só children. Na API por props, children entram depois
   // da descrição (ex.: um Button de ação), para nada sumir sem aviso.
-  const useSimplifiedAPI = title != null || description != null || icon != null;
+  const useSimplifiedAPI = title != null || description != null || icon != null || action != null;
 
   return (
     <div
@@ -38,7 +47,21 @@ const Alert = ({
       className={cn(alertVariants({ variant }), className)}
       {...props}
     >
-      {useSimplifiedAPI ? (
+      {useSimplifiedAPI && action != null ? (
+        <>
+          {icon}
+          <div data-slot="alert-main" className={alertMainStyles}>
+            <div data-slot="alert-body" className={alertBodyStyles}>
+              {title != null && <AlertTitle>{title}</AlertTitle>}
+              {description != null && <AlertDescription>{description}</AlertDescription>}
+              {children}
+            </div>
+            <div data-slot="alert-action" className={alertActionStyles}>
+              {action}
+            </div>
+          </div>
+        </>
+      ) : useSimplifiedAPI ? (
         <>
           {icon}
           {title != null && <AlertTitle>{title}</AlertTitle>}

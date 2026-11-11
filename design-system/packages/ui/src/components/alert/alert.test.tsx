@@ -44,7 +44,12 @@ describe("Alert (PRIZM / shadcn)", () => {
     it("default é neutro, com descrição secundária", () => {
       render(<Alert title="Title" description="Desc" />);
       const root = screen.getByRole("status");
-      expect(root).toHaveClass("bg-card", "border-border", "text-foreground", "[&>svg]:text-foreground");
+      expect(root).toHaveClass(
+        "bg-card",
+        "border-border",
+        "text-foreground",
+        "[&>svg]:text-foreground",
+      );
       expect(root).toHaveClass("[&_[data-slot=alert-description]]:text-muted-foreground");
     });
 
@@ -53,7 +58,12 @@ describe("Alert (PRIZM / shadcn)", () => {
       (tone) => {
         const { container } = render(<Alert variant={tone} title="Title" />);
         const root = container.firstElementChild;
-        expect(root).toHaveClass(`bg-${tone}-weak`, `border-${tone}`, `text-${tone}-strong`, `[&>svg]:text-${tone}`);
+        expect(root).toHaveClass(
+          `bg-${tone}-weak`,
+          `border-${tone}`,
+          `text-${tone}-strong`,
+          `[&>svg]:text-${tone}`,
+        );
         expect(root).not.toHaveClass("bg-card", `text-${tone}`);
       },
     );
@@ -80,7 +90,11 @@ describe("Alert (PRIZM / shadcn)", () => {
 
     it("com title e description, children (ação) entram depois da descrição", () => {
       render(
-        <Alert variant="destructive" title="Não foi possível salvar" description="Verifique a conexão.">
+        <Alert
+          variant="destructive"
+          title="Não foi possível salvar"
+          description="Verifique a conexão."
+        >
           <button type="button">Tentar de novo</button>
         </Alert>,
       );
@@ -98,6 +112,38 @@ describe("Alert (PRIZM / shadcn)", () => {
         </Alert>,
       );
       expect(screen.getByText("Composição")).toBeInTheDocument();
+    });
+  });
+
+  describe("action (decisão de 11/11/2026)", () => {
+    it("a ação fica ao lado do texto, depois da descrição, e o ícone segue à esquerda", () => {
+      render(
+        <Alert
+          variant="destructive"
+          icon={<svg data-testid="icon" />}
+          title="Oportunidade não encontrada"
+          description="O CRM não respondeu."
+          action={<button type="button">Recarregar</button>}
+        />,
+      );
+      const root = screen.getByRole("alert");
+      const main = root.querySelector('[data-slot="alert-main"]');
+      const body = root.querySelector('[data-slot="alert-body"]');
+      const action = root.querySelector('[data-slot="alert-action"]');
+      expect(main).toHaveClass("flex", "flex-wrap", "items-center", "gap-x-4");
+      expect(body).toContainElement(screen.getByText("O CRM não respondeu."));
+      expect(action).toContainElement(screen.getByRole("button", { name: "Recarregar" }));
+      expect(root.firstElementChild).toBe(screen.getByTestId("icon"));
+    });
+
+    it("só com action também usa a API por props", () => {
+      render(<Alert action={<button type="button">Ok</button>} />);
+      expect(document.querySelector('[data-slot="alert-action"]')).toBeInTheDocument();
+    });
+
+    it("sem action, a estrutura não muda", () => {
+      render(<Alert title="Title" description="Desc" />);
+      expect(document.querySelector('[data-slot="alert-main"]')).not.toBeInTheDocument();
     });
   });
 });

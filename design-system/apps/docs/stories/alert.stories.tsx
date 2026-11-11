@@ -1,6 +1,7 @@
 import { CircleAlert, TriangleAlert, CircleCheckBig, Info } from "@grupoitss/prizm-ui/icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Alert } from "@grupoitss/prizm-ui/alert";
+import { Button } from "@grupoitss/prizm-ui/button";
 
 // Traceability: the component set in [PRIZM] Componentes, the documentation frame and the
 // CMS article. The token map lives next to the component (alert.tokens.json) and is
@@ -106,4 +107,30 @@ export const TitleOnly: Story = {
     title: "Quick notice",
   },
   render: (args) => <Alert {...args} />,
+};
+
+/**
+ * `action`: um Button Outline sm à direita do texto, centralizado. Num Alert estreito, a ação
+ * desce para baixo do texto.
+ */
+export const WithAction: Story = {
+  args: {
+    variant: "destructive",
+    icon: <CircleAlert className="size-4" />,
+    title: "Oportunidade não encontrada",
+    description: "O CRM não respondeu. Tente de novo em alguns segundos.",
+    action: (
+      <Button variant="outline" size="sm">
+        Recarregar
+      </Button>
+    ),
+  },
+  render: (args) => (
+    <div className="flex flex-col gap-4">
+      <Alert {...args} />
+      <div className="max-w-xs">
+        <Alert {...args} />
+      </div>
+    </div>
+  ),
 };
