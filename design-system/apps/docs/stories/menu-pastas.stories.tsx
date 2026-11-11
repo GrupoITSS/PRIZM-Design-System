@@ -64,6 +64,14 @@ const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-
 const SIDEBAR_CMS_URL =
   "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=0c03a023-e958-49af-830e-ee2c3a10dc58&version=v1";
 
+/**
+ * Moldura das telas: a Sidebar e o header são `fixed`. O `transform` faz a moldura conter os
+ * elementos fixos, e a tela cabe dentro da página Docs, sem iframe próprio. Em iframe próprio
+ * (`inline: false`), a story não recebia a marca e o modo escolhidos na barra do Storybook.
+ * O `-m-6` tira a margem da moldura do Storybook.
+ */
+const MOLDURA = "relative -m-6 h-[600px] overflow-hidden pt-12 [transform:translateZ(0)]";
+
 type No = {
   id: string;
   nome: string;
@@ -426,7 +434,7 @@ function MenuDePastas({ arvoreInicial = ARVORE, buscaInicial = "", excluirInicia
 /** Tela do Portal do Conhecimento: Sidebar recolhida e o menu de pastas ao lado (MP4). */
 function Portal(props: MenuDePastasProps) {
   return (
-    <div className="-m-6 pt-12">
+    <div className={MOLDURA}>
       <SidebarProvider headerHeight="3rem" defaultOpen={false}>
         <header className="fixed inset-x-0 top-0 z-20 flex h-12 items-center gap-2 border-b bg-background px-4 text-sm font-medium">
           <SidebarTrigger className="md:hidden" />
@@ -482,7 +490,6 @@ const meta: Meta<typeof MenuDePastas> = {
   parameters: {
     layout: "fullscreen",
     docs: {
-      story: { inline: false, iframeHeight: 640 },
       description: {
         component:
           "Árvore de pastas e artigos do Portal do Conhecimento, num painel de 328px ao lado da Sidebar recolhida. É uma composição das peças da [Sidebar](" +
@@ -528,5 +535,7 @@ export const SemResultado: Story = {
 /** Confirmar a exclusão de uma pasta: avisa que as subpastas e os artigos vão junto. */
 export const ExcluirPasta: Story = {
   name: "Excluir pasta",
+  // Abre o AlertDialog ao carregar: na página Docs, ele cobriria a página inteira.
+  tags: ["!autodocs"],
   render: () => <Portal excluirInicial="primeiros-passos" />,
 };
