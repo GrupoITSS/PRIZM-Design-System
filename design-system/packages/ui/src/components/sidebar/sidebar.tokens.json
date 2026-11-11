@@ -1,0 +1,133 @@
+{
+  "component": "Sidebar",
+  "description": "Mapa de tokens da Sidebar: o que cada peça e estado usa do [PRIZM] Design Tokens_Core. Extraído das ligações dos sets SidebarMenuButton, SidebarMenuSubItem, SidebarGroupLabel, SidebarMenuSub e SidebarGroupAction no Figma em 11/11/2026 e conferido contra sidebar.styles.ts pelo teste sidebar.tokens.test.ts. Nomes no formato do Figma (color/sidebar-primary); no código viram classes Tailwind (bg-sidebar-primary). Medidas iguais em todas as marcas: a Sidebar não segue control-height.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=5198-1113",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26475-4838",
+    "figmaReference": "https://www.figma.com/design/fdV47vgUG4481ptSHnGT6n?node-id=931-7162",
+    "code": "design-system/packages/ui/src/components/sidebar/sidebar.tsx",
+    "story": "design-system/apps/docs/stories/sidebar.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=0c03a023-e958-49af-830e-ee2c3a10dc58&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/196"
+    ],
+    "jira": [
+      "GIES-1728"
+    ]
+  },
+  "container": {
+    "background": "color/sidebar",
+    "text": "color/sidebar-foreground",
+    "border": "color/sidebar-border",
+    "width": "16rem",
+    "widthIcon": "3rem"
+  },
+  "states": {
+    "default": {
+      "background": null,
+      "text": "color/sidebar-foreground",
+      "fontWeight": "font-weight/normal"
+    },
+    "hover": {
+      "background": "color/sidebar-accent",
+      "text": "color/sidebar-accent-foreground"
+    },
+    "active": {
+      "background": "color/sidebar-primary",
+      "text": "color/sidebar-primary-foreground",
+      "fontWeight": "font-weight/medium",
+      "attribute": "aria-current=\"page\" e data-active=\"true\" (isActive)"
+    },
+    "focus": {
+      "ring": "color/sidebar-foreground",
+      "ringWidth": 3,
+      "ringOffset": "color/sidebar",
+      "ringOffsetWidth": 2,
+      "note": "No Figma, par de DROP_SHADOW (spread 5 em color/sidebar-foreground, spread 2 em color/sidebar). O color/ring falhava contra a sidebar colorida (pendência 1 de 10/11/2026)."
+    },
+    "disabled": {
+      "opacity": "opacity/50",
+      "attribute": "disabled ou aria-disabled",
+      "note": "Opacidade 50% na camada, sobre a aparência do default."
+    }
+  },
+  "parts": {
+    "groupLabel": {
+      "text": "color/sidebar-foreground",
+      "textOpacity": 0.7,
+      "fontSize": "text/xs",
+      "fontWeight": "font-weight/medium",
+      "height": "height/8",
+      "paddingX": "spacing/2"
+    },
+    "groupAction": {
+      "icon": "color/sidebar-foreground",
+      "hoverBackground": "color/sidebar-accent",
+      "hoverIcon": "color/sidebar-accent-foreground",
+      "size": "width/5",
+      "hitArea": 24
+    },
+    "subButton": {
+      "text": "color/sidebar-foreground",
+      "hoverBackground": "color/sidebar-accent",
+      "activeBackground": "color/sidebar-accent",
+      "activeText": "color/sidebar-accent-foreground",
+      "height": "height/7",
+      "paddingX": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md"
+    },
+    "sub": {
+      "border": "color/sidebar-border"
+    },
+    "badge": {
+      "text": "color/sidebar-foreground",
+      "fontSize": "text/xs",
+      "fontWeight": "font-weight/medium"
+    }
+  },
+  "sizes": {
+    "default": {
+      "height": "height/8",
+      "padding": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm",
+      "iconSize": "width/4"
+    },
+    "lg": {
+      "height": 48,
+      "padding": "spacing/2",
+      "gap": "spacing/2",
+      "radius": "radius/md",
+      "fontSize": "text/sm",
+      "note": "Big Icon do Figma: seletor do topo, com mídia em color/sidebar-primary. Não leva isActive (P4)."
+    }
+  },
+  "divergences": [
+    {
+      "where": "SidebarGroupLabel · State=Hover",
+      "figma": "fundo color/sidebar-accent nos três Types",
+      "code": "sem hover: o rótulo não é interativo (só com asChild, como gatilho de um Collapsible)",
+      "status": "aberta"
+    },
+    {
+      "where": "SidebarMenuButton · Type=Big Icon · State=Active",
+      "figma": "fundo color/sidebar-accent com o menu aberto",
+      "code": "fundo color/sidebar-accent só no hover com o menu aberto (data-[state=open]:hover)",
+      "status": "aberta"
+    },
+    {
+      "where": "SidebarMenuSub · Type=Border",
+      "figma": "padding horizontal spacing/6 (24px); há ainda os Types Indent e Default, sem borda",
+      "code": "mx-3.5 e px-2.5 (14px e 10px), sempre com borda à esquerda",
+      "status": "aberta"
+    },
+    {
+      "where": "SidebarMenuSubItem · ícone",
+      "figma": "color/sidebar-foreground",
+      "code": "[&>svg]:text-sidebar-accent-foreground (herdado do shadcn)",
+      "status": "aberta"
+    }
+  ]
+}
