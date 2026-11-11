@@ -145,5 +145,38 @@ describe("Alert (PRIZM / shadcn)", () => {
       render(<Alert title="Title" description="Desc" />);
       expect(document.querySelector('[data-slot="alert-main"]')).not.toBeInTheDocument();
     });
+
+    it('actionPosition="right" é o padrão', () => {
+      render(<Alert title="T" action={<button type="button">Ok</button>} />);
+      const main = document.querySelector('[data-slot="alert-main"]');
+      expect(main).toHaveAttribute("data-action-position", "right");
+      expect(main).toHaveClass("flex-wrap", "items-center");
+      expect(document.querySelector('[data-slot="alert-body"]')).toHaveClass("flex-1", "basis-48");
+    });
+
+    it('actionPosition="bottom": texto com a largura toda e a ação numa linha abaixo', () => {
+      render(
+        <Alert
+          variant="warning"
+          title="Desconto acima de 15%"
+          description="Peça aprovação para seguir."
+          action={<button type="button">Pedir aprovação</button>}
+          actionPosition="bottom"
+        />,
+      );
+      const main = document.querySelector('[data-slot="alert-main"]');
+      const body = document.querySelector('[data-slot="alert-body"]');
+      expect(main).toHaveAttribute("data-action-position", "bottom");
+      expect(main).toHaveClass("flex", "flex-col", "items-start", "gap-2");
+      expect(main).not.toHaveClass("flex-wrap");
+      expect(body).toHaveClass("w-full");
+      expect(body).not.toHaveClass("basis-48");
+      expect(body?.nextElementSibling).toHaveAttribute("data-slot", "alert-action");
+    });
+
+    it("actionPosition sem action não muda a estrutura", () => {
+      render(<Alert title="T" actionPosition="bottom" />);
+      expect(document.querySelector('[data-slot="alert-main"]')).not.toBeInTheDocument();
+    });
   });
 });
