@@ -96,7 +96,7 @@ function Tela({
   children: React.ReactNode;
 }) {
   return (
-    <div className="pt-12">
+    <div className="-m-6 pt-12">
       <SidebarProvider headerHeight="3rem" defaultOpen={defaultOpen}>
         <HeaderGlobal solucao={solucao} />
         {children}
@@ -614,7 +614,7 @@ export const Controlada: Story = {
     const [aberta, setAberta] = React.useState(true);
     return (
       <>
-        <div className="pt-12">
+        <div className="-m-6 pt-12">
           <SidebarProvider headerHeight="3rem" open={aberta} onOpenChange={setAberta}>
             <HeaderGlobal />
             <SidebarCockpit />
