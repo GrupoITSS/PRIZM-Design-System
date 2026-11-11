@@ -64,6 +64,14 @@ const CMS_URL =
   "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=0c03a023-e958-49af-830e-ee2c3a10dc58&version=v1";
 
 /**
+ * Moldura das telas: a Sidebar e o header são `fixed`. O `transform` faz a moldura conter os
+ * elementos fixos, e a tela cabe dentro da página Docs, sem iframe próprio. Em iframe próprio
+ * (`inline: false`), a story não recebia a marca e o modo escolhidos na barra do Storybook.
+ * O `-m-6` tira a margem da moldura do Storybook.
+ */
+const MOLDURA = "relative -m-6 h-[600px] overflow-hidden pt-12 [transform:translateZ(0)]";
+
+/**
  * Header global de exemplo, acima da Sidebar (S2). No celular a Sidebar sai da tela: o
  * SidebarTrigger do header abre a gaveta. No desktop ele some, e o botão fica dentro da Sidebar.
  */
@@ -96,7 +104,7 @@ function Tela({
   children: React.ReactNode;
 }) {
   return (
-    <div className="-m-6 pt-12">
+    <div className={MOLDURA}>
       <SidebarProvider headerHeight="3rem" defaultOpen={defaultOpen}>
         <HeaderGlobal solucao={solucao} />
         {children}
@@ -213,7 +221,6 @@ const meta: Meta<typeof Sidebar> = {
   parameters: {
     layout: "fullscreen",
     docs: {
-      story: { inline: false, iframeHeight: 520 },
       description: {
         component:
           "Navegação lateral de uma solução, abaixo do header global. Base: [shadcn/ui](https://ui.shadcn.com/docs/components/radix/sidebar), com tokens PRIZM e as decisões de 10/11/2026.\n\n" +
@@ -614,7 +621,7 @@ export const Controlada: Story = {
     const [aberta, setAberta] = React.useState(true);
     return (
       <>
-        <div className="-m-6 pt-12">
+        <div className={MOLDURA}>
           <SidebarProvider headerHeight="3rem" open={aberta} onOpenChange={setAberta}>
             <HeaderGlobal />
             <SidebarCockpit />
