@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { alertRoles, alertTitleStyles, alertVariants } from "./alert.styles";
+import { alertMainStyles, alertRoles, alertTitleStyles, alertVariants } from "./alert.styles";
 import map from "./alert.tokens.json";
 
 // Figma token → Tailwind: "color/destructive-weak" → "destructive-weak", "spacing/4" → "4".
@@ -17,7 +17,10 @@ describe("Alert × mapa de tokens (alert.tokens.json)", () => {
     expect(Object.keys(alertRoles).sort()).toEqual(Object.keys(map.variants).sort());
   });
 
-  for (const [variant, v] of Object.entries(map.variants) as [Variant, (typeof map.variants)[Variant]][]) {
+  for (const [variant, v] of Object.entries(map.variants) as [
+    Variant,
+    (typeof map.variants)[Variant],
+  ][]) {
     it(`${variant}: fundo, borda, ícone e título do mapa estão nas classes`, () => {
       const classes = classesOf(variant);
       expect(classes).toContain(`bg-${color(v.background)}`);
@@ -30,7 +33,8 @@ describe("Alert × mapa de tokens (alert.tokens.json)", () => {
       const classes = classesOf(variant);
       const override = `[&_[data-slot=alert-description]]:text-${color(v.description)}`;
       // Quando a descrição tem a cor do título, ela só herda; senão, há uma classe para ela.
-      if (v.description === v.title) expect(classes.some((c) => c.includes("alert-description"))).toBe(false);
+      if (v.description === v.title)
+        expect(classes.some((c) => c.includes("alert-description"))).toBe(false);
       else expect(classes).toContain(override);
     });
 
@@ -55,6 +59,13 @@ describe("Alert × mapa de tokens (alert.tokens.json)", () => {
     expect(t).toContain("text-sm");
     expect(t).toContain("font-medium");
     expect(t).toContain(`mb-${step(map.layout.titleGap)}`);
+  });
+
+  it("ação: spacing/4 do texto, spacing/2 quando desce, centralizada", () => {
+    const m = alertMainStyles.split(" ");
+    expect(m).toContain(`gap-x-${step(map.layout.action.gap)}`);
+    expect(m).toContain(`gap-y-${step(map.layout.action.wrapGap)}`);
+    expect(m).toEqual(expect.arrayContaining(["flex", "flex-wrap", "items-center"]));
   });
 
   it("estados: sem hover nem foco", () => {

@@ -46,3 +46,15 @@ export const alertRoles = {
 export const alertTitleStyles = "mb-1 text-sm font-medium leading-5 tracking-tight";
 
 export const alertDescriptionStyles = "text-sm [&_p]:leading-relaxed";
+
+/**
+ * Com `action` (decisão de 11/11/2026): o texto e a ação na mesma linha, a ação à direita e
+ * centralizada, a 16px (`spacing/4`). Em largura estreita, a ação desce para baixo do texto, a 8px.
+ */
+export const alertMainStyles = "flex flex-wrap items-center gap-x-4 gap-y-2";
+
+/** Texto do Alert com ação: ocupa o espaço que sobra e deixa a ação descer quando não cabe. */
+export const alertBodyStyles = "min-w-0 flex-1 basis-48";
+
+/** Ação do Alert: um Button Outline sm do Prizm, por padrão. */
+export const alertActionStyles = "flex shrink-0 items-center gap-2";
