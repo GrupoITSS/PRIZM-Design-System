@@ -58,6 +58,9 @@ import * as React from "react";
 
 // Traceability: the reference in Redesign Docnix and the Sidebar this composition is built on.
 const FIGMA_REF_URL = "https://www.figma.com/design/fdV47vgUG4481ptSHnGT6n?node-id=1165-27680";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d77d4c60-f35d-49db-9bba-f31b143598d8&version=v1";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26549-5714";
 const SIDEBAR_CMS_URL =
   "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=0c03a023-e958-49af-830e-ee2c3a10dc58&version=v1";
 
@@ -491,7 +494,7 @@ const meta: Meta<typeof MenuDePastas> = {
           "- A busca filtra por nome, sem diferenciar maiúsculas e acentos, e abre as pastas que levam ao resultado.\n" +
           "- Excluir pede confirmação num AlertDialog.\n\n" +
           "Ficam para depois (MP5): editar o nome na própria linha, o diálogo de tradução e o link inteligente.\n\n" +
-          `[Referência no Redesign Docnix](${FIGMA_REF_URL}).`,
+          `[Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}) · [Referência no Redesign Docnix](${FIGMA_REF_URL}).`,
       },
     },
   },
