@@ -97,6 +97,12 @@
       "figma": "itemSpacing spacing/3 entre o ícone e o texto",
       "code": "ícone absoluto e [&>svg~*]:pl-7 (16 + 12px)",
       "status": "representação"
+    },
+    {
+      "where": "ação",
+      "figma": "slot Action sempre à direita do texto",
+      "code": "à direita; desce para baixo do texto quando o Alert é estreito (flex-wrap)",
+      "status": "representação"
     }
   ]
 }
