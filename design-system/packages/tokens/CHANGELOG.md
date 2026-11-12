@@ -1,5 +1,37 @@
 # @grupoitss/prizm-tokens
 
+## 5.2.0
+
+### Minor Changes
+
+- 498c671: **Accent do escuro em neutral 700**
+
+  - **Tokens**: `palette/accent/dark` passa de `neutral.800` para `neutral.700` nas marcas PAS, Docnix e ITSS (e nos produtos que herdam delas). Antes, accent e popover eram o mesmo cinza no escuro (1,00:1), e o item em destaque de Select, DropdownMenu, Command e afins não aparecia na lista (WCAG 2.4.7). Agora fica em 1,42–1,46:1 sobre o popover e 1,89–1,95:1 sobre o background. O claro não muda.
+  - **UI**: `muted-foreground` sobre o novo accent fica em 4,06–4,13:1, abaixo de 4,5:1. No item em destaque de ContextMenu, DropdownMenu, Menubar, NavigationMenu e Command, o texto com `text-muted-foreground` (descrição, atalho) passa a `accent-foreground` (9,86–10,03:1).
+
+- 63e189f: **Checkbox: decisões de 30/10/2026**
+
+  - **Tokens: novo `color/input-strong`** (`neutral.500` no claro, branco a 40% no escuro), para controles que só têm o contorno para identificar. Tem de 3,73 a 4,83:1 contra a página (WCAG 1.4.11). `color/input` não muda.
+  - **Borda sem marcar em `input-strong`.** Com `color/input`, a caixa ficava entre 1,16 e 1,55:1.
+  - **Erro visível.** `aria-invalid` agora pinta a borda de `destructive`, também com a caixa marcada ou indeterminada. Antes, o erro não aparecia na caixa.
+  - **Fundo em `input-background`,** como os campos. Muda o visual no modo escuro.
+  - **Raio em `rounded-xs`** (antes 4px fixo): 2px no PAS e no ITSS, 1px no Docnix.
+  - **Alvo de ponteiro de 24px** nos dois tamanhos, sem mudar o layout (WCAG 2.5.8).
+  - **Anel com `ring-offset-ring-offset`,** como o Button.
+
+- 66ad395: **Novos tokens `color/decoration-*`: decoração por marca (DS-67)**
+
+  - **Tokens**: seis intensidades para ilustração e fundo decorativo, `color/decoration-subtle`, `-soft`, `-muted`, `decoration`, `-strong` e `-bold` (classes `bg-decoration-*`, `border-decoration-*` etc.). Cada marca tem a sua paleta: PAS e Tchello em blue, PAS · CMS em violet, Docnix em docnix purple, ITSS · AFIPE em afipe petrol e ITSS · Digitrol em cyan.
+  - **Claro e escuro**: os degraus são escolhidos por contraste, não por número, para o peso visual ser parecido nos dois modos (o 500 espelhado no escuro ficaria bem mais forte). Por isso são 6 intensidades, não 11.
+  - **Uso**: só ilustração, capa, skeleton decorativo e fundo de marca; nunca em componente, texto ou estado. Não há `decoration-neutral`. O decoration da Digitrol é ciano; a `digitrol.navy` continua em uso na sidebar da Digitrol.
+  - **Estrutura**: pontes `palette/decoration-*` por marca (`pas/base`, `pas/cms`, `docnix/base`, `itss/afipe`, `itss/digitrol`) e semânticos em `themes/light` e `themes/dark`. Não há mudança em componentes.
+
+- f8386dd: **Novo token `color/overlay` para o fundo atrás de modal, sheet e drawer**
+
+  - **Tokens**: `color/overlay` (classe `bg-overlay`), `black-alpha/80` (quase preto a 80%) no claro e no escuro. O `color/alpha-*` não muda.
+  - **UI**: Dialog e AlertDialog saem de `bg-alpha-80` (que no claro virava branco a 80% e clareava a tela) e Sheet e Drawer saem de `bg-black/80` (valor fixo) para `bg-overlay`. Os quatro passam a escurecer a tela atrás nos dois modos, com o mesmo token. Este changeset substitui o `alert-dialog-overlay` quanto ao claro. O desfoque do Dialog e do AlertDialog continua.
+  - **Cor**: o preto do token é `#0a0a0a` (o do `black-alpha`), não `#000`, o que no overlay não se distingue a olho.
+
 ## 5.1.0
 
 ### Minor Changes
