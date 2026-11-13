@@ -4,16 +4,23 @@ import { Button, buttonVariants } from "@grupoitss/prizm-ui/button";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Toaster, toast } from "@grupoitss/prizm-ui/sonner";
 
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18482-48401";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27062-3133";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=98eee5c4-b39f-49b9-b7da-8982e20c2bfd&version=v1";
+
 const meta: Meta<typeof Toaster> = {
   title: "Primários/Sonner",
   component: Toaster,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
-          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'Wrapper do Toaster da biblioteca <code>sonner</code>, já configurado com tema PRIZM (tokens de cor) e ícones padrão para status. Renderize uma vez próximo à raiz da aplicação e dispare toasts via `toast(...)`.\n\n**Documentação oficial:** <a href="https://sonner.emilkowal.ski/getting-started" target="_blank" rel="noopener noreferrer">Sonner — Getting started</a>',
+          "Notificação passageira (toast), sobre a biblioteca <code>sonner</code>. Base: [shadcn/ui](https://ui.shadcn.com/docs/components/sonner), com tokens PRIZM.\n\n" +
+          "Renderize o `Toaster` uma vez, perto da raiz do app, e dispare com `toast()`, `toast.success()`, `.info()`, `.warning()`, `.error()`, `.loading()` ou `.promise()`, de `@grupoitss/prizm-ui/sonner`. Tons no padrão do Alert (`richColors` ligado por padrão), ação com o Button outline sm e sem botão fechar por padrão. Toast com ação: `duration` maior e a mesma ação fora do toast.\n\n" +
+          '**Documentação oficial:** <a href="https://sonner.emilkowal.ski/getting-started" target="_blank" rel="noopener noreferrer">Sonner — Getting started</a>' +
+          `\n\n[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },

@@ -1,0 +1,133 @@
+{
+  "component": "Sonner",
+  "description": "Mapa de tokens do Sonner (Toaster): o que cada tipo usa do [PRIZM] Design Tokens_Core. Extraído das ligações do component set Sonner no Figma em 13/11/2026 e conferido contra sonner.styles.ts pelo teste sonner.tokens.test.ts. Nomes no formato do Figma (color/success-weak). No código, as cores vão pelas variáveis CSS do Sonner (--success-bg…), apontando para as variáveis do Prizm (--prizm-color-success-weak); o resto vira classes Tailwind. Tons no padrão do Alert: fundo -weak, borda e ícone no tom, título e descrição -strong.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18482-48401",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27062-3133",
+    "code": "design-system/packages/ui/src/components/sonner/sonner.tsx",
+    "story": "design-system/apps/docs/stories/sonner.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=98eee5c4-b39f-49b9-b7da-8982e20c2bfd&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/201"]
+  },
+  "types": {
+    "default": {
+      "sonnerVar": "normal",
+      "background": "color/card",
+      "border": "color/border",
+      "icon": "color/foreground",
+      "title": "color/foreground",
+      "description": "color/muted-foreground"
+    },
+    "success": {
+      "sonnerVar": "success",
+      "background": "color/success-weak",
+      "border": "color/success",
+      "icon": "color/success",
+      "title": "color/success-strong",
+      "description": "color/success-strong"
+    },
+    "info": {
+      "sonnerVar": "info",
+      "background": "color/info-weak",
+      "border": "color/info",
+      "icon": "color/info",
+      "title": "color/info-strong",
+      "description": "color/info-strong"
+    },
+    "warning": {
+      "sonnerVar": "warning",
+      "background": "color/warning-weak",
+      "border": "color/warning",
+      "icon": "color/warning",
+      "title": "color/warning-strong",
+      "description": "color/warning-strong"
+    },
+    "error": {
+      "sonnerVar": "error",
+      "background": "color/destructive-weak",
+      "border": "color/destructive",
+      "icon": "color/destructive",
+      "title": "color/destructive-strong",
+      "description": "color/destructive-strong"
+    },
+    "loading": {
+      "sonnerVar": "normal",
+      "background": "color/card",
+      "border": "color/border",
+      "icon": "Spinner (sm)",
+      "title": "color/foreground",
+      "description": "color/muted-foreground"
+    }
+  },
+  "layout": {
+    "width": "356px (--width do Sonner)",
+    "padding": "spacing/4",
+    "gap": "spacing/2",
+    "titleGap": "spacing/0-5",
+    "iconSize": "width/4",
+    "radius": "radius/lg",
+    "borderWidth": "border-width/1",
+    "shadow": "shadow/lg",
+    "title": {
+      "fontSize": "text/sm/font-size",
+      "lineHeight": "text/sm/line-height",
+      "fontWeight": "font-weight/medium"
+    },
+    "description": {
+      "fontSize": "text/sm/font-size",
+      "lineHeight": "text/sm/line-height",
+      "fontWeight": "font-weight/normal"
+    },
+    "action": {
+      "button": "Button Outline sm",
+      "height": "control-height/sm",
+      "figma": "Button Outline sm fixo, instância exposta no painel, visível com Action (desligado)"
+    },
+    "closeButton": {
+      "size": "24px",
+      "default": "desligado"
+    }
+  },
+  "states": {
+    "hover": null,
+    "focus": {
+      "ring": "color/ring",
+      "ringWidth": 3,
+      "ringOffset": "color/ring-offset",
+      "ringOffsetWidth": 2
+    },
+    "note": "Sem hover, pressed nem disabled próprios: o ponteiro em cima abre a pilha e pausa o tempo (comportamento do Sonner). O foco (State=Focus) usa o anel do Button. A ação segue os estados do Button."
+  },
+  "divergences": [
+    {
+      "where": "ícone do Type=Default",
+      "figma": "Icon ligado por padrão, com Icon / Info no Type=Default",
+      "code": "toast() sem tipo não tem ícone; icon troca",
+      "status": "representação"
+    },
+    {
+      "where": "cores",
+      "figma": "variáveis do Core ligadas a fundo, borda e texto",
+      "code": "variáveis CSS do Sonner (toasterStyle) apontando para --prizm-color-*; o ícone por classe ([&_[data-icon]]:text-<tom>)",
+      "status": "representação: o CSS do Sonner fica fora de @layer e vence os utilitários do Tailwind"
+    },
+    {
+      "where": "texto de exemplo",
+      "figma": "inglês (Title Text, This is a toast description., Action)",
+      "code": "sem texto padrão",
+      "status": "aceita"
+    },
+    {
+      "where": "nomes acessíveis",
+      "figma": "—",
+      "code": "\"Notifications alt+T\" e \"Close toast\", do Sonner, em inglês",
+      "status": "aceita (decisão de 13/11/2026)"
+    },
+    {
+      "where": "borda do contêiner",
+      "figma": "color/border no Default (1,16 a 1,26:1 contra a página)",
+      "code": "--normal-border: --prizm-color-border",
+      "status": "aceita por consenso: o texto carrega a mensagem e a sombra separa o toast da página"
+    }
+  ]
+}
