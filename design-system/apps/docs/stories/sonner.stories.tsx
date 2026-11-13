@@ -2,11 +2,10 @@
 
 import { Button } from "@grupoitss/prizm-ui/button";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { toast } from "sonner";
-import { Toaster } from "@grupoitss/prizm-ui/sonner";
+import { Toaster, toast } from "@grupoitss/prizm-ui/sonner";
 
 const meta: Meta<typeof Toaster> = {
-  title: "Primários/Toaster",
+  title: "Primários/Sonner",
   component: Toaster,
   tags: ["autodocs"],
   parameters: {
@@ -19,7 +18,8 @@ const meta: Meta<typeof Toaster> = {
     },
   },
   args: {
-    richColors: false,
+    richColors: true,
+    closeButton: false,
   },
 };
 
@@ -35,6 +35,8 @@ export const Demo: Story = {
         onClick={() =>
           toast("Event has been created", {
             description: "Sunday, December 03, 2023 at 9:00 AM",
+            // Toast com ação: mais tempo para chegar à ação pelo teclado (WCAG 2.2.1).
+            duration: 10000,
             action: {
               label: "Undo",
               onClick: () => {
