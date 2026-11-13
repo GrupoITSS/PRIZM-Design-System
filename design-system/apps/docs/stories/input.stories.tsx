@@ -85,7 +85,7 @@ export const CockpitNaMesmaLinha: Story = {
         <Input size="sm" placeholder="sm" className="w-32" />
       </div>
       <div className="flex flex-wrap items-end gap-3">
-        <Input size="md" disabled defaultValue="Somente leitura" className="w-48" />
+        <Input size="md" disabled defaultValue="Desabilitado" className="w-48" />
         <Input size="md" disabled placeholder="Desabilitado vazio" className="w-48" />
         <Field data-disabled className="w-48 gap-1.5">
           <FieldLabel htmlFor="cockpit-disabled-field">Com Field</FieldLabel>
@@ -419,14 +419,14 @@ export const Estados: Story = {
 
 /**
  * Read-only (DS-64): valor já preenchido que não se edita direto. O campo continua
- * focável e vai no formulário. A edição abre por um botão (como no Cockpit) ou por
- * um clique no campo (como no CMS); os dois são composição, sem prop nova.
+ * focável e vai no formulário. A edição só volta pelo botão Editar (como no Cockpit).
+ * Quando o campo abre a edição com um clique (como no CMS), o estado é Preenchido, e
+ * não Read-only (regra da Tarde de 12/11, DS-82). Os dois convivem.
  */
 export const SomenteLeitura: Story = {
   name: "Somente leitura",
   render: function Render() {
     const [editando, setEditando] = useState(false);
-    const [editandoCnpj, setEditandoCnpj] = useState(false);
     return (
       <div className="flex max-w-md flex-col gap-6">
         <Field>
@@ -440,15 +440,11 @@ export const SomenteLeitura: Story = {
           <FieldDescription>Edição por botão, como no Cockpit.</FieldDescription>
         </Field>
         <Field>
-          <FieldLabel htmlFor="input-ro-clique">CNPJ</FieldLabel>
-          <Input
-            id="input-ro-clique"
-            readOnly={!editandoCnpj}
-            defaultValue="12.345.678/0001-90"
-            onClick={() => setEditandoCnpj(true)}
-            onBlur={() => setEditandoCnpj(false)}
-          />
-          <FieldDescription>Edição por clique no campo, como no CMS.</FieldDescription>
+          <FieldLabel htmlFor="input-preenchido">CNPJ</FieldLabel>
+          <Input id="input-preenchido" defaultValue="12.345.678/0001-90" />
+          <FieldDescription>
+            Preenchido, não somente leitura: a edição abre com um clique no campo, como no CMS.
+          </FieldDescription>
         </Field>
       </div>
     );
