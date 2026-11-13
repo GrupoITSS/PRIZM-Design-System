@@ -6,13 +6,17 @@ import {
   toastActionButtonClassName,
   toastBaseClassName,
   toastCancelButtonClassName,
+  toastCloseButtonClassName,
   toastDescriptionClassName,
   toastErrorClassName,
   toastInfoClassName,
   toastLoadingClassName,
+  toastNeutralClassName,
   toastSuccessClassName,
+  toastTitleClassName,
   toastWarningClassName,
   toasterBaseClassName,
+  toasterStyle,
 } from "./sonner.styles";
 import type { ToasterProps } from "./sonner.types";
 
@@ -22,25 +26,26 @@ import type { ToasterProps } from "./sonner.types";
  * Wrapper do `sonner` configurado com:
  * - Tema via prop `theme` (`"light" | "dark" | "system"`); o app controla (ex.: estado ou contexto).
  * - Ícones padrão para `success`, `info`, `warning`, `error` e `loading`.
- * - Classes alinhadas aos tokens PRIZM (`bg-background`, `text-foreground`, etc.).
+ * - Tons no padrão do Alert (`<tom>-weak`, tom, `<tom>-strong`), pelas variáveis do Sonner
+ *   (`richColors`, ligado por padrão), texto `text-sm`, ação com o Button `outline` `sm`,
+ *   foco com o anel do Prizm e sem botão fechar por padrão (decisões de 13/11/2026).
  *
  * Uso recomendado:
  * - Renderizar **uma única vez** próximo à raiz da aplicação (ex.: `app/layout.tsx`).
- * - Declarar `sonner` como dependência da app e disparar toasts via `toast(...)`:
+ * - Disparar toasts com `toast(...)`, exportado por `@grupoitss/prizm-ui/sonner`:
  *   - `toast("Mensagem")`
  *   - `toast.success("Criado")`
  *   - `toast("...", { description, action, position, ... })`
  *
  * @example
  * ```tsx
- * import { Toaster } from "@grupoitss/prizm-ui";
- * import { toast } from "sonner";
+ * import { Toaster, toast } from "@grupoitss/prizm-ui/sonner";
  *
  * function Page() {
  *   return (
  *     <>
- *       <button onClick={() => toast("Event has been created")}>Show</button>
- *       <Toaster richColors />
+ *       <button onClick={() => toast.success("Alterações salvas")}>Salvar</button>
+ *       <Toaster />
  *     </>
  *   );
  * }
@@ -52,9 +57,10 @@ const Toaster: React.FC<ToasterProps> = (props) => {
   const {
     theme = "system",
     position = "top-right",
-    richColors = false,
-    closeButton = true,
+    richColors = true,
+    closeButton = false,
     className,
+    style,
     toastOptions,
     ...rest
   } = props;
@@ -66,6 +72,7 @@ const Toaster: React.FC<ToasterProps> = (props) => {
       richColors={richColors}
       closeButton={closeButton}
       className={cn(toasterBaseClassName, className)}
+      style={{ ...toasterStyle, ...style }}
       icons={{
         success: <CircleCheckBig className="h-4 w-4" />,
         info: <Info className="h-4 w-4" />,
@@ -78,12 +85,14 @@ const Toaster: React.FC<ToasterProps> = (props) => {
         ...toastOptions,
         classNames: {
           toast: toastBaseClassName,
+          title: toastTitleClassName,
           description: toastDescriptionClassName,
           actionButton: toastActionButtonClassName,
           cancelButton: toastCancelButtonClassName,
-          // Variants (Sonner)
-          // Use PRIZM semantic tokens instead of Sonner `richColors`.
-          // `!` is needed to override Sonner defaults (Tailwind v4).
+          closeButton: toastCloseButtonClassName,
+          // Tons: cores pelas variáveis do Sonner (toasterStyle); aqui, o ícone no tom base
+          // e a descrição secundária nos neutros.
+          default: toastNeutralClassName,
           success: toastSuccessClassName,
           error: toastErrorClassName,
           warning: toastWarningClassName,

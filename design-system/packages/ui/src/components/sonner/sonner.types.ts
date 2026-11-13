@@ -14,9 +14,11 @@ export type SonnerToasterBaseProps = React.ComponentProps<typeof SonnerToaster>;
  * API é totalmente baseada em props, seguindo a API original do Sonner:
  * - `position`, `richColors`, `closeButton`, `duration`, `theme`, etc.
  *
- * Para cenários comuns, recomenda‑se configurar apenas:
- * - `richColors` (boolean)
- * - `position`
- * - `expand` / `duration`
+ * Padrões do Prizm (decisões de 13/11/2026): `position="top-right"`, `richColors` ligado (é ele
+ * que aplica os tons do Prizm; desligado, todo toast fica neutro), `closeButton` desligado e
+ * `theme="system"`. As cores seguem o `data-mode` do Prizm, não o `theme`.
+ *
+ * Toast com ação: use `duration` maior (ex.: `10000`) e deixe a mesma ação disponível fora do
+ * toast, porque ele some (WCAG 2.2.1).
  */
 export type ToasterProps = SonnerToasterBaseProps;
