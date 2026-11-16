@@ -68,6 +68,40 @@ export default meta;
 type Story = StoryObj<typeof Popover>;
 
 /**
+ * A única story ligada aos controles: as outras têm render fixo e ignoram os args.
+ */
+export const Playground: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Todas as props do painel valem aqui. Abra o Popover e mude `size` (largura do painel), `side` e `align` (posição em relação ao gatilho).",
+      },
+    },
+  },
+  args: {
+    size: "md",
+    side: "bottom",
+    align: "center",
+  },
+  render: (args) => (
+    <div className="flex min-h-64 items-center justify-center">
+      <Popover
+        {...args}
+        contentProps={{ "aria-label": "Dimensões" }}
+        trigger={<Button variant="outline">Abrir popover</Button>}
+        content={
+          <div className="grid gap-2">
+            <p className="font-medium leading-none">Dimensões</p>
+            <p className="text-sm text-muted-foreground">Defina as dimensões da camada.</p>
+          </div>
+        }
+      />
+    </div>
+  ),
+};
+
+/**
  * 1. PopoverDemo — exemplo com campos de dimensão.
  *
  * Conversão direta do exemplo de referência, mas usando a API props-based:

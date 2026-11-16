@@ -32,6 +32,33 @@ export default meta;
 
 type Story = StoryObj<typeof Label>;
 
+/**
+ * A única story ligada aos controles: as outras têm render fixo e ignoram os args.
+ */
+export const Playground: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Todas as props do painel valem aqui. Ligue `required` para ver o asterisco, que é decorativo: o campo também precisa de `required` para leitores de tela.",
+      },
+    },
+  },
+  argTypes: {
+    children: { control: "text" },
+  },
+  args: {
+    children: "E-mail",
+    required: false,
+  },
+  render: (args) => (
+    <div className="flex max-w-sm flex-col gap-1.5">
+      <Label htmlFor="label-playground" {...args} />
+      <Input id="label-playground" type="email" required={args.required} />
+    </div>
+  ),
+};
+
 export const Basic: Story = {
   render: () => (
     <div className="flex max-w-sm flex-col gap-1.5">

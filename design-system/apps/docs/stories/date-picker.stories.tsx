@@ -113,6 +113,74 @@ export default meta;
 type Story = StoryObj<typeof DatePicker>;
 
 /**
+ * A única story ligada aos controles: as outras têm render fixo e ignoram os args.
+ * O valor fica no estado da story; trocar `mode` começa de novo, sem data.
+ */
+export const Playground: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Todas as props do painel valem aqui. Com `mode` em `range`, o calendário escolhe um período; o valor recomeça ao trocar o modo.",
+      },
+    },
+  },
+  args: {
+    mode: "single",
+    size: "md",
+    placeholder: "Selecionar data",
+    showIcon: true,
+    iconPosition: "end",
+    showChevron: false,
+    fullWidth: true,
+    closeOnSelect: true,
+    disabled: false,
+  },
+  render: function Render(args) {
+    const [data, setData] = React.useState<Date | undefined>();
+    const [periodo, setPeriodo] = React.useState<DateRange | undefined>();
+    // Só as props comuns aos dois modos: value, onChange e formatLabel mudam de tipo com o mode.
+    const comuns = {
+      size: args.size,
+      placeholder: args.placeholder,
+      showIcon: args.showIcon,
+      iconPosition: args.iconPosition,
+      showChevron: args.showChevron,
+      fullWidth: args.fullWidth,
+      closeOnSelect: args.closeOnSelect,
+      disabled: args.disabled,
+      calendarLabel: args.calendarLabel,
+      "aria-invalid": args["aria-invalid"],
+    };
+
+    return (
+      <Field className="mx-auto w-72">
+        <FieldLabel htmlFor="date-picker-playground">Data</FieldLabel>
+        {args.mode === "range" ? (
+          <DatePicker
+            {...comuns}
+            key="range"
+            mode="range"
+            id="date-picker-playground"
+            value={periodo}
+            onChange={setPeriodo}
+          />
+        ) : (
+          <DatePicker
+            {...comuns}
+            key="single"
+            mode="single"
+            id="date-picker-playground"
+            value={data}
+            onChange={setData}
+          />
+        )}
+      </Field>
+    );
+  },
+};
+
+/**
  * 1. Basic — Date picker simples com data única.
  *
  * Adaptado do exemplo `DatePickerSimple` em `Untitled-1.md`,

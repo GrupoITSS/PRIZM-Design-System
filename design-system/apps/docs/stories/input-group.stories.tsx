@@ -46,6 +46,38 @@ export default meta;
 
 type Story = StoryObj<typeof InputGroup>;
 
+/**
+ * A única story ligada aos controles: as outras têm render fixo e ignoram os args.
+ */
+export const Playground: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Todas as props do painel valem aqui. Com `readOnly`, o campo mostra um valor e não aceita edição; com `control` em `textarea`, vira área de texto.",
+      },
+    },
+  },
+  args: {
+    control: "input",
+    size: "md",
+    disabled: false,
+    readOnly: false,
+    placeholder: "Buscar...",
+  },
+  render: (args) => (
+    <div className="w-full max-w-sm">
+      <InputGroup
+        {...args}
+        key={`${args.control}-${args.readOnly}`}
+        aria-label="Busca"
+        defaultValue={args.readOnly ? "Valor somente leitura" : undefined}
+        addonInlineEnd={<Search className="size-4" />}
+      />
+    </div>
+  ),
+};
+
 export const Basic: Story = {
   render: () => (
     <InputGroup placeholder="Buscar..." addonInlineEnd={<Search className="size-4" />} />
