@@ -269,11 +269,26 @@ describe("Avatar: decisões de 04/11/2026", () => {
   it("6: contador no tamanho do grupo", () => {
     render(<AvatarGroupCount aria-label="Mais 3 pessoas">+3</AvatarGroupCount>);
     const c = screen.getByLabelText("Mais 3 pessoas");
-    expect(c).toHaveClass("size-8", "text-sm", "font-medium");
-    for (const s of ["xs:size-5", "sm:size-6", "lg:size-10", "xl:size-12"]) {
+    // Pílula (DS-73): altura e largura mínima do avatar; cresce com o número.
+    expect(c).toHaveClass("h-8", "min-w-8", "px-0.5", "text-sm", "font-medium");
+    expect(c).not.toHaveClass("size-8");
+    for (const s of ["xs:h-5", "xs:min-w-5", "sm:h-6", "sm:min-w-6", "lg:h-10", "lg:min-w-10", "xl:h-12", "xl:min-w-12"]) {
       const [tam, cls] = s.split(":");
       expect(c.className).toContain(`group-has-data-[size=${tam}]/avatar-group:${cls}`);
     }
+  });
+
+  it("contador com count: +N até o teto, depois max+ (DS-73)", () => {
+    const { rerender } = render(<AvatarGroupCount aria-label="Mais pessoas" count={12} />);
+    expect(screen.getByLabelText("Mais pessoas")).toHaveTextContent("+12");
+    rerender(<AvatarGroupCount aria-label="Mais pessoas" count={99} />);
+    expect(screen.getByLabelText("Mais pessoas")).toHaveTextContent("+99");
+    rerender(<AvatarGroupCount aria-label="Mais pessoas" count={240} />);
+    expect(screen.getByLabelText("Mais pessoas")).toHaveTextContent("99+");
+    rerender(<AvatarGroupCount aria-label="Mais pessoas" count={12} max={9} />);
+    expect(screen.getByLabelText("Mais pessoas")).toHaveTextContent("9+");
+    rerender(<AvatarGroupCount aria-label="Mais pessoas">+5</AvatarGroupCount>);
+    expect(screen.getByLabelText("Mais pessoas")).toHaveTextContent("+5");
   });
 
   it("pendência 3: aviso no console quando há src sem alt", () => {

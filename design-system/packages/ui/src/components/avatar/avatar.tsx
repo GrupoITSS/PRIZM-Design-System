@@ -192,13 +192,16 @@ function AvatarGroup({ className, ...props }: AvatarGroupProps) {
 }
 AvatarGroup.displayName = "AvatarGroup";
 
-function AvatarGroupCount({ className, ...props }: AvatarGroupCountProps) {
+function AvatarGroupCount({ className, count, max = 99, children, ...props }: AvatarGroupCountProps) {
+  const texto = count == null ? children : count > max ? `${max}+` : `+${count}`;
   return (
     <span
       data-slot="avatar-group-count"
       className={cn(avatarGroupCountStyles, className)}
       {...props}
-    />
+    >
+      {texto}
+    </span>
   );
 }
 AvatarGroupCount.displayName = "AvatarGroupCount";

@@ -102,8 +102,11 @@ describe("Avatar × mapa de tokens (avatar.tokens.json)", () => {
     expect(c).toContain(`font-${step(map.parts.count.fontWeight)}`);
     expect(c).toContain(`ring-${step(map.parts.count.ringWidth)}`);
     expect(c).toContain(`ring-${step(map.parts.count.ring)}`);
+    expect(c).toContain(`px-${step(map.parts.count.paddingX)}`);
     for (const size of SIZES) {
-      expect(c).toContain(forSize(size, `size-${step(sizes[size].size)}`, "avatar-group"));
+      // Pílula (DS-73): altura e largura mínima do tamanho do avatar, no lugar de size-N.
+      expect(c).toContain(forSize(size, `h-${step(sizes[size].size)}`, "avatar-group"));
+      expect(c).toContain(forSize(size, `min-w-${step(sizes[size].size)}`, "avatar-group"));
       const text = `text-${step(sizes[size].countText)}`;
       const base = sizes[size].countText === sizes.md.countText;
       expect(c).toContain(base ? text : forSize(size, text, "avatar-group"));

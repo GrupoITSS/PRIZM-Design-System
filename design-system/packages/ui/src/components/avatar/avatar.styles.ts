@@ -70,6 +70,11 @@ export const avatarStatusLabels: Record<AvatarStatus, string> = {
 export const avatarGroupStyles =
   "group/avatar-group flex -space-x-2 [&>span]:ring-2 [&>span]:ring-background";
 
-/** AvatarGroupCount: "+N" no tamanho dos avatares do grupo (padrão md). */
+/**
+ * AvatarGroupCount: "+N" na altura dos avatares do grupo (padrão md). É uma pílula (DS-73,
+ * 16/11/2026): a altura é a do avatar, a largura mínima também, e ela cresce com o número. Com um
+ * dígito continua um círculo; com dois ou mais, o texto não passa da borda (antes, "+12" ocupava
+ * 22px num contador xs de 20px).
+ */
 export const avatarGroupCountStyles =
-  "relative flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground ring-2 ring-background group-has-data-[size=xs]/avatar-group:size-5 group-has-data-[size=xs]/avatar-group:text-xs group-has-data-[size=sm]/avatar-group:size-6 group-has-data-[size=sm]/avatar-group:text-xs group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=xl]/avatar-group:size-12";
+  "relative flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full bg-muted px-0.5 text-sm font-medium whitespace-nowrap tabular-nums text-muted-foreground ring-2 ring-background group-has-data-[size=xs]/avatar-group:h-5 group-has-data-[size=xs]/avatar-group:min-w-5 group-has-data-[size=xs]/avatar-group:text-xs group-has-data-[size=sm]/avatar-group:h-6 group-has-data-[size=sm]/avatar-group:min-w-6 group-has-data-[size=sm]/avatar-group:text-xs group-has-data-[size=lg]/avatar-group:h-10 group-has-data-[size=lg]/avatar-group:min-w-10 group-has-data-[size=xl]/avatar-group:h-12 group-has-data-[size=xl]/avatar-group:min-w-12";

@@ -55,6 +55,14 @@ export interface AvatarBadgeProps extends React.HTMLAttributes<HTMLSpanElement> 
 export type AvatarGroupProps = React.HTMLAttributes<HTMLDivElement>;
 
 /** Use `aria-label` para dar contexto ao +N (ex.: "Mais 3 pessoas"). */
-export type AvatarGroupCountProps = React.HTMLAttributes<HTMLSpanElement>;
+export interface AvatarGroupCountProps extends React.HTMLAttributes<HTMLSpanElement> {
+  /**
+   * Quantos ficaram de fora. Mostra "+N"; acima de `max`, mostra "max+" (ex.: "99+").
+   * Sem `count`, o contador mostra os `children`.
+   */
+  count?: number;
+  /** Teto do número mostrado. Padrão 99. */
+  max?: number;
+}
 
 export type { AvatarStatus };
