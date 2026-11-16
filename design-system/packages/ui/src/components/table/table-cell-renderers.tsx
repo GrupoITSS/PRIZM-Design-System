@@ -481,9 +481,7 @@ export function renderPrizmCell<TRow = unknown>({
 
       return popover.trigger === "click" ? (
         <Popover
-          contentProps={{
-            "aria-label": typeof popover.title === "string" ? popover.title : "Detalhes",
-          }}
+          contentProps={{ "aria-label": typeof popover.title === "string" ? popover.title : "Detalhes" }}
           trigger={triggerButton("cursor-pointer")}
           content={
             <div className="space-y-2">

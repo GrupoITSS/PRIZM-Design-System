@@ -35,9 +35,7 @@ const TableHeader = ({
   ...props
 }: React.HTMLAttributes<HTMLTableSectionElement> & {
   ref?: React.Ref<HTMLTableSectionElement>;
-}) => (
-  <thead ref={ref} data-slot="table-header" className={cn(tableHeader, className)} {...props} />
-);
+}) => <thead ref={ref} data-slot="table-header" className={cn(tableHeader, className)} {...props} />;
 TableHeader.displayName = "TableHeader";
 
 const TableBody = ({
@@ -55,9 +53,7 @@ const TableFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLTableSectionElement> & {
   ref?: React.Ref<HTMLTableSectionElement>;
-}) => (
-  <tfoot ref={ref} data-slot="table-footer" className={cn(tableFooter, className)} {...props} />
-);
+}) => <tfoot ref={ref} data-slot="table-footer" className={cn(tableFooter, className)} {...props} />;
 TableFooter.displayName = "TableFooter";
 
 const TableRow = ({
@@ -93,9 +89,7 @@ const TableCaption = ({
   ...props
 }: React.HTMLAttributes<HTMLTableCaptionElement> & {
   ref?: React.Ref<HTMLTableCaptionElement>;
-}) => (
-  <caption ref={ref} data-slot="table-caption" className={cn(tableCaption, className)} {...props} />
-);
+}) => <caption ref={ref} data-slot="table-caption" className={cn(tableCaption, className)} {...props} />;
 TableCaption.displayName = "TableCaption";
 
 export {
