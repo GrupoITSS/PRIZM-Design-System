@@ -227,7 +227,7 @@ export const Default: Story = {
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="size-8 text-[#6b7280]"
+                className="size-8 text-muted-foreground"
                 aria-label={`Ações de ${row.organization.text}`}
               >
                 <Ellipsis className="size-4" />
@@ -237,19 +237,19 @@ export const Default: Story = {
               <div className="flex min-w-[10rem] flex-col gap-0.5 py-1">
                 <button
                   type="button"
-                  className="rounded-md px-3 py-2 text-left text-sm hover:bg-[#f3f4f6]"
+                  className="rounded-md px-3 py-2 text-left text-sm hover:bg-accent"
                 >
                   Ver detalhes
                 </button>
                 <button
                   type="button"
-                  className="rounded-md px-3 py-2 text-left text-sm hover:bg-[#f3f4f6]"
+                  className="rounded-md px-3 py-2 text-left text-sm hover:bg-accent"
                 >
                   Editar
                 </button>
                 <button
                   type="button"
-                  className="rounded-md px-3 py-2 text-left text-sm text-[#dc2626] hover:bg-[#fef2f2]"
+                  className="rounded-md px-3 py-2 text-left text-sm text-destructive hover:bg-destructive/10"
                 >
                   Inativar
                 </button>
