@@ -714,7 +714,7 @@ export const CenarioSelecionado: Story = {
   render: function Render() {
     const [selecionada, setSelecionada] = useState<string | null>("c3");
     const [aberta, setAberta] = useState(false);
-    const origem = useRef<HTMLButtonElement | null>(null);
+    const origemRef = useRef<HTMLButtonElement | null>(null);
     const atual = conversas.find((c) => c.id === selecionada);
     return (
       <>
@@ -736,7 +736,7 @@ export const CenarioSelecionado: Story = {
                     aria-current={sel ? "true" : undefined}
                     className={acaoPrincipal}
                     onClick={(e) => {
-                      origem.current = e.currentTarget;
+                      origemRef.current = e.currentTarget;
                       setSelecionada(c.id);
                       setAberta(true);
                     }}
@@ -764,7 +764,7 @@ export const CenarioSelecionado: Story = {
           onOpenChange={(v) => {
             setAberta(v);
             // A Sheet abre por estado, sem Trigger: o foco volta à linha à mão.
-            if (!v) requestAnimationFrame(() => origem.current?.focus());
+            if (!v) requestAnimationFrame(() => origemRef.current?.focus());
           }}
           title={atual?.titulo}
           description={atual?.quando}
