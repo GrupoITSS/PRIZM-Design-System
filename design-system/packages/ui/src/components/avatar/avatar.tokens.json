@@ -43,7 +43,9 @@
       "text": "color/muted-foreground",
       "fontWeight": "font-weight/medium",
       "ring": "color/background",
-      "ringWidth": "border-width/2"
+      "ringWidth": "border-width/2",
+      "paddingX": "spacing/0-5",
+      "shape": "Pílula (DS-73, 16/11/2026): altura e largura mínima iguais ao tamanho do avatar (sizes.*.size), e a largura cresce com o número. Acima de 99, mostra 99+ (prop count)."
     },
     "image": {
       "radius": "radius/full"

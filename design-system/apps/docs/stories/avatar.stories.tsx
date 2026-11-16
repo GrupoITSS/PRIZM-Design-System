@@ -206,18 +206,25 @@ export const AvatarGroupSizes: Story = {
   name: "Grupo nos tamanhos",
   parameters: {
     docs: {
-      description: { story: "O contador acompanha o tamanho dos avatares do grupo." },
+      description: {
+        story:
+          "O contador acompanha o tamanho dos avatares do grupo. É uma pílula: com um dígito, um círculo; com dois ou mais, cresce na largura. Com `count`, acima de 99 mostra 99+.",
+      },
     },
   },
   render: () => (
     <div className="flex flex-col gap-4">
       {(["xs", "sm", "md", "lg", "xl"] as const).map((size) => (
-        <AvatarGroup key={size}>
-          <Avatar size={size} src={defaultImage} alt="User 1" fallback="U1" />
-          <Avatar size={size} src={altImage} alt="User 2" fallback="U2" />
-          <Avatar size={size} alt="User 3" fallback="U3" />
-          <AvatarGroupCount aria-label="Mais 3 pessoas">+3</AvatarGroupCount>
-        </AvatarGroup>
+        <div key={size} className="flex items-center gap-6">
+          {[3, 12, 240].map((n) => (
+            <AvatarGroup key={n}>
+              <Avatar size={size} src={defaultImage} alt="User 1" fallback="U1" />
+              <Avatar size={size} src={altImage} alt="User 2" fallback="U2" />
+              <Avatar size={size} alt="User 3" fallback="U3" />
+              <AvatarGroupCount aria-label={`Mais ${n} pessoas`} count={n} />
+            </AvatarGroup>
+          ))}
+        </div>
       ))}
     </div>
   ),
