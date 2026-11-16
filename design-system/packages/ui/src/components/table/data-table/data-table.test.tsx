@@ -610,9 +610,33 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
       expect(screen.getByText("Tag 1")).toBeInTheDocument();
       expect(screen.getByText("Tag 2")).toBeInTheDocument();
       expect(screen.getByText("+1")).toBeInTheDocument();
+      expect(screen.queryByText("Tag 3")).not.toBeInTheDocument();
 
-      fireEvent.click(screen.getByRole("button", { name: /mostrar mais 1/i }));
+      // DS-81: o grupo é um botão que abre um Popover com todos os nomes, no clique (antes era
+      // HoverCard, que não abria em tela de toque).
+      const trigger = screen.getByRole("button", { name: /mostrar todos/i });
+      expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
+      fireEvent.click(trigger);
       expect(onRowClick).not.toHaveBeenCalled();
+
+      const lista = screen.getByRole("dialog", { name: "3 itens" });
+      expect(within(lista).getByText("Tag 3")).toBeInTheDocument();
+      fireEvent.click(within(lista).getByText("Tag 3"));
+      expect(onRowClick).not.toHaveBeenCalled();
+    });
+
+    it("BADGE sem tags escondidas nem nomes cortados não vira botão", () => {
+      const data = [{ id: "1", tags: [{ id: "t1", name: "Tag 1" }] }];
+      const columns: ColumnDef<(typeof data)[number]>[] = [
+        {
+          accessorKey: "tags",
+          header: "Tags",
+          meta: { rows: { contentRenderType: ContentRenderType.BADGE } },
+        },
+      ];
+      render(<DataTable columns={columns} data={data} />);
+      expect(screen.getByText("Tag 1")).toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /mostrar todos/i })).not.toBeInTheDocument();
     });
 
     it("renderiza STATUS_SUMMARY_WITH_POPOVER (badge com summary)", () => {

@@ -103,7 +103,9 @@ const organizations: OrgRow[] = [
     document: "98765432000110",
     createdAt: "2023-11-02",
     plans: "1",
-    tags: [{ id: "t4", name: "Trial" }],
+    // Nome longo de propósito (DS-81): em coluna estreita o badge corta com reticências, e o grupo
+    // vira um botão que abre a lista com o nome inteiro.
+    tags: [{ id: "t4", name: "Trial estendido até a renovação do contrato anual" }],
   },
   {
     id: "3",
