@@ -18,15 +18,26 @@ import {
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   BadgeCheck as BadgeCheckIcon,
+  Bell as BellIcon,
+  Check as CheckIcon,
   ChevronDown as ChevronDownIcon,
   ChevronRight as ChevronRightIcon,
   ExternalLink as ExternalLinkIcon,
+  FileText as FileTextIcon,
   Home as HomeIcon,
   Inbox as InboxIcon,
+  Mail as MailIcon,
+  MessageSquare as MessageSquareIcon,
+  Pencil as PencilIcon,
   Plus as PlusIcon,
   ShieldAlert as ShieldAlertIcon,
+  Trash2 as Trash2Icon,
+  X as XIcon,
 } from "@grupoitss/prizm-ui/icons";
 import { Item } from "@grupoitss/prizm-ui/item";
+import { Progress } from "@grupoitss/prizm-ui/progress";
+import { Sheet } from "@grupoitss/prizm-ui/sheet";
+import { useRef, useState } from "react";
 
 // Traceability: the Item set in [PRIZM] Componentes, the documentation frame and the CMS article.
 // The token map lives next to the component (item.tokens.json) and is checked in a test.
@@ -91,6 +102,64 @@ type Story = StoryObj<typeof Item>;
 // (BadgeItem stories foram movidas para item/badge-item/badge-item.stories.tsx)
 
 // (FileItem stories have been moved to file-item/file-item.stories.tsx)
+
+/**
+ * A única story ligada aos controles: as outras têm render fixo e ignoram os args.
+ * Com `interactive` ou `href`, o Item ganha hover (passe o mouse) e foco (Tab).
+ */
+export const Playground: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Todas as props do painel valem aqui. Ligue `interactive` (ou preencha `href`) e passe o mouse para ver o hover; use Tab para ver o foco. Sem os dois, o Item é estático e não muda.",
+      },
+    },
+  },
+  argTypes: {
+    asChild: { control: false, table: { disable: true } },
+  },
+  args: {
+    variant: "outline",
+    size: "default",
+    mediaVariant: "icon",
+    interactive: false,
+    title: "Pedido 4521",
+    description: "Aguardando aprovação.",
+  },
+  render: ({ mediaVariant, ...args }) => {
+    const clicavel = Boolean(args.interactive || args.href);
+    return (
+      <div className="w-full max-w-md">
+        <Item
+          {...args}
+          mediaVariant={mediaVariant}
+          media={
+            mediaVariant === "image" ? (
+              <img
+                src={`https://avatar.vercel.sh/${encodeURIComponent("Pedido 4521")}`}
+                alt=""
+                className="object-cover"
+              />
+            ) : (
+              <InboxIcon />
+            )
+          }
+          actions={
+            clicavel ? (
+              <ChevronRightIcon className="size-4" aria-hidden="true" />
+            ) : (
+              <Button variant="outline" size="sm">
+                Abrir
+              </Button>
+            )
+          }
+          onClick={args.href ? (e) => e.preventDefault() : undefined}
+        />
+      </div>
+    );
+  },
+};
 
 export const Demo: Story = {
   parameters: {
@@ -598,4 +667,271 @@ export const Interactive: Story = {
       />
     </div>
   ),
+};
+
+// ---------------------------------------------------------------------------
+// Cenários de uso (DS-79, Tarde de 12/11)
+// ---------------------------------------------------------------------------
+
+/**
+ * Padrão "ação principal + ações secundárias" (decidido em 13/11, DS-79).
+ * O Item não é clicável inteiro: o título é o botão ou link principal, com a área de
+ * clique esticada sobre a linha (`after:absolute after:inset-0`), e os botões de
+ * `actions` ficam acima dessa área (`relative z-10`). Assim não há controle dentro de
+ * outro (WCAG 4.1.2), e o anel de foco do Item aparece quando a ação principal tem foco.
+ */
+const linhaComAcoes =
+  "relative hover:bg-accent/80 has-[[data-acao-principal]:focus-visible]:ring-[3px] has-[[data-acao-principal]:focus-visible]:ring-ring has-[[data-acao-principal]:focus-visible]:ring-offset-2 has-[[data-acao-principal]:focus-visible]:ring-offset-ring-offset";
+const acaoPrincipal =
+  "text-left outline-none after:absolute after:inset-0 after:rounded-md after:content-['']";
+
+export const CenarioEstatico: Story = {
+  name: "Cenário · Estático",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Só informação. Sem `href` nem `interactive`, o Item não recebe foco nem muda no hover. Os botões de `actions` são os únicos controles da linha.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex w-full max-w-md flex-col gap-3">
+      <Item
+        variant="outline"
+        mediaVariant="icon"
+        media={<MailIcon />}
+        title="E-mail de cobrança"
+        description="financeiro@acme.com.br"
+        actions={
+          <Button variant="outline" size="sm">
+            Alterar
+          </Button>
+        }
+      />
+    </div>
+  ),
+};
+
+export const CenarioClicavel: Story = {
+  name: "Cenário · Clicável inteiro",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "O item inteiro é o alvo: `href` para navegar, `interactive` para uma ação na mesma tela. É a saída para o \"card clicável\": o Card não tem estado, o Item `outline` com `header` tem.",
+      },
+    },
+  },
+  render: () => (
+    <div className="grid w-full max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
+      <Item
+        variant="outline"
+        href="#"
+        onClick={(e) => e.preventDefault()}
+        title="Painel da conta"
+        description="Visão geral do uso e das faturas."
+        actions={<ChevronRightIcon className="size-4" aria-hidden="true" />}
+      />
+      <Item
+        variant="outline"
+        interactive
+        header={
+          <img
+            src={models[0]?.image}
+            alt=""
+            className="aspect-video w-full rounded-sm object-cover"
+          />
+        }
+        title="Modelo de proposta"
+        description="Abre a pré-visualização."
+        onClick={() => {
+          // demonstração
+        }}
+      />
+    </div>
+  ),
+};
+
+const conversas = [
+  { id: "c1", titulo: "Proposta Acme", quando: "Atualizada há 2h" },
+  { id: "c2", titulo: "Contrato Beta", quando: "Atualizada ontem" },
+  { id: "c3", titulo: "Pedido 4521", quando: "Atualizada em 10/11" },
+];
+
+export const CenarioSelecionado: Story = {
+  name: "Cenário · Selecionado com ações no hover",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A linha abre uma Sheet e fica selecionada: fundo `color/accent` e `aria-current=\"true\"` no botão principal. As ações aparecem no hover, no foco por teclado (`focus-within`) e sempre em tela de toque. No escuro, a descrição sobre `accent` cheio fica entre 4,06 e 4,13:1: exceção do time (13/11), registrada no Critério de acessibilidade.",
+      },
+    },
+  },
+  render: function Render() {
+    const [selecionada, setSelecionada] = useState<string | null>("c3");
+    const [aberta, setAberta] = useState(false);
+    const origemRef = useRef<HTMLButtonElement | null>(null);
+    const atual = conversas.find((c) => c.id === selecionada);
+    return (
+      <>
+        <div role="list" className="flex w-full max-w-sm flex-col gap-1">
+          {conversas.map((c) => {
+            const sel = c.id === selecionada;
+            return (
+              <Item
+                key={c.id}
+                role="listitem"
+                size="sm"
+                className={`group/linha ${linhaComAcoes} ${sel ? "bg-accent hover:bg-accent" : ""}`}
+                mediaVariant="icon"
+                media={<MessageSquareIcon />}
+                title={
+                  <button
+                    type="button"
+                    data-acao-principal=""
+                    aria-current={sel ? "true" : undefined}
+                    className={acaoPrincipal}
+                    onClick={(e) => {
+                      origemRef.current = e.currentTarget;
+                      setSelecionada(c.id);
+                      setAberta(true);
+                    }}
+                  >
+                    {c.titulo}
+                  </button>
+                }
+                description={c.quando}
+                actions={
+                  <div className="relative z-10 flex gap-1 opacity-0 group-hover/linha:opacity-100 group-focus-within/linha:opacity-100 [@media(hover:none)]:opacity-100">
+                    <Button variant="ghost" size="icon-sm" aria-label={`Renomear ${c.titulo}`}>
+                      <PencilIcon />
+                    </Button>
+                    <Button variant="ghost" size="icon-sm" aria-label={`Excluir ${c.titulo}`}>
+                      <Trash2Icon />
+                    </Button>
+                  </div>
+                }
+              />
+            );
+          })}
+        </div>
+        <Sheet
+          open={aberta}
+          onOpenChange={(v) => {
+            setAberta(v);
+            // A Sheet abre por estado, sem Trigger: o foco volta à linha à mão.
+            if (!v) requestAnimationFrame(() => origemRef.current?.focus());
+          }}
+          title={atual?.titulo}
+          description={atual?.quando}
+          body={<p className="text-muted-foreground text-sm">Conteúdo da conversa.</p>}
+        />
+      </>
+    );
+  },
+};
+
+const notificacoes = [
+  { id: "n1", titulo: "Nova proposta para aprovar", quando: "Há 5 min", lida: false },
+  { id: "n2", titulo: "Contrato Beta assinado", quando: "Há 1h", lida: false },
+];
+
+export const CenarioAcaoIcone: Story = {
+  name: "Cenário · Ação em botão de ícone",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Notificação ou e-mail: a linha abre o item e um botão de ícone faz uma ação rápida. Mesmo padrão do selecionado, com as ações sempre visíveis. Cada botão de ícone tem `aria-label` com o nome do item.",
+      },
+    },
+  },
+  render: function Render() {
+    const [lista, setLista] = useState(notificacoes);
+    return (
+      <div role="list" className="flex w-full max-w-md flex-col gap-1">
+        {lista.map((n) => (
+          <Item
+            key={n.id}
+            role="listitem"
+            size="sm"
+            className={linhaComAcoes}
+            mediaVariant="icon"
+            media={<BellIcon />}
+            title={
+              <a
+                href="#"
+                data-acao-principal=""
+                className={acaoPrincipal}
+                onClick={(e) => e.preventDefault()}
+              >
+                {n.titulo}
+              </a>
+            }
+            description={n.lida ? `${n.quando} · lida` : n.quando}
+            actions={
+              <div className="relative z-10 flex gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label={`Marcar como lida: ${n.titulo}`}
+                  disabled={n.lida}
+                  onClick={() =>
+                    setLista((l) => l.map((x) => (x.id === n.id ? { ...x, lida: true } : x)))
+                  }
+                >
+                  <CheckIcon />
+                </Button>
+              </div>
+            }
+          />
+        ))}
+      </div>
+    );
+  },
+};
+
+export const CenarioDownload: Story = {
+  name: "Cenário · Download com cancelar",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Item estático com o Progress em `footer` e o botão de cancelar em `actions`. Como o Item não é clicável, o botão não fica dentro de outro controle. O Progress tem nome próprio (`aria-label`).",
+      },
+    },
+  },
+  render: function Render() {
+    const [cancelado, setCancelado] = useState(false);
+    return (
+      <div className="flex w-full max-w-md flex-col gap-3">
+        <Item
+          variant="outline"
+          mediaVariant="icon"
+          media={<FileTextIcon />}
+          title="relatorio-anual.pdf"
+          description={cancelado ? "Download cancelado" : "3,2 MB de 8 MB"}
+          actions={
+            cancelado ? undefined : (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Cancelar download de relatorio-anual.pdf"
+                onClick={() => setCancelado(true)}
+              >
+                <XIcon />
+              </Button>
+            )
+          }
+          footer={
+            cancelado ? undefined : (
+              <Progress value={40} aria-label="Download de relatorio-anual.pdf" />
+            )
+          }
+        />
+      </div>
+    );
+  },
 };
