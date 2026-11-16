@@ -27,8 +27,11 @@ export interface TableColumn<T = Record<string, unknown>> {
   className?: string;
   /** Optional class for body cells of this column. */
   cellClassName?: string;
-  /** Custom cell renderer. Receives cell value and full row. */
-  render?: (value: unknown, row: T) => React.ReactNode;
+  /**
+   * Custom cell renderer. Receives cell value, full row and the row meta (depth and, on rows
+   * with sub-rows, `subRows` — e.g. to show the sum of the sub-rows on the parent).
+   */
+  render?: (value: unknown, row: T, meta: TableRowMeta<T>) => React.ReactNode;
 
   /**
    * Optional PRIZM cell render behavior (compatible with Grid meta API).
@@ -42,6 +45,16 @@ export interface TableColumn<T = Record<string, unknown>> {
   statusLabels?: PrizmCellMeta<T>["statusLabels"];
   statusSummaryColumnHeaders?: PrizmCellMeta<T>["statusSummaryColumnHeaders"];
   badgeMaxVisible?: number;
+}
+
+/** Row context passed to `render` (third argument). */
+export interface TableRowMeta<T = Record<string, unknown>> {
+  /** 0 for top-level rows, 1 for sub-rows. */
+  depth: number;
+  /** Sub-rows of this row (from `getSubRows`); only on rows that have them. */
+  subRows?: T[];
+  /** Whether a row with sub-rows is open. */
+  isExpanded?: boolean;
 }
 
 /** One cell in a footer row. */
@@ -76,4 +89,23 @@ export interface TableProps<T = Record<string, unknown>> extends Omit<
   className?: string;
   /** Optional class for the <table> element. */
   tableClassName?: string;
+  /**
+   * Sub-rows of a row (one level). Rows with sub-rows get a button to expand them, in a column
+   * added at the left; sub-rows use the same columns, with the first data column indented.
+   * Footer rows: the first cell spans the extra column automatically.
+   */
+  getSubRows?: (row: T) => T[] | undefined;
+  /** Rows open on the first render, by `getRowKey`; `true` opens all. Uncontrolled. */
+  defaultExpanded?: string[] | true;
+  /** Open rows, by `getRowKey` (controlled). */
+  expanded?: string[];
+  /** Called with the open row keys when a row is expanded or collapsed. */
+  onExpandedChange?: (expanded: string[]) => void;
+  /**
+   * Accessible name of the expand button. Default: "Expandir" or "Recolher" plus the text of the
+   * first column (e.g. "Expandir Produto A").
+   */
+  getExpandLabel?: (row: T, isExpanded: boolean) => string;
+  /** Visually hidden header of the expand column. @default "Expandir" */
+  expandColumnLabel?: string;
 }

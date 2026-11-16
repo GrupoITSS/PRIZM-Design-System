@@ -1,11 +1,13 @@
 // Table com API por props (recomendado para casos simples)
 export { Table } from "./table";
+export { tableExpandCell, tableExpandHead, tableSubRowIndent } from "./table.styles";
 export type {
   TableCellRender,
   TableColumn,
   TableFooterCell,
   TableFooterRow,
   TableProps,
+  TableRowMeta,
 } from "./table.types";
 
 // PRIZM cell renderers (Grid-compatible meta API)

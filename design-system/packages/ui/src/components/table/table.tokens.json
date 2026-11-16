@@ -9,13 +9,8 @@
     "code": "design-system/packages/ui/src/components/table/table.tsx",
     "story": "design-system/apps/docs/stories/table.stories.tsx",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=47362d42-e44e-4171-87f3-d91b3525e0e2&version=v1",
-    "pullRequests": [
-      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/190"
-    ],
-    "jira": [
-      "GIES-1728",
-      "GIES-1724"
-    ]
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/190"],
+    "jira": ["GIES-1728", "GIES-1724"]
   },
   "parts": {
     "head": {
@@ -47,6 +42,12 @@
       "text": "color/muted-foreground",
       "fontSize": "text/sm",
       "marginTop": "spacing/4"
+    },
+    "expand": {
+      "column": "48px (w-12): Button ghost icon-sm (control-height/sm) e o padding da célula (spacing/2)",
+      "button": "Button ghost icon-sm, ChevronRight fechada e ChevronDown aberta",
+      "subRowIndent": "spacing/2 + spacing/6 + spacing/2 (40px, pl-10) na primeira coluna de dados",
+      "figma": "Table / Column Type=Expand com Table / Expand Cell (Expanded No, Yes, None); booleana Sub-row na Table / Cell"
     }
   },
   "states": {

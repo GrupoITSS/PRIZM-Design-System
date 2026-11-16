@@ -3,7 +3,14 @@ import { fireEvent } from "@testing-library/react";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Table } from "./table";
-import { TableBody, TableCell, TableHead, TableHeader, TableRoot, TableRow } from "./table-primitives";
+import {
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRoot,
+  TableRow,
+} from "./table-primitives";
 import { ContentRenderType } from "./table-cell-renderers.types";
 
 type Row = { id: string; name: string; value: number };
@@ -188,7 +195,9 @@ describe("Table · renderizadores e acessibilidade (06/11/2026)", () => {
 
   it("o gatilho do renderizador hover é um botão focável, nos dois tipos de gatilho", () => {
     for (const trigger of ["click", "hover"] as const) {
-      const { unmount } = render(<Table<R> columns={hoverCol(trigger)} rows={[{ id: "1", plans: "2" }]} />);
+      const { unmount } = render(
+        <Table<R> columns={hoverCol(trigger)} rows={[{ id: "1", plans: "2" }]} />,
+      );
       const btn = screen.getByRole("button", { name: "2" });
       expect(btn).toHaveAttribute("type", "button");
       btn.focus();
@@ -201,7 +210,9 @@ describe("Table · renderizadores e acessibilidade (06/11/2026)", () => {
     type I = { id: string; company: { imageUrl: string; text: string } };
     const { container } = render(
       <Table<I>
-        columns={[{ key: "company", header: "Empresa", contentRenderType: ContentRenderType.TEXT_IMAGE }]}
+        columns={[
+          { key: "company", header: "Empresa", contentRenderType: ContentRenderType.TEXT_IMAGE },
+        ]}
         rows={[{ id: "1", company: { imageUrl: "logo.png", text: "ACME" } }]}
       />,
     );
@@ -213,14 +224,14 @@ describe("Table · renderizadores e acessibilidade (06/11/2026)", () => {
     type L = { id: string; name: string; plans: string };
     render(
       <Table<L>
-        columns={[
-          { key: "name", header: "Nome", link: "/empresas/:id" },
-          ...hoverCol("click"),
-        ]}
+        columns={[{ key: "name", header: "Nome", link: "/empresas/:id" }, ...hoverCol("click")]}
         rows={[{ id: "1", name: "ACME", plans: "2" }]}
       />,
     );
-    for (const el of [screen.getByRole("link", { name: "ACME" }), screen.getByRole("button", { name: "2" })]) {
+    for (const el of [
+      screen.getByRole("link", { name: "ACME" }),
+      screen.getByRole("button", { name: "2" }),
+    ]) {
       expect(el).toHaveClass(
         "focus-visible:ring-[3px]",
         "focus-visible:ring-ring",
@@ -256,5 +267,126 @@ describe("Table · renderizador actions (06/11/2026)", () => {
     );
     expect(screen.getByText("—")).toBeInTheDocument();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+});
+
+describe("Table: linhas que expandem (decisão de 16/11/2026)", () => {
+  type Item = { id: string; nome: string; preco: number; planos?: Item[] };
+  const itens: Item[] = [
+    {
+      id: "a",
+      nome: "Produto A",
+      preco: 0,
+      planos: [
+        { id: "a1", nome: "Plano Básico", preco: 100 },
+        { id: "a2", nome: "Plano Pro", preco: 250 },
+      ],
+    },
+    {
+      id: "b",
+      nome: "Produto B",
+      preco: 0,
+      planos: [{ id: "b1", nome: "Plano Único", preco: 600 }],
+    },
+    { id: "c", nome: "Produto C", preco: 80 },
+  ];
+  const cols = [
+    { key: "nome", header: "Produto" },
+    {
+      key: "preco",
+      header: "Subtotal",
+      align: "right" as const,
+      render: (v: unknown, _r: Item, meta: { subRows?: Item[] }) =>
+        meta.subRows ? `soma ${meta.subRows.reduce((s, x) => s + x.preco, 0)}` : String(v),
+    },
+  ];
+  const base = {
+    columns: cols,
+    rows: itens,
+    getRowKey: (r: Item) => r.id,
+    getSubRows: (r: Item) => r.planos,
+  };
+
+  it("sem getSubRows, não há coluna de expandir", () => {
+    render(<Table<Item> columns={cols} rows={itens} />);
+    expect(screen.getAllByRole("columnheader")).toHaveLength(2);
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
+  it("botão só nas linhas com sub-linhas, fechado, com nome e cabeçalho só para leitor de tela", () => {
+    render(<Table<Item> {...base} />);
+    expect(screen.getAllByRole("columnheader")).toHaveLength(3);
+    expect(screen.getByRole("columnheader", { name: "Expandir" })).toBeInTheDocument();
+    const btn = screen.getByRole("button", { name: "Expandir Produto A" });
+    expect(btn).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("button", { name: "Expandir Produto B" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Produto C/ })).not.toBeInTheDocument();
+    expect(screen.queryByText("Plano Básico")).not.toBeInTheDocument();
+  });
+
+  it("abre e fecha pelo clique, com aria-controls para as sub-linhas recuadas", () => {
+    render(<Table<Item> {...base} />);
+    fireEvent.click(screen.getByRole("button", { name: "Expandir Produto A" }));
+    const btn = screen.getByRole("button", { name: "Recolher Produto A" });
+    expect(btn).toHaveAttribute("aria-expanded", "true");
+    const ids = btn.getAttribute("aria-controls")?.split(" ") ?? [];
+    expect(ids).toHaveLength(2);
+    for (const id of ids) expect(document.getElementById(id)).toHaveAttribute("data-depth", "1");
+    expect(screen.getByText("Plano Básico").closest("td")).toHaveClass("pl-10");
+    fireEvent.click(btn);
+    expect(screen.queryByText("Plano Básico")).not.toBeInTheDocument();
+  });
+
+  it("o render recebe subRows na linha pai (para a soma)", () => {
+    render(<Table<Item> {...base} />);
+    expect(screen.getByText("soma 350")).toBeInTheDocument();
+    expect(screen.getByText("80")).toBeInTheDocument();
+  });
+
+  it("defaultExpanded abre as linhas pedidas; true abre todas", () => {
+    const { unmount } = render(<Table<Item> {...base} defaultExpanded={["b"]} />);
+    expect(screen.getByText("Plano Único")).toBeInTheDocument();
+    expect(screen.queryByText("Plano Básico")).not.toBeInTheDocument();
+    unmount();
+    render(<Table<Item> {...base} defaultExpanded />);
+    expect(screen.getByText("Plano Básico")).toBeInTheDocument();
+    expect(screen.getByText("Plano Único")).toBeInTheDocument();
+  });
+
+  it("controlado: expanded e onExpandedChange", () => {
+    const onChange = vi.fn();
+    render(<Table<Item> {...base} expanded={[]} onExpandedChange={onChange} />);
+    fireEvent.click(screen.getByRole("button", { name: "Expandir Produto A" }));
+    expect(onChange).toHaveBeenCalledWith(["a"]);
+    expect(screen.queryByText("Plano Básico")).not.toBeInTheDocument();
+  });
+
+  it("é um botão nativo: o teclado abre com Enter e o foco fica nele", () => {
+    render(<Table<Item> {...base} />);
+    const btn = screen.getByRole("button", { name: "Expandir Produto A" });
+    expect(btn.tagName).toBe("BUTTON");
+    btn.focus();
+    fireEvent.click(btn);
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Recolher Produto A" }));
+  });
+
+  it("rodapé: a primeira célula ocupa a coluna de expandir", () => {
+    render(
+      <Table<Item>
+        {...base}
+        footerRows={[[{ content: "Total" }, { content: "1.290", align: "right" }]]}
+      />,
+    );
+    expect(screen.getByText("Total").closest("td")).toHaveAttribute("colspan", "2");
+  });
+
+  it("getExpandLabel troca o nome do botão", () => {
+    render(
+      <Table<Item>
+        {...base}
+        getExpandLabel={(r, o) => `${o ? "Fechar" : "Ver"} planos de ${r.nome}`}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "Ver planos de Produto A" })).toBeInTheDocument();
   });
 });
