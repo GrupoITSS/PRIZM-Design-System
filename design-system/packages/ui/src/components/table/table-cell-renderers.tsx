@@ -222,44 +222,42 @@ const NEUTRAL_BADGE = {
   size: "sm",
 } as const;
 
-function stopRowClick(event: React.SyntheticEvent) {
-  event.preventDefault();
-  event.stopPropagation();
+/**
+ * True when any badge inside the element is cut by the ellipsis (its text is wider than the box).
+ * Uses a callback ref: when the group moves into the Popover trigger, the element is a new one and
+ * the observer follows it. A detached element is ignored, or it would read as "not cut" and flip
+ * the cell back.
+ */
+function useBadgeTruncated(deps: unknown) {
+  const [el, setEl] = React.useState<HTMLElement | null>(null);
+  const [truncated, setTruncated] = React.useState(false);
+  React.useLayoutEffect(() => {
+    if (!el) return;
+    const measure = () => {
+      if (!el.isConnected) return;
+      const badges = el.querySelectorAll<HTMLElement>("[data-slot=badge]");
+      setTruncated(Array.from(badges).some((b) => b.scrollWidth > b.clientWidth + 1));
+    };
+    // The observer calls measure once as soon as it starts observing, so no synchronous call here.
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [el, deps]);
+  return [setEl, truncated] as const;
 }
 
-function BadgeOverflowTrigger({
-  hiddenCount,
-  content,
-}: {
-  hiddenCount: number;
-  content: React.ReactNode;
-}) {
-  return (
-    <HoverCard
-      openDelay={0}
-      closeDelay={120}
-      side="bottom"
-      align="start"
-      contentClassName="w-auto max-w-64 p-2"
-      trigger={
-        <button
-          type="button"
-          className={cn("inline-flex shrink-0", RENDERER_FOCUS)}
-          aria-label={`Mostrar mais ${hiddenCount}`}
-          onClick={stopRowClick}
-          onPointerDown={stopRowClick}
-          onMouseDown={stopRowClick}
-        >
-          <Badge {...NEUTRAL_BADGE}>+{hiddenCount}</Badge>
-        </button>
-      }
-      content={content}
-    />
-  );
-}
-
+/**
+ * Badges in a cell (DS-81, 16/11/2026). Up to `maxVisible` badges (default 2); the rest become "+N".
+ * Names never wrap: they are cut with an ellipsis. When something is hidden (+N) or cut, the whole
+ * group is a button that opens a Popover with every name in full. Before, "+N" opened a HoverCard,
+ * which only showed on hover or focus: on touch screens the list never opened, and a cut name was
+ * only in the `title`, which is not accessible.
+ */
 function BadgeCell({ tags, maxVisible = 2 }: { tags: unknown; maxVisible?: number }) {
   const normalized = toBadgeTags(tags);
+  const [groupRef, truncated] = useBadgeTruncated(normalized.map((t) => t.name).join("\u0000"));
+
   if (!normalized.length) {
     return <span className="text-sm text-muted-foreground">—</span>;
   }
@@ -267,18 +265,8 @@ function BadgeCell({ tags, maxVisible = 2 }: { tags: unknown; maxVisible?: numbe
   const visible = normalized.slice(0, Math.max(0, maxVisible));
   const hiddenCount = Math.max(0, normalized.length - visible.length);
 
-  const list = (
-    <div className="flex max-w-64 flex-col gap-1.5">
-      {normalized.map((t) => (
-        <Badge key={t.id} {...NEUTRAL_BADGE} title={t.name} className="max-w-full truncate">
-          {t.name}
-        </Badge>
-      ))}
-    </div>
-  );
-
-  return (
-    <div className="flex min-w-0 items-center gap-1.5">
+  const group = (
+    <span ref={groupRef} className="flex min-w-0 items-center gap-1.5">
       {visible.map((t) => (
         <Badge
           key={t.id}
@@ -289,7 +277,56 @@ function BadgeCell({ tags, maxVisible = 2 }: { tags: unknown; maxVisible?: numbe
           {t.name}
         </Badge>
       ))}
-      {hiddenCount > 0 ? <BadgeOverflowTrigger hiddenCount={hiddenCount} content={list} /> : null}
+      {hiddenCount > 0 ? (
+        <Badge {...NEUTRAL_BADGE} className="shrink-0">
+          +{hiddenCount}
+        </Badge>
+      ) : null}
+    </span>
+  );
+
+  if (hiddenCount === 0 && !truncated) {
+    return <div className="flex min-w-0 items-center">{group}</div>;
+  }
+
+  return (
+    <div className="flex min-w-0 items-center">
+      <Popover
+        side="bottom"
+        align="start"
+        className="w-auto max-w-64 p-2"
+        contentProps={{ "aria-label": `${normalized.length} ${normalized.length === 1 ? "item" : "itens"}` }}
+        trigger={
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            className={cn(
+              "inline-flex min-w-0 max-w-full cursor-pointer items-center border-0 bg-transparent p-0",
+              RENDERER_FOCUS,
+            )}
+            onClick={(event) => event.stopPropagation()}
+          >
+            {group}
+            <span className="sr-only">, mostrar todos</span>
+          </button>
+        }
+        content={
+          // The Popover is portaled, but React events still bubble to the row: stop them here so a
+          // click in the list does not trigger onRowClick.
+          <ul className="flex flex-col gap-1.5" onClick={(event) => event.stopPropagation()}>
+            {normalized.map((t) => (
+              <li key={t.id} className="flex">
+                <Badge
+                  {...NEUTRAL_BADGE}
+                  className="h-auto max-w-full whitespace-normal break-words text-left"
+                >
+                  {t.name}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+        }
+      />
     </div>
   );
 }
