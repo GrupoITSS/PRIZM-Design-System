@@ -85,8 +85,14 @@ describe("Badge × mapa de tokens (badge.tokens.json)", () => {
         text?: string;
         overlay?: string;
         opacity?: number;
+        veil?: string;
       };
-      if (h.overlay) {
+      if (h.veil) {
+        // Véu preto de 10% sobre o tom (DS-63, 16/11/2026): color/black-alpha/10 no Figma.
+        expect(classes).toContain(
+          `[a&]:hover:bg-[color-mix(in_srgb,var(--prizm-${h.background!.replace("/", "-")}),black_10%)]`,
+        );
+      } else if (h.overlay) {
         expect(
           classes.some(
             (c) =>

@@ -71,7 +71,7 @@
     "hover": {
       "default": {
         "background": "color/primary",
-        "opacity": 0.8
+        "veil": "color/black-alpha/10"
       },
       "secondary": {
         "overlay": "color/foreground",
@@ -83,19 +83,19 @@
       },
       "destructive": {
         "background": "color/destructive",
-        "opacity": 0.8
+        "veil": "color/black-alpha/10"
       },
       "verified": {
         "background": "color/info",
-        "opacity": 0.8
+        "veil": "color/black-alpha/10"
       },
       "success": {
         "background": "color/success",
-        "opacity": 0.8
+        "veil": "color/black-alpha/10"
       },
       "warning": {
         "background": "color/warning",
-        "opacity": 0.8
+        "veil": "color/black-alpha/10"
       }
     },
     "focus": {

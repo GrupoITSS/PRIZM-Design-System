@@ -74,11 +74,11 @@ export const calendarDayButtonStyles = [
   "aria-selected:border-0!",
 
   // Selected (single)
-  "data-[selected-single=true]:bg-primary! rounded-md! data-[selected-single=true]:text-primary-foreground! data-[selected-single=true]:hover:bg-primary/80! border-none!",
+  "data-[selected-single=true]:bg-primary! rounded-md! data-[selected-single=true]:text-primary-foreground! data-[selected-single=true]:hover:bg-[color-mix(in_srgb,var(--prizm-color-primary),black_10%)]! border-none!",
 
   // Selected (range)
-  "data-[range-start=true]:bg-primary! data-[range-start=true]:text-primary-foreground! data-[range-start=true]:hover:bg-primary/80! rounded-md",
-  "data-[range-end=true]:bg-primary! data-[range-end=true]:text-primary-foreground! data-[range-end=true]:hover:bg-primary/80!",
+  "data-[range-start=true]:bg-primary! data-[range-start=true]:text-primary-foreground! data-[range-start=true]:hover:bg-[color-mix(in_srgb,var(--prizm-color-primary),black_10%)]! rounded-md",
+  "data-[range-end=true]:bg-primary! data-[range-end=true]:text-primary-foreground! data-[range-end=true]:hover:bg-[color-mix(in_srgb,var(--prizm-color-primary),black_10%)]!",
   "data-[range-middle=true]:bg-accent! data-[range-middle=true]:text-accent-foreground! data-[range-middle=true]:rounded-none",
 
   // Focus ring comes from Button (3px ring + 2px offset in ring-offset), so it
