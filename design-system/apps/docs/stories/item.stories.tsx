@@ -103,6 +103,64 @@ type Story = StoryObj<typeof Item>;
 
 // (FileItem stories have been moved to file-item/file-item.stories.tsx)
 
+/**
+ * A única story ligada aos controles: as outras têm render fixo e ignoram os args.
+ * Com `interactive` ou `href`, o Item ganha hover (passe o mouse) e foco (Tab).
+ */
+export const Playground: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Todas as props do painel valem aqui. Ligue `interactive` (ou preencha `href`) e passe o mouse para ver o hover; use Tab para ver o foco. Sem os dois, o Item é estático e não muda.",
+      },
+    },
+  },
+  argTypes: {
+    asChild: { control: false, table: { disable: true } },
+  },
+  args: {
+    variant: "outline",
+    size: "default",
+    mediaVariant: "icon",
+    interactive: false,
+    title: "Pedido 4521",
+    description: "Aguardando aprovação.",
+  },
+  render: ({ mediaVariant, ...args }) => {
+    const clicavel = Boolean(args.interactive || args.href);
+    return (
+      <div className="w-full max-w-md">
+        <Item
+          {...args}
+          mediaVariant={mediaVariant}
+          media={
+            mediaVariant === "image" ? (
+              <img
+                src={`https://avatar.vercel.sh/${encodeURIComponent("Pedido 4521")}`}
+                alt=""
+                className="object-cover"
+              />
+            ) : (
+              <InboxIcon />
+            )
+          }
+          actions={
+            clicavel ? (
+              <ChevronRightIcon className="size-4" aria-hidden="true" />
+            ) : (
+              <Button variant="outline" size="sm">
+                Abrir
+              </Button>
+            )
+          }
+          onClick={args.href ? (e) => e.preventDefault() : undefined}
+        />
+      </div>
+    );
+  },
+};
+
 export const Demo: Story = {
   parameters: {
     docs: {
