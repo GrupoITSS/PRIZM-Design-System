@@ -127,7 +127,7 @@ const organizations: OrgRow[] = [
 
 // Traceability: the Table components in [PRIZM] Componentes, the documentation frame and the CMS
 // article. The token map lives next to the component (table.tokens.json) and is checked in a test.
-const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=325-388";
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27023-3613";
 const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26381-2461";
 const CMS_URL =
   "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=47362d42-e44e-4171-87f3-d91b3525e0e2&version=v1";
@@ -143,7 +143,7 @@ const meta: Meta<typeof Table<OrgRow>> = {
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com), com tokens PRIZM.\n\n" +
           "Tabela de dados em colunas, com cabeçalho, linhas, rodapé e legenda. API por props: `columns`, `rows`, `caption`, `footerRows` e `emptyMessage`. Para composição livre, as primitivas (`TableRoot`, `TableHeader`, `TableRow`…).\n\n" +
           "Renderizadores PRIZM (`contentRenderType` e `contentFormatType`), compatíveis com a meta API do Grid do Cockpit: `status`, `text-image`, `text-button`, `badge`, `hover`, `status-summary-with-popover` e formatos de CNPJ, CPF, data, moeda e outros.\n\n" +
-          "Dê nome à tabela com `caption` ou `aria-label`. Para ordenar, filtrar, paginar ou selecionar, use o DataTable.\n\n" +
+          "Dê nome à tabela com `caption` ou `aria-label`. A Table ordena (`sortable` na coluna), pinta linhas em destaque (`isRowHighlighted`) e mostra o Empty quando não há linhas. Para filtrar, paginar ou selecionar, use o DataTable.\n\n" +
           '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/table" target="_blank" rel="noopener noreferrer">Table — shadcn/ui</a>\n\n' +
           `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
@@ -158,6 +158,13 @@ const meta: Meta<typeof Table<OrgRow>> = {
     isRowHighlighted: { control: false },
     defaultSort: { control: "object" },
     manualSort: { control: "boolean" },
+    sort: { control: "object" },
+    onSortChange: { control: false },
+    defaultExpanded: { control: false },
+    expanded: { control: false },
+    onExpandedChange: { control: false },
+    getRowKey: { control: false },
+    footerRows: { control: false },
   },
 };
 
