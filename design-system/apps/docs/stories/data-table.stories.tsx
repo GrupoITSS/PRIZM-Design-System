@@ -107,6 +107,7 @@ const meta: Meta<typeof DataTable<MockPayment, unknown>> = {
       description: {
         component:
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
+          "Figma: [Data Table](https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118) · Artigo: [DataTable no CMS](https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=97dd20dc-cd4c-42ef-a25c-cb4e45ac6281&version=v1)\n\n" +
           'DataTable do design system PRIZM — integração completa com **TanStack Table** para tabelas avançadas.\n\n**Features suportadas:**\n- ✅ Pagination (paginação de dados) — rodapé próprio ("Página X de Y" com anterior e próxima); ainda não usa o componente Pagination\n- ✅ Sorting (ordenação de colunas)\n- ✅ Filtering (filtro por coluna)\n- ✅ Column Visibility (toggle de colunas)\n- ✅ Row Selection (seleção com checkboxes)\n- ✅ Cell Formatting (formatação customizada)\n- ✅ Row Actions (ações por linha)\n\n**Documentação e API de referência:**\n- <a href="https://tanstack.com/table/latest" target="_blank" rel="noopener noreferrer">TanStack Table</a>\n- <a href="https://ui.shadcn.com/docs/components/data-table" target="_blank" rel="noopener noreferrer">Data Table — shadcn/ui</a>',
       },
     },
