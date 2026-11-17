@@ -7,6 +7,8 @@ export {
   tableCellTruncate,
   tableExpandCell,
   tableExpandHead,
+  tableRowHighlighted,
+  tableSortButton,
   tableSubRowIndent,
 } from "./table.styles";
 export type {
@@ -16,6 +18,7 @@ export type {
   TableFooterRow,
   TableProps,
   TableRowMeta,
+  TableSort,
 } from "./table.types";
 
 // PRIZM cell renderers (Grid-compatible meta API)

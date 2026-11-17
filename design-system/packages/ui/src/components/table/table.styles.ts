@@ -21,6 +21,16 @@ export const tableCell =
   "p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]";
 export const tableCaption = "mt-4 text-sm text-muted-foreground";
 
+/**
+ * Botão de ordenar no cabeçalho (Table e DataTable, decisão de 17/11/2026). Ocupa o padding da
+ * célula para o texto não mudar de lugar. No Figma, Table / Head com Show Sort e Sort Icon.
+ */
+export const tableSortButton =
+  "-mx-2 inline-flex h-8 items-center gap-1 rounded-md px-2 font-medium text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring [&_svg]:size-4 [&_svg]:shrink-0";
+
+/** Linha em destaque (Table e DataTable): fundo `muted`, como a Table / Cell State=Selected. */
+export const tableRowHighlighted = "bg-muted hover:bg-muted";
+
 export const alignLeft = "text-left";
 export const alignRight = "text-right";
 export const alignCenter = "text-center";

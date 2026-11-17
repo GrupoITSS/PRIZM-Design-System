@@ -154,6 +154,10 @@ const meta: Meta<typeof Table<OrgRow>> = {
     rows: { control: false },
     caption: { control: "text" },
     emptyMessage: { control: "text" },
+    getSubRows: { control: false },
+    isRowHighlighted: { control: false },
+    defaultSort: { control: "object" },
+    manualSort: { control: "boolean" },
   },
 };
 
@@ -297,6 +301,15 @@ export const WithFooter: InvoiceStory = {
 };
 
 export const Empty: Story = {
+  name: "Vazio",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Sem linhas, o Empty aparece numa linha da largura toda, abaixo do cabeçalho. `emptyMessage` troca o texto (padrão "Nenhum resultado.") ou o conteúdo inteiro. No Figma, Table com Show Empty. Decisão de 17/11/2026.',
+      },
+    },
+  },
   args: {
     columns: [
       { key: "organization", header: "Organização" },
@@ -642,5 +655,109 @@ export const TruncatedText: Story = {
   name: "Texto cortado e quebra",
   render: () => (
     <Table<ProductRow> columns={productColumns} rows={productRows} getRowKey={(r) => r.id} />
+  ),
+};
+
+/** Ordenação: `sortable` na coluna. O cabeçalho vira botão, com `aria-sort`. Decisão de 17/11/2026. */
+export const Sorting: Story = {
+  name: "Ordenação",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`sortable: true` na coluna põe um botão no cabeçalho: o primeiro clique ordena em ordem crescente, o segundo em decrescente. `defaultSort` começa ordenado (aqui, Valor decrescente); `sort` e `onSortChange` controlam; com `manualSort`, a tabela não reordena (ordenação no servidor). No Figma, Table / Head com Show Sort.",
+      },
+    },
+  },
+  render: () => (
+    <Table<ProductRow>
+      aria-label="Produtos"
+      columns={[
+        { key: "produto", header: "Produto", width: "220px", sortable: true },
+        { key: "descricao", header: "Descrição", wrap: true },
+        {
+          key: "valor",
+          header: "Valor",
+          align: "right",
+          width: "140px",
+          contentFormatType: ContentFormatType.CURRENCY,
+          sortable: true,
+        },
+      ]}
+      rows={productRows}
+      getRowKey={(r) => r.id}
+      defaultSort={{ key: "valor", direction: "desc" }}
+    />
+  ),
+};
+
+/** Alinhamento da coluna: esquerda (padrão), centro e direita. */
+export const Alignment: Story = {
+  name: "Alinhamento",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`align` alinha o cabeçalho e as células da coluna: `left` (padrão), `center` e `right`. À direita, os números usam algarismos de largura fixa. No Figma, Table / Head com Align e Table / Cell com Variant=Center ou Number.",
+      },
+    },
+  },
+  render: () => (
+    <Table<{ id: string; produto: string; qtd: number; valor: number }>
+      aria-label="Itens"
+      columns={[
+        { key: "produto", header: "Produto" },
+        { key: "qtd", header: "Quantidade", align: "center", width: "140px" },
+        {
+          key: "valor",
+          header: "Valor",
+          align: "right",
+          width: "140px",
+          contentFormatType: ContentFormatType.CURRENCY,
+        },
+      ]}
+      rows={[
+        { id: "1", produto: "Licença anual", qtd: 2, valor: 1290 },
+        { id: "2", produto: "Implantação", qtd: 1, valor: 250 },
+        { id: "3", produto: "Treinamento", qtd: 12, valor: 480 },
+      ]}
+      getRowKey={(r) => r.id}
+    />
+  ),
+};
+
+/** Linha em destaque: `isRowHighlighted`, o mesmo nome do DataTable. */
+export const RowHighlight: Story = {
+  name: "Linha em destaque",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`isRowHighlighted` pinta o fundo da linha com `muted`, para diferenciar umas linhas das outras (aqui, o complemento de licença). O mesmo nome e o mesmo visual no DataTable. No Figma, Table / Cell com State=Selected.",
+      },
+    },
+  },
+  render: () => (
+    <Table<{ id: string; codigo: string; licenca: string; preco: number; complemento?: boolean }>
+      aria-label="Licenciamento"
+      columns={[
+        { key: "codigo", header: "Código", width: "140px" },
+        { key: "licenca", header: "Licença" },
+        {
+          key: "preco",
+          header: "Preço",
+          align: "right",
+          width: "140px",
+          contentFormatType: ContentFormatType.CURRENCY,
+        },
+      ]}
+      rows={[
+        { id: "1", codigo: "P-1.01-S", licenca: "Simultâneo (padrão)", preco: 150 },
+        { id: "2", codigo: "P-1.01-C", licenca: "Consulta", preco: 10, complemento: true },
+        { id: "3", codigo: "P-1.02-S", licenca: "Simultâneo (padrão)", preco: 150 },
+      ]}
+      getRowKey={(r) => r.id}
+      isRowHighlighted={(r) => r.complemento === true}
+    />
   ),
 };
