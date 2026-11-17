@@ -1,5 +1,8 @@
+import type { Tabs as RadixTabs } from "radix-ui";
 import type * as React from "react";
 import type { TabsVariantProps } from "./tabs.styles";
+
+export type TabsVariant = "underline" | "pills";
 
 export interface TabsItem {
   /**
@@ -18,6 +21,11 @@ export interface TabsItem {
    * Optional icon rendered before the label in the trigger.
    */
   icon?: React.ReactNode;
+  /**
+   * Optional counter after the label (ex.: pendências). A number or string becomes a
+   * Badge `shape="number"`; any other node is rendered as is. It is part of the tab name.
+   */
+  badge?: React.ReactNode;
   /**
    * Whether this tab is disabled.
    * @default false
@@ -46,12 +54,7 @@ export interface TabsProps
    */
   defaultValue?: string;
   /**
-   * Tab orientation.
-   * @default "horizontal"
-   */
-  orientation?: "horizontal" | "vertical";
-  /**
-   * Activation mode (automatic on focus or manual on click).
+   * Activation mode: "automatic" selects on arrow focus; "manual" selects with Enter or Space.
    * @default "automatic"
    */
   activationMode?: "automatic" | "manual";
@@ -65,12 +68,12 @@ export interface TabsProps
    */
   fullWidth?: boolean;
   /**
-   * Advanced composition: when `items` is not provided,
-   * children will be rendered directly inside the Tabs root.
+   * Composition: when `items` is not provided, children are rendered inside the root.
+   * Use `TabsList`, `TabsTrigger` and `TabsContent`.
    */
   children?: React.ReactNode;
   /**
-   * Classe extra no wrapper da lista (ex.: `-mx-8 px-8` para o divisor full-bleed).
+   * Classe extra no contêiner da lista (ex.: `-mx-8 px-8` para o divisor full-bleed).
    */
   listClassName?: string;
   /**
@@ -78,3 +81,19 @@ export interface TabsProps
    */
   className?: string;
 }
+
+export interface TabsListProps extends React.ComponentProps<typeof RadixTabs.List> {
+  /** Triggers divide the list width in equal parts. */
+  fullWidth?: boolean;
+  /** Class for the container around the list (it holds the underline border). */
+  containerClassName?: string;
+}
+
+export interface TabsTriggerProps extends React.ComponentProps<typeof RadixTabs.Trigger> {
+  /** Icon before the label. */
+  icon?: React.ReactNode;
+  /** Counter after the label; a number or string becomes a Badge `shape="number"`. */
+  badge?: React.ReactNode;
+}
+
+export type TabsContentProps = React.ComponentProps<typeof RadixTabs.Content>;
