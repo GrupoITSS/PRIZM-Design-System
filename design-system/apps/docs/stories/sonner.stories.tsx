@@ -150,7 +150,7 @@ const COCKPIT_MAX_ALERTS = 3;
 const COCKPIT_TOAST_CLASS_NAMES = {
   actionButton: [
     buttonVariants({ variant: "default", size: "xs" }),
-    "!h-control-height-xs !rounded-md !border-0 !bg-primary !px-2 !text-xs !font-medium !text-primary-foreground !shadow-xs hover:!bg-primary/80",
+    "!h-control-height-xs !rounded-md !border-0 !bg-primary !px-2 !text-xs !font-medium !text-primary-foreground !shadow-xs hover:!bg-[color-mix(in_srgb,var(--prizm-color-primary),black_10%)]",
     "focus-visible:!ring-[3px] focus-visible:!ring-ring focus-visible:!ring-offset-2 focus-visible:!ring-offset-ring-offset",
   ].join(" "),
 };

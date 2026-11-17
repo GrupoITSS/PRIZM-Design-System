@@ -29,13 +29,16 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        // Hover dos tons: véu preto de 10% sobre o tom (DS-63, 16/11/2026), no Figma color/black-alpha/10.
+        // Antes era o tom a 80%: o texto ficava entre 3,47 e 3,97:1 no destructive e abaixo de 4,5:1
+        // no default de PAS, Tchello e Digitrol claros. Com o véu, 60 de 60 pares passam.
+        default: "bg-primary text-primary-foreground hover:bg-[color-mix(in_srgb,var(--prizm-color-primary),black_10%)]",
         // Hover overlays foreground at 10%, not secondary/80: secondary is a
         // near-background gray, and at 80% it changed only 1.02–1.09:1. The
         // overlay darkens in light mode and lightens in dark (1.24–1.36:1).
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklab,var(--prizm-color-secondary),var(--prizm-color-foreground)_10%)]",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/80",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-[color-mix(in_srgb,var(--prizm-color-destructive),black_10%)]",
         outline:
           "border border-input bg-input-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground",
         ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",

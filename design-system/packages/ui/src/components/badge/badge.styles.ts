@@ -40,22 +40,22 @@ export const badgeVariants = cva(
       variant: {
         // Figma "Default" is bound to `color/primary`.
         default:
-          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/80",
+          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-[color-mix(in_srgb,var(--prizm-color-primary),black_10%)]",
         // Link hover as in the Button secondary: foreground overlay at 10%.
         secondary:
           "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-[color-mix(in_oklab,var(--prizm-color-secondary),var(--prizm-color-foreground)_10%)]",
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground [a&]:hover:bg-destructive/80",
+          "border-transparent bg-destructive text-destructive-foreground [a&]:hover:bg-[color-mix(in_srgb,var(--prizm-color-destructive),black_10%)]",
         // Same tokens as the Figma Button outline.
         outline:
           "border-input bg-input-background text-foreground shadow-xs [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
         // Figma "Verified": the info tone (`color/info`), used with a check icon.
         verified:
-          "border-transparent bg-info text-info-foreground [a&]:hover:bg-info/80",
+          "border-transparent bg-info text-info-foreground [a&]:hover:bg-[color-mix(in_srgb,var(--prizm-color-info),black_10%)]",
         success:
-          "border-transparent bg-success text-success-foreground [a&]:hover:bg-success/80",
+          "border-transparent bg-success text-success-foreground [a&]:hover:bg-[color-mix(in_srgb,var(--prizm-color-success),black_10%)]",
         warning:
-          "border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/80",
+          "border-transparent bg-warning text-warning-foreground [a&]:hover:bg-[color-mix(in_srgb,var(--prizm-color-warning),black_10%)]",
       },
       // Same sizes in Figma (Size = sm, md, lg): height/5, height/6 and height/7.
       size: {

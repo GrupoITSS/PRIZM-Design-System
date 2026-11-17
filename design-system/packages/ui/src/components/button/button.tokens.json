@@ -19,7 +19,7 @@
       "background": "color/primary",
       "text": "color/primary-foreground",
       "border": null,
-      "hover": { "rule": "cor de tom a 80%", "background": "color/primary", "opacity": 0.8 }
+      "hover": { "rule": "véu preto de 10% sobre o tom (DS-63, 16/11/2026)", "background": "color/primary", "veil": "color/black-alpha/10" }
     },
     "secondary": {
       "background": "color/secondary",
@@ -31,7 +31,7 @@
       "background": "color/destructive",
       "text": "color/destructive-foreground",
       "border": null,
-      "hover": { "rule": "cor de tom a 80%", "background": "color/destructive", "opacity": 0.8 }
+      "hover": { "rule": "véu preto de 10% sobre o tom (DS-63, 16/11/2026)", "background": "color/destructive", "veil": "color/black-alpha/10" }
     },
     "outline": {
       "background": "color/input-background",
