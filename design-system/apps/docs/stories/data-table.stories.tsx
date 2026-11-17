@@ -1,3 +1,4 @@
+import { Badge } from "@grupoitss/prizm-ui/badge";
 import { Button } from "@grupoitss/prizm-ui/button";
 import { Download, Trash2 } from "@grupoitss/prizm-ui/icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -688,6 +689,121 @@ export const Grupos: Story = {
             </span>
           </>
         )}
+      />
+    );
+  },
+};
+
+export const GruposQueRecolhem: Story = {
+  name: "Grupo que recolhe",
+  parameters: story(
+    "`collapsibleGroups` põe na linha de grupo um botão que recolhe e abre as linhas do grupo (`aria-expanded`). `defaultCollapsedGroups` começa com grupos fechados; `collapsedGroups` e `onCollapsedGroupsChange` controlam o estado. É diferente das sub-linhas da Table: a linha de grupo é um título para um conjunto de linhas, não uma linha de dados. Aqui, como o catálogo da proposta do Pricing: contagem e Badge no grupo, e o complemento de licença em destaque.",
+  ),
+  render: () => {
+    type ItemCatalogo = {
+      codigo: string;
+      grupo: string;
+      cobranca: string;
+      produto: string;
+      licenca: string;
+      preco: number;
+      complemento?: boolean;
+    };
+    const itens: ItemCatalogo[] = [
+      {
+        codigo: "P-1.01-S",
+        grupo: "Licenciamento",
+        cobranca: "Cobrança mensal",
+        produto: "Documentos",
+        licenca: "Simultâneo (padrão)",
+        preco: 150,
+      },
+      {
+        codigo: "P-1.01-C",
+        grupo: "Licenciamento",
+        cobranca: "Cobrança mensal",
+        produto: "",
+        licenca: "Consulta",
+        preco: 10,
+        complemento: true,
+      },
+      {
+        codigo: "P-1.02-S",
+        grupo: "Licenciamento",
+        cobranca: "Cobrança mensal",
+        produto: "Formulários",
+        licenca: "Simultâneo (padrão)",
+        preco: 150,
+      },
+      {
+        codigo: "P-2.01",
+        grupo: "Implantação",
+        cobranca: "Cobrança única",
+        produto: "Migração de documentos",
+        licenca: "—",
+        preco: 7000,
+      },
+      {
+        codigo: "P-2.02",
+        grupo: "Implantação",
+        cobranca: "Cobrança única",
+        produto: "Formulários",
+        licenca: "—",
+        preco: 7000,
+      },
+      {
+        codigo: "P-3.01",
+        grupo: "Recursos extras",
+        cobranca: "Cobrança única",
+        produto: "Assinatura digital",
+        licenca: "—",
+        preco: 1200,
+      },
+      {
+        codigo: "P-4.01",
+        grupo: "Treinamento",
+        cobranca: "Cobrança única",
+        produto: "Turma remota",
+        licenca: "—",
+        preco: 900,
+      },
+      {
+        codigo: "P-4.02",
+        grupo: "Treinamento",
+        cobranca: "Cobrança única",
+        produto: "Turma presencial",
+        licenca: "—",
+        preco: 1500,
+      },
+    ];
+    return (
+      <DataTable<ItemCatalogo, unknown>
+        aria-label="Catálogo da proposta"
+        columns={[
+          { accessorKey: "codigo", header: "Código", size: 120 },
+          { accessorKey: "produto", header: "Produto", size: 220 },
+          { accessorKey: "licenca", header: "Licença", size: 200 },
+          {
+            accessorKey: "preco",
+            header: "Preço",
+            size: 140,
+            cell: ({ getValue }) => brl(getValue<number>()),
+            meta: { prizm: { cellAlign: "right" } },
+          },
+        ]}
+        data={itens}
+        getRowId={(i) => i.codigo}
+        groupBy={(i) => i.grupo}
+        collapsibleGroups
+        defaultCollapsedGroups={["Recursos extras", "Treinamento"]}
+        renderGroupLabel={({ key, rows }) => (
+          <span className="inline-flex items-center gap-2">
+            {key}
+            <Badge variant="secondary">{rows.length}</Badge>
+            <Badge variant="outline">{rows[0]?.cobranca}</Badge>
+          </span>
+        )}
+        isRowHighlighted={(i) => i.complemento === true}
       />
     );
   },

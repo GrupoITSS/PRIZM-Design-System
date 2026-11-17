@@ -30,7 +30,8 @@
     "groupRow": {
       "background": "color/muted",
       "height": "height/10",
-      "count": "color/muted-foreground"
+      "count": "color/muted-foreground",
+      "toggle": "collapsibleGroups: ChevronRight ou ChevronDown (width/4) e o conteúdo da linha num botão; hover color/accent, foco com o anel do Prizm"
     },
     "summaryRow": {
       "background": "color/muted a 50%",

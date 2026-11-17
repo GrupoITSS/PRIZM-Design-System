@@ -35,6 +35,12 @@ export const dataTableRowHighlighted = "bg-muted hover:bg-muted";
 export const dataTableGroupRow = "border-b border-border bg-muted hover:bg-muted";
 export const dataTableGroupCell = "h-10 px-2 py-2 text-left text-sm font-medium text-foreground";
 export const dataTableGroupCount = "ml-2 font-normal text-muted-foreground";
+/**
+ * Botão de recolher o grupo: chevron e o conteúdo da linha de grupo. Ocupa o padding da célula, como
+ * o botão de ordenar, para o texto não mudar de lugar entre grupo que recolhe e que não recolhe.
+ */
+export const dataTableGroupToggle =
+  "-mx-1 inline-flex min-h-8 items-center gap-2 rounded-md px-1 text-left font-medium text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring [&_svg]:size-4 [&_svg]:shrink-0";
 
 /** Linha de resumo (totais): como o rodapé da Table. */
 export const dataTableSummaryRow =

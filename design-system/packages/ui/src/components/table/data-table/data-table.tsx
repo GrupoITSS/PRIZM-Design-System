@@ -59,6 +59,7 @@ import {
   dataTableGroupCell,
   dataTableGroupCount,
   dataTableGroupRow,
+  dataTableGroupToggle,
   dataTableHead,
   dataTableRowClickable,
   dataTableRowHighlighted,
@@ -357,6 +358,17 @@ export interface DataTableProps<TData, TValue> {
   groupBy?: (row: TData) => string;
   /** Content of the group row. @default the key and the count */
   renderGroupLabel?: (group: { key: string; rows: TData[] }) => React.ReactNode;
+  /**
+   * The group row gets a button that collapses and expands the group's rows. Different from
+   * sub-rows: the group row is a header for a set of rows, not a data row. @default false
+   */
+  collapsibleGroups?: boolean;
+  /** Groups collapsed at first, by key (uncontrolled). */
+  defaultCollapsedGroups?: string[];
+  /** Collapsed groups, by key (controlled). */
+  collapsedGroups?: string[];
+  /** Called when a group collapses or expands. */
+  onCollapsedGroupsChange?: (collapsedGroups: string[]) => void;
   /** Actions at the end of the toolbar (e.g. a "Nova proposta" button). */
   toolbarActions?: React.ReactNode;
   /**
@@ -561,6 +573,10 @@ export function DataTable<TData, TValue>({
   isRowHighlighted,
   groupBy,
   renderGroupLabel,
+  collapsibleGroups = false,
+  defaultCollapsedGroups = [],
+  collapsedGroups: controlledCollapsedGroups,
+  onCollapsedGroupsChange,
   toolbarActions,
   summaryRow,
   renderRowDetail,
@@ -602,6 +618,18 @@ export function DataTable<TData, TValue>({
     [controlledExpandedRows, expandedRows, onExpandedRowsChange],
   );
   const detailBaseId = React.useId();
+
+  const [uncontrolledCollapsed, setUncontrolledCollapsed] = React.useState<string[]>(
+    () => defaultCollapsedGroups,
+  );
+  const collapsedGroups = controlledCollapsedGroups ?? uncontrolledCollapsed;
+  const toggleGroup = (key: string) => {
+    const next = collapsedGroups.includes(key)
+      ? collapsedGroups.filter((k) => k !== key)
+      : [...collapsedGroups, key];
+    if (controlledCollapsedGroups === undefined) setUncontrolledCollapsed(next);
+    onCollapsedGroupsChange?.(next);
+  };
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(
     initialColumnVisibility ?? {},
@@ -848,7 +876,7 @@ export function DataTable<TData, TValue>({
     else groups.push({ key, rows: [row] });
   }
 
-  const renderRow = (row: Row<TData>) => {
+  const renderRow = (row: Row<TData>, trId?: string) => {
     const highlighted = isRowHighlighted?.(row.original) ?? false;
     const detail =
       renderRowDetail && expandedRows.includes(row.id) ? renderRowDetail(row.original) : null;
@@ -857,6 +885,7 @@ export function DataTable<TData, TValue>({
     return (
       <React.Fragment key={row.id}>
         <TableRow
+          id={trId}
           data-state={row.getIsSelected() ? "selected" : undefined}
           data-highlighted={highlighted || undefined}
           tabIndex={activate ? 0 : undefined}
@@ -1189,32 +1218,57 @@ export function DataTable<TData, TValue>({
                   ))}
                 </TableBody>
               ) : groupBy ? (
-                groups.map((group) => (
-                  <TableBody key={group.key ?? ""} data-slot="data-table-group">
-                    <TableRow data-slot="data-table-group-row" className={dataTableGroupRow}>
-                      <th
-                        scope="rowgroup"
-                        colSpan={visibleColumnCount}
-                        className={dataTableGroupCell}
-                      >
-                        {renderGroupLabel ? (
-                          renderGroupLabel({
-                            key: group.key ?? "",
-                            rows: group.rows.map((r) => r.original),
-                          })
-                        ) : (
-                          <>
-                            {group.key}
-                            <span className={dataTableGroupCount}>{group.rows.length}</span>
-                          </>
-                        )}
-                      </th>
-                    </TableRow>
-                    {group.rows.map(renderRow)}
-                  </TableBody>
-                ))
+                groups.map((group, groupIndex) => {
+                  const key = group.key ?? "";
+                  const label = renderGroupLabel ? (
+                    renderGroupLabel({ key, rows: group.rows.map((r) => r.original) })
+                  ) : (
+                    <>
+                      {group.key}
+                      <span className={dataTableGroupCount}>{group.rows.length}</span>
+                    </>
+                  );
+                  const isCollapsed = collapsibleGroups && collapsedGroups.includes(key);
+                  const rowIds = group.rows.map((_, i) => `${detailBaseId}-g${groupIndex}-${i}`);
+                  return (
+                    <TableBody
+                      key={key}
+                      data-slot="data-table-group"
+                      data-collapsed={collapsibleGroups ? isCollapsed : undefined}
+                    >
+                      <TableRow data-slot="data-table-group-row" className={dataTableGroupRow}>
+                        <th
+                          scope="rowgroup"
+                          colSpan={visibleColumnCount}
+                          className={dataTableGroupCell}
+                        >
+                          {collapsibleGroups ? (
+                            <button
+                              type="button"
+                              data-slot="data-table-group-toggle"
+                              className={dataTableGroupToggle}
+                              aria-expanded={!isCollapsed}
+                              aria-controls={isCollapsed ? undefined : rowIds.join(" ")}
+                              onClick={() => toggleGroup(key)}
+                            >
+                              {isCollapsed ? (
+                                <ChevronRight aria-hidden />
+                              ) : (
+                                <ChevronDown aria-hidden />
+                              )}
+                              {label}
+                            </button>
+                          ) : (
+                            label
+                          )}
+                        </th>
+                      </TableRow>
+                      {isCollapsed ? null : group.rows.map((r, i) => renderRow(r, rowIds[i]))}
+                    </TableBody>
+                  );
+                })
               ) : (
-                <TableBody>{rows.map(renderRow)}</TableBody>
+                <TableBody>{rows.map((r) => renderRow(r))}</TableBody>
               )}
               {summaryRow && !isLoading ? (
                 <tfoot data-slot="data-table-summary">

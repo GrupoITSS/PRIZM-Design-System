@@ -833,6 +833,37 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
       expect(group).toHaveTextContent("2");
     });
 
+    it("grupo que recolhe: botão com aria-expanded e aria-controls, linhas somem", () => {
+      const onCollapsedGroupsChange = vi.fn();
+      render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          groupBy={(r) => (r.amount >= 200 ? "Acima de 200" : "Até 199")}
+          collapsibleGroups
+          defaultCollapsedGroups={["Até 199"]}
+          onCollapsedGroupsChange={onCollapsedGroupsChange}
+        />,
+      );
+      const fechado = screen.getByRole("button", { name: /Até 199/ });
+      expect(fechado).toHaveAttribute("aria-expanded", "false");
+      expect(screen.queryByText("test@example.com")).toBeNull();
+      const aberto = screen.getByRole("button", { name: /Acima de 200/ });
+      expect(aberto).toHaveAttribute("aria-expanded", "true");
+      const ids = aberto.getAttribute("aria-controls")!.split(" ");
+      expect(ids).toHaveLength(2);
+      expect(document.getElementById(ids[0])).toHaveTextContent("user@example.com");
+      fireEvent.click(aberto);
+      expect(screen.queryByText("user@example.com")).toBeNull();
+      expect(onCollapsedGroupsChange).toHaveBeenLastCalledWith(["Até 199", "Acima de 200"]);
+      fireEvent.click(fechado);
+      expect(screen.getByText("test@example.com")).toBeInTheDocument();
+      expect(screen.getByRole("rowheader", { name: /Até 199/ })).toHaveAttribute(
+        "scope",
+        "rowgroup",
+      );
+    });
+
     it("ações na toolbar", () => {
       render(
         <DataTable
