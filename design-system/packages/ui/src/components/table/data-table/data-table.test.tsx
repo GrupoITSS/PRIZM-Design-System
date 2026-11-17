@@ -923,6 +923,13 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
       expect(screen.getAllByRole("rowgroup")[0]).toHaveClass("sticky", "top-0");
     });
 
+    it("paginação com o Button outline icon, quadrado como no Figma", () => {
+      render(<DataTable columns={basicColumns} data={mockData} showPagination />);
+      const prev = screen.getByRole("button", { name: "Página anterior" });
+      expect(prev).not.toHaveClass("rounded-full");
+      expect(prev).toBeDisabled();
+    });
+
     it("nome da tabela por aria-label", () => {
       render(<DataTable columns={basicColumns} data={mockData} aria-label="Propostas" />);
       expect(screen.getByRole("table", { name: "Propostas" })).toBeInTheDocument();

@@ -1266,7 +1266,7 @@ export function DataTable<TData, TValue>({
                   type="button"
                   variant="outline"
                   size="icon"
-                  className="size-9 shrink-0 rounded-full"
+                  className="shrink-0"
                   disabled={isLoading || pagination.currentPage <= 1 || pagination.totalRows === 0}
                   aria-label="Página anterior"
                   onClick={() => pagination.onPageChange(pagination.currentPage - 1)}
@@ -1280,7 +1280,7 @@ export function DataTable<TData, TValue>({
                   type="button"
                   variant="outline"
                   size="icon"
-                  className="size-9 shrink-0 rounded-full"
+                  className="shrink-0"
                   disabled={
                     isLoading ||
                     pagination.currentPage >= pagination.totalPages ||
@@ -1325,10 +1325,7 @@ export function DataTable<TData, TValue>({
                         type="button"
                         variant="outline"
                         size="icon"
-                        className={cn(
-                          "size-9 shrink-0 rounded-full",
-                          isFirst && "cursor-not-allowed opacity-35",
-                        )}
+                        className="shrink-0"
                         disabled={isFirst}
                         aria-label="Página anterior"
                         onClick={() => table.previousPage()}
@@ -1342,10 +1339,7 @@ export function DataTable<TData, TValue>({
                         type="button"
                         variant="outline"
                         size="icon"
-                        className={cn(
-                          "size-9 shrink-0 rounded-full",
-                          isLast && "cursor-not-allowed opacity-35",
-                        )}
+                        className="shrink-0"
                         disabled={isLast}
                         aria-label="Próxima página"
                         onClick={() => table.nextPage()}
