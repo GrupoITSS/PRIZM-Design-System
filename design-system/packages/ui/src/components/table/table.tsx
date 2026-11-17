@@ -293,10 +293,7 @@ function Table<T extends Record<string, unknown>>({
                       onClick={() => toggleSort(col.key)}
                     >
                       {col.header}
-                      <SortIcon
-                        aria-hidden
-                        className={direction ? undefined : "text-muted-foreground"}
-                      />
+                      <SortIcon aria-hidden />
                     </button>
                   ) : (
                     col.header

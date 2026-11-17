@@ -36,13 +36,12 @@
         "button": "height/8 (32px), ocupa o padding da célula (-mx-2 px-2)",
         "gap": "spacing/1",
         "icon": "16px",
-        "iconUnsorted": "color/muted-foreground",
-        "iconSorted": "color/foreground",
         "hoverBackground": "color/accent",
         "hoverText": "color/accent-foreground",
         "focusRing": "color/ring",
         "focusRingWidth": "3px",
-        "attribute": "aria-sort no th"
+        "attribute": "aria-sort no th",
+        "iconColor": "color/foreground, a cor do texto do cabeçalho, com ou sem ordem (decisão de 17/11/2026)"
       },
       "align": {
         "left": "Align=Left",
@@ -174,9 +173,9 @@
     },
     {
       "where": "Cor do ícone de ordenar",
-      "figma": "no exemplo da seção 03b (27498:9888), ArrowUpDown sem ordem em color/foreground e a seta da coluna ordenada em color/muted-foreground; os ícones Icon / Arrow* são color/foreground",
-      "code": "sem ordem em color/muted-foreground; ordenada em color/foreground (herda do cabeçalho)",
-      "status": "aberta"
+      "figma": "Sort Icon em color/foreground (corrigido o exemplo da seção 03b, que tinha a seta ordenada em color/muted-foreground)",
+      "code": "o ícone herda color/foreground do cabeçalho",
+      "status": "decidida (17/11): color/foreground com ou sem ordem, no Figma e no código"
     },
     {
       "where": "Vazio",
@@ -200,7 +199,7 @@
       "where": "Gap das variantes Hover da Table / Cell",
       "figma": "itemSpacing sem ligação nas variantes Hover (exceto Avatar); nas outras, spacing/2",
       "code": "gap-2 não se aplica à célula de texto",
-      "status": "aberta"
+      "status": "decidida (17/11): ligado a spacing/2 no Figma"
     }
   ]
 }

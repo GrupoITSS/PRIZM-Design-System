@@ -95,6 +95,8 @@ describe("Table × mapa de tokens: ordenação, destaque e vazio (17/11/2026)", 
     expect(c).toContain(`focus-visible:ring-[${s.focusRingWidth}]`);
     expect(c).toContain("[&_svg]:size-4");
     expect(s.icon).toBe("16px");
+    // Ícone na cor do texto do cabeçalho, com ou sem ordem (decisão de 17/11/2026).
+    expect(s.iconColor).toMatch(/^color\/foreground/);
   });
 
   it("linha em destaque: fundo do mapa, também no hover", async () => {
