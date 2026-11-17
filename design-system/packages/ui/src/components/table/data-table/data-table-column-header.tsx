@@ -36,7 +36,7 @@ export function DataTableColumnHeader<TData, TValue>({
       onClick={() => column.toggleSorting(sorted === "asc")}
     >
       {title}
-      <Icon aria-hidden className={sorted ? undefined : "text-muted-foreground"} />
+      <Icon aria-hidden />
     </button>
   );
 }

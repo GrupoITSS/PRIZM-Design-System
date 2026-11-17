@@ -1,16 +1,26 @@
 {
   "component": "Table",
-  "description": "Mapa de tokens da Table: o que cabeçalho, célula, linha, rodapé e legenda usam do [PRIZM] Design Tokens_Core. Extraído das ligações de Table / Head, Table / Cell e Table no Figma em 06/11/2026 (nenhuma ligação fora do Core) e conferido contra table.styles.ts pelo teste table.tokens.test.ts. Nomes no formato do Figma (color/border); no código viram classes Tailwind (border-border).",
+  "description": "Mapa de tokens da Table: o que cabeçalho, botão de ordenar, célula, linha, vazio, rodapé e legenda usam do [PRIZM] Design Tokens_Core. Extraído das ligações de Table, Table / Head e Table / Cell no Figma em 06/11/2026 e de novo em 17/11/2026, com as variantes Number, Wrap, Badges e Center, o Show Sort e o Empty Row (nenhuma ligação fora do Core), e conferido contra table.styles.ts pelo teste table.tokens.test.ts. Nomes no formato do Figma (color/border); no código viram classes Tailwind (border-border).",
   "sources": {
-    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=325-388",
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27023-3613",
+    "figmaColumn": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27023-3612",
+    "figmaExpandCell": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27134-8978",
     "figmaHead": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=190-898",
     "figmaCell": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=190-901",
     "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26381-2461",
     "code": "design-system/packages/ui/src/components/table/table.tsx",
     "story": "design-system/apps/docs/stories/table.stories.tsx",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=47362d42-e44e-4171-87f3-d91b3525e0e2&version=v1",
-    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/190"],
-    "jira": ["GIES-1728", "GIES-1724"]
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/190",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/192",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/204",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/206",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/211",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/214"
+    ],
+    "jira": ["GIES-1728", "GIES-1724", "GIES-2089"],
+    "figmaLegacy": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=325-388"
   },
   "parts": {
     "head": {
@@ -20,7 +30,24 @@
       "fontWeight": "font-weight/medium",
       "fontSize": "text/sm",
       "border": "color/border",
-      "wrap": false
+      "wrap": false,
+      "sort": {
+        "figma": "Table / Head com Show Sort e Sort Icon (ArrowUpDown, ArrowUp, ArrowDown); texto e ícone num frame Label com spacing/1",
+        "button": "height/8 (32px), ocupa o padding da célula (-mx-2 px-2)",
+        "gap": "spacing/1",
+        "icon": "16px",
+        "hoverBackground": "color/accent",
+        "hoverText": "color/accent-foreground",
+        "focusRing": "color/ring",
+        "focusRingWidth": "3px",
+        "attribute": "aria-sort no th",
+        "iconColor": "color/foreground, a cor do texto do cabeçalho, com ou sem ordem (decisão de 17/11/2026)"
+      },
+      "align": {
+        "left": "Align=Left",
+        "right": "Align=Right, com Table / Cell Variant=Number",
+        "center": "Align=Center, com Table / Cell Variant=Center"
+      }
     },
     "cell": {
       "padding": "spacing/2",
@@ -54,6 +81,12 @@
       "truncate": "uma linha com reticências (block truncate, max-w-0 na célula); Tooltip com o texto inteiro só quando corta",
       "wrap": "coluna com wrap: true quebra a linha; no Figma, Table / Cell Variant=Wrap",
       "numeric": "align right usa tabular-nums; no Figma, Table / Cell Variant=Number e Table / Head Align=Right"
+    },
+    "empty": {
+      "figma": "Table com Show Empty: Empty Row (spacing/14 em cima e embaixo, spacing/2 dos lados) com o Empty plain; Table / Column com Show Cells desligado",
+      "code": "td com colSpan da largura toda e o Empty appearance=plain, ícone FolderOpen, texto padrão \"Nenhum resultado.\"",
+      "paddingY": "spacing/14",
+      "paddingX": "spacing/2"
     }
   },
   "states": {
@@ -66,9 +99,17 @@
     "selected": {
       "background": "color/muted",
       "attribute": "data-state=selected",
-      "on": "linha (tr)"
+      "on": "linha (tr)",
+      "note": "Seleção do DataTable (checkbox), na primitiva TableRow. Na Table por props, o destaque é isRowHighlighted."
     },
-    "note": "O estado é da linha, não da célula. A seleção é do DataTable, que marca o checkbox."
+    "note": "O estado é da linha, não da célula. A seleção é do DataTable, que marca o checkbox; a Table só pinta a linha em destaque.",
+    "highlighted": {
+      "background": "color/muted",
+      "attribute": "data-highlighted",
+      "on": "linha (tr)",
+      "prop": "isRowHighlighted",
+      "figma": "Table / Cell State=Selected"
+    }
   },
   "cellTypes": {
     "Default": "text",
@@ -81,7 +122,11 @@
     "Progress": "render",
     "Input": "render",
     "Toggle Group": "render",
-    "Checkbox": "render (seleção no DataTable)"
+    "Checkbox": "render (seleção no DataTable)",
+    "Number": "text com align right (tabular-nums)",
+    "Wrap": "text com wrap: true",
+    "Badges": "badge, com badgeMaxVisible",
+    "Center": "text com align center"
   },
   "divergences": [
     {
@@ -107,6 +152,54 @@
       "figma": "não há",
       "code": "contentRenderType e contentFormatType",
       "status": "só no código"
+    },
+    {
+      "where": "Recuo da sub-linha",
+      "figma": "booleana Sub-row na Table / Cell",
+      "code": "recuo automático na primeira coluna de dados",
+      "status": "representação"
+    },
+    {
+      "where": "Alinhamento da coluna",
+      "figma": "Align na Table / Head e Variant=Number ou Center na Table / Cell, escolhidos separados",
+      "code": "align na coluna",
+      "status": "decidida (17/11): representação"
+    },
+    {
+      "where": "Ícone de ordenar",
+      "figma": "Sort Icon escolhido à mão",
+      "code": "o ícone segue o estado da ordem",
+      "status": "representação"
+    },
+    {
+      "where": "Cor do ícone de ordenar",
+      "figma": "Sort Icon em color/foreground (corrigido o exemplo da seção 03b, que tinha a seta ordenada em color/muted-foreground)",
+      "code": "o ícone herda color/foreground do cabeçalho",
+      "status": "decidida (17/11): color/foreground com ou sem ordem, no Figma e no código"
+    },
+    {
+      "where": "Vazio",
+      "figma": "Show Empty na Table e Show Cells desligado em cada coluna",
+      "code": "Empty quando rows está vazio",
+      "status": "representação"
+    },
+    {
+      "where": "Tooltip do texto cortado",
+      "figma": "célula com o texto cortado e reticências, sem Tooltip",
+      "code": "Tooltip só quando corta, abre só com o ponteiro",
+      "status": "decidida (17/11): fica assim, registrado como parcial"
+    },
+    {
+      "where": "Lista de badges",
+      "figma": "dois badges e o +N",
+      "code": "Popover com a lista inteira",
+      "status": "só no código"
+    },
+    {
+      "where": "Gap das variantes Hover da Table / Cell",
+      "figma": "itemSpacing sem ligação nas variantes Hover (exceto Avatar); nas outras, spacing/2",
+      "code": "gap-2 não se aplica à célula de texto",
+      "status": "decidida (17/11): ligado a spacing/2 no Figma"
     }
   ]
 }

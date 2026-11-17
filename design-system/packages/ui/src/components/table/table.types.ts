@@ -21,6 +21,13 @@ export interface TableColumn<T = Record<string, unknown>> {
   header: React.ReactNode;
   /** Cell alignment. @default 'left' */
   align?: "left" | "right" | "center";
+  /**
+   * The header becomes a button that sorts the rows by this column (ascending, then descending),
+   * with `aria-sort` on the header cell. @default false
+   */
+  sortable?: boolean;
+  /** Value used to sort, when the cell value is not a string or number (e.g. a date in an object). */
+  sortValue?: (row: T) => string | number | null | undefined;
   /** Optional width (e.g. "100px", "w-[100px]"). */
   width?: string;
   /** Optional class for header. */
@@ -114,6 +121,20 @@ export interface TableProps<T = Record<string, unknown>> extends Omit<
   getExpandLabel?: (row: T, isExpanded: boolean) => string;
   /** Visually hidden header of the expand column. @default "Expandir" */
   expandColumnLabel?: string;
-  /** Marks a row as selected (`data-state="selected"`, `color/muted` background). */
-  isRowSelected?: (row: T) => boolean;
+  /**
+   * Highlights a row with the `muted` background (`data-highlighted`), to set it apart from the
+   * others. Same name as in the DataTable (decision of 17/11/2026).
+   */
+  isRowHighlighted?: (row: T) => boolean;
+  /** Initial sorting (uncontrolled). Columns sort with `sortable: true`. */
+  defaultSort?: TableSort | null;
+  /** Sorting (controlled). `null` = no sorting. */
+  sort?: TableSort | null;
+  /** Called when a sortable header is clicked. */
+  onSortChange?: (sort: TableSort | null) => void;
+  /** Sorting is done outside (e.g. the server): the table does not reorder `rows`. @default false */
+  manualSort?: boolean;
 }
+
+/** Sorting of the Table: the column key and the direction. */
+export type TableSort = { key: string; direction: "asc" | "desc" };

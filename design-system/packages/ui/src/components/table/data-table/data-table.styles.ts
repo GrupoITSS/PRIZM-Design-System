@@ -1,3 +1,5 @@
+import { tableRowHighlighted, tableSortButton } from "../table.styles";
+
 /**
  * Estilos do DataTable.
  *
@@ -21,15 +23,14 @@ export const dataTableRowClickable =
   "cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring";
 
 /** Botão de ordenar no cabeçalho: ocupa o padding da célula para o texto não mudar de lugar. */
-export const dataTableSortButton =
-  "-mx-2 inline-flex h-8 items-center gap-1 rounded-md px-2 font-medium text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring [&_svg]:size-4 [&_svg]:shrink-0";
+export const dataTableSortButton = tableSortButton;
 
 /**
  * Linha em destaque (decisão de 17/11/2026): só o fundo `muted`, para diferenciar linhas da tabela,
  * como a Table / Cell com State=Selected no Figma (referência: catálogo da proposta, Redesign
  * Pricing). Sem tons nem barra.
  */
-export const dataTableRowHighlighted = "bg-muted hover:bg-muted";
+export const dataTableRowHighlighted = tableRowHighlighted;
 
 /** Linha de grupo: `muted`, 40px, texto `medium`, com a contagem em `muted-foreground`. */
 export const dataTableGroupRow = "border-b border-border bg-muted hover:bg-muted";

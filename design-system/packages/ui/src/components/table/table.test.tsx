@@ -3,6 +3,7 @@ import { fireEvent } from "@testing-library/react";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Table } from "./table";
+import type { TableColumn } from "./table.types";
 import {
   TableBody,
   TableCell,
@@ -56,9 +57,19 @@ describe("Table (PRIZM / prop-based)", () => {
     expect(screen.getByRole("cell", { name: "30" })).toBeInTheDocument();
   });
 
-  it("renderiza emptyMessage quando rows está vazio", () => {
-    render(<Table<Row> columns={columns} rows={[]} emptyMessage="No data" />);
-    expect(screen.getByRole("cell", { name: /no data/i })).toBeInTheDocument();
+  it("vazio: o Empty com emptyMessage, numa célula da largura toda", () => {
+    const { container } = render(
+      <Table<Row> columns={columns} rows={[]} emptyMessage="Sem dados" />,
+    );
+    const cell = container.querySelector("[data-slot=table-empty]")!;
+    expect(cell).toHaveAttribute("colspan", String(columns.length));
+    expect(cell.querySelector("[data-slot=empty]")).not.toBeNull();
+    expect(cell).toHaveTextContent("Sem dados");
+  });
+
+  it('vazio sem emptyMessage: "Nenhum resultado."', () => {
+    render(<Table<Row> columns={columns} rows={[]} />);
+    expect(screen.getByText("Nenhum resultado.")).toBeInTheDocument();
   });
 
   it("usa getRowKey para keys das linhas", () => {
@@ -431,9 +442,71 @@ describe("Table: decisões de 17/11/2026 (teste da Proposta)", () => {
     expect(screen.getByText("1290").closest("td")).toHaveClass("text-right", "tabular-nums");
   });
 
-  it("isRowSelected marca a linha selecionada", () => {
-    render(<Table<P> columns={colunas} rows={linhas} isRowSelected={(r) => r.id === "1"} />);
-    expect(screen.getByText("Produto A").closest("tr")).toHaveAttribute("data-state", "selected");
+  it("isRowHighlighted: fundo muted e data-highlighted, como no DataTable", () => {
+    render(<Table<P> columns={colunas} rows={linhas} isRowHighlighted={(r) => r.id === "1"} />);
+    const tr = screen.getByText("Produto A").closest("tr")!;
+    expect(tr).toHaveAttribute("data-highlighted", "true");
+    expect(tr).toHaveClass("bg-muted");
+  });
+
+  it("ordenação: botão no cabeçalho, aria-sort, crescente e decrescente", () => {
+    const onSortChange = vi.fn();
+    const cols: TableColumn<P>[] = [
+      { key: "nome", header: "Produto", sortable: true },
+      { key: "valor", header: "Valor", align: "right", sortable: true },
+    ];
+    const dados = [
+      { id: "1", nome: "Banana", valor: 30, obs: "" },
+      { id: "2", nome: "Abacate", valor: 5, obs: "" },
+      { id: "3", nome: "Caju", valor: 100, obs: "" },
+    ] as unknown as P[];
+    render(<Table<P> columns={cols} rows={dados} onSortChange={onSortChange} />);
+    const nomes = () =>
+      screen
+        .getAllByRole("row")
+        .slice(1)
+        .map((r) => r.textContent);
+    fireEvent.click(screen.getByRole("button", { name: "Valor" }));
+    expect(screen.getByRole("columnheader", { name: "Valor" })).toHaveAttribute(
+      "aria-sort",
+      "ascending",
+    );
+    expect(nomes()[0]).toContain("Abacate");
+    fireEvent.click(screen.getByRole("button", { name: "Valor" }));
+    expect(screen.getByRole("columnheader", { name: "Valor" })).toHaveAttribute(
+      "aria-sort",
+      "descending",
+    );
+    expect(nomes()[0]).toContain("Caju");
+    fireEvent.click(screen.getByRole("button", { name: "Produto" }));
+    expect(nomes()[0]).toContain("Abacate");
+    expect(onSortChange).toHaveBeenLastCalledWith({ key: "nome", direction: "asc" });
+    expect(screen.getByRole("columnheader", { name: "Valor" })).not.toHaveAttribute("aria-sort");
+  });
+
+  it("manualSort não reordena; coluna sem sortable não tem botão", () => {
+    const cols: TableColumn<P>[] = [
+      { key: "nome", header: "Produto" },
+      { key: "valor", header: "Valor", sortable: true },
+    ];
+    const dados = [
+      { id: "1", nome: "B", valor: 30, obs: "" },
+      { id: "2", nome: "A", valor: 5, obs: "" },
+    ] as unknown as P[];
+    render(
+      <Table<P>
+        columns={cols}
+        rows={dados}
+        manualSort
+        defaultSort={{ key: "valor", direction: "asc" }}
+      />,
+    );
+    expect(screen.queryByRole("button", { name: "Produto" })).toBeNull();
+    expect(screen.getAllByRole("row")[1]).toHaveTextContent("B");
+    expect(screen.getByRole("columnheader", { name: "Valor" })).toHaveAttribute(
+      "aria-sort",
+      "ascending",
+    );
   });
 
   it("Tooltip com o texto inteiro só quando o texto corta", async () => {
