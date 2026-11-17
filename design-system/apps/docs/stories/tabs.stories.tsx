@@ -13,10 +13,25 @@ const itens = [
  * Tabs: alterna entre painéis de conteúdo da mesma tela, um visível por vez.
  * `underline` (padrão) é o visual do Cockpit; `pills` é a troca compacta.
  */
+// Rastreabilidade: o component set no [PRIZM] Componentes, o frame de documentação e o artigo no CMS.
+const FIGMA_COMPONENTE = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=183-532";
+const FIGMA_DOC = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27297-2375";
+const ARTIGO = "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=18c635ba-85dc-4017-bb46-dc86d9e949fd&version=v1";
+
 const meta: Meta<typeof Tabs> = {
   title: "Primários/Tabs",
   component: Tabs,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "Tabs do design system PRIZM. Alterna entre painéis de conteúdo da mesma tela, um visível por vez. `underline` (padrão) é o visual do Cockpit; `pills` é a troca compacta.\n\n" +
+          "Teclado: Tab entra na aba ativa, setas e Home/End trocam de aba, Tab de novo vai para o painel.\n\n" +
+          `[Componente no Figma](${FIGMA_COMPONENTE}) · [Documentação no Figma](${FIGMA_DOC}) · [Artigo no CMS](${ARTIGO})`,
+      },
+    },
+  },
   args: {
     variant: "underline",
     fullWidth: false,
