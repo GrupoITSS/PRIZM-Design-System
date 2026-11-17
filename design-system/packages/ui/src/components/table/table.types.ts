@@ -114,11 +114,6 @@ export interface TableProps<T = Record<string, unknown>> extends Omit<
   getExpandLabel?: (row: T, isExpanded: boolean) => string;
   /** Visually hidden header of the expand column. @default "Expandir" */
   expandColumnLabel?: string;
-  /**
-   * Minimum row height, 1px border included: `"default"` 52px, `"compact"` 36px (decision of 17/11/2026).
-   * @default "default"
-   */
-  density?: "default" | "compact";
   /** Marks a row as selected (`data-state="selected"`, `color/muted` background). */
   isRowSelected?: (row: T) => boolean;
 }

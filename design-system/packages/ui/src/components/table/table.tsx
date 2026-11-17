@@ -11,8 +11,7 @@ import {
   tableBody,
   tableCaption,
   tableCell,
-  tableCellCompactDensity,
-  tableCellDefaultDensity,
+  tableCellMinHeight,
   tableCellNumeric,
   tableCellText,
   tableCellTruncate,
@@ -125,7 +124,6 @@ function Table<T extends Record<string, unknown>>({
   onExpandedChange,
   getExpandLabel,
   expandColumnLabel = "Expandir",
-  density = "default",
   isRowSelected,
   ref,
   ...tableProps
@@ -148,7 +146,6 @@ function Table<T extends Record<string, unknown>>({
     onExpandedChange?.(list);
   };
 
-  const densityClass = density === "default" ? tableCellDefaultDensity : tableCellCompactDensity;
   const firstKey = columns[0]?.key;
   const labelOf = (row: T, isOpen: boolean) =>
     getExpandLabel?.(row, isOpen) ??
@@ -170,7 +167,10 @@ function Table<T extends Record<string, unknown>>({
       className={tableRow}
     >
       {expandable && (
-        <td data-slot="table-expand-cell" className={cn(tableCell, tableExpandCell, densityClass)}>
+        <td
+          data-slot="table-expand-cell"
+          className={cn(tableCell, tableExpandCell, tableCellMinHeight)}
+        >
           {extra.expandCell}
         </td>
       )}
@@ -184,7 +184,7 @@ function Table<T extends Record<string, unknown>>({
             key={col.key}
             className={cn(
               tableCell,
-              densityClass,
+              tableCellMinHeight,
               getAlignClass(col.align),
               col.align === "right" ? tableCellNumeric : undefined,
               cut ? tableCellTruncate : undefined,

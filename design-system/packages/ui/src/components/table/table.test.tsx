@@ -400,13 +400,9 @@ describe("Table: decisões de 17/11/2026 (teste da Proposta)", () => {
     { key: "obs", header: "Observação", wrap: true },
   ];
 
-  it("densidade padrão: linha de 52px (h-13); compacta sem altura mínima", () => {
-    const { unmount } = render(<Table<P> columns={colunas} rows={linhas} />);
+  it("linha de 52px (h-13), uma densidade só", () => {
+    render(<Table<P> columns={colunas} rows={linhas} />);
     expect(screen.getByText("Produto A").closest("td")).toHaveClass("h-13");
-    unmount();
-    render(<Table<P> columns={colunas} rows={linhas} density="compact" />);
-    expect(screen.getByText("Produto A").closest("td")).not.toHaveClass("h-13");
-    expect(screen.getByText("Produto A").closest("td")).toHaveClass("h-9", "py-1.5");
   });
 
   it("texto cortado numa linha por padrão; wrap quebra", () => {

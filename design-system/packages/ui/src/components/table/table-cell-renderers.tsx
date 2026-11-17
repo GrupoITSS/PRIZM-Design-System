@@ -110,7 +110,7 @@ function TextCell({
 }) {
   const text = formatTableText(value, format ?? undefined);
   return (
-    <div className="truncate text-sm">
+    <div className="truncate text-sm/6">
       {link ? (
         <a className={cn("hover:underline hover:underline-offset-4", RENDERER_FOCUS)} href={link}>
           {text}
@@ -138,7 +138,7 @@ function TextButtonCell({
         type="button"
         onClick={onClick}
         className={cn(
-          "truncate text-sm w-full text-left hover:underline hover:cursor-pointer hover:underline-offset-4",
+          "truncate text-sm/6 w-full text-left hover:underline hover:cursor-pointer hover:underline-offset-4",
           RENDERER_FOCUS,
         )}
       >
@@ -165,7 +165,7 @@ function TextImageCell({
           <img src={value.imageUrl} alt="" className="h-full w-full object-cover" />
         )}
       </div>
-      <div className="text-sm truncate">
+      <div className="text-sm/6 truncate">
         {link ? (
           <a
             className={cn("font-normal hover:underline hover:underline-offset-4", RENDERER_FOCUS)}
@@ -500,7 +500,7 @@ export function renderPrizmCell<TRow = unknown>({
 
     case ContentRenderType.HOVER: {
       const popover = meta?.renderPopover;
-      const triggerNode = <span className="truncate text-sm">{toText(value)}</span>;
+      const triggerNode = <span className="truncate text-sm/6">{toText(value)}</span>;
 
       if (!popover) return triggerNode;
       // The trigger is a real button (06/11/2026): a span never received focus, so the keyboard
@@ -508,7 +508,7 @@ export function renderPrizmCell<TRow = unknown>({
       const triggerButton = (cursor: string) => (
         <button
           type="button"
-          className={cn("max-w-full truncate text-left text-sm", cursor, RENDERER_FOCUS)}
+          className={cn("max-w-full truncate text-left text-sm/6", cursor, RENDERER_FOCUS)}
         >
           {toText(value)}
         </button>

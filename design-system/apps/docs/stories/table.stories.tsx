@@ -644,25 +644,3 @@ export const TruncatedText: Story = {
     <Table<ProductRow> columns={productColumns} rows={productRows} getRowKey={(r) => r.id} />
   ),
 };
-
-/** Densidade: padrão (52px) e compacta (36px). Decisão de 17/11/2026. */
-export const Density: Story = {
-  name: "Densidade",
-  render: () => (
-    <div className="flex flex-col gap-8">
-      <Table<ProductRow>
-        columns={productColumns}
-        rows={productRows}
-        getRowKey={(r) => r.id}
-        caption="Padrão (52px)"
-      />
-      <Table<ProductRow>
-        columns={productColumns}
-        rows={productRows}
-        getRowKey={(r) => r.id}
-        density="compact"
-        caption="Compacta (36px)"
-      />
-    </div>
-  ),
-};

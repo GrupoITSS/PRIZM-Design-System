@@ -1,8 +1,7 @@
 // Table com API por props (recomendado para casos simples)
 export { Table } from "./table";
 export {
-  tableCellCompactDensity,
-  tableCellDefaultDensity,
+  tableCellMinHeight,
   tableCellNumeric,
   tableCellText,
   tableCellTruncate,
