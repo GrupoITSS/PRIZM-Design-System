@@ -7,8 +7,10 @@ import {
   DropdownMenuTrigger,
 } from "@grupoitss/prizm-ui/dropdown-menu";
 import { Ellipsis } from "@grupoitss/prizm-ui/icons";
+import { Input } from "@grupoitss/prizm-ui/input";
 import { Popover } from "@grupoitss/prizm-ui/popover";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { ContentFormatType, ContentRenderType } from "@grupoitss/prizm-ui/table";
 import type { TableColumn, TableFooterRow } from "@grupoitss/prizm-ui/table";
 import { Table } from "@grupoitss/prizm-ui/table";
@@ -506,4 +508,102 @@ export const WithFormatters: Story = {
 
     return <Table<Row> columns={columns} rows={rows} getRowKey={(r) => r.id} />;
   },
+};
+
+type OrderItem = { id: string; nome: string; preco: number; planos?: OrderItem[] };
+
+const orderItems: OrderItem[] = [
+  {
+    id: "produto-a",
+    nome: "Produto A",
+    preco: 0,
+    planos: [
+      { id: "basico", nome: "Plano Básico", preco: 100 },
+      { id: "pro", nome: "Plano Pro", preco: 250 },
+    ],
+  },
+  {
+    id: "produto-b",
+    nome: "Produto B",
+    preco: 0,
+    planos: [
+      { id: "mensal", nome: "Mensal", preco: 200 },
+      { id: "anual", nome: "Anual", preco: 400 },
+    ],
+  },
+  { id: "produto-c", nome: "Produto C", preco: 80 },
+];
+
+const brl = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+function OrderItemsTable() {
+  const [qtd, setQtd] = useState<Record<string, number>>({
+    basico: 2,
+    pro: 1,
+    mensal: 1,
+    anual: 1,
+    "produto-c": 3,
+  });
+  const leafTotal = (item: OrderItem) => item.preco * (qtd[item.id] ?? 0);
+  const rowTotal = (item: OrderItem) =>
+    item.planos ? item.planos.reduce((s, p) => s + leafTotal(p), 0) : leafTotal(item);
+  const total = orderItems.reduce((s, i) => s + rowTotal(i), 0);
+
+  const columns: TableColumn<OrderItem>[] = [
+    { key: "nome", header: "Produto" },
+    {
+      key: "preco",
+      header: "Preço",
+      align: "right",
+      render: (_, item, { subRows }) => (subRows ? "—" : brl(item.preco)),
+    },
+    {
+      key: "qtd",
+      header: "Quantidade",
+      width: "120px",
+      render: (_, item, { subRows }) =>
+        subRows ? null : (
+          <Input
+            type="number"
+            min={0}
+            aria-label={`Quantidade de ${item.nome}`}
+            value={qtd[item.id] ?? 0}
+            onChange={(e) => setQtd({ ...qtd, [item.id]: Number(e.target.value) })}
+          />
+        ),
+    },
+    {
+      key: "subtotal",
+      header: "Subtotal",
+      align: "right",
+      cellClassName: "tabular-nums",
+      render: (_, item) => brl(rowTotal(item)),
+    },
+  ];
+
+  return (
+    <Table<OrderItem>
+      columns={columns}
+      rows={orderItems}
+      getRowKey={(r) => r.id}
+      getSubRows={(r) => r.planos}
+      defaultExpanded={["produto-a"]}
+      caption="Itens do orçamento"
+      footerRows={[
+        [
+          { content: "Total", colSpan: 3 },
+          { content: <span aria-live="polite">{brl(total)}</span>, align: "right" },
+        ],
+      ]}
+    />
+  );
+}
+
+/**
+ * Linhas que expandem (16/11/2026): itens do orçamento com quantidade por plano. A linha do
+ * produto mostra a soma das sub-linhas; o total fica no rodapé.
+ */
+export const WithExpandableRows: Story = {
+  name: "Linhas que expandem",
+  render: () => <OrderItemsTable />,
 };

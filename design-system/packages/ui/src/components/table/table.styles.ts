@@ -24,3 +24,13 @@ export const tableCaption = "mt-4 text-sm text-muted-foreground";
 export const alignLeft = "text-left";
 export const alignRight = "text-right";
 export const alignCenter = "text-center";
+
+/**
+ * Linhas que expandem (decisão de 16/11/2026): coluna de 48px (`w-12`) com o Button ghost icon-sm
+ * (32px) e o padding da célula (8px dos lados). A sub-linha recua a primeira coluna de dados para
+ * 40px: o padding da célula (`spacing/2`) mais o recuo (`spacing/6`) e o espaço (`spacing/2`),
+ * como a booleana Sub-row da Table / Cell no Figma.
+ */
+export const tableExpandHead = "w-12";
+export const tableExpandCell = "w-12";
+export const tableSubRowIndent = "pl-10";

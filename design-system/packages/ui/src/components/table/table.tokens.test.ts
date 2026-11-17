@@ -56,3 +56,14 @@ describe("Table × mapa de tokens (table.tokens.json)", () => {
     expect(map.cellTypes.Dropdown).toBe("actions");
   });
 });
+
+describe("Table × mapa de tokens: linhas que expandem", () => {
+  it("coluna de 48px e recuo de 40px na sub-linha", async () => {
+    const { tableExpandHead, tableExpandCell, tableSubRowIndent } = await import("./table.styles");
+    expect(map.parts.expand.column).toMatch(/^48px \(w-12\)/);
+    expect(tableExpandHead.split(" ")).toContain("w-12");
+    expect(tableExpandCell.split(" ")).toContain("w-12");
+    expect(map.parts.expand.subRowIndent).toContain("pl-10");
+    expect(tableSubRowIndent.split(" ")).toContain("pl-10");
+  });
+});
