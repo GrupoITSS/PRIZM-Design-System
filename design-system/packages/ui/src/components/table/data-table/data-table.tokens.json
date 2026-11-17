@@ -7,7 +7,11 @@
     "table": "design-system/packages/ui/src/components/table/table.tokens.json",
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=97dd20dc-cd4c-42ef-a25c-cb4e45ac6281&version=v1",
-    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/212"]
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/212"
+    ],
+    "figmaGroupRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3932",
+    "figmaDetailRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3933"
   },
   "parts": {
     "head": {
@@ -25,13 +29,15 @@
       "button": "texto + ArrowUpDown, ArrowUp ou ArrowDown (width/4)",
       "height": "control-height/sm",
       "hover": "color/accent",
-      "a11y": "aria-sort na célula do cabeçalho"
+      "a11y": "aria-sort na célula do cabeçalho",
+      "figma": "Table / Head: Show Sort e Sort Icon (ArrowUpDown, ArrowUp, ArrowDown)"
     },
     "groupRow": {
       "background": "color/muted",
       "height": "height/10",
       "count": "color/muted-foreground",
-      "toggle": "collapsibleGroups: ChevronRight ou ChevronDown (width/4) e o conteúdo da linha num botão; hover color/accent, foco com o anel do Prizm"
+      "toggle": "collapsibleGroups: ChevronRight ou ChevronDown (width/4) e o conteúdo da linha num botão; hover color/accent, foco com o anel do Prizm",
+      "figma": "Data Table / Group Row: Expanded Yes, No (collapsibleGroups) e None (só groupBy); Label, Show Count, Show Badge"
     },
     "summaryRow": {
       "background": "color/muted a 50%",
@@ -40,11 +46,13 @@
     },
     "detail": {
       "column": "48px (w-12), Button ghost icon-sm",
-      "paddingLeft": "56px (pl-14)"
+      "paddingLeft": "56px (pl-14)",
+      "figma": "Table / Expand Cell e Data Table / Detail Row (slot Content)"
     },
     "editableCell": {
       "input": "Input sm (control-height/sm)",
-      "error": "color/destructive-strong, text/sm"
+      "error": "color/destructive-strong, text/sm",
+      "figma": "Table / Cell Variant=Input, com o Input sm exposto"
     },
     "loading": {
       "skeleton": "Skeleton h-4, até 160px",
@@ -88,6 +96,18 @@
       "where": "mensagem de erro da célula editável",
       "measured": "color/destructive sobre color/background: 4,22:1 no Docnix escuro e 4,43:1 no ITSS · Digitrol claro",
       "status": "decidida no código: destructive-strong (24 de 24 passam); o FieldError usa destructive"
+    },
+    {
+      "where": "coluna fixa",
+      "figma": "—",
+      "code": "stickyHeader, stickyFirstColumn, stickyLastColumn",
+      "status": "representação: comportamento de rolagem"
+    },
+    {
+      "where": "mensagem de erro da célula editável",
+      "figma": "Input State=Error, sem a mensagem",
+      "code": "mensagem em destructive-strong embaixo do Input",
+      "status": "representação"
     }
   ]
 }
