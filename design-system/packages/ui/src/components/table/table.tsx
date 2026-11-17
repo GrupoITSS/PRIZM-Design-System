@@ -1,8 +1,8 @@
 import { cn } from "../../lib/cn";
 import * as React from "react";
+import { TruncatedText } from "./table-truncated-text";
 import { Button } from "../button";
 import { ChevronDown, ChevronRight } from "../icons";
-import { Tooltip } from "../tooltip";
 import {
   alignCenter,
   alignLeft,
@@ -13,7 +13,6 @@ import {
   tableCell,
   tableCellMinHeight,
   tableCellNumeric,
-  tableCellText,
   tableCellTruncate,
   tableExpandCell,
   tableExpandHead,
@@ -40,27 +39,6 @@ function getAlignClass(align: "left" | "right" | "center" | undefined): string {
 }
 
 /** Texto cortado numa linha; o Tooltip com o texto todo só aparece quando ele corta. */
-/**
- * Texto cortado com reticências. O Tooltip com o texto inteiro só entra se o texto não coube:
- * a medida é feita quando o ponteiro entra na célula, sem observar o tamanho de cada uma.
- */
-function TruncatedText({ children }: { children: React.ReactNode }) {
-  const [isCut, setIsCut] = React.useState(false);
-  const text = (
-    <span
-      data-slot="table-cell-text"
-      className={tableCellText}
-      onPointerEnter={(e) => {
-        const el = e.currentTarget;
-        setIsCut(el.scrollWidth > el.clientWidth);
-      }}
-    >
-      {children}
-    </span>
-  );
-  return isCut ? <Tooltip content={children}>{text}</Tooltip> : text;
-}
-
 function renderCellContent<T extends Record<string, unknown>>(
   col: TableColumn<T>,
   row: T,

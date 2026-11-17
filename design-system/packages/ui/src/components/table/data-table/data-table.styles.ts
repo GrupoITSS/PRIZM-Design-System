@@ -1,0 +1,79 @@
+/**
+ * Estilos do DataTable.
+ *
+ * Decisões de 17/11/2026 (teste de tela da Proposta): o DataTable segue a Table. Cabeçalho com 40px,
+ * 8px dos lados, em `foreground`; linha com 52px de altura mínima e célula com 8px. Antes, o
+ * cabeçalho ficava em `foreground` a 40% e a célula com 16px dos lados.
+ */
+
+/** Cabeçalho: `height/10`, `spacing/2` dos lados, `foreground`, sem quebra. */
+export const dataTableHead =
+  "h-10 min-w-0 px-2 text-sm font-medium whitespace-nowrap text-foreground";
+
+/** Célula: 52px de altura mínima, com a borda, e `spacing/2`. */
+export const dataTableCell = "h-13 min-w-0 p-2";
+
+/** Números à direita com algarismos de largura fixa. */
+export const dataTableCellNumeric = "tabular-nums";
+
+/** Linha clicável: foco pelo teclado com o contorno do anel do Prizm, por dentro da linha. */
+export const dataTableRowClickable =
+  "cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring";
+
+/** Botão de ordenar no cabeçalho: ocupa o padding da célula para o texto não mudar de lugar. */
+export const dataTableSortButton =
+  "-mx-2 inline-flex h-8 items-center gap-1 rounded-md px-2 font-medium text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring [&_svg]:size-4 [&_svg]:shrink-0";
+
+/**
+ * Ênfase da linha: fundo `<tom>-weak` e uma barra de 3px no tom, na primeira célula. A barra
+ * repete o tom para quem não distingue o fundo; o motivo da ênfase precisa estar também em texto.
+ */
+export const dataTableRowEmphasis = {
+  info: "bg-info-weak hover:bg-info-weak",
+  success: "bg-success-weak hover:bg-success-weak",
+  warning: "bg-warning-weak hover:bg-warning-weak",
+  destructive: "bg-destructive-weak hover:bg-destructive-weak",
+} as const;
+
+export const dataTableRowEmphasisBar = {
+  info: "shadow-[inset_3px_0_0_var(--prizm-color-info)]",
+  success: "shadow-[inset_3px_0_0_var(--prizm-color-success)]",
+  warning: "shadow-[inset_3px_0_0_var(--prizm-color-warning)]",
+  destructive: "shadow-[inset_3px_0_0_var(--prizm-color-destructive)]",
+} as const;
+
+export type DataTableRowEmphasis = keyof typeof dataTableRowEmphasis;
+
+/** Linha de grupo: `muted`, 40px, texto `medium`, com a contagem em `muted-foreground`. */
+export const dataTableGroupRow = "border-b border-border bg-muted hover:bg-muted";
+export const dataTableGroupCell = "h-10 px-2 py-2 text-left text-sm font-medium text-foreground";
+export const dataTableGroupCount = "ml-2 font-normal text-muted-foreground";
+
+/** Linha de resumo (totais): como o rodapé da Table. */
+export const dataTableSummaryRow =
+  "border-t border-border bg-muted/50 font-medium hover:bg-muted/50";
+
+/** Coluna de abrir o detalhe: 48px, como a coluna de expandir da Table. */
+export const dataTableExpandCell = "w-12";
+
+/** Linha de detalhe: ocupa a largura toda, abaixo da linha que a abre. */
+export const dataTableDetailRow = "border-b border-border hover:bg-transparent";
+export const dataTableDetailCell = "px-2 py-4 pl-14";
+
+/**
+ * Coluna fixa. A célula fixa precisa de fundo opaco: repete o fundo da linha (hover, selecionada,
+ * ênfase), já que o da linha é transparente ou fica por baixo das células que rolam.
+ */
+export const dataTableStickyCell =
+  "sticky z-10 bg-background [tr:hover>&]:bg-[color-mix(in_oklab,var(--prizm-color-muted)_50%,var(--prizm-color-background))] [tr[data-state=selected]>&]:bg-muted [tr[data-emphasis=info]>&]:bg-info-weak [tr[data-emphasis=success]>&]:bg-success-weak [tr[data-emphasis=warning]>&]:bg-warning-weak [tr[data-emphasis=destructive]>&]:bg-destructive-weak";
+/** Cabeçalho da coluna fixa. */
+export const dataTableStickyHead = "sticky z-20 bg-background";
+/** Borda que separa a coluna fixa das que rolam. */
+export const dataTableStickyEdgeLeft = "shadow-[inset_-1px_0_0_var(--prizm-color-border)]";
+export const dataTableStickyEdgeRight = "shadow-[inset_1px_0_0_var(--prizm-color-border)]";
+
+/** Cabeçalho fixo no topo, quando a tabela rola na vertical. */
+export const dataTableStickyHeader = "sticky top-0 z-30 bg-background";
+
+/** Estado de carregando: linhas de Skeleton no lugar dos dados. */
+export const dataTableSkeleton = "h-4 w-full max-w-40";

@@ -9,14 +9,24 @@ import {
   DropdownMenuTrigger,
 } from "../../dropdown-menu";
 import { Select } from "../../select";
-import { Spinner } from "../../spinner";
+import { Skeleton } from "../../skeleton";
 import { Empty } from "../../empty";
-import { ChevronLeft, ChevronRight, Columns3, FolderOpen, Search } from "../../icons";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  CircleAlert,
+  Columns3,
+  FolderOpen,
+  Search,
+} from "../../icons";
 import { Input } from "../../input";
 import type {
   CellContext,
+  Column,
   ColumnDef,
   ColumnFiltersState,
+  ColumnPinningState,
   OnChangeFn,
   Row,
   RowSelectionState,
@@ -39,6 +49,29 @@ import { ContentRenderType } from "../table-cell-renderers.types";
 import { renderPrizmCell } from "../table-cell-renderers";
 import { alignCenter, alignLeft, alignRight } from "../table.styles";
 import { toText } from "../../../lib/to-text";
+import { TruncatedText } from "../table-truncated-text";
+import {
+  dataTableCell,
+  dataTableCellNumeric,
+  dataTableDetailCell,
+  dataTableDetailRow,
+  dataTableExpandCell,
+  dataTableGroupCell,
+  dataTableGroupCount,
+  dataTableGroupRow,
+  dataTableHead,
+  dataTableRowClickable,
+  dataTableRowEmphasis,
+  dataTableRowEmphasisBar,
+  dataTableSkeleton,
+  dataTableStickyCell,
+  dataTableStickyEdgeLeft,
+  dataTableStickyEdgeRight,
+  dataTableStickyHead,
+  dataTableStickyHeader,
+  dataTableSummaryRow,
+  type DataTableRowEmphasis,
+} from "./data-table.styles";
 
 function getPrizmRowsMeta(meta: unknown): PrizmCellMeta<unknown> | null {
   if (!meta || typeof meta !== "object") return null;
@@ -138,6 +171,11 @@ function columnWidthStyle(
 
 const FILTER_ALL_VALUE = "__all__";
 const SELECT_COLUMN_ID = "select";
+const EXPAND_COLUMN_ID = "expand";
+
+/** Elementos que têm clique próprio: o clique e o Enter neles não abrem a linha. */
+const INTERACTIVE_SELECTOR =
+  "button, a, input, select, textarea, [role='menuitem'], [role='checkbox'], [role='combobox']";
 
 function defaultRowId<TData>(
   row: TData,
@@ -237,7 +275,7 @@ export interface DataTableProps<TData, TValue> {
   data: TData[];
   /** Optional wrapper class. */
   className?: string;
-  /** Optional message when no data. @default "No results." */
+  /** Mensagem sem dados. @default "Nenhum resultado." */
   emptyMessage?: React.ReactNode;
   /** Enable pagination controls. @default false */
   showPagination?: boolean;
@@ -245,7 +283,7 @@ export interface DataTableProps<TData, TValue> {
   showFilter?: boolean;
   /** Column ID to filter (e.g., "email"). Required if showFilter=true. */
   filterColumn?: string;
-  /** Placeholder for filter input. @default "Filter..." */
+  /** Placeholder for filter input. @default "Filtrar..." */
   filterPlaceholder?: string;
   /** Select filters rendered in the toolbar (Grupo, Papel, Status, …). */
   filters?: DataTableSelectFilter[];
@@ -253,9 +291,9 @@ export interface DataTableProps<TData, TValue> {
   showColumnVisibility?: boolean;
   /** Initial column visibility (`false` hides the column). */
   initialColumnVisibility?: VisibilityState;
-  /** Label of the column visibility button. @default "Columns" */
+  /** Label of the column visibility button. @default "Colunas" */
   columnVisibilityLabel?: string;
-  /** Label inside the column visibility menu. @default "Toggle columns" */
+  /** Label inside the column visibility menu. @default "Mostrar colunas" */
   columnVisibilityMenuLabel?: string;
   /**
    * Enable row selection. Injects a checkbox column when columns do not
@@ -283,14 +321,67 @@ export interface DataTableProps<TData, TValue> {
   showSelectedCount?: boolean;
   /** Optional labels mapping for STATUS render type. */
   statusLabels?: Record<string, string>;
-  /** Called when a data row is clicked. */
+  /** Called when a data row is clicked, or activated with Enter or Space (the row takes focus). */
   onRowClick?: (row: TData) => void;
   /** Optional class names for a data row. */
   getRowClassName?: (row: TData) => string | undefined;
   /** Horizontal overflow of the table body. @default "auto" */
   overflowX?: "auto" | "hidden";
-  /** Replaces the table body with a spinner. @default false */
+  /** Shows skeleton rows in place of the data. @default false */
   isLoading?: boolean;
+  /** Number of skeleton rows while loading. @default 5 */
+  loadingRows?: number;
+  /** Error message. Replaces the table, with a retry button when `onRetry` is set. */
+  error?: React.ReactNode;
+  /** Retry after an error. */
+  onRetry?: () => void;
+  /** Label of the retry button. @default "Tentar novamente" */
+  retryLabel?: string;
+  /** Accessible name of the table. */
+  "aria-label"?: string;
+  /** Controlled sorting state (TanStack). Use `DataTableColumnHeader` in the column header. */
+  sorting?: SortingState;
+  /** Initial sorting (uncontrolled). */
+  defaultSorting?: SortingState;
+  /** Called when sorting changes. */
+  onSortingChange?: OnChangeFn<SortingState>;
+  /** Sorting is done by the server: the table does not reorder `data`. @default false */
+  manualSorting?: boolean;
+  /**
+   * Emphasis of a row: `<tone>-weak` background and a 3px bar in the tone. The reason must also be
+   * in text in the row (color alone does not reach everyone).
+   */
+  getRowEmphasis?: (row: TData) => DataTableRowEmphasis | undefined;
+  /**
+   * Groups rows under a group row, by the returned key. Groups follow the order of `data`: sort the
+   * data by the group first. Each group is a `<tbody>` with a `<th scope="rowgroup">`.
+   */
+  groupBy?: (row: TData) => string;
+  /** Content of the group row. @default the key and the count */
+  renderGroupLabel?: (group: { key: string; rows: TData[] }) => React.ReactNode;
+  /** Actions at the end of the toolbar (e.g. a "Nova proposta" button). */
+  toolbarActions?: React.ReactNode;
+  /**
+   * Summary row (totals) at the bottom of the table, by column id. Cells follow the column alignment.
+   * @example { produto: "Total", valor: "R$ 1.640,00" }
+   */
+  summaryRow?: Partial<Record<string, React.ReactNode>>;
+  /** Detail of a row, opened by a button in a column on the left. Returns `null` for rows without detail. */
+  renderRowDetail?: (row: TData) => React.ReactNode;
+  /** Rows with the detail open at first, by row id. */
+  defaultExpandedRows?: string[];
+  /** Rows with the detail open (controlled). */
+  expandedRows?: string[];
+  /** Called when a detail opens or closes. */
+  onExpandedRowsChange?: (expandedRows: string[]) => void;
+  /** Name of the detail button. @default "Ver detalhes" / "Ocultar detalhes" + the first column */
+  getDetailLabel?: (row: TData, isExpanded: boolean) => string;
+  /** Header stays on top when the table scrolls vertically. @default false */
+  stickyHeader?: boolean;
+  /** First data column (and the selection and detail columns) stays when scrolling sideways. Needs `size`. @default false */
+  stickyFirstColumn?: boolean;
+  /** Last column (e.g. actions) stays when scrolling sideways. Needs `size`. @default false */
+  stickyLastColumn?: boolean;
   /** Optional footer rendered inside the table card (pagination, counts). */
   footer?: React.ReactNode;
   /**
@@ -436,15 +527,15 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   className,
-  emptyMessage = "No results.",
+  emptyMessage = "Nenhum resultado.",
   showPagination = false,
   showFilter = false,
   filterColumn,
-  filterPlaceholder = "Filter...",
+  filterPlaceholder = "Filtrar...",
   filters,
   showColumnVisibility = false,
-  columnVisibilityLabel = "Columns",
-  columnVisibilityMenuLabel = "Toggle columns",
+  columnVisibilityLabel = "Colunas",
+  columnVisibilityMenuLabel = "Mostrar colunas",
   initialColumnVisibility,
   enableRowSelection = false,
   enableMultiRowSelection = true,
@@ -460,12 +551,59 @@ export function DataTable<TData, TValue>({
   getRowClassName,
   overflowX = "auto",
   isLoading = false,
+  loadingRows = 5,
+  error,
+  onRetry,
+  retryLabel = "Tentar novamente",
+  "aria-label": ariaLabel,
+  sorting: controlledSorting,
+  defaultSorting = [],
+  onSortingChange,
+  manualSorting = false,
+  getRowEmphasis,
+  groupBy,
+  renderGroupLabel,
+  toolbarActions,
+  summaryRow,
+  renderRowDetail,
+  defaultExpandedRows = [],
+  expandedRows: controlledExpandedRows,
+  onExpandedRowsChange,
+  getDetailLabel,
+  stickyHeader = false,
+  stickyFirstColumn = false,
+  stickyLastColumn = false,
   footer,
   pagination,
   toolbarFilters,
   selectionBar,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [uncontrolledSorting, setUncontrolledSorting] =
+    React.useState<SortingState>(defaultSorting);
+  const sorting = controlledSorting ?? uncontrolledSorting;
+  const handleSortingChange = React.useCallback<OnChangeFn<SortingState>>(
+    (updater) => {
+      if (controlledSorting === undefined) setUncontrolledSorting(updater);
+      onSortingChange?.(updater);
+    },
+    [controlledSorting, onSortingChange],
+  );
+
+  const [uncontrolledExpanded, setUncontrolledExpanded] = React.useState<string[]>(
+    () => defaultExpandedRows,
+  );
+  const expandedRows = controlledExpandedRows ?? uncontrolledExpanded;
+  const toggleExpanded = React.useCallback(
+    (id: string) => {
+      const next = expandedRows.includes(id)
+        ? expandedRows.filter((x) => x !== id)
+        : [...expandedRows, id];
+      if (controlledExpandedRows === undefined) setUncontrolledExpanded(next);
+      onExpandedRowsChange?.(next);
+    },
+    [controlledExpandedRows, expandedRows, onExpandedRowsChange],
+  );
+  const detailBaseId = React.useId();
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(
     initialColumnVisibility ?? {},
@@ -524,17 +662,73 @@ export function DataTable<TData, TValue>({
   );
 
   const columnsWithSelection = React.useMemo(() => {
-    if (!enableRowSelection) return columns;
-    const hasSelectColumn = columns.some((column) => column.id === SELECT_COLUMN_ID);
-    if (hasSelectColumn) return columns;
-    return [createSelectColumn<TData, TValue>(), ...columns];
-  }, [columns, enableRowSelection]);
+    let cols = columns;
+    if (renderRowDetail && !cols.some((column) => column.id === EXPAND_COLUMN_ID)) {
+      const expandColumn: ColumnDef<TData, TValue> = {
+        id: EXPAND_COLUMN_ID,
+        size: 48,
+        enableSorting: false,
+        enableHiding: false,
+        header: () => <span className="sr-only">Detalhes</span>,
+        cell: ({ row }) => {
+          if (renderRowDetail(row.original) == null) return null;
+          const isOpen = expandedRows.includes(row.id);
+          const firstCell = row
+            .getAllCells()
+            .find((c) => c.column.id !== SELECT_COLUMN_ID && c.column.id !== EXPAND_COLUMN_ID);
+          const label = getDetailLabel
+            ? getDetailLabel(row.original, isOpen)
+            : `${isOpen ? "Ocultar detalhes" : "Ver detalhes"} de ${toText(firstCell?.getValue())}`;
+          return (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              aria-expanded={isOpen}
+              aria-controls={isOpen ? `${detailBaseId}-${row.id}` : undefined}
+              aria-label={label}
+              onClick={() => toggleExpanded(row.id)}
+            >
+              {isOpen ? <ChevronDown /> : <ChevronRight />}
+            </Button>
+          );
+        },
+      };
+      cols = [expandColumn, ...cols];
+    }
+    if (!enableRowSelection) return cols;
+    const hasSelectColumn = cols.some((column) => column.id === SELECT_COLUMN_ID);
+    if (hasSelectColumn) return cols;
+    return [createSelectColumn<TData, TValue>(), ...cols];
+  }, [
+    columns,
+    detailBaseId,
+    enableRowSelection,
+    expandedRows,
+    getDetailLabel,
+    renderRowDetail,
+    toggleExpanded,
+  ]);
 
   const enhancedColumns = React.useMemo(() => {
     return columnsWithSelection.map((col) => {
       const sizedCol = withStatusColumnSize(col);
       const rowsMeta = getPrizmRowsMeta(sizedCol.meta);
-      if (!rowsMeta) return sizedCol;
+      // Texto simples corta numa linha, com Tooltip quando corta (decisão de 17/11/2026).
+      const plainTextCell =
+        sizedCol.cell == null && !rowsMeta?.wrap && !(rowsMeta && needsPrizmCellRenderer(rowsMeta))
+          ? {
+              cell: (ctx: CellContext<TData, TValue>) => {
+                const value = ctx.getValue();
+                if (value == null || value === "") return null;
+                if (typeof value === "string" || typeof value === "number") {
+                  return <TruncatedText>{toText(value)}</TruncatedText>;
+                }
+                return value as React.ReactNode;
+              },
+            }
+          : null;
+      if (!rowsMeta) return plainTextCell ? { ...sizedCol, ...plainTextCell } : sizedCol;
 
       const customCell = rowsMeta.cell;
       if (typeof customCell === "function") {
@@ -548,7 +742,9 @@ export function DataTable<TData, TValue>({
         };
       }
 
-      if (!needsPrizmCellRenderer(rowsMeta)) return sizedCol;
+      if (!needsPrizmCellRenderer(rowsMeta)) {
+        return plainTextCell ? { ...sizedCol, ...plainTextCell } : sizedCol;
+      }
 
       return {
         ...sizedCol,
@@ -568,6 +764,20 @@ export function DataTable<TData, TValue>({
     });
   }, [columnsWithSelection, statusLabels]);
 
+  const columnPinning = React.useMemo<ColumnPinningState>(() => {
+    const ids = enhancedColumns.map(
+      (c) => c.id ?? columnAccessorKey(c as ColumnDef<unknown, unknown>),
+    );
+    const lead = ids.filter((id) => id === SELECT_COLUMN_ID || id === EXPAND_COLUMN_ID);
+    const dataIds = ids.filter(
+      (id): id is string => id != null && id !== SELECT_COLUMN_ID && id !== EXPAND_COLUMN_ID,
+    );
+    const left = stickyFirstColumn && dataIds[0] ? [...(lead as string[]), dataIds[0]] : [];
+    const last = dataIds[dataIds.length - 1];
+    const right = stickyLastColumn && last && !left.includes(last) ? [last] : [];
+    return { left, right };
+  }, [enhancedColumns, stickyFirstColumn, stickyLastColumn]);
+
   // TanStack Table isn't compatible with the React Compiler's memoization;
   // the compiler skips this component, which is what it should do.
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -576,8 +786,9 @@ export function DataTable<TData, TValue>({
     columns: enhancedColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: showPagination ? getPaginationRowModel() : undefined,
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: handleSortingChange,
+    getSortedRowModel: manualSorting ? undefined : getSortedRowModel(),
+    manualSorting,
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -590,6 +801,7 @@ export function DataTable<TData, TValue>({
       sorting,
       columnFilters,
       columnVisibility,
+      columnPinning,
       ...(enableRowSelection && { rowSelection }),
     },
   });
@@ -603,8 +815,124 @@ export function DataTable<TData, TValue>({
   const otherToolbarFilters = toolbarFilters?.filter((filter) => filter.type === "status");
   const hasLeadingSelects = hasSelectFilters || Boolean(otherToolbarFilters?.length);
   const hasToolbarFilters = Boolean(toolbarFilters?.length);
-  const showToolbar = showFilter || showColumnVisibility || hasSelectFilters || hasToolbarFilters;
-  const showEmptyTable = !isLoading && table.getRowModel().rows.length === 0;
+  const showToolbar =
+    showFilter ||
+    showColumnVisibility ||
+    hasSelectFilters ||
+    hasToolbarFilters ||
+    toolbarActions != null;
+  const showError = !isLoading && error != null;
+  const showEmptyTable = !isLoading && !showError && table.getRowModel().rows.length === 0;
+  const visibleColumnCount = table.getVisibleLeafColumns().length;
+
+  const pinnedStyle = (column: Column<TData, unknown>): React.CSSProperties | undefined => {
+    const pinned = column.getIsPinned();
+    if (pinned === "left") return { left: column.getStart("left") };
+    if (pinned === "right") return { right: column.getAfter("right") };
+    return undefined;
+  };
+  const pinnedClass = (column: Column<TData, unknown>, isHead: boolean) => {
+    const pinned = column.getIsPinned();
+    if (!pinned) return undefined;
+    return cn(
+      isHead ? dataTableStickyHead : dataTableStickyCell,
+      pinned === "left" && column.getIsLastColumn("left") && dataTableStickyEdgeLeft,
+      pinned === "right" && column.getIsFirstColumn("right") && dataTableStickyEdgeRight,
+    );
+  };
+
+  const rows = table.getRowModel().rows;
+  const groups: Array<{ key: string | null; rows: Row<TData>[] }> = [];
+  for (const row of rows) {
+    const key = groupBy ? groupBy(row.original) : null;
+    const last = groups[groups.length - 1];
+    if (last && last.key === key) last.rows.push(row);
+    else groups.push({ key, rows: [row] });
+  }
+
+  const renderRow = (row: Row<TData>) => {
+    const emphasis = getRowEmphasis?.(row.original);
+    const detail =
+      renderRowDetail && expandedRows.includes(row.id) ? renderRowDetail(row.original) : null;
+    const cells = row.getVisibleCells();
+    const activate = onRowClick ? () => onRowClick(row.original) : undefined;
+    return (
+      <React.Fragment key={row.id}>
+        <TableRow
+          data-state={row.getIsSelected() ? "selected" : undefined}
+          data-emphasis={emphasis}
+          tabIndex={activate ? 0 : undefined}
+          className={cn(
+            "border-border transition-colors",
+            activate && dataTableRowClickable,
+            emphasis && dataTableRowEmphasis[emphasis],
+            getRowClassName?.(row.original),
+          )}
+          onClick={
+            activate
+              ? (event) => {
+                  const target = event.target as HTMLElement | null;
+                  if (target?.closest(INTERACTIVE_SELECTOR)) return;
+                  activate();
+                }
+              : undefined
+          }
+          onKeyDown={
+            activate
+              ? (event) => {
+                  if (event.target !== event.currentTarget) return;
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    activate();
+                  }
+                }
+              : undefined
+          }
+        >
+          {cells.map((cell, index) => {
+            const meta = getPrizmRowsMeta(cell.column.columnDef.meta);
+            const isStatus = isStatusLikeColumn(cell.column);
+            const align = meta?.cellAlign ?? (isStatus ? "left" : undefined);
+            return (
+              <TableCell
+                key={cell.id}
+                style={{
+                  ...columnWidthStyle(cell.column.columnDef.size, isStatus),
+                  ...pinnedStyle(cell.column),
+                }}
+                className={cn(
+                  dataTableCell,
+                  meta?.wrap
+                    ? "whitespace-normal break-words"
+                    : isStatus
+                      ? "overflow-visible"
+                      : "overflow-hidden truncate",
+                  cellAlignClassName(cell.column.columnDef.meta, isStatus ? "left" : undefined),
+                  align === "right" && dataTableCellNumeric,
+                  cell.column.id === EXPAND_COLUMN_ID && dataTableExpandCell,
+                  pinnedClass(cell.column, false),
+                  index === 0 && emphasis && dataTableRowEmphasisBar[emphasis],
+                )}
+              >
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </TableCell>
+            );
+          })}
+        </TableRow>
+        {detail != null ? (
+          <TableRow
+            id={`${detailBaseId}-${row.id}`}
+            data-slot="data-table-detail-row"
+            className={dataTableDetailRow}
+          >
+            <TableCell colSpan={visibleColumnCount} className={dataTableDetailCell}>
+              {detail}
+            </TableCell>
+          </TableRow>
+        ) : null}
+      </React.Fragment>
+    );
+  };
 
   const searchInput =
     showFilter && filterColumn ? (
@@ -730,6 +1058,7 @@ export function DataTable<TData, TValue>({
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+            {toolbarActions}
           </div>
         </div>
       )}
@@ -753,7 +1082,27 @@ export function DataTable<TData, TValue>({
         </div>
       ) : null}
 
-      {showEmptyTable ? (
+      {showError ? (
+        <div
+          data-slot="data-table-error"
+          role="alert"
+          className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-visible px-2 py-8"
+        >
+          <Empty
+            appearance="plain"
+            mediaVariant="icon"
+            icon={<CircleAlert className="size-6 text-destructive" aria-hidden />}
+            title={error}
+            content={
+              onRetry ? (
+                <Button type="button" variant="outline" onClick={onRetry}>
+                  {retryLabel}
+                </Button>
+              ) : undefined
+            }
+          />
+        </div>
+      ) : showEmptyTable ? (
         <div
           data-slot="data-table-empty"
           className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-visible px-2 py-8"
@@ -763,7 +1112,7 @@ export function DataTable<TData, TValue>({
               appearance="plain"
               mediaVariant="icon"
               icon={<FolderOpen className="size-6 text-muted-foreground" aria-hidden />}
-              title={emptyMessage ?? "No results."}
+              title={emptyMessage ?? "Nenhum resultado."}
             />
           ) : (
             emptyMessage
@@ -780,27 +1129,42 @@ export function DataTable<TData, TValue>({
               overflowX === "hidden" ? "overflow-x-hidden" : "overflow-x-auto",
             )}
           >
-            <table className="w-full table-fixed caption-bottom text-sm">
-              <TableHeader>
+            <table
+              aria-label={ariaLabel}
+              aria-busy={isLoading || undefined}
+              className="w-full table-fixed caption-bottom text-sm"
+            >
+              <TableHeader className={cn(stickyHeader && dataTableStickyHeader)}>
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id} className="border-border">
+                  <TableRow key={headerGroup.id} className="border-border hover:bg-transparent">
                     {headerGroup.headers.map((header) => {
+                      const isStatus = isStatusLikeColumn(header.column);
+                      const meta = getPrizmRowsMeta(header.column.columnDef.meta);
+                      const sorted = header.column.getIsSorted();
                       return (
                         <TableHead
                           key={header.id}
-                          style={columnWidthStyle(
-                            header.column.columnDef.size,
-                            isStatusLikeColumn(header.column),
-                          )}
+                          aria-sort={
+                            sorted === "asc"
+                              ? "ascending"
+                              : sorted === "desc"
+                                ? "descending"
+                                : undefined
+                          }
+                          style={{
+                            ...columnWidthStyle(header.column.columnDef.size, isStatus),
+                            ...pinnedStyle(header.column),
+                          }}
                           className={cn(
-                            "h-10 min-w-0 px-4 py-2.5 border-border text-sm font-medium text-foreground/40",
-                            isStatusLikeColumn(header.column)
-                              ? "overflow-visible"
-                              : "overflow-hidden truncate",
+                            dataTableHead,
+                            isStatus ? "overflow-visible" : "overflow-hidden truncate",
                             cellAlignClassName(
                               header.column.columnDef.meta,
-                              isStatusLikeColumn(header.column) ? "left" : undefined,
+                              isStatus ? "left" : undefined,
                             ),
+                            meta?.cellAlign === "right" && dataTableCellNumeric,
+                            header.column.id === EXPAND_COLUMN_ID && dataTableExpandCell,
+                            pinnedClass(header.column, true),
                           )}
                         >
                           {header.isPlaceholder
@@ -812,64 +1176,76 @@ export function DataTable<TData, TValue>({
                   </TableRow>
                 ))}
               </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={enhancedColumns.length} className="h-24 text-center">
-                      <Spinner className="mx-auto" />
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() ? "selected" : undefined}
-                      className={cn(
-                        "border-border transition-colors",
-                        onRowClick ? "cursor-pointer hover:bg-muted/50" : undefined,
-                        getRowClassName?.(row.original),
-                      )}
-                      onClick={
-                        onRowClick
-                          ? (event) => {
-                              const target = event.target as HTMLElement | null;
-                              if (
-                                target?.closest(
-                                  "button, a, input, [role='menuitem'], [role='checkbox']",
-                                )
-                              ) {
-                                return;
-                              }
-                              onRowClick(row.original);
-                            }
-                          : undefined
-                      }
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                          style={columnWidthStyle(
-                            cell.column.columnDef.size,
-                            isStatusLikeColumn(cell.column),
+              {isLoading ? (
+                <TableBody data-slot="data-table-loading">
+                  {Array.from({ length: loadingRows }, (_, i) => (
+                    <TableRow key={i} className="hover:bg-transparent">
+                      {table.getVisibleLeafColumns().map((column) => (
+                        <TableCell key={column.id} className={dataTableCell}>
+                          {column.id === SELECT_COLUMN_ID ||
+                          column.id === EXPAND_COLUMN_ID ? null : (
+                            <Skeleton className={dataTableSkeleton} />
                           )}
-                          className={cn(
-                            "h-[52px] min-w-0 px-4 py-0",
-                            isStatusLikeColumn(cell.column)
-                              ? "overflow-visible"
-                              : "overflow-hidden truncate",
-                            cellAlignClassName(
-                              cell.column.columnDef.meta,
-                              isStatusLikeColumn(cell.column) ? "left" : undefined,
-                            ),
-                          )}
-                        >
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                       ))}
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
+                  ))}
+                </TableBody>
+              ) : groupBy ? (
+                groups.map((group) => (
+                  <TableBody key={group.key ?? ""} data-slot="data-table-group">
+                    <TableRow data-slot="data-table-group-row" className={dataTableGroupRow}>
+                      <th
+                        scope="rowgroup"
+                        colSpan={visibleColumnCount}
+                        className={dataTableGroupCell}
+                      >
+                        {renderGroupLabel ? (
+                          renderGroupLabel({
+                            key: group.key ?? "",
+                            rows: group.rows.map((r) => r.original),
+                          })
+                        ) : (
+                          <>
+                            {group.key}
+                            <span className={dataTableGroupCount}>{group.rows.length}</span>
+                          </>
+                        )}
+                      </th>
+                    </TableRow>
+                    {group.rows.map(renderRow)}
+                  </TableBody>
+                ))
+              ) : (
+                <TableBody>{rows.map(renderRow)}</TableBody>
+              )}
+              {summaryRow && !isLoading ? (
+                <tfoot data-slot="data-table-summary">
+                  <TableRow className={dataTableSummaryRow}>
+                    {table.getVisibleLeafColumns().map((column) => {
+                      const meta = getPrizmRowsMeta(column.columnDef.meta);
+                      return (
+                        <TableCell
+                          key={column.id}
+                          style={{
+                            ...columnWidthStyle(column.columnDef.size),
+                            ...pinnedStyle(column),
+                          }}
+                          className={cn(
+                            dataTableCell,
+                            "overflow-hidden truncate",
+                            cellAlignClassName(column.columnDef.meta),
+                            meta?.cellAlign === "right" && dataTableCellNumeric,
+                            pinnedClass(column, false),
+                          )}
+                        >
+                          {summaryRow[column.id] ?? null}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                </tfoot>
+              ) : null}
             </table>
           </div>
 

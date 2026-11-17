@@ -4,7 +4,7 @@ import { fireEvent } from "@testing-library/react";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { MockPayment } from "./data-table.mock";
-import { DataTable } from "./index";
+import { DataTable, DataTableColumnHeader, DataTableEditableCell } from "./index";
 import { ContentRenderType } from "../table-cell-renderers.types";
 
 const mockData: MockPayment[] = [
@@ -61,7 +61,7 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
 
     it("mostra emptyMessage quando não há dados", () => {
       const { container } = render(<DataTable columns={basicColumns} data={[]} />);
-      expect(screen.getByText(/no results/i)).toBeInTheDocument();
+      expect(screen.getByText("Nenhum resultado.")).toBeInTheDocument();
       expect(container.querySelector('[data-slot="empty-icon"]')).toBeInTheDocument();
     });
 
@@ -189,12 +189,12 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
   describe("Column Visibility", () => {
     it("mostra botão de toggle de colunas quando showColumnVisibility=true", () => {
       render(<DataTable columns={basicColumns} data={mockData} showColumnVisibility />);
-      expect(screen.getByRole("button", { name: /columns/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /colunas/i })).toBeInTheDocument();
     });
 
     it("não mostra botão de toggle por padrão", () => {
       render(<DataTable columns={basicColumns} data={mockData} />);
-      expect(screen.queryByRole("button", { name: /columns/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /colunas/i })).not.toBeInTheDocument();
     });
 
     it("esconde colunas definidas em initialColumnVisibility", () => {
@@ -698,6 +698,265 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
       fireEvent.click(screen.getByText("2"));
       expect(screen.getByText("Popover content")).toBeInTheDocument();
       expect(within(screen.getByRole("dialog")).getByText("Plans")).toBeInTheDocument();
+    });
+  });
+
+  describe("decisões de 17/11/2026 (teste da Proposta)", () => {
+    const sortable: ColumnDef<MockPayment>[] = [
+      { accessorKey: "email", header: "Email", size: 200 },
+      {
+        accessorKey: "amount",
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Valor" />,
+        meta: { prizm: { cellAlign: "right" } },
+        size: 120,
+      },
+    ];
+
+    it("visual da Table: cabeçalho foreground com 8px, célula de 52px", () => {
+      render(<DataTable columns={basicColumns} data={mockData} />);
+      const th = screen.getByRole("columnheader", { name: "Email" });
+      expect(th).toHaveClass("px-2", "text-foreground");
+      expect(th).not.toHaveClass("text-foreground/40");
+      expect(screen.getByText("test@example.com").closest("td")).toHaveClass("h-13", "p-2");
+    });
+
+    it("texto simples corta com o span do Tooltip; wrap quebra", () => {
+      const cols: ColumnDef<MockPayment>[] = [
+        { accessorKey: "email", header: "Email" },
+        {
+          accessorKey: "status",
+          id: "situacao",
+          header: "Situação",
+          meta: { prizm: { wrap: true } },
+        },
+      ];
+      render(<DataTable columns={cols} data={[mockData[0]]} />);
+      expect(screen.getByText("test@example.com")).toHaveAttribute("data-slot", "table-cell-text");
+      const wrapped = screen.getByText("pending");
+      expect(wrapped.tagName).toBe("TD");
+      expect(wrapped).toHaveClass("whitespace-normal");
+    });
+
+    it("ordena pelo cabeçalho e marca aria-sort", () => {
+      render(<DataTable columns={sortable} data={mockData} />);
+      const button = screen.getByRole("button", { name: "Valor" });
+      fireEvent.click(button);
+      expect(screen.getByRole("columnheader", { name: "Valor" })).toHaveAttribute(
+        "aria-sort",
+        "ascending",
+      );
+      fireEvent.click(button);
+      expect(screen.getByRole("columnheader", { name: "Valor" })).toHaveAttribute(
+        "aria-sort",
+        "descending",
+      );
+      const firstRow = screen.getAllByRole("row")[1];
+      expect(within(firstRow).getByText("admin@example.com")).toBeInTheDocument();
+    });
+
+    it("manualSorting não reordena os dados e avisa a mudança", () => {
+      const onSortingChange = vi.fn();
+      render(
+        <DataTable
+          columns={sortable}
+          data={mockData}
+          manualSorting
+          onSortingChange={onSortingChange}
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: "Valor" }));
+      fireEvent.click(screen.getByRole("button", { name: "Valor" }));
+      expect(onSortingChange).toHaveBeenCalled();
+      const firstRow = screen.getAllByRole("row")[1];
+      expect(within(firstRow).getByText("test@example.com")).toBeInTheDocument();
+    });
+
+    it("coluna à direita com tabular-nums", () => {
+      render(<DataTable columns={sortable} data={mockData} />);
+      expect(screen.getByText("100").closest("td")).toHaveClass("tabular-nums", "text-right");
+    });
+
+    it("linha clicável abre com Enter e Espaço, não com Enter num botão dentro", () => {
+      const onRowClick = vi.fn();
+      render(<DataTable columns={basicColumns} data={mockData} onRowClick={onRowClick} />);
+      const row = screen.getByText("test@example.com").closest("tr")!;
+      expect(row).toHaveAttribute("tabindex", "0");
+      fireEvent.keyDown(row, { key: "Enter" });
+      fireEvent.keyDown(row, { key: " " });
+      expect(onRowClick).toHaveBeenCalledTimes(2);
+      expect(onRowClick).toHaveBeenCalledWith(mockData[0]);
+    });
+
+    it("textos padrão em português", () => {
+      render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          showColumnVisibility
+          showFilter
+          filterColumn="email"
+        />,
+      );
+      expect(screen.getByRole("button", { name: /colunas/i })).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Filtrar...")).toBeInTheDocument();
+    });
+
+    it("ênfase da linha: data-emphasis, fundo -weak e barra na primeira célula", () => {
+      render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          getRowEmphasis={(r) => (r.status === "failed" ? "destructive" : undefined)}
+        />,
+      );
+      const row = screen.getByText("admin@example.com").closest("tr")!;
+      expect(row).toHaveAttribute("data-emphasis", "destructive");
+      expect(row).toHaveClass("bg-destructive-weak");
+      expect(row.querySelector("td")).toHaveClass(
+        "shadow-[inset_3px_0_0_var(--prizm-color-destructive)]",
+      );
+      expect(screen.getByText("test@example.com").closest("tr")).not.toHaveAttribute(
+        "data-emphasis",
+      );
+    });
+
+    it("linha de grupo: um tbody por grupo, com th scope=rowgroup e a contagem", () => {
+      const { container } = render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          groupBy={(r) => (r.amount >= 200 ? "Acima de 200" : "Até 199")}
+        />,
+      );
+      expect(container.querySelectorAll("tbody")).toHaveLength(2);
+      const group = screen.getByRole("rowheader", { name: /Acima de 200/ });
+      expect(group).toHaveAttribute("scope", "rowgroup");
+      expect(group).toHaveAttribute("colspan", "3");
+      expect(group).toHaveTextContent("2");
+    });
+
+    it("ações na toolbar", () => {
+      render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          toolbarActions={<button>Nova proposta</button>}
+        />,
+      );
+      expect(screen.getByRole("button", { name: "Nova proposta" })).toBeInTheDocument();
+    });
+
+    it("linha de resumo no tfoot, alinhada pela coluna", () => {
+      const { container } = render(
+        <DataTable
+          columns={sortable}
+          data={mockData}
+          summaryRow={{ email: "Total", amount: "600" }}
+        />,
+      );
+      const tfoot = container.querySelector("tfoot")!;
+      expect(within(tfoot).getByText("Total")).toBeInTheDocument();
+      expect(within(tfoot).getByText("600").closest("td")).toHaveClass("text-right");
+    });
+
+    it("linha de detalhe: botão com aria-expanded e aria-controls, detalhe embaixo", () => {
+      render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          renderRowDetail={(r) => (r.id === "3" ? null : <p>Detalhe de {r.email}</p>)}
+        />,
+      );
+      const button = screen.getByRole("button", { name: "Ver detalhes de pending" });
+      expect(button).toHaveAttribute("aria-expanded", "false");
+      expect(screen.getAllByRole("button", { name: /Ver detalhes/ })).toHaveLength(2);
+      fireEvent.click(button);
+      const open = screen.getByRole("button", { name: "Ocultar detalhes de pending" });
+      expect(open).toHaveAttribute("aria-expanded", "true");
+      const detail = screen.getByText("Detalhe de test@example.com").closest("tr")!;
+      expect(open.getAttribute("aria-controls")).toBe(detail.id);
+      expect(detail.previousElementSibling).toBe(open.closest("tr"));
+    });
+
+    it("carregando: linhas de Skeleton e aria-busy", () => {
+      const { container } = render(
+        <DataTable columns={basicColumns} data={mockData} isLoading loadingRows={3} />,
+      );
+      expect(container.querySelector("table")).toHaveAttribute("aria-busy", "true");
+      expect(container.querySelectorAll("[data-slot=data-table-loading] tr")).toHaveLength(3);
+      expect(screen.queryByText("test@example.com")).toBeNull();
+    });
+
+    it("erro: alerta com tentar novamente", () => {
+      const onRetry = vi.fn();
+      render(
+        <DataTable
+          columns={basicColumns}
+          data={[]}
+          error="Não foi possível carregar."
+          onRetry={onRetry}
+        />,
+      );
+      expect(screen.getByRole("alert")).toHaveTextContent("Não foi possível carregar.");
+      fireEvent.click(screen.getByRole("button", { name: "Tentar novamente" }));
+      expect(onRetry).toHaveBeenCalled();
+      expect(screen.queryByText("Nenhum resultado.")).toBeNull();
+    });
+
+    it("coluna fixa: primeira e última com sticky e deslocamento", () => {
+      render(
+        <DataTable
+          columns={sortable}
+          data={mockData}
+          enableRowSelection
+          stickyFirstColumn
+          stickyLastColumn
+          stickyHeader
+        />,
+      );
+      const first = screen.getByText("test@example.com").closest("td")!;
+      expect(first).toHaveClass("sticky");
+      expect(first.style.left).toBe("40px");
+      const last = screen.getByText("100").closest("td")!;
+      expect(last).toHaveClass("sticky");
+      expect(last.style.right).toBe("0px");
+      expect(screen.getAllByRole("rowgroup")[0]).toHaveClass("sticky", "top-0");
+    });
+
+    it("nome da tabela por aria-label", () => {
+      render(<DataTable columns={basicColumns} data={mockData} aria-label="Propostas" />);
+      expect(screen.getByRole("table", { name: "Propostas" })).toBeInTheDocument();
+    });
+
+    it("célula editável: Input sm, nome, inválido com mensagem, sem abrir a linha", () => {
+      const onRowClick = vi.fn();
+      const onChange = vi.fn();
+      const cols: ColumnDef<MockPayment>[] = [
+        { accessorKey: "email", header: "Email" },
+        {
+          id: "qtd",
+          header: "Quantidade",
+          cell: ({ row }) => (
+            <DataTableEditableCell
+              label={`Quantidade de ${row.original.email}`}
+              value={-1}
+              onChange={onChange}
+              align="right"
+              error="Não pode ser negativa"
+            />
+          ),
+        },
+      ];
+      render(<DataTable columns={cols} data={[mockData[0]]} onRowClick={onRowClick} />);
+      const input = screen.getByRole("textbox", { name: "Quantidade de test@example.com" });
+      expect(input).toHaveAttribute("aria-invalid", "true");
+      expect(input).toHaveAccessibleDescription("Não pode ser negativa");
+      expect(input).toHaveClass("h-control-height-sm", "text-right");
+      fireEvent.change(input, { target: { value: "3" } });
+      expect(onChange).toHaveBeenCalledWith("3");
+      fireEvent.click(input);
+      fireEvent.keyDown(input, { key: "Enter" });
+      expect(onRowClick).not.toHaveBeenCalled();
     });
   });
 });

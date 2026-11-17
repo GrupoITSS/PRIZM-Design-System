@@ -49,8 +49,14 @@ export type {
 } from "./table-cell-renderers.types";
 
 // DataTable com TanStack Table (para tabelas avançadas)
-export { DataTable } from "./data-table";
-export type { DataTableProps, DataTableStatusFilterValue } from "./data-table";
+export { DataTable, DataTableColumnHeader, DataTableEditableCell } from "./data-table";
+export type {
+  DataTableColumnHeaderProps,
+  DataTableEditableCellProps,
+  DataTableProps,
+  DataTableRowEmphasis,
+  DataTableStatusFilterValue,
+} from "./data-table";
 
 // Primitivos para composição avançada
 export {

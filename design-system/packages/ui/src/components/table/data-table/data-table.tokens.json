@@ -1,0 +1,72 @@
+{
+  "component": "DataTable",
+  "description": "Mapa de tokens do DataTable. Decisões de 17/11/2026 (teste de tela da Proposta): o DataTable segue a Table (cabeçalho, célula, altura da linha) e ganha ordenação, ênfase de linha, linha de grupo, resumo, detalhe, célula editável, carregando, erro e coluna fixa. Conferido contra data-table.styles.ts por data-table.tokens.test.ts. Nomes no formato do Figma.",
+  "sources": {
+    "code": "design-system/packages/ui/src/components/table/data-table/data-table.tsx",
+    "story": "design-system/apps/docs/stories/data-table.stories.tsx",
+    "table": "design-system/packages/ui/src/components/table/table.tokens.json"
+  },
+  "parts": {
+    "head": {
+      "height": "height/10",
+      "paddingX": "spacing/2",
+      "color": "color/foreground",
+      "fontWeight": "font-weight/medium"
+    },
+    "cell": {
+      "minHeight": "52px (h-13), com a borda",
+      "padding": "spacing/2",
+      "numeric": "tabular-nums com cellAlign right"
+    },
+    "sort": {
+      "button": "texto + ArrowUpDown, ArrowUp ou ArrowDown (width/4)",
+      "height": "control-height/sm",
+      "hover": "color/accent",
+      "a11y": "aria-sort na célula do cabeçalho"
+    },
+    "groupRow": {
+      "background": "color/muted",
+      "height": "height/10",
+      "count": "color/muted-foreground"
+    },
+    "summaryRow": {
+      "background": "color/muted a 50%",
+      "border": "color/border, em cima",
+      "fontWeight": "font-weight/medium"
+    },
+    "detail": { "column": "48px (w-12), Button ghost icon-sm", "paddingLeft": "56px (pl-14)" },
+    "editableCell": {
+      "input": "Input sm (control-height/sm)",
+      "error": "color/destructive-strong, text/sm"
+    },
+    "loading": { "skeleton": "Skeleton h-4, até 160px", "rows": 5 },
+    "error": { "icon": "CircleAlert em color/destructive", "action": "Button outline" },
+    "sticky": {
+      "background": "color/background, repetindo o fundo da linha",
+      "edge": "color/border, 1px"
+    }
+  },
+  "emphasis": {
+    "info": { "background": "color/info-weak", "bar": "color/info" },
+    "success": { "background": "color/success-weak", "bar": "color/success" },
+    "warning": { "background": "color/warning-weak", "bar": "color/warning" },
+    "destructive": { "background": "color/destructive-weak", "bar": "color/destructive" }
+  },
+  "states": {
+    "hover": { "background": "color/muted", "opacity": 0.5 },
+    "selected": { "background": "color/muted", "attribute": "data-state=selected" },
+    "focus": { "outline": "color/ring", "width": "2px, por dentro da linha" }
+  },
+  "divergences": [
+    {
+      "where": "barra da ênfase warning",
+      "measured": "color/warning sobre color/warning-weak: 2,07:1 no claro (1,72:1 no ITSS · Digitrol)",
+      "status": "aberta: a barra repete o tom, e o motivo tem de estar em texto na linha; decidir se a barra vai para -strong"
+    },
+    {
+      "where": "mensagem de erro da célula editável",
+      "measured": "color/destructive sobre color/background: 4,22:1 no Docnix escuro e 4,43:1 no ITSS · Digitrol claro",
+      "status": "decidida no código: destructive-strong (24 de 24 passam); o FieldError usa destructive"
+    }
+  ]
+}

@@ -12,7 +12,13 @@ import { ArrowUpDown, Ellipsis } from "@grupoitss/prizm-ui/icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { MockPayment } from "./mocks/data-table.mock";
-import { DataTable } from "@grupoitss/prizm-ui/table";
+import {
+  DataTable,
+  DataTableColumnHeader,
+  DataTableEditableCell,
+  type DataTableRowEmphasis,
+} from "@grupoitss/prizm-ui/table";
+import * as React from "react";
 import { ContentRenderType } from "@grupoitss/prizm-ui/table";
 
 const mockData: MockPayment[] = [
@@ -149,7 +155,7 @@ export const WithPagination: Story = {
     docs: {
       description: {
         story:
-          "Os controles de página são um rodapé próprio da tabela: \"Página X de Y\" com anterior e próxima. Ainda não usam o componente [Pagination](?path=/docs/primários-pagination--docs); a troca fica para a documentação da tabela.",
+          'Os controles de página são um rodapé próprio da tabela: "Página X de Y" com anterior e próxima. Ainda não usam o componente [Pagination](?path=/docs/primários-pagination--docs); a troca fica para a documentação da tabela.',
       },
     },
   },
@@ -180,7 +186,7 @@ export const WithPagination: Story = {
 /**
  * **3. Sorting** — Ordenação de colunas.
  * Clique no header "Email" para alternar entre asc/desc/none.
- * Usa `column.toggleSorting()` e ícone ArrowUpDown.
+ * Usa `DataTableColumnHeader`: o clique ordena e o cabeçalho ganha `aria-sort`.
  */
 export const WithSorting: Story = {
   render: function SortingDataTable() {
@@ -191,27 +197,18 @@ export const WithSorting: Story = {
       },
       {
         accessorKey: "email",
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-              Email
-              <ArrowUpDown className="ml-2 size-4" />
-            </Button>
-          );
-        },
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
       },
       {
         accessorKey: "amount",
-        header: "Amount",
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
+        meta: { prizm: { cellAlign: "right" } },
       },
     ];
 
     return (
       <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={mockData.slice(0, 8)} />
+        <DataTable columns={columns} data={mockData.slice(0, 8)} aria-label="Pagamentos" />
       </div>
     );
   },
@@ -455,7 +452,7 @@ export const CompleteExample: Story = {
     docs: {
       description: {
         story:
-          "Inclui a paginação no rodapé (rodapé próprio da tabela, \"Página X de Y\"). O componente [Pagination](?path=/docs/primários-pagination--docs) ainda não é usado aqui.",
+          'Inclui a paginação no rodapé (rodapé próprio da tabela, "Página X de Y"). O componente [Pagination](?path=/docs/primários-pagination--docs) ainda não é usado aqui.',
       },
     },
   },
@@ -682,4 +679,249 @@ export const WithPrizmMetaCellRenderers: Story = {
       </div>
     );
   },
+};
+
+/* ---------------------------------------------------------------------------------------------
+ * Decisões de 17/11/2026 (teste de tela da Proposta)
+ * ------------------------------------------------------------------------------------------- */
+
+type ItemProposta = {
+  id: string;
+  produto: string;
+  categoria: string;
+  descricao: string;
+  situacao: string;
+  valor: number;
+  itens?: string[];
+};
+
+const itensProposta: ItemProposta[] = [
+  {
+    id: "p1",
+    produto: "Plano Empresarial com suporte dedicado e integrações ilimitadas",
+    categoria: "Software",
+    descricao: "Licença anual para até 200 usuários, com suporte em horário estendido.",
+    situacao: "Aprovado",
+    valor: 1290,
+    itens: ["Licença anual", "Suporte estendido", "Integrações"],
+  },
+  {
+    id: "p2",
+    produto: "Plano Básico",
+    categoria: "Software",
+    descricao: "Para equipes pequenas.",
+    situacao: "Aguardando aprovação",
+    valor: 100,
+  },
+  {
+    id: "p3",
+    produto: "Implantação",
+    categoria: "Serviços",
+    descricao: "Configuração inicial e importação de dados.",
+    situacao: "Desconto acima do limite",
+    valor: 250,
+    itens: ["Configuração", "Importação de dados"],
+  },
+  {
+    id: "p4",
+    produto: "Treinamento da equipe",
+    categoria: "Serviços",
+    descricao: "Duas turmas, remotas.",
+    situacao: "Aprovado",
+    valor: 480,
+  },
+];
+
+const brl = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+const colunasProposta: ColumnDef<ItemProposta>[] = [
+  {
+    accessorKey: "produto",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Produto" />,
+    size: 240,
+  },
+  { accessorKey: "categoria", header: "Categoria", size: 140 },
+  {
+    accessorKey: "descricao",
+    header: "Descrição",
+    size: 280,
+    meta: { prizm: { wrap: true } },
+  },
+  { accessorKey: "situacao", header: "Situação", size: 200 },
+  {
+    accessorKey: "valor",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Valor" />,
+    cell: ({ getValue }) => brl(getValue<number>()),
+    size: 140,
+    meta: { prizm: { cellAlign: "right" } },
+  },
+];
+
+const ENFASE: Record<string, DataTableRowEmphasis | undefined> = {
+  "Aguardando aprovação": "warning",
+  "Desconto acima do limite": "destructive",
+};
+
+/**
+ * **Proposta** — o DataTable com o que o teste de tela pediu: ordenação pelo cabeçalho, texto cortado
+ * com Tooltip, Descrição quebrando linha, ênfase de linha, ações na toolbar, linha de resumo e linha
+ * clicável pelo teclado. Decisões de 17/11/2026.
+ */
+export const Proposta: Story = {
+  render: function PropostaStory() {
+    const [aberta, setAberta] = React.useState<string | null>(null);
+    return (
+      <div className="flex flex-col gap-2 py-6">
+        <DataTable<ItemProposta, unknown>
+          aria-label="Itens da proposta"
+          columns={colunasProposta}
+          data={itensProposta}
+          getRowEmphasis={(r) => ENFASE[r.situacao]}
+          toolbarActions={<Button>Adicionar item</Button>}
+          showColumnVisibility
+          summaryRow={{
+            produto: "Total",
+            valor: brl(itensProposta.reduce((t, r) => t + r.valor, 0)),
+          }}
+          onRowClick={(r) => setAberta(r.produto)}
+        />
+        <p className="text-sm text-muted-foreground" aria-live="polite">
+          {aberta ? `Aberto: ${aberta}` : "Clique numa linha, ou use Tab e Enter."}
+        </p>
+      </div>
+    );
+  },
+};
+
+/** **Linha de grupo** — `groupBy` agrupa as linhas; cada grupo é um `<tbody>` com `<th scope="rowgroup">`. */
+export const Grupos: Story = {
+  name: "Linha de grupo",
+  render: () => (
+    <div className="py-6">
+      <DataTable<ItemProposta, unknown>
+        aria-label="Itens por categoria"
+        columns={colunasProposta}
+        data={itensProposta}
+        groupBy={(r) => r.categoria}
+      />
+    </div>
+  ),
+};
+
+/** **Linha de detalhe** — `renderRowDetail` abre o detalhe da linha por um botão à esquerda. */
+export const Detalhe: Story = {
+  name: "Linha de detalhe",
+  render: () => (
+    <div className="py-6">
+      <DataTable<ItemProposta, unknown>
+        aria-label="Itens da proposta"
+        columns={colunasProposta}
+        data={itensProposta}
+        defaultExpandedRows={["p1"]}
+        renderRowDetail={(r) =>
+          r.itens ? (
+            <ul className="list-disc pl-4 text-sm">
+              {r.itens.map((i) => (
+                <li key={i}>{i}</li>
+              ))}
+            </ul>
+          ) : null
+        }
+      />
+    </div>
+  ),
+};
+
+/** **Célula editável** — `DataTableEditableCell`: Input `sm`, com nome da linha e estado inválido. */
+export const CelulaEditavel: Story = {
+  name: "Célula editável",
+  render: function EditavelStory() {
+    const [qtd, setQtd] = React.useState<Record<string, string>>({ p1: "2", p2: "-1", p3: "1" });
+    const total = itensProposta.reduce(
+      (t, r) => t + r.valor * Math.max(0, Number(qtd[r.id] ?? 0)),
+      0,
+    );
+    const cols: ColumnDef<ItemProposta>[] = [
+      { accessorKey: "produto", header: "Produto", size: 240 },
+      {
+        id: "qtd",
+        header: "Quantidade",
+        size: 140,
+        cell: ({ row }) => {
+          const v = qtd[row.id] ?? "0";
+          return (
+            <DataTableEditableCell
+              type="number"
+              align="right"
+              label={`Quantidade de ${row.original.produto}`}
+              value={v}
+              disabled={row.id === "p4"}
+              error={Number(v) < 0 ? "Não pode ser negativa" : undefined}
+              onChange={(next) => setQtd({ ...qtd, [row.id]: next })}
+            />
+          );
+        },
+        meta: { prizm: { cellAlign: "right" } },
+      },
+      {
+        id: "subtotal",
+        header: "Subtotal",
+        size: 140,
+        cell: ({ row }) => brl(row.original.valor * Math.max(0, Number(qtd[row.id] ?? 0))),
+        meta: { prizm: { cellAlign: "right" } },
+      },
+    ];
+    return (
+      <div className="py-6">
+        <DataTable<ItemProposta, unknown>
+          aria-label="Quantidades"
+          columns={cols}
+          data={itensProposta}
+          getRowId={(r) => r.id}
+          summaryRow={{ produto: "Total", subtotal: brl(total) }}
+        />
+      </div>
+    );
+  },
+};
+
+/** **Carregando e erro** — linhas de Skeleton com `isLoading`; `error` com `onRetry`. */
+export const CarregandoEErro: Story = {
+  name: "Carregando e erro",
+  render: () => (
+    <div className="flex flex-col gap-8 py-6">
+      <DataTable<ItemProposta, unknown>
+        aria-label="Carregando"
+        columns={colunasProposta}
+        data={[]}
+        isLoading
+        loadingRows={3}
+      />
+      <DataTable<ItemProposta, unknown>
+        aria-label="Com erro"
+        columns={colunasProposta}
+        data={[]}
+        error="Não foi possível carregar os itens."
+        onRetry={() => {}}
+      />
+    </div>
+  ),
+};
+
+/** **Coluna fixa** — primeira e última colunas ficam ao rolar para o lado; o cabeçalho fica no topo. */
+export const ColunaFixa: Story = {
+  name: "Coluna fixa",
+  render: () => (
+    <div className="h-80 w-[640px] py-6">
+      <DataTable<ItemProposta, unknown>
+        aria-label="Itens da proposta"
+        columns={colunasProposta}
+        data={[...itensProposta, ...itensProposta.map((r) => ({ ...r, id: `${r.id}b` }))]}
+        enableRowSelection
+        stickyFirstColumn
+        stickyLastColumn
+        stickyHeader
+      />
+    </div>
+  ),
 };
