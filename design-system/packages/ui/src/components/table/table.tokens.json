@@ -48,6 +48,12 @@
       "button": "Button ghost icon-sm, ChevronRight fechada e ChevronDown aberta",
       "subRowIndent": "spacing/2 + spacing/6 + spacing/2 (40px, pl-10) na primeira coluna de dados",
       "figma": "Table / Column Type=Expand com Table / Expand Cell (Expanded No, Yes, None); booleana Sub-row na Table / Cell"
+    },
+    "rowHeight": "52px (h-13) de altura mínima na célula, com a borda de 1px e padding spacing/2; uma densidade só (decisão de 17/11/2026). No Figma, Table / Cell com 52.",
+    "text": {
+      "truncate": "uma linha com reticências (block truncate, max-w-0 na célula); Tooltip com o texto inteiro só quando corta",
+      "wrap": "coluna com wrap: true quebra a linha; no Figma, Table / Cell Variant=Wrap",
+      "numeric": "align right usa tabular-nums; no Figma, Table / Cell Variant=Number e Table / Head Align=Right"
     }
   },
   "states": {

@@ -34,3 +34,15 @@ export const alignCenter = "text-center";
 export const tableExpandHead = "w-12";
 export const tableExpandCell = "w-12";
 export const tableSubRowIndent = "pl-10";
+
+/**
+ * Decisões de 17/11/2026 (teste da tela da Proposta):
+ * - uma densidade só: linha de 52px (`h-13`, com `p-2`), com a borda de 1px; é altura mínima,
+ *   conteúdo maior cresce;
+ * - texto cortado numa linha por padrão, com Tooltip quando corta; `wrap` na coluna quebra;
+ * - números à direita com algarismos de largura fixa (`tabular-nums`), para os valores alinharem.
+ */
+export const tableCellMinHeight = "h-13";
+export const tableCellTruncate = "max-w-0";
+export const tableCellText = "block truncate";
+export const tableCellNumeric = "tabular-nums";

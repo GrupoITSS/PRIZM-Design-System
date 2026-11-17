@@ -607,3 +607,40 @@ export const WithExpandableRows: Story = {
   name: "Linhas que expandem",
   render: () => <OrderItemsTable />,
 };
+
+type ProductRow = { id: string; produto: string; descricao: string; valor: number };
+
+const productRows: ProductRow[] = [
+  {
+    id: "1",
+    produto: "Plano Empresarial com suporte dedicado e integrações ilimitadas",
+    descricao: "Inclui implantação, treinamento da equipe e suporte em horário estendido.",
+    valor: 1290,
+  },
+  { id: "2", produto: "Plano Básico", descricao: "Para equipes pequenas.", valor: 100 },
+  { id: "3", produto: "Plano Pro", descricao: "Relatórios e automações.", valor: 250 },
+];
+
+const productColumns: TableColumn<ProductRow>[] = [
+  { key: "produto", header: "Produto", width: "220px" },
+  { key: "descricao", header: "Descrição", wrap: true },
+  {
+    key: "valor",
+    header: "Valor",
+    align: "right",
+    width: "120px",
+    contentFormatType: ContentFormatType.CURRENCY,
+  },
+];
+
+/**
+ * Decisões de 17/11/2026: texto cortado numa linha por padrão, com Tooltip quando corta (passe o
+ * ponteiro sobre o primeiro produto); `wrap` na coluna Descrição quebra. Valor à direita com
+ * algarismos de largura fixa.
+ */
+export const TruncatedText: Story = {
+  name: "Texto cortado e quebra",
+  render: () => (
+    <Table<ProductRow> columns={productColumns} rows={productRows} getRowKey={(r) => r.id} />
+  ),
+};

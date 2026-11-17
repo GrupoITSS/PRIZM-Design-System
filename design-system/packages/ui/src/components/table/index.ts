@@ -1,6 +1,14 @@
 // Table com API por props (recomendado para casos simples)
 export { Table } from "./table";
-export { tableExpandCell, tableExpandHead, tableSubRowIndent } from "./table.styles";
+export {
+  tableCellMinHeight,
+  tableCellNumeric,
+  tableCellText,
+  tableCellTruncate,
+  tableExpandCell,
+  tableExpandHead,
+  tableSubRowIndent,
+} from "./table.styles";
 export type {
   TableCellRender,
   TableColumn,
