@@ -7,7 +7,6 @@ import {
   DataTable,
   DataTableColumnHeader,
   DataTableEditableCell,
-  type DataTableRowEmphasis,
   type DataTableStatusFilterValue,
 } from "@grupoitss/prizm-ui/table";
 import * as React from "react";
@@ -201,7 +200,7 @@ const meta: Meta<typeof DataTable<PropostaLinha, unknown>> = {
       description: {
         component:
           "Figma: [Data Table](https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118) · Artigo: [DataTable no CMS](https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=97dd20dc-cd4c-42ef-a25c-cb4e45ac6281&version=v1)\n\n" +
-          "Tabela de dados com **TanStack Table**: ordenação, busca e filtros, seleção, paginação, colunas visíveis, linha clicável, ênfase, grupos, resumo, detalhe, célula editável, carregando, vazio, erro e colunas fixas. Usa a Table por dentro, com o mesmo cabeçalho, célula e altura de linha. " +
+          "Tabela de dados com **TanStack Table**: ordenação, busca e filtros, seleção, paginação, colunas visíveis, linha clicável, linha em destaque, grupos, resumo, detalhe, célula editável, carregando, vazio, erro e colunas fixas. Usa a Table por dentro, com o mesmo cabeçalho, célula e altura de linha. " +
           "Para mostrar dados sem ordenar, filtrar nem paginar, use a [Table](?path=/docs/primários-table--docs).\n\n" +
           "Cada story abaixo mostra uma possibilidade. A story **Proposta** junta várias, como numa tela de verdade.\n\n" +
           'Referências: <a href="https://tanstack.com/table/latest" target="_blank" rel="noopener noreferrer">TanStack Table</a> · <a href="https://ui.shadcn.com/docs/components/data-table" target="_blank" rel="noopener noreferrer">Data Table — shadcn/ui</a>',
@@ -594,26 +593,46 @@ export const ClickableRow: Story = {
   },
 };
 
-const ENFASE: Partial<Record<PropostaLinha["situacao"], DataTableRowEmphasis>> = {
-  Aprovada: "success",
-  Enviada: "info",
-  Vencida: "warning",
-  Recusada: "destructive",
-};
-
-export const RowEmphasis: Story = {
-  name: "Ênfase de linha",
+export const RowHighlight: Story = {
+  name: "Linha em destaque",
   parameters: story(
-    "`getRowEmphasis` destaca a linha com `info`, `success`, `warning` ou `destructive`: fundo `-weak` e uma barra de 3px no tom, na primeira célula. O motivo tem de estar em texto na linha (aqui, a coluna Situação): a cor sozinha não chega a todo mundo.",
+    "`isRowHighlighted` pinta o fundo da linha com `muted`, para diferenciar umas linhas das outras. Aqui, o complemento de licença (P-1.01-C) logo abaixo do produto, como no catálogo da proposta do Pricing. É o mesmo fundo da linha selecionada: com seleção ligada, o checkbox diferencia as duas.",
   ),
-  render: () => (
-    <DataTable
-      aria-label="Propostas"
-      columns={colunasBasicas}
-      data={propostas.slice(0, 5)}
-      getRowEmphasis={(p) => ENFASE[p.situacao]}
-    />
-  ),
+  render: () => {
+    type ItemCatalogo = {
+      codigo: string;
+      produto: string;
+      licenca: string;
+      preco: number;
+      complemento?: boolean;
+    };
+    const itens: ItemCatalogo[] = [
+      { codigo: "P-1.01-S", produto: "Documentos", licenca: "Simultâneo (padrão)", preco: 150 },
+      { codigo: "P-1.01-C", produto: "", licenca: "Consulta", preco: 10, complemento: true },
+      { codigo: "P-1.02-S", produto: "Formulários", licenca: "Simultâneo (padrão)", preco: 150 },
+      { codigo: "P-1.03-S", produto: "Registros", licenca: "Simultâneo (padrão)", preco: 150 },
+    ];
+    return (
+      <DataTable<ItemCatalogo, unknown>
+        aria-label="Licenciamento"
+        columns={[
+          { accessorKey: "codigo", header: "Código", size: 120 },
+          { accessorKey: "produto", header: "Produto", size: 200 },
+          { accessorKey: "licenca", header: "Licença", size: 200 },
+          {
+            accessorKey: "preco",
+            header: "Preço",
+            size: 140,
+            cell: ({ getValue }) => brl(getValue<number>()),
+            meta: { prizm: { cellAlign: "right" } },
+          },
+        ]}
+        data={itens}
+        getRowId={(i) => i.codigo}
+        isRowHighlighted={(i) => i.complemento === true}
+      />
+    );
+  },
 };
 
 export const RowActions: Story = {
@@ -890,7 +909,7 @@ export const ColunaFixa: Story = {
 
 export const Proposta: Story = {
   parameters: story(
-    "O que o teste de tela da Proposta pediu (17/11/2026), numa tela só: busca, colunas visíveis, ação na toolbar, ordenação, texto cortado e quebra, ênfase, seleção, linha clicável, detalhe, linha de resumo e paginação.",
+    "O que o teste de tela da Proposta pediu (17/11/2026), numa tela só: busca, colunas visíveis, ação na toolbar, ordenação, texto cortado e quebra, seleção, linha clicável, detalhe, linha de resumo e paginação.",
   ),
   render: function PropostaStory() {
     const [aberta, setAberta] = React.useState<string | null>(null);
@@ -923,7 +942,6 @@ export const Proposta: Story = {
           showColumnVisibility
           toolbarActions={<Button>Nova proposta</Button>}
           defaultSorting={[{ id: "valor", desc: true }]}
-          getRowEmphasis={(p) => ENFASE[p.situacao]}
           enableRowSelection
           renderRowDetail={(p) =>
             p.itens ? (

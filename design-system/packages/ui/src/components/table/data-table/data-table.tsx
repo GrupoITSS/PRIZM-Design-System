@@ -61,8 +61,7 @@ import {
   dataTableGroupRow,
   dataTableHead,
   dataTableRowClickable,
-  dataTableRowEmphasis,
-  dataTableRowEmphasisBar,
+  dataTableRowHighlighted,
   dataTableSkeleton,
   dataTableStickyCell,
   dataTableStickyEdgeLeft,
@@ -70,7 +69,6 @@ import {
   dataTableStickyHead,
   dataTableStickyHeader,
   dataTableSummaryRow,
-  type DataTableRowEmphasis,
 } from "./data-table.styles";
 
 function getPrizmRowsMeta(meta: unknown): PrizmCellMeta<unknown> | null {
@@ -348,10 +346,10 @@ export interface DataTableProps<TData, TValue> {
   /** Sorting is done by the server: the table does not reorder `data`. @default false */
   manualSorting?: boolean;
   /**
-   * Emphasis of a row: `<tone>-weak` background and a 3px bar in the tone. The reason must also be
-   * in text in the row (color alone does not reach everyone).
+   * Highlights a row with the `muted` background, to set it apart from the others (e.g. a sub-item).
+   * Same look as the selected row: with row selection on, the checkbox tells them apart.
    */
-  getRowEmphasis?: (row: TData) => DataTableRowEmphasis | undefined;
+  isRowHighlighted?: (row: TData) => boolean;
   /**
    * Groups rows under a group row, by the returned key. Groups follow the order of `data`: sort the
    * data by the group first. Each group is a `<tbody>` with a `<th scope="rowgroup">`.
@@ -560,7 +558,7 @@ export function DataTable<TData, TValue>({
   defaultSorting = [],
   onSortingChange,
   manualSorting = false,
-  getRowEmphasis,
+  isRowHighlighted,
   groupBy,
   renderGroupLabel,
   toolbarActions,
@@ -851,7 +849,7 @@ export function DataTable<TData, TValue>({
   }
 
   const renderRow = (row: Row<TData>) => {
-    const emphasis = getRowEmphasis?.(row.original);
+    const highlighted = isRowHighlighted?.(row.original) ?? false;
     const detail =
       renderRowDetail && expandedRows.includes(row.id) ? renderRowDetail(row.original) : null;
     const cells = row.getVisibleCells();
@@ -860,12 +858,12 @@ export function DataTable<TData, TValue>({
       <React.Fragment key={row.id}>
         <TableRow
           data-state={row.getIsSelected() ? "selected" : undefined}
-          data-emphasis={emphasis}
+          data-highlighted={highlighted || undefined}
           tabIndex={activate ? 0 : undefined}
           className={cn(
             "border-border transition-colors",
             activate && dataTableRowClickable,
-            emphasis && dataTableRowEmphasis[emphasis],
+            highlighted && dataTableRowHighlighted,
             getRowClassName?.(row.original),
           )}
           onClick={
@@ -889,7 +887,7 @@ export function DataTable<TData, TValue>({
               : undefined
           }
         >
-          {cells.map((cell, index) => {
+          {cells.map((cell) => {
             const meta = getPrizmRowsMeta(cell.column.columnDef.meta);
             const isStatus = isStatusLikeColumn(cell.column);
             const align = meta?.cellAlign ?? (isStatus ? "left" : undefined);
@@ -911,7 +909,6 @@ export function DataTable<TData, TValue>({
                   align === "right" && dataTableCellNumeric,
                   cell.column.id === EXPAND_COLUMN_ID && dataTableExpandCell,
                   pinnedClass(cell.column, false),
-                  index === 0 && emphasis && dataTableRowEmphasisBar[emphasis],
                 )}
               >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

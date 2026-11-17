@@ -25,24 +25,11 @@ export const dataTableSortButton =
   "-mx-2 inline-flex h-8 items-center gap-1 rounded-md px-2 font-medium text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring [&_svg]:size-4 [&_svg]:shrink-0";
 
 /**
- * Ênfase da linha: fundo `<tom>-weak` e uma barra de 3px no tom, na primeira célula. A barra
- * repete o tom para quem não distingue o fundo; o motivo da ênfase precisa estar também em texto.
+ * Linha em destaque (decisão de 17/11/2026): só o fundo `muted`, para diferenciar linhas da tabela,
+ * como a Table / Cell com State=Selected no Figma (referência: catálogo da proposta, Redesign
+ * Pricing). Sem tons nem barra.
  */
-export const dataTableRowEmphasis = {
-  info: "bg-info-weak hover:bg-info-weak",
-  success: "bg-success-weak hover:bg-success-weak",
-  warning: "bg-warning-weak hover:bg-warning-weak",
-  destructive: "bg-destructive-weak hover:bg-destructive-weak",
-} as const;
-
-export const dataTableRowEmphasisBar = {
-  info: "shadow-[inset_3px_0_0_var(--prizm-color-info)]",
-  success: "shadow-[inset_3px_0_0_var(--prizm-color-success)]",
-  warning: "shadow-[inset_3px_0_0_var(--prizm-color-warning)]",
-  destructive: "shadow-[inset_3px_0_0_var(--prizm-color-destructive)]",
-} as const;
-
-export type DataTableRowEmphasis = keyof typeof dataTableRowEmphasis;
+export const dataTableRowHighlighted = "bg-muted hover:bg-muted";
 
 /** Linha de grupo: `muted`, 40px, texto `medium`, com a contagem em `muted-foreground`. */
 export const dataTableGroupRow = "border-b border-border bg-muted hover:bg-muted";
@@ -62,10 +49,10 @@ export const dataTableDetailCell = "px-2 py-4 pl-14";
 
 /**
  * Coluna fixa. A célula fixa precisa de fundo opaco: repete o fundo da linha (hover, selecionada,
- * ênfase), já que o da linha é transparente ou fica por baixo das células que rolam.
+ * destaque), já que o da linha é transparente ou fica por baixo das células que rolam.
  */
 export const dataTableStickyCell =
-  "sticky z-10 bg-background [tr:hover>&]:bg-[color-mix(in_oklab,var(--prizm-color-muted)_50%,var(--prizm-color-background))] [tr[data-state=selected]>&]:bg-muted [tr[data-emphasis=info]>&]:bg-info-weak [tr[data-emphasis=success]>&]:bg-success-weak [tr[data-emphasis=warning]>&]:bg-warning-weak [tr[data-emphasis=destructive]>&]:bg-destructive-weak";
+  "sticky z-10 bg-background [tr:hover>&]:bg-[color-mix(in_oklab,var(--prizm-color-muted)_50%,var(--prizm-color-background))] [tr[data-state=selected]>&]:bg-muted [tr[data-highlighted=true]>&]:bg-muted";
 /** Cabeçalho da coluna fixa. */
 export const dataTableStickyHead = "sticky z-20 bg-background";
 /** Borda que separa a coluna fixa das que rolam. */

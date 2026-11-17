@@ -54,7 +54,6 @@ export type {
   DataTableColumnHeaderProps,
   DataTableEditableCellProps,
   DataTableProps,
-  DataTableRowEmphasis,
   DataTableStatusFilterValue,
 } from "./data-table";
 

@@ -801,22 +801,20 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
       expect(screen.getByPlaceholderText("Filtrar...")).toBeInTheDocument();
     });
 
-    it("ênfase da linha: data-emphasis, fundo -weak e barra na primeira célula", () => {
+    it("linha em destaque: fundo muted, data-highlighted, sem barra", () => {
       render(
         <DataTable
           columns={basicColumns}
           data={mockData}
-          getRowEmphasis={(r) => (r.status === "failed" ? "destructive" : undefined)}
+          isRowHighlighted={(r) => r.status === "failed"}
         />,
       );
       const row = screen.getByText("admin@example.com").closest("tr")!;
-      expect(row).toHaveAttribute("data-emphasis", "destructive");
-      expect(row).toHaveClass("bg-destructive-weak");
-      expect(row.querySelector("td")).toHaveClass(
-        "shadow-[inset_3px_0_0_var(--prizm-color-destructive)]",
-      );
+      expect(row).toHaveAttribute("data-highlighted", "true");
+      expect(row).toHaveClass("bg-muted");
+      expect(row.querySelector("td")?.className).not.toMatch(/shadow-\[inset_3px/);
       expect(screen.getByText("test@example.com").closest("tr")).not.toHaveAttribute(
-        "data-emphasis",
+        "data-highlighted",
       );
     });
 

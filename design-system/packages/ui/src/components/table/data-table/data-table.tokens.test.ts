@@ -16,15 +16,9 @@ describe("DataTable × mapa de tokens (data-table.tokens.json)", () => {
     expect(cls(s.dataTableCellNumeric)).toContain("tabular-nums");
   });
 
-  for (const [tone, t] of Object.entries(map.emphasis) as [
-    keyof typeof map.emphasis,
-    { background: string; bar: string },
-  ][]) {
-    it(`ênfase ${tone}: fundo e barra`, () => {
-      expect(cls(s.dataTableRowEmphasis[tone])).toContain(`bg-${color(t.background)}`);
-      expect(s.dataTableRowEmphasisBar[tone]).toContain(`var(--prizm-color-${color(t.bar)})`);
-    });
-  }
+  it("linha em destaque: só o fundo muted", () => {
+    expect(cls(s.dataTableRowHighlighted)).toContain(`bg-${color(map.highlighted.background)}`);
+  });
 
   it("linha de grupo, resumo e detalhe", () => {
     expect(cls(s.dataTableGroupRow)).toContain(`bg-${color(map.parts.groupRow.background)}`);
