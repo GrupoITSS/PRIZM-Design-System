@@ -34,3 +34,16 @@ export const alignCenter = "text-center";
 export const tableExpandHead = "w-12";
 export const tableExpandCell = "w-12";
 export const tableSubRowIndent = "pl-10";
+
+/**
+ * Decisões de 17/11/2026 (teste da tela da Proposta):
+ * - densidade: linha de 52px no padrão (`h-13`, com `p-2`) e 36px na compacta (`h-9`, com `py-1.5`);
+ *   as duas medidas contam a borda de 1px da linha e são altura mínima: conteúdo maior cresce;
+ * - texto cortado numa linha por padrão, com Tooltip quando corta; `wrap` na coluna quebra;
+ * - números à direita com algarismos de largura fixa (`tabular-nums`), para os valores alinharem.
+ */
+export const tableCellDefaultDensity = "h-13";
+export const tableCellCompactDensity = "h-9 py-1.5";
+export const tableCellTruncate = "max-w-0";
+export const tableCellText = "block truncate";
+export const tableCellNumeric = "tabular-nums";

@@ -390,3 +390,82 @@ describe("Table: linhas que expandem (decisão de 16/11/2026)", () => {
     expect(screen.getByRole("button", { name: "Ver planos de Produto A" })).toBeInTheDocument();
   });
 });
+
+describe("Table: decisões de 17/11/2026 (teste da Proposta)", () => {
+  type P = { id: string; nome: string; valor: number; obs: string };
+  const linhas: P[] = [{ id: "1", nome: "Produto A", valor: 1290, obs: "Observação longa" }];
+  const colunas = [
+    { key: "nome", header: "Produto" },
+    { key: "valor", header: "Valor", align: "right" as const },
+    { key: "obs", header: "Observação", wrap: true },
+  ];
+
+  it("densidade padrão: linha de 52px (h-13); compacta sem altura mínima", () => {
+    const { unmount } = render(<Table<P> columns={colunas} rows={linhas} />);
+    expect(screen.getByText("Produto A").closest("td")).toHaveClass("h-13");
+    unmount();
+    render(<Table<P> columns={colunas} rows={linhas} density="compact" />);
+    expect(screen.getByText("Produto A").closest("td")).not.toHaveClass("h-13");
+    expect(screen.getByText("Produto A").closest("td")).toHaveClass("h-9", "py-1.5");
+  });
+
+  it("texto cortado numa linha por padrão; wrap quebra", () => {
+    render(<Table<P> columns={colunas} rows={linhas} />);
+    const nome = screen.getByText("Produto A");
+    expect(nome).toHaveAttribute("data-slot", "table-cell-text");
+    expect(nome).toHaveClass("block", "truncate");
+    expect(nome.closest("td")).toHaveClass("max-w-0");
+    const obs = screen.getByText("Observação longa");
+    expect(obs.tagName).toBe("TD");
+    expect(obs).not.toHaveClass("max-w-0");
+  });
+
+  it("conteúdo que não é texto não é cortado", () => {
+    render(
+      <Table<P>
+        columns={[{ key: "nome", header: "Produto", render: (v) => <strong>{String(v)}</strong> }]}
+        rows={linhas}
+      />,
+    );
+    expect(screen.getByText("Produto A").tagName).toBe("STRONG");
+  });
+
+  it("coluna à direita com algarismos de largura fixa", () => {
+    render(<Table<P> columns={colunas} rows={linhas} />);
+    expect(screen.getByText("1290").closest("td")).toHaveClass("text-right", "tabular-nums");
+  });
+
+  it("isRowSelected marca a linha selecionada", () => {
+    render(<Table<P> columns={colunas} rows={linhas} isRowSelected={(r) => r.id === "1"} />);
+    expect(screen.getByText("Produto A").closest("tr")).toHaveAttribute("data-state", "selected");
+  });
+
+  it("Tooltip com o texto inteiro só quando o texto corta", async () => {
+    // A seta do Radix mede com ResizeObserver, que o jsdom não tem.
+    if (!("ResizeObserver" in globalThis)) {
+      (globalThis as unknown as { ResizeObserver: unknown }).ResizeObserver = class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      };
+    }
+    const widths = (scroll: number) => {
+      vi.spyOn(HTMLElement.prototype, "scrollWidth", "get").mockReturnValue(scroll);
+      vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(100);
+    };
+    widths(100);
+    const { unmount } = render(<Table<P> columns={colunas} rows={linhas} />);
+    fireEvent.pointerEnter(screen.getByText("Produto A"));
+    fireEvent.pointerMove(screen.getByText("Produto A"));
+    await new Promise((r) => setTimeout(r, 250));
+    expect(screen.queryByRole("tooltip")).toBeNull();
+    unmount();
+    widths(300);
+    render(<Table<P> columns={colunas} rows={linhas} />);
+    fireEvent.pointerEnter(screen.getByText("Produto A"));
+    fireEvent.pointerMove(screen.getByText("Produto A"));
+    expect(await screen.findByRole("tooltip")).toHaveTextContent("Produto A");
+    expect(screen.queryAllByRole("tooltip")).toHaveLength(1);
+    vi.restoreAllMocks();
+  });
+});

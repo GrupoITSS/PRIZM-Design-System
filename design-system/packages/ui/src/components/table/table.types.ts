@@ -28,6 +28,12 @@ export interface TableColumn<T = Record<string, unknown>> {
   /** Optional class for body cells of this column. */
   cellClassName?: string;
   /**
+   * Text wraps instead of being cut with an ellipsis. By default (decision of 17/11/2026), text
+   * and numbers are cut on one line, and a Tooltip shows the full text when it is cut.
+   * @default false
+   */
+  wrap?: boolean;
+  /**
    * Custom cell renderer. Receives cell value, full row and the row meta (depth and, on rows
    * with sub-rows, `subRows` — e.g. to show the sum of the sub-rows on the parent).
    */
@@ -108,4 +114,11 @@ export interface TableProps<T = Record<string, unknown>> extends Omit<
   getExpandLabel?: (row: T, isExpanded: boolean) => string;
   /** Visually hidden header of the expand column. @default "Expandir" */
   expandColumnLabel?: string;
+  /**
+   * Minimum row height, 1px border included: `"default"` 52px, `"compact"` 36px (decision of 17/11/2026).
+   * @default "default"
+   */
+  density?: "default" | "compact";
+  /** Marks a row as selected (`data-state="selected"`, `color/muted` background). */
+  isRowSelected?: (row: T) => boolean;
 }

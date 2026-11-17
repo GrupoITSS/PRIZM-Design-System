@@ -67,3 +67,17 @@ describe("Table × mapa de tokens: linhas que expandem", () => {
     expect(tableSubRowIndent.split(" ")).toContain("pl-10");
   });
 });
+
+describe("Table × mapa de tokens: densidade e texto (17/11/2026)", () => {
+  it("padrão com 52px (h-13); texto cortado e números tabulares", async () => {
+    const s = await import("./table.styles");
+    expect(map.parts.density.default).toMatch(/^52px \(h-13\)/);
+    expect(cls(s.tableCellDefaultDensity)).toContain("h-13");
+    expect(map.parts.density.compact).toMatch(/^36px \(h-9\)/);
+    expect(cls(s.tableCellCompactDensity)).toEqual(["h-9", "py-1.5"]);
+    expect(map.parts.text.truncate).toContain("max-w-0");
+    expect(cls(s.tableCellTruncate)).toContain("max-w-0");
+    expect(cls(s.tableCellText)).toEqual(expect.arrayContaining(["block", "truncate"]));
+    expect(cls(s.tableCellNumeric)).toContain("tabular-nums");
+  });
+});

@@ -2,6 +2,7 @@ import { cn } from "../../lib/cn";
 import * as React from "react";
 import { Button } from "../button";
 import { ChevronDown, ChevronRight } from "../icons";
+import { Tooltip } from "../tooltip";
 import {
   alignCenter,
   alignLeft,
@@ -10,6 +11,11 @@ import {
   tableBody,
   tableCaption,
   tableCell,
+  tableCellCompactDensity,
+  tableCellDefaultDensity,
+  tableCellNumeric,
+  tableCellText,
+  tableCellTruncate,
   tableExpandCell,
   tableExpandHead,
   tableFooter,
@@ -32,6 +38,28 @@ function getAlignClass(align: "left" | "right" | "center" | undefined): string {
     default:
       return alignLeft;
   }
+}
+
+/** Texto cortado numa linha; o Tooltip com o texto todo só aparece quando ele corta. */
+/**
+ * Texto cortado com reticências. O Tooltip com o texto inteiro só entra se o texto não coube:
+ * a medida é feita quando o ponteiro entra na célula, sem observar o tamanho de cada uma.
+ */
+function TruncatedText({ children }: { children: React.ReactNode }) {
+  const [isCut, setIsCut] = React.useState(false);
+  const text = (
+    <span
+      data-slot="table-cell-text"
+      className={tableCellText}
+      onPointerEnter={(e) => {
+        const el = e.currentTarget;
+        setIsCut(el.scrollWidth > el.clientWidth);
+      }}
+    >
+      {children}
+    </span>
+  );
+  return isCut ? <Tooltip content={children}>{text}</Tooltip> : text;
 }
 
 function renderCellContent<T extends Record<string, unknown>>(
@@ -97,6 +125,8 @@ function Table<T extends Record<string, unknown>>({
   onExpandedChange,
   getExpandLabel,
   expandColumnLabel = "Expandir",
+  density = "default",
+  isRowSelected,
   ref,
   ...tableProps
 }: TableProps<T> & { ref?: React.Ref<HTMLTableElement> }) {
@@ -118,6 +148,7 @@ function Table<T extends Record<string, unknown>>({
     onExpandedChange?.(list);
   };
 
+  const densityClass = density === "default" ? tableCellDefaultDensity : tableCellCompactDensity;
   const firstKey = columns[0]?.key;
   const labelOf = (row: T, isOpen: boolean) =>
     getExpandLabel?.(row, isOpen) ??
@@ -135,27 +166,36 @@ function Table<T extends Record<string, unknown>>({
       data-slot="table-row"
       data-depth={expandable ? meta.depth : undefined}
       data-expanded={meta.subRows ? (meta.isExpanded ? "true" : "false") : undefined}
+      data-state={isRowSelected?.(row) ? "selected" : undefined}
       className={tableRow}
     >
       {expandable && (
-        <td data-slot="table-expand-cell" className={cn(tableCell, tableExpandCell)}>
+        <td data-slot="table-expand-cell" className={cn(tableCell, tableExpandCell, densityClass)}>
           {extra.expandCell}
         </td>
       )}
-      {columns.map((col, colIndex) => (
-        <td
-          data-slot="table-cell"
-          key={col.key}
-          className={cn(
-            tableCell,
-            getAlignClass(col.align),
-            col.cellClassName ?? col.className,
-            meta.depth > 0 && colIndex === 0 ? tableSubRowIndent : undefined,
-          )}
-        >
-          {renderCellContent(col, row, key, meta)}
-        </td>
-      ))}
+      {columns.map((col, colIndex) => {
+        const content = renderCellContent(col, row, key, meta);
+        const isText = typeof content === "string" || typeof content === "number";
+        const cut = isText && !col.wrap;
+        return (
+          <td
+            data-slot="table-cell"
+            key={col.key}
+            className={cn(
+              tableCell,
+              densityClass,
+              getAlignClass(col.align),
+              col.align === "right" ? tableCellNumeric : undefined,
+              cut ? tableCellTruncate : undefined,
+              col.cellClassName ?? col.className,
+              meta.depth > 0 && colIndex === 0 ? tableSubRowIndent : undefined,
+            )}
+          >
+            {cut ? <TruncatedText>{content}</TruncatedText> : content}
+          </td>
+        );
+      })}
     </tr>
   );
 
