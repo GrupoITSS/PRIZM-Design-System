@@ -23,7 +23,7 @@ import type {
  *   aria-label="Actions"
  *   buttons={[{ label: "Save", onClick: save }, { label: "Cancel", variant: "outline", onClick: cancel }]}
  * />
- * <ButtonGroup buttons={[{ label: "One" }, { label: "Two" }]} separatorBetween text="Label" />
+ * <ButtonGroup aria-label="Formato" buttons={[{ label: "One" }, { label: "Two" }]} text="Label" />
  * ```
  *
  * Composição com ButtonGroupSeparator / ButtonGroupText disponível como escape hatch.
@@ -34,13 +34,23 @@ function ButtonGroupRoot({
   className,
   orientation = "horizontal",
   buttons,
-  separatorBetween = false,
+  separatorBetween = "auto",
   text,
   "aria-label": ariaLabel,
   children,
   ...props
 }: ButtonGroupProps) {
   const useSimplifiedAPI = Array.isArray(buttons) && buttons.length > 0;
+  const named = Boolean(ariaLabel ?? props["aria-labelledby"]);
+
+  // Pendência 1 (18/11/2026): o grupo é role="group" e precisa de nome para o leitor de tela.
+  React.useEffect(() => {
+    if (process.env.NODE_ENV !== "production" && !named) {
+      console.warn(
+        "ButtonGroup: grupo sem nome acessível. Passe aria-label ou aria-labelledby (ex.: aria-label=\"Ações do documento\").",
+      );
+    }
+  }, [named]);
 
   const groupClassName = cn(buttonGroupVariants({ orientation }), className);
 
@@ -55,6 +65,12 @@ function ButtonGroupRoot({
 
   if (useSimplifiedAPI) {
     const sepOrientation = orientation === "vertical" ? "horizontal" : "vertical";
+    // B3 (17/11/2026): no automático, o separador aparece nos grupos com fundo e nunca no Outline,
+    // onde a borda já separa os botões.
+    const showSeparator =
+      separatorBetween === "auto"
+        ? buttons.every((item) => (item.variant ?? "default") !== "outline")
+        : separatorBetween;
     return (
       <div {...groupProps}>
         {text != null && (
@@ -65,7 +81,7 @@ function ButtonGroupRoot({
         {buttons.map((item, index) => (
           // eslint-disable-next-line @eslint-react/no-array-index-key -- positional list, items have no stable id
           <React.Fragment key={index}>
-            {separatorBetween && index > 0 && (
+            {showSeparator && index > 0 && (
               <Separator
                 data-slot="button-group-separator"
                 orientation={sepOrientation}
@@ -79,6 +95,7 @@ function ButtonGroupRoot({
               size={item.size ?? "default"}
               disabled={item.disabled}
               onClick={item.onClick}
+              aria-label={item["aria-label"]}
             >
               {item.icon}
               {item.label}

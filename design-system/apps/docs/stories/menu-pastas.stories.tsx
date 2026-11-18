@@ -337,7 +337,7 @@ function MenuDePastas({ arvoreInicial = ARVORE, buscaInicial = "", excluirInicia
             onChange={(evento) => setBusca(evento.target.value)}
           />
         </InputGroup>
-        <ButtonGroup className="w-full">
+        <ButtonGroup className="w-full" aria-label="Criar pasta ou artigo">
           <Button variant="outline" size="sm" className="flex-1">
             <Plus aria-hidden="true" />
             Adicionar pasta
