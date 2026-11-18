@@ -1,0 +1,91 @@
+{
+  "component": "ButtonGroup",
+  "description": "Mapa de tokens do ButtonGroup: o que o contêiner, o separador e o rótulo usam do [PRIZM] Design Tokens_Core. Os botões são o Button do Prizm, com os tokens do button.tokens.json. Extraído das ligações dos sets ButtonGroup e ButtonGroupText no Figma em 18/11/2026 (nenhuma ligação fora do Core) e conferido contra button-group.styles.ts pelo teste button-group.tokens.test.ts. Nomes no formato do Figma (color/border); no código viram classes Tailwind (bg-border).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18672-224279",
+    "figmaText": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27593-4639",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27593-5600",
+    "code": "design-system/packages/ui/src/components/button-group/button-group.tsx",
+    "story": "design-system/apps/docs/stories/button-group.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=f168d429-d7e1-4092-b9f0-939acefe6fab&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/220"
+    ],
+    "jira": [
+      "GIES-1728"
+    ]
+  },
+  "orientations": ["horizontal", "vertical"],
+  "container": {
+    "radius": "radius/md",
+    "radiusRule": "Só nas pontas do grupo; os cantos de dentro ficam retos.",
+    "nestedGap": "spacing/2",
+    "focus": "O botão focado vem para a frente (z-10), e o anel do Button aparece inteiro."
+  },
+  "variants": {
+    "default": {
+      "button": "Variant=Default do Button",
+      "separator": "color/primary-foreground",
+      "separatorOpacity": 0.2
+    },
+    "outline": {
+      "button": "Variant=Outline do Button",
+      "border": "color/input",
+      "borderWidth": "border-width/1",
+      "separator": null,
+      "note": "Sem separador: a borda já separa. Entre os botões, a borda não dobra (a de dentro é removida)."
+    },
+    "secondary": {
+      "button": "Variant=Secondary do Button",
+      "separator": "color/border",
+      "separatorOpacity": 1
+    }
+  },
+  "separator": {
+    "width": 1,
+    "default": "color/border",
+    "afterFilled": "color/primary-foreground",
+    "afterFilledOpacity": 0.2,
+    "filledVariants": ["default", "destructive"],
+    "auto": "separatorBetween=\"auto\" (padrão): aparece quando nenhum botão é outline."
+  },
+  "parts": {
+    "text": {
+      "background": "color/muted",
+      "text": "color/foreground",
+      "border": "color/border",
+      "borderWidth": "border-width/1",
+      "radius": "radius/md",
+      "paddingX": "spacing/4",
+      "gap": "spacing/2",
+      "fontSize": "text/sm",
+      "fontWeight": "font-weight/medium",
+      "shadow": "style/shadow/xs"
+    }
+  },
+  "sizes": {
+    "sm": { "height": "control-height/sm", "note": "do Button" },
+    "default": { "height": "control-height/md", "note": "do Button" },
+    "lg": { "height": "control-height/lg", "note": "do Button" }
+  },
+  "divergences": [
+    {
+      "where": "Cantos e borda de fora",
+      "figma": "O contêiner tem radius/md e corta o conteúdo (clipsContent); no Outline, a borda color/input fica no contêiner. Os botões têm os cantos retos.",
+      "code": "O contêiner não corta: os filhos perdem os cantos de dentro (rounded-l-none e rounded-r-none) e a borda colada (border-l-0). O visual é o mesmo.",
+      "status": "aberta"
+    },
+    {
+      "where": "Anel de foco",
+      "figma": "Cortado pelo contêiner (efeito do clipsContent); o frame de documentação mostra o foco num grupo montado à mão.",
+      "code": "Inteiro, com o botão focado na frente (z-10).",
+      "status": "aberta"
+    },
+    {
+      "where": "Variante",
+      "figma": "Variant vale para o grupo inteiro (B2).",
+      "code": "variant é de cada item; o grupo pode ser misto.",
+      "status": "aberta"
+    }
+  ]
+}
