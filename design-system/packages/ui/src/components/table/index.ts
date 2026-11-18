@@ -7,6 +7,7 @@ export {
   tableCellTruncate,
   tableExpandCell,
   tableExpandHead,
+  tableSortButton,
   tableSubRowIndent,
 } from "./table.styles";
 export type {
@@ -16,6 +17,7 @@ export type {
   TableFooterRow,
   TableProps,
   TableRowMeta,
+  TableSort,
 } from "./table.types";
 
 // PRIZM cell renderers (Grid-compatible meta API)
@@ -49,8 +51,19 @@ export type {
 } from "./table-cell-renderers.types";
 
 // DataTable com TanStack Table (para tabelas avançadas)
-export { DataTable } from "./data-table";
-export type { DataTableProps, DataTableStatusFilterValue } from "./data-table";
+export { DataTable, DataTableColumnHeader, DataTableEditableCell } from "./data-table";
+export type {
+  DataTableClientPagination,
+  DataTableColumnHeaderProps,
+  DataTableEditableCellProps,
+  DataTableEntityName,
+  DataTableFilter,
+  DataTableProps,
+  DataTableSearchFilter,
+  DataTableServerPagination,
+  DataTableStatusFilter,
+  DataTableStatusFilterValue,
+} from "./data-table";
 
 // Primitivos para composição avançada
 export {

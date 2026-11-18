@@ -1,107 +1,210 @@
+import { Badge } from "@grupoitss/prizm-ui/badge";
 import { Button } from "@grupoitss/prizm-ui/button";
-import { Checkbox } from "@grupoitss/prizm-ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@grupoitss/prizm-ui/dropdown-menu";
-import { ArrowUpDown, Ellipsis } from "@grupoitss/prizm-ui/icons";
+import { Download, Trash2 } from "@grupoitss/prizm-ui/icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { MockPayment } from "./mocks/data-table.mock";
-import { DataTable } from "@grupoitss/prizm-ui/table";
-import { ContentRenderType } from "@grupoitss/prizm-ui/table";
+import {
+  ContentRenderType,
+  DataTable,
+  DataTableColumnHeader,
+  DataTableEditableCell,
+  type DataTableStatusFilterValue,
+} from "@grupoitss/prizm-ui/table";
+import * as React from "react";
 
-const mockData: MockPayment[] = [
+/*
+ * Textos em português, como no produto. No Figma, os textos de exemplo ficam em inglês.
+ * Um conjunto de dados para todas as stories: as propostas comerciais e os itens de uma proposta.
+ */
+
+type PropostaLinha = {
+  id: string;
+  cliente: string;
+  responsavel: string;
+  situacao: "Rascunho" | "Enviada" | "Aprovada" | "Recusada" | "Vencida";
+  categoria: string;
+  descricao: string;
+  valor: number;
+  ativa: boolean;
+  itens?: string[];
+};
+
+const propostas: PropostaLinha[] = [
   {
-    id: "728ed52f",
-    amount: 100,
-    status: "pending",
-    email: "m@example.com",
+    id: "P-1042",
+    cliente: "Clínica Bem Viver Ltda. – unidade Setor Bueno",
+    responsavel: "Ana Souza",
+    situacao: "Aprovada",
+    categoria: "Saúde",
+    descricao: "Licença anual para 200 usuários, com implantação e treinamento em duas turmas.",
+    valor: 18900,
+    ativa: true,
+    itens: ["Licença anual · 200 usuários", "Implantação", "Treinamento · 2 turmas"],
   },
   {
-    id: "489e1d42",
-    amount: 125,
-    status: "processing",
-    email: "example@gmail.com",
+    id: "P-1043",
+    cliente: "Construtora Horizonte",
+    responsavel: "Bruno Lima",
+    situacao: "Enviada",
+    categoria: "Construção",
+    descricao: "Módulo de obras.",
+    valor: 7400,
+    ativa: true,
   },
   {
-    id: "3a2f8b1c",
-    amount: 250,
-    status: "success",
-    email: "john@doe.com",
+    id: "P-1044",
+    cliente: "Escola Aprender Mais",
+    responsavel: "Carla Dias",
+    situacao: "Vencida",
+    categoria: "Educação",
+    descricao: "Renovação do contrato de 2025, com reajuste pelo IPCA.",
+    valor: 5200,
+    ativa: false,
   },
   {
-    id: "5d9c4e7a",
-    amount: 75,
-    status: "failed",
-    email: "jane@smith.com",
+    id: "P-1045",
+    cliente: "Hospital São Lucas",
+    responsavel: "Ana Souza",
+    situacao: "Rascunho",
+    categoria: "Saúde",
+    descricao: "Integração com o prontuário eletrônico.",
+    valor: 32500,
+    ativa: true,
+    itens: ["Integração HL7", "Suporte estendido"],
   },
   {
-    id: "8f1a2b3c",
-    amount: 180,
-    status: "success",
-    email: "test@test.com",
+    id: "P-1046",
+    cliente: "Mercado Bom Preço",
+    responsavel: "Diego Alves",
+    situacao: "Recusada",
+    categoria: "Varejo",
+    descricao: "Plano básico para cinco lojas.",
+    valor: 2900,
+    ativa: false,
   },
   {
-    id: "9g2h4k5l",
-    amount: 220,
-    status: "pending",
-    email: "user@domain.com",
+    id: "P-1047",
+    cliente: "Colégio Santa Clara",
+    responsavel: "Carla Dias",
+    situacao: "Aprovada",
+    categoria: "Educação",
+    descricao: "Portal do aluno e app.",
+    valor: 9800,
+    ativa: true,
   },
   {
-    id: "1m3n5p7q",
-    amount: 310,
-    status: "success",
-    email: "admin@site.com",
+    id: "P-1048",
+    cliente: "Laboratório Vida",
+    responsavel: "Bruno Lima",
+    situacao: "Enviada",
+    categoria: "Saúde",
+    descricao: "Laudos on-line.",
+    valor: 6100,
+    ativa: true,
   },
   {
-    id: "2r4t6v8x",
-    amount: 95,
-    status: "failed",
-    email: "guest@mail.com",
+    id: "P-1049",
+    cliente: "Loja Casa & Cia",
+    responsavel: "Diego Alves",
+    situacao: "Aprovada",
+    categoria: "Varejo",
+    descricao: "Frente de caixa.",
+    valor: 4300,
+    ativa: true,
   },
   {
-    id: "3y5z7a9b",
-    amount: 450,
-    status: "processing",
-    email: "support@help.com",
+    id: "P-1050",
+    cliente: "Faculdade Alfa",
+    responsavel: "Ana Souza",
+    situacao: "Enviada",
+    categoria: "Educação",
+    descricao: "Secretaria acadêmica.",
+    valor: 21000,
+    ativa: true,
   },
   {
-    id: "4c6e8g0h",
-    amount: 160,
-    status: "success",
-    email: "info@company.com",
+    id: "P-1051",
+    cliente: "Edifício Jardins",
+    responsavel: "Bruno Lima",
+    situacao: "Rascunho",
+    categoria: "Construção",
+    descricao: "Gestão do condomínio.",
+    valor: 1800,
+    ativa: true,
   },
   {
-    id: "5i7k9m1n",
-    amount: 270,
-    status: "pending",
-    email: "sales@shop.com",
+    id: "P-1052",
+    cliente: "Farmácia Saúde Já",
+    responsavel: "Carla Dias",
+    situacao: "Aprovada",
+    categoria: "Varejo",
+    descricao: "Estoque e PDV.",
+    valor: 5600,
+    ativa: true,
   },
   {
-    id: "6o8q0s2t",
-    amount: 390,
-    status: "success",
-    email: "contact@business.com",
+    id: "P-1053",
+    cliente: "Clínica Sorriso",
+    responsavel: "Diego Alves",
+    situacao: "Vencida",
+    categoria: "Saúde",
+    descricao: "Agenda on-line.",
+    valor: 1500,
+    ativa: false,
   },
 ];
 
-const meta: Meta<typeof DataTable<MockPayment, unknown>> = {
+const brl = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+/** Colunas simples, sem nada além de texto. */
+const colunasBasicas: ColumnDef<PropostaLinha>[] = [
+  { accessorKey: "id", header: "Proposta", size: 110 },
+  { accessorKey: "cliente", header: "Cliente", size: 260 },
+  { accessorKey: "responsavel", header: "Responsável", size: 160 },
+  { accessorKey: "situacao", header: "Situação", size: 140 },
+  {
+    accessorKey: "valor",
+    header: "Valor",
+    size: 140,
+    cell: ({ getValue }) => brl(getValue<number>()),
+    meta: { prizm: { cellAlign: "right" } },
+  },
+];
+
+/** As mesmas colunas, com ordenação em Cliente e Valor. */
+const colunasOrdenaveis: ColumnDef<PropostaLinha>[] = [
+  { accessorKey: "id", header: "Proposta", size: 110, enableSorting: false },
+  {
+    accessorKey: "cliente",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Cliente" />,
+    size: 260,
+  },
+  { accessorKey: "responsavel", header: "Responsável", size: 160, enableSorting: false },
+  { accessorKey: "situacao", header: "Situação", size: 140, enableSorting: false },
+  {
+    accessorKey: "valor",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Valor" />,
+    size: 140,
+    cell: ({ getValue }) => brl(getValue<number>()),
+    meta: { prizm: { cellAlign: "right" } },
+  },
+];
+
+const meta: Meta<typeof DataTable<PropostaLinha, unknown>> = {
   title: "Primários/DataTable",
   component: DataTable as React.ComponentType<
-    React.ComponentProps<typeof DataTable<MockPayment, unknown>>
+    React.ComponentProps<typeof DataTable<PropostaLinha, unknown>>
   >,
   tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
         component:
-          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          'DataTable do design system PRIZM — integração completa com **TanStack Table** para tabelas avançadas.\n\n**Features suportadas:**\n- ✅ Pagination (paginação de dados) — rodapé próprio ("Página X de Y" com anterior e próxima); ainda não usa o componente Pagination\n- ✅ Sorting (ordenação de colunas)\n- ✅ Filtering (filtro por coluna)\n- ✅ Column Visibility (toggle de colunas)\n- ✅ Row Selection (seleção com checkboxes)\n- ✅ Cell Formatting (formatação customizada)\n- ✅ Row Actions (ações por linha)\n\n**Documentação e API de referência:**\n- <a href="https://tanstack.com/table/latest" target="_blank" rel="noopener noreferrer">TanStack Table</a>\n- <a href="https://ui.shadcn.com/docs/components/data-table" target="_blank" rel="noopener noreferrer">Data Table — shadcn/ui</a>',
+          "Figma: [Data Table](https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118) · Artigo: [DataTable no CMS](https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=97dd20dc-cd4c-42ef-a25c-cb4e45ac6281&version=v1)\n\n" +
+          "Tabela de dados com **TanStack Table**: ordenação, busca e filtros, seleção, paginação, colunas visíveis, linha clicável, linha em destaque, grupos, resumo, detalhe, célula editável, carregando, vazio, erro e colunas fixas. Usa a Table por dentro, com o mesmo cabeçalho, célula e altura de linha. " +
+          "Para mostrar dados sem ordenar, filtrar nem paginar, use a [Table](?path=/docs/primários-table--docs).\n\n" +
+          "Cada story abaixo mostra uma possibilidade. A story **Proposta** junta várias, como numa tela de verdade.\n\n" +
+          'Referências: <a href="https://tanstack.com/table/latest" target="_blank" rel="noopener noreferrer">TanStack Table</a> · <a href="https://ui.shadcn.com/docs/components/data-table" target="_blank" rel="noopener noreferrer">Data Table — shadcn/ui</a>',
       },
     },
   },
@@ -109,537 +212,118 @@ const meta: Meta<typeof DataTable<MockPayment, unknown>> = {
 
 export default meta;
 
-type Story = StoryObj<typeof DataTable<MockPayment, unknown>>;
+type Story = StoryObj<typeof DataTable<PropostaLinha, unknown>>;
 
-/**
- * **1. Basic** — Tabela básica com TanStack Table.
- * Define colunas simples (accessorKey + header) e passa os dados.
- */
+const story = (text: string) => ({ docs: { description: { story: text } } });
+
+/* ------------------------------------------------------------------------------------------- *
+ * Básico e dados
+ * ------------------------------------------------------------------------------------------- */
+
 export const Basic: Story = {
-  render: function BasicDataTable() {
-    const columns: ColumnDef<MockPayment>[] = [
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-      },
-      {
-        accessorKey: "amount",
-        header: "Amount",
-      },
-    ];
-
-    return (
-      <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={mockData.slice(0, 5)} />
-      </div>
-    );
-  },
+  name: "Básico",
+  parameters: story(
+    "Colunas com `accessorKey` e `header`, e os dados em `data`. Texto longo corta numa linha, com Tooltip quando corta. Dê nome à tabela com `aria-label`.",
+  ),
+  render: () => (
+    <DataTable<PropostaLinha, unknown>
+      aria-label="Propostas"
+      columns={[
+        { accessorKey: "id", header: "Proposta" },
+        { accessorKey: "cliente", header: "Cliente" },
+        { accessorKey: "responsavel", header: "Responsável" },
+        { accessorKey: "situacao", header: "Situação" },
+      ]}
+      data={propostas.slice(0, 5)}
+    />
+  ),
 };
 
-/**
- * **2. Pagination** — Paginação automática, com rodapé próprio ("Página X de Y").
- * Por padrão, pagina em blocos de 10 linhas. Ainda não usa o componente Pagination (troca prevista na documentação da tabela).
- */
-export const WithPagination: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Os controles de página são um rodapé próprio da tabela: \"Página X de Y\" com anterior e próxima. Ainda não usam o componente [Pagination](?path=/docs/primários-pagination--docs); a troca fica para a documentação da tabela.",
-      },
-    },
-  },
-  render: function PaginationDataTable() {
-    const columns: ColumnDef<MockPayment>[] = [
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-      },
-      {
-        accessorKey: "amount",
-        header: "Amount",
-      },
-    ];
-
-    return (
-      <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={mockData} showPagination />
-      </div>
-    );
-  },
-};
-
-/**
- * **3. Sorting** — Ordenação de colunas.
- * Clique no header "Email" para alternar entre asc/desc/none.
- * Usa `column.toggleSorting()` e ícone ArrowUpDown.
- */
-export const WithSorting: Story = {
-  render: function SortingDataTable() {
-    const columns: ColumnDef<MockPayment>[] = [
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        accessorKey: "email",
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-              Email
-              <ArrowUpDown className="ml-2 size-4" />
-            </Button>
-          );
-        },
-      },
-      {
-        accessorKey: "amount",
-        header: "Amount",
-      },
-    ];
-
-    return (
-      <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={mockData.slice(0, 8)} />
-      </div>
-    );
-  },
-};
-
-/**
- * **4. Filtering** — Filtro por coluna (email).
- * Input de busca que filtra a coluna "email" em tempo real.
- */
-export const WithFiltering: Story = {
-  render: function FilteringDataTable() {
-    const columns: ColumnDef<MockPayment>[] = [
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-      },
-      {
-        accessorKey: "amount",
-        header: "Amount",
-      },
-    ];
-
-    return (
-      <div className="container mx-auto py-10">
-        <DataTable
-          columns={columns}
-          data={mockData}
-          showFilter
-          filterColumn="email"
-          filterPlaceholder="Filter emails..."
-        />
-      </div>
-    );
-  },
-};
-
-/**
- * **5. Column Visibility** — Toggle de visibilidade de colunas.
- * Dropdown "Columns" permite mostrar/ocultar colunas.
- */
-export const WithColumnVisibility: Story = {
-  render: function ColumnVisibilityDataTable() {
-    const columns: ColumnDef<MockPayment>[] = [
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-      },
-      {
-        accessorKey: "amount",
-        header: "Amount",
-      },
-    ];
-
-    return (
-      <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={mockData.slice(0, 5)} showColumnVisibility />
-      </div>
-    );
-  },
-};
-
-/**
- * **6. Row Selection** — Seleção de linhas com checkboxes.
- * Checkbox no header seleciona todas as linhas da página.
- * Mostra contagem de linhas selecionadas.
- */
-export const WithRowSelection: Story = {
-  render: function RowSelectionDataTable() {
-    const columns: ColumnDef<MockPayment>[] = [
-      {
-        id: "select",
-        header: ({ table }) => (
-          <Checkbox
-            checked={
-              table.getIsAllPageRowsSelected() ||
-              (table.getIsSomePageRowsSelected() && "indeterminate")
-            }
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-            aria-label="Select all"
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="Select row"
-          />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-      },
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-      },
-      {
-        accessorKey: "amount",
-        header: "Amount",
-      },
-    ];
-
-    return (
-      <div className="container mx-auto py-10">
-        <DataTable
-          columns={columns}
-          data={mockData.slice(0, 8)}
-          enableRowSelection
-          showSelectedCount
-        />
-      </div>
-    );
-  },
-};
-
-/**
- * **7. Cell Formatting** — Formatação customizada de células.
- * Coluna "Amount" formata valores como moeda USD e alinha à direita.
- */
 export const WithCellFormatting: Story = {
-  render: function CellFormattingDataTable() {
-    const columns: ColumnDef<MockPayment>[] = [
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-      },
-      {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
-        cell: ({ row }) => {
-          const amount = parseFloat(row.getValue("amount"));
-          const formatted = new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-          }).format(amount);
-
-          return <div className="text-right font-medium">{formatted}</div>;
-        },
-      },
-    ];
-
-    return (
-      <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={mockData.slice(0, 5)} />
-      </div>
-    );
-  },
+  name: "Formato e alinhamento",
+  parameters: story(
+    'O `cell` da coluna formata o valor (moeda, data). `meta.prizm.cellAlign: "right"` alinha o cabeçalho e as células à direita, com algarismos de largura fixa. Alinhe à direita números que se comparam.',
+  ),
+  render: () => (
+    <DataTable aria-label="Propostas" columns={colunasBasicas} data={propostas.slice(0, 5)} />
+  ),
 };
 
-/**
- * **8. Row Actions** — Ações contextuais por linha.
- * Coluna "actions" com dropdown (Copy ID, View customer, View details).
- * Acessa dados da linha via `row.original`.
- */
-export const WithRowActions: Story = {
-  render: function RowActionsDataTable() {
-    const columns: ColumnDef<MockPayment>[] = [
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-      },
-      {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
-        cell: ({ row }) => {
-          const amount = parseFloat(row.getValue("amount"));
-          const formatted = new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-          }).format(amount);
-
-          return <div className="text-right font-medium">{formatted}</div>;
+export const TruncatedText: Story = {
+  name: "Texto cortado e quebra",
+  parameters: story(
+    "Por padrão, o texto corta numa linha e o Tooltip mostra o texto inteiro, só quando corta. `meta.prizm.wrap: true` quebra a linha: use em descrição e observação.",
+  ),
+  render: () => (
+    <DataTable<PropostaLinha, unknown>
+      aria-label="Propostas"
+      columns={[
+        { accessorKey: "cliente", header: "Cliente (corta)", size: 220 },
+        {
+          accessorKey: "descricao",
+          header: "Descrição (quebra)",
+          size: 320,
+          meta: { prizm: { wrap: true } },
         },
-      },
-      {
-        id: "actions",
-        cell: ({ row }) => {
-          const payment = row.original;
-
-          return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="size-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <Ellipsis className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem
-                  onClick={() => {
-                    void navigator.clipboard.writeText(payment.id);
-                  }}
-                >
-                  Copy payment ID
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>View customer</DropdownMenuItem>
-                <DropdownMenuItem>View payment details</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          );
+        {
+          accessorKey: "valor",
+          header: "Valor",
+          size: 140,
+          cell: ({ getValue }) => brl(getValue<number>()),
+          meta: { prizm: { cellAlign: "right" } },
         },
-      },
-    ];
-
-    return (
-      <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={mockData.slice(0, 5)} />
-      </div>
-    );
-  },
+      ]}
+      data={propostas.slice(0, 4)}
+    />
+  ),
 };
 
-/**
- * **9. Complete Example** — Todas as features ativadas.
- * Pagination + Sorting + Filtering + Column Visibility + Row Selection + Cell Formatting + Actions.
- * A paginação é o rodapé próprio da tabela (ainda não usa o componente Pagination).
- */
-export const CompleteExample: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Inclui a paginação no rodapé (rodapé próprio da tabela, \"Página X de Y\"). O componente [Pagination](?path=/docs/primários-pagination--docs) ainda não é usado aqui.",
-      },
-    },
-  },
-  render: function CompleteDataTable() {
-    const columns: ColumnDef<MockPayment>[] = [
-      {
-        id: "select",
-        header: ({ table }) => (
-          <Checkbox
-            checked={
-              table.getIsAllPageRowsSelected() ||
-              (table.getIsSomePageRowsSelected() && "indeterminate")
-            }
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-            aria-label="Select all"
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="Select row"
-          />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-      },
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        accessorKey: "email",
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-              Email
-              <ArrowUpDown className="ml-2 size-4" />
-            </Button>
-          );
-        },
-      },
-      {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
-        cell: ({ row }) => {
-          const amount = parseFloat(row.getValue("amount"));
-          const formatted = new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-          }).format(amount);
-
-          return <div className="text-right font-medium">{formatted}</div>;
-        },
-      },
-      {
-        id: "actions",
-        cell: ({ row }) => {
-          const payment = row.original;
-
-          return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="size-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <Ellipsis className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem
-                  onClick={() => {
-                    void navigator.clipboard.writeText(payment.id);
-                  }}
-                >
-                  Copy payment ID
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>View customer</DropdownMenuItem>
-                <DropdownMenuItem>View payment details</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          );
-        },
-      },
-    ];
-
-    return (
-      <div className="container mx-auto py-10">
-        <DataTable
-          columns={columns}
-          data={mockData}
-          showPagination
-          showFilter
-          filterColumn="email"
-          filterPlaceholder="Filter emails..."
-          showColumnVisibility
-          enableRowSelection
-          showSelectedCount
-        />
-      </div>
-    );
-  },
-};
-
-/**
- * **10. Empty State** — Mensagem customizada quando não há dados.
- */
-export const Empty: Story = {
-  render: function EmptyDataTable() {
-    const columns: ColumnDef<MockPayment>[] = [
-      {
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-      },
-      {
-        accessorKey: "amount",
-        header: "Amount",
-      },
-    ];
-
-    return (
-      <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={[]} emptyMessage="No payments found." />
-      </div>
-    );
-  },
-};
-
-/**
- * **11. PRIZM Meta Cell Renderers** — Usa `columnDef.meta.rows.contentRenderType`
- * (compatível com o Grid do assistant/cockpit) sem precisar definir `cell` manualmente.
- */
 export const WithPrizmMetaCellRenderers: Story = {
-  render: function WithPrizmMetaCellRenderers() {
-    type Row = {
+  name: "Renderizadores do Prizm",
+  parameters: story(
+    "`meta.rows.contentRenderType` (ou `meta.prizm`) usa os renderizadores da Table, compatíveis com o Grid do Cockpit, sem escrever `cell`: status, imagem com texto, badges, painel no hover e resumo de status.",
+  ),
+  render: function RenderizadoresStory() {
+    type Linha = {
       id: string;
       status: string;
-      company: { imageUrl?: string; text: string };
+      empresa: { imageUrl?: string; text: string };
       tags: { id: string; name: string }[];
-      summary: { summary: string; statusItems: { type: string; status: string; value: string }[] };
-      plans: string;
+      resumo: { summary: string; statusItems: { type: string; status: string; value: string }[] };
+      planos: string;
     };
-
-    const data: Row[] = [
+    const dados: Linha[] = [
       {
         id: "1",
-        status: "PENDING",
-        company: { imageUrl: "https://picsum.photos/64?1", text: "ACME" },
+        status: "ACTIVE",
+        empresa: { imageUrl: "https://picsum.photos/64?1", text: "Clínica Bem Viver" },
         tags: [
           { id: "t1", name: "Manutenção" },
           { id: "t2", name: "IA" },
-          { id: "t3", name: "Debugging" },
+          { id: "t3", name: "Integrações" },
         ],
-        summary: {
+        resumo: {
           summary: "2/3",
           statusItems: [
-            { type: "doc", status: "processed", value: "a" },
-            { type: "doc", status: "error", value: "b" },
-            { type: "doc", status: "processed", value: "c" },
+            { type: "Documento", status: "processed", value: "Contrato" },
+            { type: "Documento", status: "error", value: "Aditivo" },
+            { type: "Documento", status: "processed", value: "Proposta" },
           ],
         },
-        plans: "2",
+        planos: "2",
       },
     ];
-
-    const columns: ColumnDef<Row>[] = [
+    const colunas: ColumnDef<Linha>[] = [
       {
         accessorKey: "status",
         header: "Status",
         meta: { rows: { contentRenderType: ContentRenderType.STATUS } },
       },
       {
-        accessorKey: "company",
-        header: "Company",
+        accessorKey: "empresa",
+        header: "Empresa",
         meta: {
-          rows: { contentRenderType: ContentRenderType.TEXT_IMAGE, link: "/organization/:id" },
+          rows: { contentRenderType: ContentRenderType.TEXT_IMAGE, link: "/empresas/:id" },
         },
       },
       {
@@ -648,20 +332,20 @@ export const WithPrizmMetaCellRenderers: Story = {
         meta: { rows: { contentRenderType: ContentRenderType.BADGE, badgeMaxVisible: 2 } },
       },
       {
-        accessorKey: "plans",
-        header: "Plans",
+        accessorKey: "planos",
+        header: "Planos",
         meta: {
           rows: {
             contentRenderType: ContentRenderType.HOVER,
             renderPopover: {
-              title: "Plans",
+              title: "Planos",
               trigger: "hover",
               position: "bottom",
-              content: ({ row }: { row: { original?: { company?: { text?: string } } } }) => (
+              content: ({ row }: { row: { original?: { empresa?: { text?: string } } } }) => (
                 <div className="space-y-1">
-                  <div className="text-sm font-medium">Organization</div>
+                  <div className="text-sm font-medium">Empresa</div>
                   <div className="text-sm text-muted-foreground">
-                    {row.original?.company?.text ?? "—"}
+                    {row.original?.empresa?.text ?? "—"}
                   </div>
                 </div>
               ),
@@ -670,15 +354,741 @@ export const WithPrizmMetaCellRenderers: Story = {
         },
       },
       {
-        accessorKey: "summary",
-        header: "Summary",
+        accessorKey: "resumo",
+        header: "Documentos",
         meta: { rows: { contentRenderType: ContentRenderType.STATUS_SUMMARY_WITH_POPOVER } },
       },
     ];
-
     return (
-      <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={data} />
+      <DataTable
+        aria-label="Empresas"
+        columns={colunas}
+        data={dados}
+        statusLabels={{ ACTIVE: "Ativa" }}
+      />
+    );
+  },
+};
+
+/* ------------------------------------------------------------------------------------------- *
+ * Ordenar, buscar, filtrar, paginar
+ * ------------------------------------------------------------------------------------------- */
+
+export const WithSorting: Story = {
+  name: "Ordenação",
+  parameters: story(
+    "`DataTableColumnHeader` no `header` da coluna: o primeiro clique ordena em ordem crescente, o segundo em decrescente, e o cabeçalho ganha `aria-sort`. Aqui a tabela começa ordenada por Valor, decrescente (`defaultSorting`). Coluna sem ordenação: `enableSorting: false`.",
+  ),
+  render: () => (
+    <DataTable
+      aria-label="Propostas"
+      columns={colunasOrdenaveis}
+      data={propostas.slice(0, 6)}
+      defaultSorting={[{ id: "valor", desc: true }]}
+    />
+  ),
+};
+
+export const ServerSorting: Story = {
+  name: "Ordenação no servidor",
+  parameters: story(
+    "Com `manualSorting`, a tabela não reordena `data`: avisa a mudança por `onSortingChange`, e quem busca os dados ordena. A ordem atual fica em `sorting`.",
+  ),
+  render: function OrdenacaoServidorStory() {
+    const [sorting, setSorting] = React.useState<{ id: string; desc: boolean }[]>([]);
+    const dados = React.useMemo(() => {
+      const s = sorting[0];
+      if (!s) return propostas.slice(0, 6);
+      const key = s.id as keyof PropostaLinha;
+      return [...propostas.slice(0, 6)].sort((a, b) =>
+        (a[key] as number | string) > (b[key] as number | string) === s.desc ? -1 : 1,
+      );
+    }, [sorting]);
+    return (
+      <div className="flex flex-col gap-2">
+        <DataTable
+          aria-label="Propostas"
+          columns={colunasOrdenaveis}
+          data={dados}
+          manualSorting
+          sorting={sorting}
+          onSortingChange={setSorting}
+        />
+        <p className="text-sm text-muted-foreground" aria-live="polite">
+          {sorting[0]
+            ? `Pedido ao servidor: ${sorting[0].id}, ${sorting[0].desc ? "decrescente" : "crescente"}`
+            : "Sem ordenação."}
+        </p>
+      </div>
+    );
+  },
+};
+
+export const WithFiltering: Story = {
+  name: "Busca por coluna",
+  parameters: story(
+    '`filters` com `type: "search"` e `columnId`: a tabela filtra a coluna, na hora, nos dados que tem. Use quando todos os dados estão na tela. Antes, `showFilter` e `filterColumn` (`@deprecated` desde 18/11/2026).',
+  ),
+  render: () => (
+    <DataTable
+      aria-label="Propostas"
+      columns={colunasBasicas}
+      data={propostas}
+      filters={[{ type: "search", columnId: "cliente", placeholder: "Buscar cliente" }]}
+    />
+  ),
+};
+
+export const ToolbarFilters: Story = {
+  name: "Filtros na toolbar",
+  parameters: story(
+    "`filters` com `type`: `select` (Responsável), `status` (Ativos, Inativos e Todos) e `search` com `onChange` (espera de 350 ms entre teclas). O filtro é do produto: a tabela mostra os campos e avisa as mudanças. Selects e status à esquerda, a busca depois deles. Antes, `toolbarFilters` (`@deprecated` desde 18/11/2026).",
+  ),
+  render: function FiltrosStory() {
+    const [busca, setBusca] = React.useState("");
+    const [status, setStatus] = React.useState<DataTableStatusFilterValue>("active");
+    const [responsavel, setResponsavel] = React.useState("");
+    const dados = propostas.filter(
+      (p) =>
+        (status === "all" || p.ativa === (status === "active")) &&
+        (!responsavel || p.responsavel === responsavel) &&
+        p.cliente.toLowerCase().includes(busca.toLowerCase()),
+    );
+    return (
+      <DataTable
+        aria-label="Propostas"
+        columns={colunasBasicas}
+        data={dados}
+        filters={[
+          { type: "search", placeholder: "Buscar cliente", value: busca, onChange: setBusca },
+          { type: "status", value: status, onChange: setStatus },
+          {
+            type: "select",
+            id: "responsavel",
+            label: "Responsável",
+            allLabel: "Todos os responsáveis",
+            value: responsavel,
+            onChange: setResponsavel,
+            options: ["Ana Souza", "Bruno Lima", "Carla Dias", "Diego Alves"].map((n) => ({
+              value: n,
+              label: n,
+            })),
+          },
+        ]}
+      />
+    );
+  },
+};
+
+export const WithPagination: Story = {
+  name: "Paginação",
+  parameters: story(
+    '`pagination` sem `onPageChange`: a tabela pagina os dados que tem, de `perPage` em `perPage` (10 por padrão), com a contagem e "Página X de Y" no rodapé. Os botões são o Button outline `icon`, como no Figma. Antes, `showPagination` (`@deprecated` desde 18/11/2026).',
+  ),
+  render: () => (
+    <DataTable
+      aria-label="Propostas"
+      columns={colunasBasicas}
+      data={propostas}
+      pagination={{ perPage: 5 }}
+    />
+  ),
+};
+
+export const ServerPagination: Story = {
+  name: "Paginação no servidor",
+  parameters: story(
+    "`pagination` com `onPageChange`: o produto pagina. A tabela recebe só a página atual em `data`, mais a página, o total e `perPage`. Use com `isLoading` enquanto a próxima página chega.",
+  ),
+  render: function PaginacaoServidorStory() {
+    const porPagina = 5;
+    const [pagina, setPagina] = React.useState(1);
+    const total = propostas.length;
+    return (
+      <DataTable
+        aria-label="Propostas"
+        columns={colunasBasicas}
+        data={propostas.slice((pagina - 1) * porPagina, pagina * porPagina)}
+        pagination={{
+          currentPage: pagina,
+          perPage: porPagina,
+          totalRows: total,
+          totalPages: Math.ceil(total / porPagina),
+          onPageChange: setPagina,
+        }}
+      />
+    );
+  },
+};
+
+export const WithColumnVisibility: Story = {
+  name: "Colunas visíveis",
+  parameters: story(
+    "`showColumnVisibility` põe o botão Colunas, que mostra e esconde colunas. `initialColumnVisibility` começa com Responsável escondida.",
+  ),
+  render: () => (
+    <DataTable
+      aria-label="Propostas"
+      columns={colunasBasicas}
+      data={propostas.slice(0, 5)}
+      showColumnVisibility
+      initialColumnVisibility={{ responsavel: false }}
+    />
+  ),
+};
+
+/* ------------------------------------------------------------------------------------------- *
+ * Linhas
+ * ------------------------------------------------------------------------------------------- */
+
+export const WithRowSelection: Story = {
+  name: "Seleção de linhas",
+  parameters: story(
+    "`enableRowSelection` põe a coluna de checkbox. A linha marcada fica em `accent`. Com linhas marcadas, aparece a barra de seleção, com o nome no singular e no plural (`selectionBar.entityName`) e as ações de `selectionBar.actions`; a contagem é anunciada ao leitor de tela.",
+  ),
+  render: () => (
+    <DataTable
+      aria-label="Propostas"
+      columns={colunasBasicas}
+      data={propostas.slice(0, 6)}
+      getRowId={(p) => p.id}
+      enableRowSelection
+      defaultSelection={{ "P-1043": true }}
+      selectionBar={{
+        entityName: { one: "proposta selecionada", other: "propostas selecionadas" },
+        actions: (
+          <>
+            <Button variant="outline" size="sm">
+              <Download data-icon="inline-start" />
+              Exportar
+            </Button>
+            <Button variant="destructive" size="sm">
+              <Trash2 data-icon="inline-start" />
+              Excluir
+            </Button>
+          </>
+        ),
+      }}
+    />
+  ),
+};
+
+export const ClickableRow: Story = {
+  name: "Linha clicável",
+  parameters: story(
+    "Com `onRowClick`, a linha abre no clique e também pelo teclado: Tab até a linha e Enter ou Espaço. Clique ou Enter num botão, link ou campo da linha não abrem a linha.",
+  ),
+  render: function LinhaClicavelStory() {
+    const [aberta, setAberta] = React.useState<string | null>(null);
+    return (
+      <div className="flex flex-col gap-2">
+        <DataTable
+          aria-label="Propostas"
+          columns={colunasBasicas}
+          data={propostas.slice(0, 4)}
+          onRowClick={(p) => setAberta(`${p.id} · ${p.cliente}`)}
+        />
+        <p className="text-sm text-muted-foreground" aria-live="polite">
+          {aberta ? `Aberta: ${aberta}` : "Clique numa linha, ou use Tab e Enter."}
+        </p>
+      </div>
+    );
+  },
+};
+
+export const SubRows: Story = {
+  name: "Sub-linhas",
+  parameters: story(
+    "`getSubRows`: a linha com sub-linhas ganha o botão de abrir, numa coluna à esquerda, como na Table. Aberta, a linha pai fica em `accent` e as sub-linhas aparecem recuadas. Um nível só. Diferente de grupo: a linha pai é um dado (o produto), não um cabeçalho. Não use com `renderRowDetail`.",
+  ),
+  render: () => {
+    type ItemCatalogo = {
+      codigo: string;
+      produto: string;
+      licenca: string;
+      preco: number;
+      complementos?: ItemCatalogo[];
+    };
+    const itens: ItemCatalogo[] = [
+      {
+        codigo: "P-1.01-S",
+        produto: "Documentos",
+        licenca: "Simultâneo (padrão)",
+        preco: 150,
+        complementos: [{ codigo: "P-1.01-C", produto: "Consulta", licenca: "Consulta", preco: 10 }],
+      },
+      { codigo: "P-1.02-S", produto: "Formulários", licenca: "Simultâneo (padrão)", preco: 150 },
+      {
+        codigo: "P-1.03-S",
+        produto: "Registros",
+        licenca: "Simultâneo (padrão)",
+        preco: 150,
+        complementos: [
+          { codigo: "P-1.03-C", produto: "Consulta", licenca: "Consulta", preco: 10 },
+          { codigo: "P-1.03-A", produto: "Auditoria", licenca: "Simultâneo", preco: 40 },
+        ],
+      },
+    ];
+    return (
+      <DataTable<ItemCatalogo, unknown>
+        aria-label="Licenciamento"
+        columns={[
+          { accessorKey: "codigo", header: "Código", size: 120 },
+          { accessorKey: "produto", header: "Produto", size: 200 },
+          { accessorKey: "licenca", header: "Licença", size: 200 },
+          {
+            accessorKey: "preco",
+            header: "Preço",
+            size: 140,
+            cell: ({ getValue }) => brl(getValue<number>()),
+            meta: { prizm: { cellAlign: "right" } },
+          },
+        ]}
+        data={itens}
+        getRowId={(i) => i.codigo}
+        getSubRows={(i) => i.complementos}
+        defaultExpandedRows={["P-1.01-S"]}
+      />
+    );
+  },
+};
+
+export const RowActions: Story = {
+  name: "Ações por linha",
+  parameters: story(
+    'Uma coluna com `contentRenderType: "actions"` mostra o menu de ações da linha. O valor da célula é a lista de ações (`label`, `onClick`, `icon`, `variant`). Abrir o menu não dispara o clique da linha.',
+  ),
+  render: () => (
+    <DataTable<PropostaLinha & { acoes: unknown }, unknown>
+      aria-label="Propostas"
+      columns={[
+        ...(colunasBasicas as ColumnDef<PropostaLinha & { acoes: unknown }>[]),
+        {
+          accessorKey: "acoes",
+          header: () => <span className="sr-only">Ações</span>,
+          size: 64,
+          meta: { prizm: { contentRenderType: ContentRenderType.ACTIONS } },
+        },
+      ]}
+      data={propostas.slice(0, 4).map((p) => ({
+        ...p,
+        acoes: [
+          { label: "Abrir", onClick: () => {} },
+          { label: "Duplicar", onClick: () => {} },
+          { label: "Excluir", onClick: () => {}, variant: "destructive" },
+        ],
+      }))}
+    />
+  ),
+};
+
+export const Grupos: Story = {
+  name: "Linha de grupo",
+  parameters: story(
+    '`groupBy` agrupa as linhas sob uma linha de grupo, com o nome e a contagem. Os grupos seguem a ordem de `data`: ordene pelos grupos antes. Cada grupo é um `<tbody>` com `<th scope="rowgroup">`. `renderGroupLabel` troca o conteúdo; aqui, mostra a soma do grupo.',
+  ),
+  render: () => {
+    const ordenadas = [...propostas.slice(0, 8)].sort((a, b) =>
+      a.categoria.localeCompare(b.categoria),
+    );
+    return (
+      <DataTable
+        aria-label="Propostas por categoria"
+        columns={colunasBasicas}
+        data={ordenadas}
+        groupBy={(p) => p.categoria}
+        renderGroupLabel={({ key, rows }) => (
+          <>
+            {key}
+            <span className="ml-2 font-normal text-muted-foreground">
+              {rows.length} {rows.length === 1 ? "proposta" : "propostas"} ·{" "}
+              {brl(rows.reduce((t, r) => t + r.valor, 0))}
+            </span>
+          </>
+        )}
+      />
+    );
+  },
+};
+
+export const GruposQueRecolhem: Story = {
+  name: "Grupo que recolhe",
+  parameters: story(
+    "`collapsibleGroups` põe na linha de grupo um botão que recolhe e abre as linhas do grupo (`aria-expanded`). `defaultCollapsedGroups` começa com grupos fechados; `collapsedGroups` e `onCollapsedGroupsChange` controlam o estado. É diferente das sub-linhas da Table: a linha de grupo é um título para um conjunto de linhas, não uma linha de dados. Aqui, como o catálogo da proposta do Pricing: contagem e Badge no grupo, e o complemento de licença em destaque.",
+  ),
+  render: () => {
+    type ItemCatalogo = {
+      codigo: string;
+      grupo: string;
+      cobranca: string;
+      produto: string;
+      licenca: string;
+      preco: number;
+      complemento?: boolean;
+    };
+    const itens: ItemCatalogo[] = [
+      {
+        codigo: "P-1.01-S",
+        grupo: "Licenciamento",
+        cobranca: "Cobrança mensal",
+        produto: "Documentos",
+        licenca: "Simultâneo (padrão)",
+        preco: 150,
+      },
+      {
+        codigo: "P-1.01-C",
+        grupo: "Licenciamento",
+        cobranca: "Cobrança mensal",
+        produto: "",
+        licenca: "Consulta",
+        preco: 10,
+        complemento: true,
+      },
+      {
+        codigo: "P-1.02-S",
+        grupo: "Licenciamento",
+        cobranca: "Cobrança mensal",
+        produto: "Formulários",
+        licenca: "Simultâneo (padrão)",
+        preco: 150,
+      },
+      {
+        codigo: "P-2.01",
+        grupo: "Implantação",
+        cobranca: "Cobrança única",
+        produto: "Migração de documentos",
+        licenca: "—",
+        preco: 7000,
+      },
+      {
+        codigo: "P-2.02",
+        grupo: "Implantação",
+        cobranca: "Cobrança única",
+        produto: "Formulários",
+        licenca: "—",
+        preco: 7000,
+      },
+      {
+        codigo: "P-3.01",
+        grupo: "Recursos extras",
+        cobranca: "Cobrança única",
+        produto: "Assinatura digital",
+        licenca: "—",
+        preco: 1200,
+      },
+      {
+        codigo: "P-4.01",
+        grupo: "Treinamento",
+        cobranca: "Cobrança única",
+        produto: "Turma remota",
+        licenca: "—",
+        preco: 900,
+      },
+      {
+        codigo: "P-4.02",
+        grupo: "Treinamento",
+        cobranca: "Cobrança única",
+        produto: "Turma presencial",
+        licenca: "—",
+        preco: 1500,
+      },
+    ];
+    return (
+      <DataTable<ItemCatalogo, unknown>
+        aria-label="Catálogo da proposta"
+        columns={[
+          { accessorKey: "codigo", header: "Código", size: 120 },
+          { accessorKey: "produto", header: "Produto", size: 220 },
+          { accessorKey: "licenca", header: "Licença", size: 200 },
+          {
+            accessorKey: "preco",
+            header: "Preço",
+            size: 140,
+            cell: ({ getValue }) => brl(getValue<number>()),
+            meta: { prizm: { cellAlign: "right" } },
+          },
+        ]}
+        data={itens}
+        getRowId={(i) => i.codigo}
+        groupBy={(i) => i.grupo}
+        collapsibleGroups
+        defaultCollapsedGroups={["Recursos extras", "Treinamento"]}
+        renderGroupLabel={({ key, rows }) => (
+          <span className="inline-flex items-center gap-2">
+            {key}
+            <Badge variant="secondary">{rows.length}</Badge>
+            <Badge variant="outline">{rows[0]?.cobranca}</Badge>
+          </span>
+        )}
+      />
+    );
+  },
+};
+
+export const SummaryRow: Story = {
+  name: "Linha de resumo",
+  parameters: story(
+    "`summaryRow` põe uma linha no fim da tabela, por id de coluna, alinhada como a coluna. O cálculo é do produto. No Figma, é o Show Footer da Table.",
+  ),
+  render: () => {
+    const dados = propostas.slice(0, 5);
+    return (
+      <DataTable
+        aria-label="Propostas"
+        columns={colunasBasicas}
+        data={dados}
+        summaryRow={{ id: "Total", valor: brl(dados.reduce((t, p) => t + p.valor, 0)) }}
+      />
+    );
+  },
+};
+
+export const Detalhe: Story = {
+  name: "Linha de detalhe",
+  parameters: story(
+    "`renderRowDetail` põe um botão à esquerda que abre o detalhe abaixo da linha. Linha sem detalhe (retorno `null`) fica sem botão. `defaultExpandedRows` abre a primeira. Para sub-linhas com as mesmas colunas, use a Table com `getSubRows`.",
+  ),
+  render: () => (
+    <DataTable
+      aria-label="Propostas"
+      columns={colunasBasicas}
+      data={propostas.slice(0, 5)}
+      getRowId={(p) => p.id}
+      defaultExpandedRows={["P-1042"]}
+      renderRowDetail={(p) =>
+        p.itens ? (
+          <div className="flex flex-col gap-1">
+            <p className="text-sm font-medium">Itens da proposta</p>
+            <ul className="list-disc pl-4 text-sm">
+              {p.itens.map((i) => (
+                <li key={i}>{i}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null
+      }
+    />
+  ),
+};
+
+export const CelulaEditavel: Story = {
+  name: "Célula editável",
+  parameters: story(
+    "`DataTableEditableCell` é o Input `sm` na célula, com nome da linha. Estados nesta story: preenchido, inválido com mensagem (quantidade negativa) e desabilitado (Treinamento). O valor e a validação são do produto; o total vem na linha de resumo.",
+  ),
+  render: function EditavelStory() {
+    type Item = { id: string; produto: string; preco: number };
+    const itens: Item[] = [
+      { id: "i1", produto: "Licença anual · 200 usuários", preco: 1290 },
+      { id: "i2", produto: "Implantação", preco: 250 },
+      { id: "i3", produto: "Suporte estendido", preco: 100 },
+      { id: "i4", produto: "Treinamento · 2 turmas", preco: 480 },
+    ];
+    const [qtd, setQtd] = React.useState<Record<string, string>>({
+      i1: "2",
+      i2: "1",
+      i3: "-1",
+      i4: "1",
+    });
+    const sub = (i: Item) => i.preco * Math.max(0, Number(qtd[i.id] ?? 0));
+    const colunas: ColumnDef<Item>[] = [
+      { accessorKey: "produto", header: "Produto", size: 260 },
+      {
+        accessorKey: "preco",
+        header: "Preço",
+        size: 120,
+        cell: ({ getValue }) => brl(getValue<number>()),
+        meta: { prizm: { cellAlign: "right" } },
+      },
+      {
+        id: "qtd",
+        header: "Quantidade",
+        size: 140,
+        cell: ({ row }) => {
+          const v = qtd[row.id] ?? "0";
+          return (
+            <DataTableEditableCell
+              type="number"
+              align="right"
+              label={`Quantidade de ${row.original.produto}`}
+              value={v}
+              disabled={row.id === "i4"}
+              error={Number(v) < 0 ? "Não pode ser negativa" : undefined}
+              onChange={(next) => setQtd({ ...qtd, [row.id]: next })}
+            />
+          );
+        },
+        meta: { prizm: { cellAlign: "right" } },
+      },
+      {
+        id: "subtotal",
+        header: "Subtotal",
+        size: 140,
+        cell: ({ row }) => brl(sub(row.original)),
+        meta: { prizm: { cellAlign: "right" } },
+      },
+    ];
+    return (
+      <DataTable
+        aria-label="Itens da proposta"
+        columns={colunas}
+        data={itens}
+        getRowId={(i) => i.id}
+        summaryRow={{ produto: "Total", subtotal: brl(itens.reduce((t, i) => t + sub(i), 0)) }}
+      />
+    );
+  },
+};
+
+/* ------------------------------------------------------------------------------------------- *
+ * Toolbar, estados e layout
+ * ------------------------------------------------------------------------------------------- */
+
+export const ToolbarActions: Story = {
+  name: "Ações na toolbar",
+  parameters: story(
+    "`toolbarActions` fica no fim da toolbar, depois de Colunas. Use para a ação principal da tela, como criar um item.",
+  ),
+  render: () => (
+    <DataTable
+      aria-label="Propostas"
+      columns={colunasBasicas}
+      data={propostas.slice(0, 4)}
+      showColumnVisibility
+      toolbarActions={<Button>Nova proposta</Button>}
+    />
+  ),
+};
+
+export const Loading: Story = {
+  name: "Carregando",
+  parameters: story(
+    "`isLoading` mostra linhas de Skeleton no lugar dos dados (`loadingRows`, 5 por padrão), com `aria-busy` na tabela. O cabeçalho continua.",
+  ),
+  render: () => (
+    <DataTable
+      aria-label="Propostas"
+      columns={colunasBasicas}
+      data={[]}
+      isLoading
+      loadingRows={4}
+    />
+  ),
+};
+
+export const Empty: Story = {
+  name: "Vazio",
+  parameters: story(
+    'Sem linhas, o Empty aparece no lugar da tabela. O texto padrão é "Nenhum resultado."; `emptyMessage` troca o texto ou o conteúdo inteiro.',
+  ),
+  render: () => (
+    <DataTable
+      aria-label="Propostas"
+      columns={colunasBasicas}
+      data={[]}
+      emptyMessage="Nenhuma proposta encontrada."
+    />
+  ),
+};
+
+export const ErrorState: Story = {
+  name: "Erro",
+  parameters: story(
+    'Com `error`, a mensagem aparece no lugar da tabela, com `role="alert"`. Com `onRetry`, o botão "Tentar novamente" (`retryLabel` troca o texto).',
+  ),
+  render: () => (
+    <DataTable
+      aria-label="Propostas"
+      columns={colunasBasicas}
+      data={[]}
+      error="Não foi possível carregar as propostas."
+      onRetry={() => {}}
+    />
+  ),
+};
+
+export const ColunaFixa: Story = {
+  name: "Coluna fixa",
+  parameters: story(
+    "Role para o lado e para baixo. `stickyFirstColumn` fixa a primeira coluna (com a de seleção), `stickyLastColumn` a última, e `stickyHeader` o cabeçalho. A coluna fixa precisa de `size`.",
+  ),
+  render: () => (
+    <div className="h-80 w-[640px]">
+      <DataTable<PropostaLinha, unknown>
+        aria-label="Propostas"
+        columns={[
+          ...colunasBasicas.slice(0, 4),
+          {
+            accessorKey: "descricao",
+            header: "Descrição",
+            size: 280,
+          },
+          colunasBasicas[4],
+        ]}
+        data={propostas}
+        enableRowSelection
+        stickyFirstColumn
+        stickyLastColumn
+        stickyHeader
+      />
+    </div>
+  ),
+};
+
+/* ------------------------------------------------------------------------------------------- *
+ * Tudo junto
+ * ------------------------------------------------------------------------------------------- */
+
+export const Proposta: Story = {
+  parameters: story(
+    "O que o teste de tela da Proposta pediu (17/11/2026), numa tela só: busca, colunas visíveis, ação na toolbar, ordenação, texto cortado e quebra, seleção, linha clicável, detalhe, linha de resumo e paginação.",
+  ),
+  render: function PropostaStory() {
+    const [aberta, setAberta] = React.useState<string | null>(null);
+    const colunas: ColumnDef<PropostaLinha>[] = [
+      ...colunasOrdenaveis
+        .slice(0, 4)
+        .map((c) =>
+          c.id === "cliente" || ("accessorKey" in c && c.accessorKey === "cliente")
+            ? { ...c, size: 200 }
+            : c,
+        ),
+      {
+        accessorKey: "descricao",
+        header: "Descrição",
+        size: 200,
+        meta: { prizm: { wrap: true } },
+      },
+      colunasOrdenaveis[4],
+    ];
+    return (
+      <div className="flex flex-col gap-2">
+        <DataTable
+          aria-label="Propostas"
+          columns={colunas}
+          data={propostas}
+          getRowId={(p) => p.id}
+          filters={[{ type: "search", columnId: "cliente", placeholder: "Buscar cliente" }]}
+          showColumnVisibility
+          toolbarActions={<Button>Nova proposta</Button>}
+          defaultSorting={[{ id: "valor", desc: true }]}
+          enableRowSelection
+          renderRowDetail={(p) =>
+            p.itens ? (
+              <ul className="list-disc pl-4 text-sm">
+                {p.itens.map((i) => (
+                  <li key={i}>{i}</li>
+                ))}
+              </ul>
+            ) : null
+          }
+          onRowClick={(p) => setAberta(`${p.id} · ${p.cliente}`)}
+          summaryRow={{ id: "Total", valor: brl(propostas.reduce((t, p) => t + p.valor, 0)) }}
+          pagination={{ perPage: 10 }}
+        />
+        <p className="text-sm text-muted-foreground" aria-live="polite">
+          {aberta ? `Aberta: ${aberta}` : "Clique numa linha, ou use Tab e Enter."}
+        </p>
       </div>
     );
   },

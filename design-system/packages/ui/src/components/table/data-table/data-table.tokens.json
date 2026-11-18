@@ -1,0 +1,134 @@
+{
+  "component": "DataTable",
+  "description": "Mapa de tokens do DataTable. Decisões de 17/11/2026 (teste de tela da Proposta): o DataTable segue a Table (cabeçalho, célula, altura da linha) e ganha ordenação, linha em destaque, linha de grupo, resumo, detalhe, célula editável, carregando, erro e coluna fixa. Conferido contra data-table.styles.ts por data-table.tokens.test.ts. Nomes no formato do Figma.",
+  "sources": {
+    "code": "design-system/packages/ui/src/components/table/data-table/data-table.tsx",
+    "story": "design-system/apps/docs/stories/data-table.stories.tsx",
+    "table": "design-system/packages/ui/src/components/table/table.tokens.json",
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=97dd20dc-cd4c-42ef-a25c-cb4e45ac6281&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/212"],
+    "figmaGroupRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3932",
+    "figmaDetailRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3933"
+  },
+  "parts": {
+    "head": {
+      "height": "height/10",
+      "paddingX": "spacing/2",
+      "color": "color/foreground",
+      "fontWeight": "font-weight/medium"
+    },
+    "cell": {
+      "minHeight": "52px (h-13), com a borda",
+      "padding": "spacing/2",
+      "numeric": "tabular-nums com cellAlign right"
+    },
+    "sort": {
+      "button": "texto + ArrowUpDown, ArrowUp ou ArrowDown (width/4)",
+      "height": "control-height/sm",
+      "hover": "color/accent",
+      "a11y": "aria-sort na célula do cabeçalho",
+      "figma": "Table / Head: Show Sort e Sort Icon (ArrowUpDown, ArrowUp, ArrowDown)"
+    },
+    "groupRow": {
+      "background": "color/muted",
+      "height": "height/10",
+      "count": "Badge secondary sm, number (decisão de 18/11/2026, P1; antes, texto em color/muted-foreground)",
+      "toggle": "collapsibleGroups: ChevronRight ou ChevronDown (width/4) e o conteúdo da linha num botão; hover color/accent, foco com o anel do Prizm",
+      "figma": "Data Table / Group Row: Expanded Yes, No (collapsibleGroups) e None (só groupBy); Label, Show Count, Show Badge"
+    },
+    "summaryRow": {
+      "background": "color/muted a 50%",
+      "border": "color/border, em cima",
+      "fontWeight": "font-weight/medium"
+    },
+    "detail": {
+      "column": "48px (w-12), Button ghost icon-sm",
+      "paddingLeft": "56px (pl-14)",
+      "figma": "Table / Expand Cell e Data Table / Detail Row (slot Content)"
+    },
+    "editableCell": {
+      "input": "Input sm (control-height/sm)",
+      "error": "color/destructive-strong, text/sm",
+      "figma": "Table / Cell Variant=Input, com o Input sm exposto"
+    },
+    "loading": {
+      "skeleton": "Skeleton h-4, até 160px",
+      "rows": 5
+    },
+    "error": {
+      "icon": "CircleAlert em color/destructive",
+      "action": "Button outline"
+    },
+    "pagination": {
+      "buttons": "Button outline icon, quadrado como no Figma (decisão de 17/11/2026; antes, redondo)",
+      "padding": "spacing/4 dos lados, spacing/3 em cima e embaixo",
+      "footer": "contagem (role=status), footer livre e paginação na mesma faixa (decisão de 18/11/2026)"
+    },
+    "sticky": {
+      "background": "color/background, repetindo o fundo da linha",
+      "edge": "color/border, 1px"
+    },
+    "selectionBar": {
+      "background": "color/muted",
+      "border": "color/border",
+      "radius": "radius/xl",
+      "paddingX": "spacing/4",
+      "paddingY": "spacing/2-5",
+      "gap": "spacing/3",
+      "text": "color/foreground, número em bold",
+      "a11y": "contagem em role=status (decisão de 18/11/2026)",
+      "figma": "Data Table / Selection Bar"
+    },
+    "empty": {
+      "paddingY": "spacing/20 (py-20, decisão de 18/11/2026, P6; antes py-8)",
+      "paddingX": "spacing/2",
+      "figma": "Empty Area nas variantes State=Empty e State=Error"
+    },
+    "subRows": {
+      "background": "color/accent na linha pai aberta (data-expanded=true)",
+      "indent": "spacing/2 + spacing/6 + spacing/2 (40px, pl-10) na primeira coluna de dados, como na Table",
+      "column": "48px (w-12), o mesmo botão da coluna de detalhe",
+      "figma": "Table / Column Type=Expand e Table / Cell Sub-row, como na Table"
+    }
+  },
+  "states": {
+    "hover": {
+      "background": "color/muted",
+      "opacity": 0.5
+    },
+    "selected": {
+      "background": "color/accent",
+      "attribute": "data-state=selected",
+      "note": "Também no hover. Decisão de 18/11/2026 (antes, color/muted). No Figma, Table / Cell State=Selected."
+    },
+    "focus": {
+      "outline": "color/ring",
+      "width": "2px, por dentro da linha"
+    },
+    "expanded": {
+      "background": "color/accent",
+      "attribute": "data-expanded=true",
+      "note": "Linha pai com as sub-linhas à mostra (decisão de 18/11/2026)."
+    }
+  },
+  "divergences": [
+    {
+      "where": "mensagem de erro da célula editável",
+      "measured": "color/destructive sobre color/background: 4,22:1 no Docnix escuro e 4,43:1 no ITSS · Digitrol claro",
+      "status": "decidida no código: destructive-strong (24 de 24 passam); o FieldError usa destructive"
+    },
+    {
+      "where": "coluna fixa",
+      "figma": "—",
+      "code": "stickyHeader, stickyFirstColumn, stickyLastColumn",
+      "status": "representação: comportamento de rolagem"
+    },
+    {
+      "where": "mensagem de erro da célula editável",
+      "figma": "Input State=Error, sem a mensagem",
+      "code": "mensagem em destructive-strong embaixo do Input",
+      "status": "representação"
+    }
+  ]
+}

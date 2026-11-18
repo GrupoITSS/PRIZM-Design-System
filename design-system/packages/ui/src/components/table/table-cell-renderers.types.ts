@@ -95,6 +95,10 @@ export interface PrizmCellMeta<TRow = unknown> {
   badgeMaxVisible?: number;
   /** Horizontal alignment for table cells when using DataTable (`td` / `th`). */
   cellAlign?: "left" | "right" | "center";
+  /**
+   * DataTable: quebra o texto da célula em vez de cortar numa linha com Tooltip. @default false
+   */
+  wrap?: boolean;
   /** Custom cell renderer (Grid compat). */
   cell?: (ctx: { getValue: () => unknown; row: unknown }) => React.ReactNode;
   actions?: unknown;

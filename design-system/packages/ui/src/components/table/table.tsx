@@ -1,8 +1,9 @@
 import { cn } from "../../lib/cn";
 import * as React from "react";
+import { TruncatedText } from "./table-truncated-text";
 import { Button } from "../button";
-import { ChevronDown, ChevronRight } from "../icons";
-import { Tooltip } from "../tooltip";
+import { Empty } from "../empty";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, ChevronRight, FolderOpen } from "../icons";
 import {
   alignCenter,
   alignLeft,
@@ -13,7 +14,6 @@ import {
   tableCell,
   tableCellMinHeight,
   tableCellNumeric,
-  tableCellText,
   tableCellTruncate,
   tableExpandCell,
   tableExpandHead,
@@ -23,8 +23,9 @@ import {
   tableRow,
   tableSubRowIndent,
   tableWrapper,
+  tableSortButton,
 } from "./table.styles";
-import type { TableColumn, TableProps, TableRowMeta } from "./table.types";
+import type { TableColumn, TableProps, TableRowMeta, TableSort } from "./table.types";
 import { renderPrizmCell } from "./table-cell-renderers";
 import { toText } from "../../lib/to-text";
 
@@ -40,27 +41,6 @@ function getAlignClass(align: "left" | "right" | "center" | undefined): string {
 }
 
 /** Texto cortado numa linha; o Tooltip com o texto todo só aparece quando ele corta. */
-/**
- * Texto cortado com reticências. O Tooltip com o texto inteiro só entra se o texto não coube:
- * a medida é feita quando o ponteiro entra na célula, sem observar o tamanho de cada uma.
- */
-function TruncatedText({ children }: { children: React.ReactNode }) {
-  const [isCut, setIsCut] = React.useState(false);
-  const text = (
-    <span
-      data-slot="table-cell-text"
-      className={tableCellText}
-      onPointerEnter={(e) => {
-        const el = e.currentTarget;
-        setIsCut(el.scrollWidth > el.clientWidth);
-      }}
-    >
-      {children}
-    </span>
-  );
-  return isCut ? <Tooltip content={children}>{text}</Tooltip> : text;
-}
-
 function renderCellContent<T extends Record<string, unknown>>(
   col: TableColumn<T>,
   row: T,
@@ -124,11 +104,41 @@ function Table<T extends Record<string, unknown>>({
   onExpandedChange,
   getExpandLabel,
   expandColumnLabel = "Expandir",
-  isRowSelected,
+  defaultSort = null,
+  sort: controlledSort,
+  onSortChange,
+  manualSort = false,
   ref,
   ...tableProps
 }: TableProps<T> & { ref?: React.Ref<HTMLTableElement> }) {
   const baseId = React.useId();
+  const [innerSort, setInnerSort] = React.useState<TableSort | null>(defaultSort);
+  const sort = controlledSort !== undefined ? controlledSort : innerSort;
+  const toggleSort = (key: string) => {
+    const next: TableSort = {
+      key,
+      direction: sort?.key === key && sort.direction === "asc" ? "desc" : "asc",
+    };
+    if (controlledSort === undefined) setInnerSort(next);
+    onSortChange?.(next);
+  };
+  const sortedRows = React.useMemo(() => {
+    const entries = rows.map((row, index) => ({ row, index }));
+    const col = sort ? columns.find((c) => c.key === sort.key) : undefined;
+    if (!sort || !col || manualSort) return entries;
+    const valueOf = (row: T) =>
+      col.sortValue ? col.sortValue(row) : (row as Record<string, unknown>)[col.key];
+    const factor = sort.direction === "asc" ? 1 : -1;
+    return [...entries].sort((a, b) => {
+      const va = valueOf(a.row);
+      const vb = valueOf(b.row);
+      if (va == null && vb == null) return 0;
+      if (va == null) return 1;
+      if (vb == null) return -1;
+      if (typeof va === "number" && typeof vb === "number") return (va - vb) * factor;
+      return toText(va).localeCompare(toText(vb), "pt-BR", { numeric: true }) * factor;
+    });
+  }, [rows, columns, sort, manualSort]);
   const expandable = getSubRows != null;
   const [innerExpanded, setInnerExpanded] = React.useState<string[]>(() =>
     defaultExpanded === true
@@ -163,7 +173,6 @@ function Table<T extends Record<string, unknown>>({
       data-slot="table-row"
       data-depth={expandable ? meta.depth : undefined}
       data-expanded={meta.subRows ? (meta.isExpanded ? "true" : "false") : undefined}
-      data-state={isRowSelected?.(row) ? "selected" : undefined}
       className={tableRow}
     >
       {expandable && (
@@ -199,7 +208,7 @@ function Table<T extends Record<string, unknown>>({
     </tr>
   );
 
-  const bodyRows = rows.flatMap((row, index) => {
+  const bodyRows = sortedRows.flatMap(({ row, index }) => {
     const key = getRowKey(row, index);
     const subRows = expandable ? getSubRows?.(row) : undefined;
     const hasSub = subRows != null && subRows.length > 0;
@@ -251,6 +260,9 @@ function Table<T extends Record<string, unknown>>({
             )}
             {columns.map((col) => {
               const widthIsClass = typeof col.width === "string" && col.width.startsWith("w-");
+              const direction = sort?.key === col.key ? sort.direction : undefined;
+              const SortIcon =
+                direction === "asc" ? ArrowUp : direction === "desc" ? ArrowDown : ArrowUpDown;
               return (
                 <th
                   data-slot="table-head"
@@ -262,22 +274,50 @@ function Table<T extends Record<string, unknown>>({
                     widthIsClass ? col.width : undefined,
                   )}
                   style={col.width && !widthIsClass ? { width: col.width } : undefined}
+                  aria-sort={
+                    direction === "asc"
+                      ? "ascending"
+                      : direction === "desc"
+                        ? "descending"
+                        : undefined
+                  }
                 >
-                  {col.header}
+                  {col.sortable ? (
+                    <button
+                      type="button"
+                      data-slot="table-sort"
+                      className={tableSortButton}
+                      onClick={() => toggleSort(col.key)}
+                    >
+                      {col.header}
+                      <SortIcon aria-hidden />
+                    </button>
+                  ) : (
+                    col.header
+                  )}
                 </th>
               );
             })}
           </tr>
         </thead>
         <tbody data-slot="table-body" className={tableBody}>
-          {rows.length === 0 && emptyMessage != null ? (
-            <tr data-slot="table-row" className={tableRow}>
+          {rows.length === 0 ? (
+            <tr data-slot="table-row" className={cn(tableRow, "hover:bg-transparent")}>
               <td
-                data-slot="table-cell"
+                data-slot="table-empty"
                 colSpan={columns.length + (expandable ? 1 : 0)}
-                className={cn(tableCell, alignCenter, "text-muted-foreground")}
+                className={cn(tableCell, alignCenter)}
               >
-                {emptyMessage}
+                {typeof emptyMessage === "string" || emptyMessage == null ? (
+                  <Empty
+                    appearance="plain"
+                    mediaVariant="icon"
+                    icon={<FolderOpen className="size-6 text-muted-foreground" aria-hidden />}
+                    title={emptyMessage ?? "Nenhum resultado."}
+                  />
+                ) : (
+                  emptyMessage
+                )}
               </td>
             </tr>
           ) : (

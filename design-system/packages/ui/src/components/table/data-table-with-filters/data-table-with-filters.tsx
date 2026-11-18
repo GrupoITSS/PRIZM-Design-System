@@ -10,6 +10,9 @@ export interface DataTableWithFiltersProps<TData, TValue> extends DataTableProps
 /**
  * DataTable com toolbar de filtros (selects) e visibilidade de colunas.
  * Padrão da listagem de Acessos (Grupo, Objeto, Papel, Status + Colunas).
+ *
+ * @deprecated Use `<DataTable filters={…} showColumnVisibility />`: este componente só mudava esses
+ * dois padrões (decisão de 18/11/2026).
  */
 export function DataTableWithFilters<TData, TValue>({
   showColumnVisibility = true,

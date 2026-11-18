@@ -79,3 +79,39 @@ describe("Table × mapa de tokens: altura da linha e texto (17/11/2026)", () => 
     expect(cls(s.tableCellNumeric)).toContain("tabular-nums");
   });
 });
+
+describe("Table × mapa de tokens: ordenação, destaque e vazio (17/11/2026)", () => {
+  it("botão de ordenar: altura, espaço, hover e anel do mapa", async () => {
+    const { tableSortButton } = await import("./table.styles");
+    const s = map.parts.head.sort;
+    const c = cls(tableSortButton);
+    expect(s.button).toMatch(/^height\/8/);
+    expect(c).toContain("h-8");
+    expect(c).toContain(`gap-${step(s.gap)}`);
+    expect(c).toContain(`text-${color(map.parts.head.text)}`);
+    expect(c).toContain(`hover:bg-${color(s.hoverBackground)}`);
+    expect(c).toContain(`hover:text-${color(s.hoverText)}`);
+    expect(c).toContain(`focus-visible:ring-${color(s.focusRing)}`);
+    expect(c).toContain(`focus-visible:ring-[${s.focusRingWidth}]`);
+    expect(c).toContain("[&_svg]:size-4");
+    expect(s.icon).toBe("16px");
+    // Ícone na cor do texto do cabeçalho, com ou sem ordem (decisão de 17/11/2026).
+    expect(s.iconColor).toMatch(/^color\/foreground/);
+  });
+
+  it("linha selecionada e linha pai aberta em accent, também no hover", () => {
+    const c = cls(tableRow);
+    for (const st of [map.states.selected, map.states.expanded]) {
+      const [k, v] = st.attribute.replace(/^data-/, "").split("=");
+      expect(c).toContain(`data-[${k}=${v}]:bg-${color(st.background)}`);
+      expect(c).toContain(`data-[${k}=${v}]:hover:bg-${color(st.background)}`);
+    }
+  });
+
+  it("células do Figma Number, Center, Wrap e Badges têm par no código", () => {
+    expect(map.cellTypes.Number).toContain("align right");
+    expect(map.cellTypes.Center).toContain("align center");
+    expect(map.cellTypes.Wrap).toContain("wrap: true");
+    expect(map.cellTypes.Badges).toContain("badge");
+  });
+});

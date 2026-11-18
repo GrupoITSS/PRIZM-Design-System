@@ -127,7 +127,7 @@ const organizations: OrgRow[] = [
 
 // Traceability: the Table components in [PRIZM] Componentes, the documentation frame and the CMS
 // article. The token map lives next to the component (table.tokens.json) and is checked in a test.
-const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=325-388";
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27023-3613";
 const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26381-2461";
 const CMS_URL =
   "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=47362d42-e44e-4171-87f3-d91b3525e0e2&version=v1";
@@ -143,7 +143,7 @@ const meta: Meta<typeof Table<OrgRow>> = {
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com), com tokens PRIZM.\n\n" +
           "Tabela de dados em colunas, com cabeçalho, linhas, rodapé e legenda. API por props: `columns`, `rows`, `caption`, `footerRows` e `emptyMessage`. Para composição livre, as primitivas (`TableRoot`, `TableHeader`, `TableRow`…).\n\n" +
           "Renderizadores PRIZM (`contentRenderType` e `contentFormatType`), compatíveis com a meta API do Grid do Cockpit: `status`, `text-image`, `text-button`, `badge`, `hover`, `status-summary-with-popover` e formatos de CNPJ, CPF, data, moeda e outros.\n\n" +
-          "Dê nome à tabela com `caption` ou `aria-label`. Para ordenar, filtrar, paginar ou selecionar, use o DataTable.\n\n" +
+          "Dê nome à tabela com `caption` ou `aria-label`. A Table ordena (`sortable` na coluna), e mostra o Empty quando não há linhas. Para filtrar, paginar ou selecionar, use o DataTable.\n\n" +
           '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/table" target="_blank" rel="noopener noreferrer">Table — shadcn/ui</a>\n\n' +
           `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
@@ -154,6 +154,16 @@ const meta: Meta<typeof Table<OrgRow>> = {
     rows: { control: false },
     caption: { control: "text" },
     emptyMessage: { control: "text" },
+    getSubRows: { control: false },
+    defaultSort: { control: "object" },
+    manualSort: { control: "boolean" },
+    sort: { control: "object" },
+    onSortChange: { control: false },
+    defaultExpanded: { control: false },
+    expanded: { control: false },
+    onExpandedChange: { control: false },
+    getRowKey: { control: false },
+    footerRows: { control: false },
   },
 };
 
@@ -297,6 +307,15 @@ export const WithFooter: InvoiceStory = {
 };
 
 export const Empty: Story = {
+  name: "Vazio",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Sem linhas, o Empty aparece numa linha da largura toda, abaixo do cabeçalho. `emptyMessage` troca o texto (padrão "Nenhum resultado.") ou o conteúdo inteiro. No Figma, Table com Show Empty. Decisão de 17/11/2026.',
+      },
+    },
+  },
   args: {
     columns: [
       { key: "organization", header: "Organização" },
@@ -642,5 +661,73 @@ export const TruncatedText: Story = {
   name: "Texto cortado e quebra",
   render: () => (
     <Table<ProductRow> columns={productColumns} rows={productRows} getRowKey={(r) => r.id} />
+  ),
+};
+
+/** Ordenação: `sortable` na coluna. O cabeçalho vira botão, com `aria-sort`. Decisão de 17/11/2026. */
+export const Sorting: Story = {
+  name: "Ordenação",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`sortable: true` na coluna põe um botão no cabeçalho: o primeiro clique ordena em ordem crescente, o segundo em decrescente. `defaultSort` começa ordenado (aqui, Valor decrescente); `sort` e `onSortChange` controlam; com `manualSort`, a tabela não reordena (ordenação no servidor). No Figma, Table / Head com Show Sort.",
+      },
+    },
+  },
+  render: () => (
+    <Table<ProductRow>
+      aria-label="Produtos"
+      columns={[
+        { key: "produto", header: "Produto", width: "220px", sortable: true },
+        { key: "descricao", header: "Descrição", wrap: true },
+        {
+          key: "valor",
+          header: "Valor",
+          align: "right",
+          width: "140px",
+          contentFormatType: ContentFormatType.CURRENCY,
+          sortable: true,
+        },
+      ]}
+      rows={productRows}
+      getRowKey={(r) => r.id}
+      defaultSort={{ key: "valor", direction: "desc" }}
+    />
+  ),
+};
+
+/** Alinhamento da coluna: esquerda (padrão), centro e direita. */
+export const Alignment: Story = {
+  name: "Alinhamento",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`align` alinha o cabeçalho e as células da coluna: `left` (padrão), `center` e `right`. À direita, os números usam algarismos de largura fixa. No Figma, Table / Head com Align e Table / Cell com Variant=Center ou Number.",
+      },
+    },
+  },
+  render: () => (
+    <Table<{ id: string; produto: string; qtd: number; valor: number }>
+      aria-label="Itens"
+      columns={[
+        { key: "produto", header: "Produto" },
+        { key: "qtd", header: "Quantidade", align: "center", width: "140px" },
+        {
+          key: "valor",
+          header: "Valor",
+          align: "right",
+          width: "140px",
+          contentFormatType: ContentFormatType.CURRENCY,
+        },
+      ]}
+      rows={[
+        { id: "1", produto: "Licença anual", qtd: 2, valor: 1290 },
+        { id: "2", produto: "Implantação", qtd: 1, valor: 250 },
+        { id: "3", produto: "Treinamento", qtd: 12, valor: 480 },
+      ]}
+      getRowKey={(r) => r.id}
+    />
   ),
 };
