@@ -190,21 +190,26 @@ const colunasOrdenaveis: ColumnDef<PropostaLinha>[] = [
   },
 ];
 
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27560-4747";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=97dd20dc-cd4c-42ef-a25c-cb4e45ac6281&version=v1";
+
 const meta: Meta<typeof DataTable<PropostaLinha, unknown>> = {
   title: "Primários/DataTable",
   component: DataTable as React.ComponentType<
     React.ComponentProps<typeof DataTable<PropostaLinha, unknown>>
   >,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
-          "Figma: [Data Table](https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118) · Artigo: [DataTable no CMS](https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=97dd20dc-cd4c-42ef-a25c-cb4e45ac6281&version=v1)\n\n" +
-          "Tabela de dados com **TanStack Table**: ordenação, busca e filtros, seleção, paginação, colunas visíveis, linha clicável, linha em destaque, grupos, resumo, detalhe, célula editável, carregando, vazio, erro e colunas fixas. Usa a Table por dentro, com o mesmo cabeçalho, célula e altura de linha. " +
+          "Tabela de dados com **TanStack Table**: ordenação, busca e filtros, seleção, paginação, colunas visíveis, linha clicável, grupos, sub-linhas, resumo, detalhe, célula editável, carregando, vazio, erro e colunas fixas. Usa a Table por dentro, com o mesmo cabeçalho, célula e altura de linha. " +
           "Para mostrar dados sem ordenar, filtrar nem paginar, use a [Table](?path=/docs/primários-table--docs).\n\n" +
           "Cada story abaixo mostra uma possibilidade. A story **Proposta** junta várias, como numa tela de verdade.\n\n" +
-          'Referências: <a href="https://tanstack.com/table/latest" target="_blank" rel="noopener noreferrer">TanStack Table</a> · <a href="https://ui.shadcn.com/docs/components/data-table" target="_blank" rel="noopener noreferrer">Data Table — shadcn/ui</a>',
+          'Referências: <a href="https://tanstack.com/table/latest" target="_blank" rel="noopener noreferrer">TanStack Table</a> · <a href="https://ui.shadcn.com/docs/components/data-table" target="_blank" rel="noopener noreferrer">Data Table — shadcn/ui</a>\n\n' +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
@@ -714,7 +719,7 @@ export const Grupos: Story = {
 export const GruposQueRecolhem: Story = {
   name: "Grupo que recolhe",
   parameters: story(
-    "`collapsibleGroups` põe na linha de grupo um botão que recolhe e abre as linhas do grupo (`aria-expanded`). `defaultCollapsedGroups` começa com grupos fechados; `collapsedGroups` e `onCollapsedGroupsChange` controlam o estado. É diferente das sub-linhas da Table: a linha de grupo é um título para um conjunto de linhas, não uma linha de dados. Aqui, como o catálogo da proposta do Pricing: contagem e Badge no grupo, e o complemento de licença em destaque.",
+    "`collapsibleGroups` põe na linha de grupo um botão que recolhe e abre as linhas do grupo (`aria-expanded`). `defaultCollapsedGroups` começa com grupos fechados; `collapsedGroups` e `onCollapsedGroupsChange` controlam o estado. É diferente das sub-linhas da Table: a linha de grupo é um título para um conjunto de linhas, não uma linha de dados. Aqui, como o catálogo da proposta do Pricing: contagem e Badge no grupo.",
   ),
   render: () => {
     type ItemCatalogo = {
