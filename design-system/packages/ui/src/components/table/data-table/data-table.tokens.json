@@ -1,27 +1,67 @@
 {
   "component": "DataTable",
-  "description": "Mapa de tokens do DataTable. Decisões de 17/11/2026 (teste de tela da Proposta): o DataTable segue a Table (cabeçalho, célula, altura da linha) e ganha ordenação, linha em destaque, linha de grupo, resumo, detalhe, célula editável, carregando, erro e coluna fixa. Conferido contra data-table.styles.ts por data-table.tokens.test.ts. Nomes no formato do Figma.",
+  "description": "Mapa de tokens do DataTable: o que contêiner, barra de ferramentas, barra de seleção, tabela, linha de grupo, detalhe, sub-linhas, vazio, carregando, erro e rodapé usam do [PRIZM] Design Tokens_Core. Extraído das ligações de Data Table, Data Table / Group Row, Data Table / Detail Row e Data Table / Selection Bar no Figma em 18/11/2026 (nenhuma ligação do Data Table fora do Core; a única variável local vem do ícone Columns3, ver divergences). Cabeçalho, célula e ordenação seguem a Table (table.tokens.json). Conferido contra data-table.styles.ts e data-table.tsx por data-table.tokens.test.ts. Nomes no formato do Figma (color/muted); no código viram classes Tailwind (bg-muted).",
   "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118",
+    "figmaGroupRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3932",
+    "figmaDetailRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3933",
+    "figmaSelectionBar": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27558-6098",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27560-4747",
     "code": "design-system/packages/ui/src/components/table/data-table/data-table.tsx",
+    "styles": "design-system/packages/ui/src/components/table/data-table/data-table.styles.ts",
     "story": "design-system/apps/docs/stories/data-table.stories.tsx",
     "table": "design-system/packages/ui/src/components/table/table.tokens.json",
-    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=97dd20dc-cd4c-42ef-a25c-cb4e45ac6281&version=v1",
-    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/212"],
-    "figmaGroupRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3932",
-    "figmaDetailRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3933"
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/212",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/214",
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/215"
+    ]
   },
   "parts": {
+    "root": {
+      "gap": "spacing/4",
+      "figma": "Data Table: itemSpacing entre a barra de ferramentas, a barra de seleção e a tabela"
+    },
+    "card": {
+      "background": "color/background",
+      "border": "color/border",
+      "radius": "radius/2xl",
+      "figma": "Card"
+    },
+    "toolbar": {
+      "gap": "spacing/2",
+      "search": "Input md (control-height/md)",
+      "selectFilter": "Select md (control-height/md), 176px (w-44)",
+      "columns": "Button outline md (control-height/md)",
+      "action": "Button default md: color/primary, control-height/md, radius/md",
+      "figma": "Toolbar: Leading (Filters com Show Filters, Input) e Actions (Columns, Toolbar Action)"
+    },
+    "selectionBar": {
+      "background": "color/muted",
+      "border": "color/border",
+      "radius": "radius/xl",
+      "paddingX": "spacing/4",
+      "paddingY": "spacing/2-5",
+      "gap": "spacing/3",
+      "text": "color/foreground, text/sm, número em bold",
+      "actions": "Button outline sm (control-height/sm), spacing/2 entre eles",
+      "a11y": "contagem em role=status (decisão de 18/11/2026)",
+      "figma": "Data Table / Selection Bar (Show Actions, Label)"
+    },
     "head": {
       "height": "height/10",
       "paddingX": "spacing/2",
       "color": "color/foreground",
-      "fontWeight": "font-weight/medium"
+      "fontWeight": "font-weight/medium",
+      "figma": "Table / Head, como na Table"
     },
     "cell": {
       "minHeight": "52px (h-13), com a borda",
       "padding": "spacing/2",
-      "numeric": "tabular-nums com cellAlign right"
+      "border": "color/border, embaixo",
+      "numeric": "tabular-nums com cellAlign right",
+      "figma": "Table / Cell, como na Table"
     },
     "sort": {
       "button": "texto + ArrowUpDown, ArrowUp ou ArrowDown (width/4)",
@@ -32,7 +72,11 @@
     },
     "groupRow": {
       "background": "color/muted",
+      "border": "color/border, embaixo",
       "height": "height/10",
+      "paddingX": "spacing/2",
+      "gap": "spacing/2",
+      "text": "color/foreground, font-weight/medium",
       "count": "Badge secondary sm, number (decisão de 18/11/2026, P1; antes, texto em color/muted-foreground)",
       "toggle": "collapsibleGroups: ChevronRight ou ChevronDown (width/4) e o conteúdo da linha num botão; hover color/accent, foco com o anel do Prizm",
       "figma": "Data Table / Group Row: Expanded Yes, No (collapsibleGroups) e None (só groupBy); Label, Show Count, Show Badge"
@@ -44,52 +88,55 @@
     },
     "detail": {
       "column": "48px (w-12), Button ghost icon-sm",
-      "paddingLeft": "56px (pl-14)",
+      "background": "color/background",
+      "border": "color/border, embaixo",
+      "paddingLeft": "spacing/14 (pl-14)",
+      "paddingRight": "spacing/2",
+      "paddingY": "spacing/4",
       "figma": "Table / Expand Cell e Data Table / Detail Row (slot Content)"
-    },
-    "editableCell": {
-      "input": "Input sm (control-height/sm)",
-      "error": "color/destructive-strong, text/sm",
-      "figma": "Table / Cell Variant=Input, com o Input sm exposto"
-    },
-    "loading": {
-      "skeleton": "Skeleton h-4, até 160px",
-      "rows": 5
-    },
-    "error": {
-      "icon": "CircleAlert em color/destructive",
-      "action": "Button outline"
-    },
-    "pagination": {
-      "buttons": "Button outline icon, quadrado como no Figma (decisão de 17/11/2026; antes, redondo)",
-      "padding": "spacing/4 dos lados, spacing/3 em cima e embaixo",
-      "footer": "contagem (role=status), footer livre e paginação na mesma faixa (decisão de 18/11/2026)"
-    },
-    "sticky": {
-      "background": "color/background, repetindo o fundo da linha",
-      "edge": "color/border, 1px"
-    },
-    "selectionBar": {
-      "background": "color/muted",
-      "border": "color/border",
-      "radius": "radius/xl",
-      "paddingX": "spacing/4",
-      "paddingY": "spacing/2-5",
-      "gap": "spacing/3",
-      "text": "color/foreground, número em bold",
-      "a11y": "contagem em role=status (decisão de 18/11/2026)",
-      "figma": "Data Table / Selection Bar"
-    },
-    "empty": {
-      "paddingY": "spacing/20 (py-20, decisão de 18/11/2026, P6; antes py-8)",
-      "paddingX": "spacing/2",
-      "figma": "Empty Area nas variantes State=Empty e State=Error"
     },
     "subRows": {
       "background": "color/accent na linha pai aberta (data-expanded=true)",
       "indent": "spacing/2 + spacing/6 + spacing/2 (40px, pl-10) na primeira coluna de dados, como na Table",
       "column": "48px (w-12), o mesmo botão da coluna de detalhe",
       "figma": "Table / Column Type=Expand e Table / Cell Sub-row, como na Table"
+    },
+    "editableCell": {
+      "input": "Input sm (control-height/sm)",
+      "error": "color/destructive-strong, text/sm",
+      "figma": "Table / Cell Variant=Input e Input Error, com o Input exposto"
+    },
+    "loading": {
+      "skeleton": "Skeleton height/4, radius/md, color/muted, até 160px",
+      "rows": 5,
+      "figma": "Data Table State=Loading: Skeleton cell"
+    },
+    "empty": {
+      "paddingY": "spacing/20 (py-20, decisão de 18/11/2026, P6; antes py-8)",
+      "paddingX": "spacing/2",
+      "icon": "FolderOpen em color/muted-foreground",
+      "figma": "Empty Area nas variantes State=Empty e State=Error"
+    },
+    "error": {
+      "paddingY": "spacing/20",
+      "icon": "CircleAlert em color/destructive",
+      "action": "Button outline"
+    },
+    "pagination": {
+      "background": "color/background",
+      "border": "color/border, em cima",
+      "paddingX": "spacing/4",
+      "paddingY": "spacing/3",
+      "count": "color/muted-foreground, text/sm, role=status",
+      "pages": "spacing/3 entre os botões e a página",
+      "page": "color/foreground, text/sm",
+      "buttons": "Button outline icon (control-height/md), quadrado como no Figma (decisão de 17/11/2026; antes, redondo)",
+      "footer": "contagem (role=status), footer livre e paginação na mesma faixa (decisão de 18/11/2026)",
+      "figma": "Pagination: Count, Pages (Previous, Page, Next)"
+    },
+    "sticky": {
+      "background": "color/background, repetindo o fundo da linha",
+      "edge": "color/border, 1px"
     }
   },
   "states": {
@@ -100,7 +147,8 @@
     "selected": {
       "background": "color/accent",
       "attribute": "data-state=selected",
-      "note": "Também no hover. Decisão de 18/11/2026 (antes, color/muted). No Figma, Table / Cell State=Selected."
+      "checkbox": "Checkbox marcado: color/primary",
+      "note": "Também no hover. Decisão de 18/11/2026 (antes, color/muted). No Figma, Table / Cell State=Selected, na variante Content=Selection."
     },
     "focus": {
       "outline": "color/ring",
@@ -119,16 +167,34 @@
       "status": "decidida no código: destructive-strong (24 de 24 passam); o FieldError usa destructive"
     },
     {
-      "where": "coluna fixa",
-      "figma": "—",
-      "code": "stickyHeader, stickyFirstColumn, stickyLastColumn",
-      "status": "representação: comportamento de rolagem"
-    },
-    {
       "where": "mensagem de erro da célula editável",
-      "figma": "Input State=Error, sem a mensagem",
+      "figma": "Table / Cell Variant=Input Error: Input com erro, sem a mensagem",
       "code": "mensagem em destructive-strong embaixo do Input",
       "status": "representação"
+    },
+    {
+      "where": "coluna fixa e cabeçalho fixo",
+      "figma": "—",
+      "code": "stickyHeader, stickyFirstColumn, stickyLastColumn",
+      "status": "representação: comportamento de rolagem, só no código e no artigo (decisão de 18/11/2026)"
+    },
+    {
+      "where": "linha clicável",
+      "figma": "—",
+      "code": "onRowClick, com o contorno color/ring no foco",
+      "status": "representação: só no código e no artigo (decisão de 18/11/2026)"
+    },
+    {
+      "where": "cor da barra de seleção (selectionBar.color)",
+      "figma": "color/muted e color/border",
+      "code": "cor livre, fora de token",
+      "status": "decidida: selectionBar.color @deprecated (18/11/2026, P2)"
+    },
+    {
+      "where": "ícone Columns3 do botão Columns",
+      "figma": "traço ligado a stroke-width/stroke-[1-33], variável local da coleção 1. TailwindCSS, no componente Icon / Columns3",
+      "code": "ícone do lucide-react",
+      "status": "aberta: fora do Data Table; corrigir no componente do ícone"
     }
   ]
 }
