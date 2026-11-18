@@ -200,7 +200,7 @@
       "where": "linha de grupo (groupBy)",
       "figma": "Data Table / Group Cell: uma célula por coluna no slot Cells, com a faixa de color/muted e a borda; o rótulo e a contagem ficam na primeira coluna e são cortados na largura dela",
       "code": "uma linha com th scope=rowgroup e colSpan de todas as colunas: o rótulo ocupa a largura toda",
-      "status": "representação: o Figma não tem colSpan; decidida em 18/11/2026 (o set Data Table / Group Row e a variante Content=Groups saíram do uso)"
+      "status": "representação: o Figma não tem colSpan; decidida em 18/11/2026 (o set Data Table / Group Row e as variantes Content=Groups, Selection e Detail foram removidos do Figma)"
     }
   ]
 }
