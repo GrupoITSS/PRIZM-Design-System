@@ -28,7 +28,8 @@ export const dataTableSortButton = tableSortButton;
 /** Linha de grupo: `muted`, 40px, texto `medium`, com a contagem em `muted-foreground`. */
 export const dataTableGroupRow = "border-b border-border bg-muted hover:bg-muted";
 export const dataTableGroupCell = "h-10 px-2 py-2 text-left text-sm font-medium text-foreground";
-export const dataTableGroupCount = "ml-2 font-normal text-muted-foreground";
+/** Contagem na linha de grupo: Badge secondary sm, número (decisão de 18/11/2026, P1). */
+export const dataTableGroupCount = "ml-2";
 /**
  * Botão de recolher o grupo: chevron e o conteúdo da linha de grupo. Ocupa o padding da célula, como
  * o botão de ordenar, para o texto não mudar de lugar entre grupo que recolhe e que não recolhe.
