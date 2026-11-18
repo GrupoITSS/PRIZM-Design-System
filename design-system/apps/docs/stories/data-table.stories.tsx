@@ -594,48 +594,6 @@ export const ClickableRow: Story = {
   },
 };
 
-export const RowHighlight: Story = {
-  name: "Linha em destaque",
-  parameters: story(
-    "`isRowHighlighted` pinta o fundo da linha com `muted`, para diferenciar umas linhas das outras. Aqui, o complemento de licença (P-1.01-C) logo abaixo do produto, como no catálogo da proposta do Pricing. É o mesmo fundo da linha selecionada: com seleção ligada, o checkbox diferencia as duas.",
-  ),
-  render: () => {
-    type ItemCatalogo = {
-      codigo: string;
-      produto: string;
-      licenca: string;
-      preco: number;
-      complemento?: boolean;
-    };
-    const itens: ItemCatalogo[] = [
-      { codigo: "P-1.01-S", produto: "Documentos", licenca: "Simultâneo (padrão)", preco: 150 },
-      { codigo: "P-1.01-C", produto: "", licenca: "Consulta", preco: 10, complemento: true },
-      { codigo: "P-1.02-S", produto: "Formulários", licenca: "Simultâneo (padrão)", preco: 150 },
-      { codigo: "P-1.03-S", produto: "Registros", licenca: "Simultâneo (padrão)", preco: 150 },
-    ];
-    return (
-      <DataTable<ItemCatalogo, unknown>
-        aria-label="Licenciamento"
-        columns={[
-          { accessorKey: "codigo", header: "Código", size: 120 },
-          { accessorKey: "produto", header: "Produto", size: 200 },
-          { accessorKey: "licenca", header: "Licença", size: 200 },
-          {
-            accessorKey: "preco",
-            header: "Preço",
-            size: 140,
-            cell: ({ getValue }) => brl(getValue<number>()),
-            meta: { prizm: { cellAlign: "right" } },
-          },
-        ]}
-        data={itens}
-        getRowId={(i) => i.codigo}
-        isRowHighlighted={(i) => i.complemento === true}
-      />
-    );
-  },
-};
-
 export const RowActions: Story = {
   name: "Ações por linha",
   parameters: story(
@@ -803,7 +761,6 @@ export const GruposQueRecolhem: Story = {
             <Badge variant="outline">{rows[0]?.cobranca}</Badge>
           </span>
         )}
-        isRowHighlighted={(i) => i.complemento === true}
       />
     );
   },

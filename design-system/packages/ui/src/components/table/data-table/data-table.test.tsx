@@ -801,21 +801,13 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
       expect(screen.getByPlaceholderText("Filtrar...")).toBeInTheDocument();
     });
 
-    it("linha em destaque: fundo muted, data-highlighted, sem barra", () => {
-      render(
-        <DataTable
-          columns={basicColumns}
-          data={mockData}
-          isRowHighlighted={(r) => r.status === "failed"}
-        />,
-      );
-      const row = screen.getByText("admin@example.com").closest("tr")!;
-      expect(row).toHaveAttribute("data-highlighted", "true");
-      expect(row).toHaveClass("bg-muted");
-      expect(row.querySelector("td")?.className).not.toMatch(/shadow-\[inset_3px/);
-      expect(screen.getByText("test@example.com").closest("tr")).not.toHaveAttribute(
-        "data-highlighted",
-      );
+    it("linha selecionada em accent (decisão de 18/11)", () => {
+      render(<DataTable columns={basicColumns} data={mockData} enableRowSelection />);
+      const box = screen.getAllByRole("checkbox", { name: "Selecionar linha" })[0];
+      fireEvent.click(box);
+      const row = box.closest("tr")!;
+      expect(row).toHaveAttribute("data-state", "selected");
+      expect(row.className).toContain("data-[state=selected]:bg-accent");
     });
 
     it("linha de grupo: um tbody por grupo, com th scope=rowgroup e a contagem", () => {

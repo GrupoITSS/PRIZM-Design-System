@@ -7,7 +7,6 @@ export {
   tableCellTruncate,
   tableExpandCell,
   tableExpandHead,
-  tableRowHighlighted,
   tableSortButton,
   tableSubRowIndent,
 } from "./table.styles";

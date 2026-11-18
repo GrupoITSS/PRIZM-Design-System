@@ -13,8 +13,13 @@ export const tableBase = "w-full caption-bottom text-sm border-collapse";
 export const tableHeader = "[&_tr]:border-b border-border";
 export const tableBody = "[&_tr:last-child]:border-0";
 export const tableFooter = "border-t border-border bg-muted/50 font-medium [&>tr]:last:border-b-0";
+/**
+ * Linha. Hover em `muted` a 50%. Linha selecionada (checkbox, DataTable) e linha pai aberta (com as
+ * sub-linhas à mostra) em `accent`, também no hover (decisão de 18/11/2026). No Figma, Table / Cell
+ * State=Selected.
+ */
 export const tableRow =
-  "border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted";
+  "border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-accent data-[state=selected]:hover:bg-accent data-[expanded=true]:bg-accent data-[expanded=true]:hover:bg-accent";
 export const tableHead =
   "h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]";
 export const tableCell =
@@ -27,9 +32,6 @@ export const tableCaption = "mt-4 text-sm text-muted-foreground";
  */
 export const tableSortButton =
   "-mx-2 inline-flex h-8 items-center gap-1 rounded-md px-2 font-medium text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring [&_svg]:size-4 [&_svg]:shrink-0";
-
-/** Linha em destaque (Table e DataTable): fundo `muted`, como a Table / Cell State=Selected. */
-export const tableRowHighlighted = "bg-muted hover:bg-muted";
 
 export const alignLeft = "text-left";
 export const alignRight = "text-right";

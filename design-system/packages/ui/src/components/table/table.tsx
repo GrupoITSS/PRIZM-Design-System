@@ -23,7 +23,6 @@ import {
   tableRow,
   tableSubRowIndent,
   tableWrapper,
-  tableRowHighlighted,
   tableSortButton,
 } from "./table.styles";
 import type { TableColumn, TableProps, TableRowMeta, TableSort } from "./table.types";
@@ -105,7 +104,6 @@ function Table<T extends Record<string, unknown>>({
   onExpandedChange,
   getExpandLabel,
   expandColumnLabel = "Expandir",
-  isRowHighlighted,
   defaultSort = null,
   sort: controlledSort,
   onSortChange,
@@ -175,8 +173,7 @@ function Table<T extends Record<string, unknown>>({
       data-slot="table-row"
       data-depth={expandable ? meta.depth : undefined}
       data-expanded={meta.subRows ? (meta.isExpanded ? "true" : "false") : undefined}
-      data-highlighted={isRowHighlighted?.(row) ? true : undefined}
-      className={cn(tableRow, isRowHighlighted?.(row) && tableRowHighlighted)}
+      className={tableRow}
     >
       {expandable && (
         <td

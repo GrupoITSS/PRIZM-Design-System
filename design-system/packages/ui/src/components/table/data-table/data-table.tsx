@@ -62,7 +62,6 @@ import {
   dataTableGroupToggle,
   dataTableHead,
   dataTableRowClickable,
-  dataTableRowHighlighted,
   dataTableSkeleton,
   dataTableStickyCell,
   dataTableStickyEdgeLeft,
@@ -347,11 +346,6 @@ export interface DataTableProps<TData, TValue> {
   /** Sorting is done by the server: the table does not reorder `data`. @default false */
   manualSorting?: boolean;
   /**
-   * Highlights a row with the `muted` background, to set it apart from the others (e.g. a sub-item).
-   * Same look as the selected row: with row selection on, the checkbox tells them apart.
-   */
-  isRowHighlighted?: (row: TData) => boolean;
-  /**
    * Groups rows under a group row, by the returned key. Groups follow the order of `data`: sort the
    * data by the group first. Each group is a `<tbody>` with a `<th scope="rowgroup">`.
    */
@@ -570,7 +564,6 @@ export function DataTable<TData, TValue>({
   defaultSorting = [],
   onSortingChange,
   manualSorting = false,
-  isRowHighlighted,
   groupBy,
   renderGroupLabel,
   collapsibleGroups = false,
@@ -877,7 +870,6 @@ export function DataTable<TData, TValue>({
   }
 
   const renderRow = (row: Row<TData>, trId?: string) => {
-    const highlighted = isRowHighlighted?.(row.original) ?? false;
     const detail =
       renderRowDetail && expandedRows.includes(row.id) ? renderRowDetail(row.original) : null;
     const cells = row.getVisibleCells();
@@ -887,12 +879,10 @@ export function DataTable<TData, TValue>({
         <TableRow
           id={trId}
           data-state={row.getIsSelected() ? "selected" : undefined}
-          data-highlighted={highlighted || undefined}
           tabIndex={activate ? 0 : undefined}
           className={cn(
             "border-border transition-colors",
             activate && dataTableRowClickable,
-            highlighted && dataTableRowHighlighted,
             getRowClassName?.(row.original),
           )}
           onClick={

@@ -99,13 +99,13 @@ describe("Table × mapa de tokens: ordenação, destaque e vazio (17/11/2026)", 
     expect(s.iconColor).toMatch(/^color\/foreground/);
   });
 
-  it("linha em destaque: fundo do mapa, também no hover", async () => {
-    const { tableRowHighlighted } = await import("./table.styles");
-    const h = map.states.highlighted;
-    expect(cls(tableRowHighlighted)).toEqual(
-      expect.arrayContaining([`bg-${color(h.background)}`, `hover:bg-${color(h.background)}`]),
-    );
-    expect(h.attribute).toBe("data-highlighted");
+  it("linha selecionada e linha pai aberta em accent, também no hover", () => {
+    const c = cls(tableRow);
+    for (const st of [map.states.selected, map.states.expanded]) {
+      const [k, v] = st.attribute.replace(/^data-/, "").split("=");
+      expect(c).toContain(`data-[${k}=${v}]:bg-${color(st.background)}`);
+      expect(c).toContain(`data-[${k}=${v}]:hover:bg-${color(st.background)}`);
+    }
   });
 
   it("células do Figma Number, Center, Wrap e Badges têm par no código", () => {

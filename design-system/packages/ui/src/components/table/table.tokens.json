@@ -97,18 +97,17 @@
       "note": "No Figma, camada \"Hover fill\" a 50%."
     },
     "selected": {
-      "background": "color/muted",
+      "background": "color/accent",
       "attribute": "data-state=selected",
       "on": "linha (tr)",
-      "note": "Seleção do DataTable (checkbox), na primitiva TableRow. Na Table por props, o destaque é isRowHighlighted."
+      "note": "Seleção do DataTable (checkbox), na primitiva TableRow. Também no hover. Decisão de 18/11/2026."
     },
-    "note": "O estado é da linha, não da célula. A seleção é do DataTable, que marca o checkbox; a Table só pinta a linha em destaque.",
-    "highlighted": {
-      "background": "color/muted",
-      "attribute": "data-highlighted",
-      "on": "linha (tr)",
-      "prop": "isRowHighlighted",
-      "figma": "Table / Cell State=Selected"
+    "note": "O estado é da linha, não da célula. No Figma, a Table é montada por colunas: marque o mesmo State na célula de cada coluna da linha.",
+    "expanded": {
+      "background": "color/accent",
+      "attribute": "data-expanded=true",
+      "on": "linha pai (tr), só quando aberta",
+      "note": "Linha com sub-linhas à mostra. Fechada, sem fundo. Decisão de 18/11/2026."
     }
   },
   "cellTypes": {

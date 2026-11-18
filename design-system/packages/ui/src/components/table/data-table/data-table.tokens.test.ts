@@ -16,10 +16,6 @@ describe("DataTable × mapa de tokens (data-table.tokens.json)", () => {
     expect(cls(s.dataTableCellNumeric)).toContain("tabular-nums");
   });
 
-  it("linha em destaque: só o fundo muted", () => {
-    expect(cls(s.dataTableRowHighlighted)).toContain(`bg-${color(map.highlighted.background)}`);
-  });
-
   it("linha de grupo, resumo e detalhe", () => {
     expect(cls(s.dataTableGroupRow)).toContain(`bg-${color(map.parts.groupRow.background)}`);
     expect(cls(s.dataTableGroupCell)).toContain("h-10");

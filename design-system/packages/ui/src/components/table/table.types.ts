@@ -121,11 +121,6 @@ export interface TableProps<T = Record<string, unknown>> extends Omit<
   getExpandLabel?: (row: T, isExpanded: boolean) => string;
   /** Visually hidden header of the expand column. @default "Expandir" */
   expandColumnLabel?: string;
-  /**
-   * Highlights a row with the `muted` background (`data-highlighted`), to set it apart from the
-   * others. Same name as in the DataTable (decision of 17/11/2026).
-   */
-  isRowHighlighted?: (row: T) => boolean;
   /** Initial sorting (uncontrolled). Columns sort with `sortable: true`. */
   defaultSort?: TableSort | null;
   /** Sorting (controlled). `null` = no sorting. */

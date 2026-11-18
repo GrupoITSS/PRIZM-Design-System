@@ -1,4 +1,4 @@
-import { tableRowHighlighted, tableSortButton } from "../table.styles";
+import { tableSortButton } from "../table.styles";
 
 /**
  * Estilos do DataTable.
@@ -25,13 +25,6 @@ export const dataTableRowClickable =
 /** Botão de ordenar no cabeçalho: ocupa o padding da célula para o texto não mudar de lugar. */
 export const dataTableSortButton = tableSortButton;
 
-/**
- * Linha em destaque (decisão de 17/11/2026): só o fundo `muted`, para diferenciar linhas da tabela,
- * como a Table / Cell com State=Selected no Figma (referência: catálogo da proposta, Redesign
- * Pricing). Sem tons nem barra.
- */
-export const dataTableRowHighlighted = tableRowHighlighted;
-
 /** Linha de grupo: `muted`, 40px, texto `medium`, com a contagem em `muted-foreground`. */
 export const dataTableGroupRow = "border-b border-border bg-muted hover:bg-muted";
 export const dataTableGroupCell = "h-10 px-2 py-2 text-left text-sm font-medium text-foreground";
@@ -56,10 +49,10 @@ export const dataTableDetailCell = "px-2 py-4 pl-14";
 
 /**
  * Coluna fixa. A célula fixa precisa de fundo opaco: repete o fundo da linha (hover, selecionada,
- * destaque), já que o da linha é transparente ou fica por baixo das células que rolam.
+ * aberta), já que o da linha é transparente ou fica por baixo das células que rolam.
  */
 export const dataTableStickyCell =
-  "sticky z-10 bg-background [tr:hover>&]:bg-[color-mix(in_oklab,var(--prizm-color-muted)_50%,var(--prizm-color-background))] [tr[data-state=selected]>&]:bg-muted [tr[data-highlighted=true]>&]:bg-muted";
+  "sticky z-10 bg-background [tr:hover>&]:bg-[color-mix(in_oklab,var(--prizm-color-muted)_50%,var(--prizm-color-background))] [tr[data-state=selected]>&]:bg-accent [tr[data-expanded=true]>&]:bg-accent";
 /** Cabeçalho da coluna fixa. */
 export const dataTableStickyHead = "sticky z-20 bg-background";
 /** Borda que separa a coluna fixa das que rolam. */

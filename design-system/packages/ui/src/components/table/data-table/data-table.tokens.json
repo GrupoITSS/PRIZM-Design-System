@@ -7,9 +7,7 @@
     "table": "design-system/packages/ui/src/components/table/table.tokens.json",
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=97dd20dc-cd4c-42ef-a25c-cb4e45ac6281&version=v1",
-    "pullRequests": [
-      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/212"
-    ],
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/212"],
     "figmaGroupRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3932",
     "figmaDetailRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3933"
   },
@@ -71,24 +69,24 @@
       "edge": "color/border, 1px"
     }
   },
-  "highlighted": {
-    "background": "color/muted",
-    "attribute": "data-highlighted=true",
-    "figma": "Table / Cell State=Selected",
-    "note": "Decisão de 17/11/2026: só o fundo, para diferenciar linhas (referência: catálogo da proposta, Redesign Pricing). Sem tons nem barra."
-  },
   "states": {
     "hover": {
       "background": "color/muted",
       "opacity": 0.5
     },
     "selected": {
-      "background": "color/muted",
-      "attribute": "data-state=selected"
+      "background": "color/accent",
+      "attribute": "data-state=selected",
+      "note": "Também no hover. Decisão de 18/11/2026 (antes, color/muted). No Figma, Table / Cell State=Selected."
     },
     "focus": {
       "outline": "color/ring",
       "width": "2px, por dentro da linha"
+    },
+    "expanded": {
+      "background": "color/accent",
+      "attribute": "data-expanded=true",
+      "note": "Linha pai com as sub-linhas à mostra (decisão de 18/11/2026)."
     }
   },
   "divergences": [

@@ -442,11 +442,22 @@ describe("Table: decisões de 17/11/2026 (teste da Proposta)", () => {
     expect(screen.getByText("1290").closest("td")).toHaveClass("text-right", "tabular-nums");
   });
 
-  it("isRowHighlighted: fundo muted e data-highlighted, como no DataTable", () => {
-    render(<Table<P> columns={colunas} rows={linhas} isRowHighlighted={(r) => r.id === "1"} />);
+  it("linha pai aberta em accent; fechada sem fundo (decisão de 18/11)", () => {
+    type I = { id: string; nome: string; filhos?: I[] };
+    const itens: I[] = [{ id: "a", nome: "Produto A", filhos: [{ id: "a1", nome: "Plano 1" }] }];
+    render(
+      <Table<I>
+        columns={[{ key: "nome", header: "Produto" }]}
+        rows={itens}
+        getRowKey={(i) => i.id}
+        getSubRows={(i) => i.filhos}
+      />,
+    );
     const tr = screen.getByText("Produto A").closest("tr")!;
-    expect(tr).toHaveAttribute("data-highlighted", "true");
-    expect(tr).toHaveClass("bg-muted");
+    expect(tr).toHaveAttribute("data-expanded", "false");
+    expect(tr.className).toContain("data-[expanded=true]:bg-accent");
+    fireEvent.click(screen.getByRole("button", { name: /Expandir Produto A/ }));
+    expect(tr).toHaveAttribute("data-expanded", "true");
   });
 
   it("ordenação: botão no cabeçalho, aria-sort, crescente e decrescente", () => {

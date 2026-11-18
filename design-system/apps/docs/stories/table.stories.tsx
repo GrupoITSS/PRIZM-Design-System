@@ -143,7 +143,7 @@ const meta: Meta<typeof Table<OrgRow>> = {
           "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com), com tokens PRIZM.\n\n" +
           "Tabela de dados em colunas, com cabeçalho, linhas, rodapé e legenda. API por props: `columns`, `rows`, `caption`, `footerRows` e `emptyMessage`. Para composição livre, as primitivas (`TableRoot`, `TableHeader`, `TableRow`…).\n\n" +
           "Renderizadores PRIZM (`contentRenderType` e `contentFormatType`), compatíveis com a meta API do Grid do Cockpit: `status`, `text-image`, `text-button`, `badge`, `hover`, `status-summary-with-popover` e formatos de CNPJ, CPF, data, moeda e outros.\n\n" +
-          "Dê nome à tabela com `caption` ou `aria-label`. A Table ordena (`sortable` na coluna), pinta linhas em destaque (`isRowHighlighted`) e mostra o Empty quando não há linhas. Para filtrar, paginar ou selecionar, use o DataTable.\n\n" +
+          "Dê nome à tabela com `caption` ou `aria-label`. A Table ordena (`sortable` na coluna), e mostra o Empty quando não há linhas. Para filtrar, paginar ou selecionar, use o DataTable.\n\n" +
           '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/table" target="_blank" rel="noopener noreferrer">Table — shadcn/ui</a>\n\n' +
           `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
@@ -155,7 +155,6 @@ const meta: Meta<typeof Table<OrgRow>> = {
     caption: { control: "text" },
     emptyMessage: { control: "text" },
     getSubRows: { control: false },
-    isRowHighlighted: { control: false },
     defaultSort: { control: "object" },
     manualSort: { control: "boolean" },
     sort: { control: "object" },
@@ -729,42 +728,6 @@ export const Alignment: Story = {
         { id: "3", produto: "Treinamento", qtd: 12, valor: 480 },
       ]}
       getRowKey={(r) => r.id}
-    />
-  ),
-};
-
-/** Linha em destaque: `isRowHighlighted`, o mesmo nome do DataTable. */
-export const RowHighlight: Story = {
-  name: "Linha em destaque",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "`isRowHighlighted` pinta o fundo da linha com `muted`, para diferenciar umas linhas das outras (aqui, o complemento de licença). O mesmo nome e o mesmo visual no DataTable. No Figma, Table / Cell com State=Selected.",
-      },
-    },
-  },
-  render: () => (
-    <Table<{ id: string; codigo: string; licenca: string; preco: number; complemento?: boolean }>
-      aria-label="Licenciamento"
-      columns={[
-        { key: "codigo", header: "Código", width: "140px" },
-        { key: "licenca", header: "Licença" },
-        {
-          key: "preco",
-          header: "Preço",
-          align: "right",
-          width: "140px",
-          contentFormatType: ContentFormatType.CURRENCY,
-        },
-      ]}
-      rows={[
-        { id: "1", codigo: "P-1.01-S", licenca: "Simultâneo (padrão)", preco: 150 },
-        { id: "2", codigo: "P-1.01-C", licenca: "Consulta", preco: 10, complemento: true },
-        { id: "3", codigo: "P-1.02-S", licenca: "Simultâneo (padrão)", preco: 150 },
-      ]}
-      getRowKey={(r) => r.id}
-      isRowHighlighted={(r) => r.complemento === true}
     />
   ),
 };
