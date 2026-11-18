@@ -987,4 +987,203 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
       expect(onRowClick).not.toHaveBeenCalled();
     });
   });
+
+  describe("decisões de 18/11/2026", () => {
+    it("filters type search com columnId: a tabela filtra a coluna", () => {
+      render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          filters={[{ type: "search", columnId: "email", placeholder: "Buscar e-mail" }]}
+        />,
+      );
+      fireEvent.change(screen.getByRole("textbox", { name: "Buscar e-mail" }), {
+        target: { value: "admin" },
+      });
+      expect(screen.getByText("admin@example.com")).toBeInTheDocument();
+      expect(screen.queryByText("test@example.com")).not.toBeInTheDocument();
+    });
+
+    it("filters type search com onChange: o produto filtra, com espera", () => {
+      vi.useFakeTimers();
+      const onChange = vi.fn();
+      render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          filters={[{ type: "search", value: "", onChange, placeholder: "Buscar" }]}
+        />,
+      );
+      fireEvent.change(screen.getByRole("textbox", { name: "Buscar" }), {
+        target: { value: "acme" },
+      });
+      expect(onChange).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(400);
+      expect(onChange).toHaveBeenCalledWith("acme");
+      expect(screen.getByText("test@example.com")).toBeInTheDocument();
+      vi.useRealTimers();
+    });
+
+    it("busca fica à esquerda, depois dos selects e do status (P4)", () => {
+      const { container } = render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          showColumnVisibility
+          filters={[
+            { type: "search", columnId: "email", placeholder: "Buscar" },
+            { id: "grupo", label: "Grupo", allLabel: "Todos", options: [], onChange: () => {} },
+            { type: "status", value: "all", onChange: () => {} },
+          ]}
+        />,
+      );
+      const toolbar = container.querySelector("[data-slot=data-table] > div")!;
+      const [left, right] = Array.from(toolbar.children);
+      expect(
+        within(left as HTMLElement).getByRole("textbox", { name: "Buscar" }),
+      ).toBeInTheDocument();
+      expect(within(right as HTMLElement).queryByRole("textbox")).toBeNull();
+      const order = Array.from(left.querySelectorAll("input, button, [role=combobox]")).map(
+        (e) => e.getAttribute("aria-label") ?? e.getAttribute("placeholder"),
+      );
+      expect(order.indexOf("Buscar")).toBe(order.length - 1);
+    });
+
+    it("APIs antigas de filtro ainda funcionam e avisam no console", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          showFilter
+          filterColumn="email"
+          filterPlaceholder="Filtrar e-mail"
+          getRowClassName={() => undefined}
+        />,
+      );
+      expect(screen.getByRole("textbox", { name: "Filtrar e-mail" })).toBeInTheDocument();
+      // Cada aviso sai uma vez por sessão; getRowClassName não aparece nos outros testes.
+      expect(warn.mock.calls.flat().join(" ")).toMatch(/getRowClassName está @deprecated/);
+      warn.mockRestore();
+    });
+
+    it("pagination sem onPageChange: a tabela pagina, com perPage", () => {
+      const muitos = Array.from({ length: 5 }, (_, i) => ({
+        id: String(i),
+        amount: i,
+        status: "pending" as const,
+        email: `u${i}@x.com`,
+      }));
+      render(<DataTable columns={basicColumns} data={muitos} pagination={{ perPage: 2 }} />);
+      expect(screen.getByRole("status")).toHaveTextContent("Mostrando 1-2 de 5 itens");
+      expect(screen.getByText("Página 1 de 3")).toBeInTheDocument();
+      fireEvent.click(screen.getByRole("button", { name: "Próxima página" }));
+      expect(screen.getByText("u2@x.com")).toBeInTheDocument();
+      expect(screen.getByText("Página 2 de 3")).toBeInTheDocument();
+    });
+
+    it("pagination com onPageChange: o produto pagina; footer no mesmo rodapé", () => {
+      const onPageChange = vi.fn();
+      const { container } = render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          footer={<span>Total R$ 600</span>}
+          pagination={{ currentPage: 1, totalPages: 4, totalRows: 40, perPage: 10, onPageChange }}
+        />,
+      );
+      const footer = container.querySelector("[data-slot=data-table-footer]")!;
+      expect(within(footer as HTMLElement).getByText("Total R$ 600")).toBeInTheDocument();
+      expect(within(footer as HTMLElement).getByRole("status")).toHaveTextContent(
+        "Mostrando 1-10 de 40 itens",
+      );
+      fireEvent.click(screen.getByRole("button", { name: "Próxima página" }));
+      expect(onPageChange).toHaveBeenCalledWith(2);
+    });
+
+    it("sub-linhas: botão na primeira coluna, linha pai aberta em accent, recuo", () => {
+      type Item = { id: string; nome: string; filhos?: Item[] };
+      const itens: Item[] = [
+        { id: "a", nome: "Produto A", filhos: [{ id: "a1", nome: "Plano 1" }] },
+        { id: "b", nome: "Produto B" },
+      ];
+      render(
+        <DataTable<Item, unknown>
+          columns={[{ accessorKey: "nome", header: "Produto" }]}
+          data={itens}
+          getRowId={(i) => i.id}
+          getSubRows={(i) => i.filhos}
+        />,
+      );
+      const pai = screen.getByText("Produto A").closest("tr")!;
+      expect(pai).toHaveAttribute("data-expanded", "false");
+      expect(screen.queryByText("Plano 1")).not.toBeInTheDocument();
+      expect(screen.getAllByRole("button", { name: /Expandir/ })).toHaveLength(1);
+      fireEvent.click(screen.getByRole("button", { name: "Expandir Produto A" }));
+      expect(pai).toHaveAttribute("data-expanded", "true");
+      expect(pai.className).toContain("data-[expanded=true]:bg-accent");
+      const filho = screen.getByText("Plano 1").closest("tr")!;
+      expect(filho).toHaveAttribute("data-depth", "1");
+      expect(screen.getByText("Plano 1").closest("td")).toHaveClass("pl-10");
+      const botao = screen.getByRole("button", { name: "Recolher Produto A" });
+      expect(botao).toHaveAttribute("aria-expanded", "true");
+      expect(botao.getAttribute("aria-controls")).toBe(filho.id);
+    });
+
+    it("sub-linhas e detalhe juntos: ficam as sub-linhas, com aviso", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      type Item = { id: string; nome: string; filhos?: Item[] };
+      render(
+        <DataTable<Item, unknown>
+          columns={[{ accessorKey: "nome", header: "Produto" }]}
+          data={[{ id: "a", nome: "Produto A", filhos: [{ id: "a1", nome: "Plano 1" }] }]}
+          getSubRows={(i) => i.filhos}
+          renderRowDetail={() => "detalhe"}
+        />,
+      );
+      expect(screen.getByRole("button", { name: "Expandir Produto A" })).toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /Ver detalhes/ })).toBeNull();
+      warn.mockRestore();
+    });
+
+    it("contagem do grupo num Badge (P1)", () => {
+      render(<DataTable columns={basicColumns} data={mockData} groupBy={(r) => r.status} />);
+      const th = screen.getAllByRole("rowheader")[0];
+      expect(th.querySelector("[data-slot=badge]")).toHaveTextContent("1");
+    });
+
+    it("barra de seleção com singular e plural (P3) e anúncio em role=status", () => {
+      render(
+        <DataTable
+          columns={basicColumns}
+          data={mockData}
+          enableRowSelection
+          selectionBar={{
+            entityName: { one: "pagamento selecionado", other: "pagamentos selecionados" },
+          }}
+        />,
+      );
+      const boxes = screen.getAllByRole("checkbox", { name: "Selecionar linha" });
+      fireEvent.click(boxes[0]);
+      expect(screen.getByRole("status")).toHaveTextContent("1 pagamento selecionado");
+      fireEvent.click(boxes[1]);
+      expect(screen.getByRole("status")).toHaveTextContent("2 pagamentos selecionados");
+    });
+
+    it("vazio e erro com py-20 (P6)", () => {
+      const { container, rerender } = render(<DataTable columns={basicColumns} data={[]} />);
+      expect(container.querySelector("[data-slot=data-table-empty]")).toHaveClass("py-20");
+      rerender(<DataTable columns={basicColumns} data={[]} error="Falhou" />);
+      expect(container.querySelector("[data-slot=data-table-error]")).toHaveClass("py-20");
+    });
+
+    it("menu de colunas com o título Colunas visíveis", () => {
+      render(<DataTable columns={basicColumns} data={mockData} showColumnVisibility />);
+      fireEvent.pointerDown(screen.getByRole("button", { name: /Colunas/ }), {
+        button: 0,
+        ctrlKey: false,
+      });
+      expect(screen.getByText("Colunas visíveis")).toBeInTheDocument();
+    });
+  });
 });

@@ -427,16 +427,14 @@ export const ServerSorting: Story = {
 export const WithFiltering: Story = {
   name: "Busca por coluna",
   parameters: story(
-    "`showFilter` e `filterColumn` põem um campo de busca que filtra uma coluna, na hora, no navegador.",
+    '`filters` com `type: "search"` e `columnId`: a tabela filtra a coluna, na hora, nos dados que tem. Use quando todos os dados estão na tela. Antes, `showFilter` e `filterColumn` (`@deprecated` desde 18/11/2026).',
   ),
   render: () => (
     <DataTable
       aria-label="Propostas"
       columns={colunasBasicas}
       data={propostas}
-      showFilter
-      filterColumn="cliente"
-      filterPlaceholder="Buscar cliente..."
+      filters={[{ type: "search", columnId: "cliente", placeholder: "Buscar cliente" }]}
     />
   ),
 };
@@ -444,7 +442,7 @@ export const WithFiltering: Story = {
 export const ToolbarFilters: Story = {
   name: "Filtros na toolbar",
   parameters: story(
-    "`toolbarFilters` (busca com espera de 350 ms e status Ativos, Inativos e Todos) e `filters` (selects próprios). O filtro em si é do produto: a tabela só mostra os campos e avisa as mudanças.",
+    "`filters` com `type`: `select` (Responsável), `status` (Ativos, Inativos e Todos) e `search` com `onChange` (espera de 350 ms entre teclas). O filtro é do produto: a tabela mostra os campos e avisa as mudanças. Selects e status à esquerda, a busca depois deles. Antes, `toolbarFilters` (`@deprecated` desde 18/11/2026).",
   ),
   render: function FiltrosStory() {
     const [busca, setBusca] = React.useState("");
@@ -461,12 +459,11 @@ export const ToolbarFilters: Story = {
         aria-label="Propostas"
         columns={colunasBasicas}
         data={dados}
-        toolbarFilters={[
+        filters={[
           { type: "search", placeholder: "Buscar cliente", value: busca, onChange: setBusca },
           { type: "status", value: status, onChange: setStatus },
-        ]}
-        filters={[
           {
+            type: "select",
             id: "responsavel",
             label: "Responsável",
             allLabel: "Todos os responsáveis",
@@ -486,17 +483,22 @@ export const ToolbarFilters: Story = {
 export const WithPagination: Story = {
   name: "Paginação",
   parameters: story(
-    '`showPagination` pagina no navegador, de 10 em 10, com a contagem e "Página X de Y". Os botões são o Button outline `icon`, como no Figma.',
+    '`pagination` sem `onPageChange`: a tabela pagina os dados que tem, de `perPage` em `perPage` (10 por padrão), com a contagem e "Página X de Y" no rodapé. Os botões são o Button outline `icon`, como no Figma. Antes, `showPagination` (`@deprecated` desde 18/11/2026).',
   ),
   render: () => (
-    <DataTable aria-label="Propostas" columns={colunasBasicas} data={propostas} showPagination />
+    <DataTable
+      aria-label="Propostas"
+      columns={colunasBasicas}
+      data={propostas}
+      pagination={{ perPage: 5 }}
+    />
   ),
 };
 
 export const ServerPagination: Story = {
   name: "Paginação no servidor",
   parameters: story(
-    "`pagination` recebe a página, o total e `onPageChange`: a tabela mostra a página que o produto buscou. Use com `isLoading` enquanto a próxima página chega.",
+    "`pagination` com `onPageChange`: o produto pagina. A tabela recebe só a página atual em `data`, mais a página, o total e `perPage`. Use com `isLoading` enquanto a próxima página chega.",
   ),
   render: function PaginacaoServidorStory() {
     const porPagina = 5;
@@ -542,7 +544,7 @@ export const WithColumnVisibility: Story = {
 export const WithRowSelection: Story = {
   name: "Seleção de linhas",
   parameters: story(
-    "`enableRowSelection` põe a coluna de checkbox. Com linhas marcadas, aparece a barra de seleção, com as ações de `selectionBar.actions`. `showSelectedCount` mostra a contagem no rodapé.",
+    "`enableRowSelection` põe a coluna de checkbox. A linha marcada fica em `accent`. Com linhas marcadas, aparece a barra de seleção, com o nome no singular e no plural (`selectionBar.entityName`) e as ações de `selectionBar.actions`; a contagem é anunciada ao leitor de tela.",
   ),
   render: () => (
     <DataTable
@@ -552,8 +554,8 @@ export const WithRowSelection: Story = {
       getRowId={(p) => p.id}
       enableRowSelection
       defaultSelection={{ "P-1043": true }}
-      showSelectedCount
       selectionBar={{
+        entityName: { one: "proposta selecionada", other: "propostas selecionadas" },
         actions: (
           <>
             <Button variant="outline" size="sm">
@@ -590,6 +592,63 @@ export const ClickableRow: Story = {
           {aberta ? `Aberta: ${aberta}` : "Clique numa linha, ou use Tab e Enter."}
         </p>
       </div>
+    );
+  },
+};
+
+export const SubRows: Story = {
+  name: "Sub-linhas",
+  parameters: story(
+    "`getSubRows`: a linha com sub-linhas ganha o botão de abrir, numa coluna à esquerda, como na Table. Aberta, a linha pai fica em `accent` e as sub-linhas aparecem recuadas. Um nível só. Diferente de grupo: a linha pai é um dado (o produto), não um cabeçalho. Não use com `renderRowDetail`.",
+  ),
+  render: () => {
+    type ItemCatalogo = {
+      codigo: string;
+      produto: string;
+      licenca: string;
+      preco: number;
+      complementos?: ItemCatalogo[];
+    };
+    const itens: ItemCatalogo[] = [
+      {
+        codigo: "P-1.01-S",
+        produto: "Documentos",
+        licenca: "Simultâneo (padrão)",
+        preco: 150,
+        complementos: [{ codigo: "P-1.01-C", produto: "Consulta", licenca: "Consulta", preco: 10 }],
+      },
+      { codigo: "P-1.02-S", produto: "Formulários", licenca: "Simultâneo (padrão)", preco: 150 },
+      {
+        codigo: "P-1.03-S",
+        produto: "Registros",
+        licenca: "Simultâneo (padrão)",
+        preco: 150,
+        complementos: [
+          { codigo: "P-1.03-C", produto: "Consulta", licenca: "Consulta", preco: 10 },
+          { codigo: "P-1.03-A", produto: "Auditoria", licenca: "Simultâneo", preco: 40 },
+        ],
+      },
+    ];
+    return (
+      <DataTable<ItemCatalogo, unknown>
+        aria-label="Licenciamento"
+        columns={[
+          { accessorKey: "codigo", header: "Código", size: 120 },
+          { accessorKey: "produto", header: "Produto", size: 200 },
+          { accessorKey: "licenca", header: "Licença", size: 200 },
+          {
+            accessorKey: "preco",
+            header: "Preço",
+            size: 140,
+            cell: ({ getValue }) => brl(getValue<number>()),
+            meta: { prizm: { cellAlign: "right" } },
+          },
+        ]}
+        data={itens}
+        getRowId={(i) => i.codigo}
+        getSubRows={(i) => i.complementos}
+        defaultExpandedRows={["P-1.01-S"]}
+      />
     );
   },
 };
@@ -1009,9 +1068,7 @@ export const Proposta: Story = {
           columns={colunas}
           data={propostas}
           getRowId={(p) => p.id}
-          showFilter
-          filterColumn="cliente"
-          filterPlaceholder="Buscar cliente..."
+          filters={[{ type: "search", columnId: "cliente", placeholder: "Buscar cliente" }]}
           showColumnVisibility
           toolbarActions={<Button>Nova proposta</Button>}
           defaultSorting={[{ id: "valor", desc: true }]}
@@ -1027,7 +1084,7 @@ export const Proposta: Story = {
           }
           onRowClick={(p) => setAberta(`${p.id} · ${p.cliente}`)}
           summaryRow={{ id: "Total", valor: brl(propostas.reduce((t, p) => t + p.valor, 0)) }}
-          showPagination
+          pagination={{ perPage: 10 }}
         />
         <p className="text-sm text-muted-foreground" aria-live="polite">
           {aberta ? `Aberta: ${aberta}` : "Clique numa linha, ou use Tab e Enter."}

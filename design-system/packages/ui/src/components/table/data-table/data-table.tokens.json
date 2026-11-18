@@ -33,7 +33,7 @@
     "groupRow": {
       "background": "color/muted",
       "height": "height/10",
-      "count": "color/muted-foreground",
+      "count": "Badge secondary sm, number (decisão de 18/11/2026, P1; antes, texto em color/muted-foreground)",
       "toggle": "collapsibleGroups: ChevronRight ou ChevronDown (width/4) e o conteúdo da linha num botão; hover color/accent, foco com o anel do Prizm",
       "figma": "Data Table / Group Row: Expanded Yes, No (collapsibleGroups) e None (só groupBy); Label, Show Count, Show Badge"
     },
@@ -62,11 +62,34 @@
     },
     "pagination": {
       "buttons": "Button outline icon, quadrado como no Figma (decisão de 17/11/2026; antes, redondo)",
-      "padding": "spacing/4 dos lados, spacing/3 em cima e embaixo"
+      "padding": "spacing/4 dos lados, spacing/3 em cima e embaixo",
+      "footer": "contagem (role=status), footer livre e paginação na mesma faixa (decisão de 18/11/2026)"
     },
     "sticky": {
       "background": "color/background, repetindo o fundo da linha",
       "edge": "color/border, 1px"
+    },
+    "selectionBar": {
+      "background": "color/muted",
+      "border": "color/border",
+      "radius": "radius/xl",
+      "paddingX": "spacing/4",
+      "paddingY": "spacing/2-5",
+      "gap": "spacing/3",
+      "text": "color/foreground, número em bold",
+      "a11y": "contagem em role=status (decisão de 18/11/2026)",
+      "figma": "Data Table / Selection Bar"
+    },
+    "empty": {
+      "paddingY": "spacing/20 (py-20, decisão de 18/11/2026, P6; antes py-8)",
+      "paddingX": "spacing/2",
+      "figma": "Empty Area nas variantes State=Empty e State=Error"
+    },
+    "subRows": {
+      "background": "color/accent na linha pai aberta (data-expanded=true)",
+      "indent": "spacing/2 + spacing/6 + spacing/2 (40px, pl-10) na primeira coluna de dados, como na Table",
+      "column": "48px (w-12), o mesmo botão da coluna de detalhe",
+      "figma": "Table / Column Type=Expand e Table / Cell Sub-row, como na Table"
     }
   },
   "states": {
