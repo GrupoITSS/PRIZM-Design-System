@@ -1,9 +1,9 @@
 {
   "component": "DataTable",
-  "description": "Mapa de tokens do DataTable: o que contêiner, barra de ferramentas, barra de seleção, tabela, linha de grupo, detalhe, sub-linhas, vazio, carregando, erro e rodapé usam do [PRIZM] Design Tokens_Core. Extraído das ligações de Data Table, Data Table / Group Row, Data Table / Detail Row e Data Table / Selection Bar no Figma em 18/11/2026 (nenhuma ligação fora do Core depois de religar o traço do ícone Columns3, ver divergences). Cabeçalho, célula e ordenação seguem a Table (table.tokens.json). Conferido contra data-table.styles.ts e data-table.tsx por data-table.tokens.test.ts. Nomes no formato do Figma (color/muted); no código viram classes Tailwind (bg-muted).",
+  "description": "Mapa de tokens do DataTable: o que contêiner, barra de ferramentas, barra de seleção, tabela, linha de grupo, detalhe, sub-linhas, vazio, carregando, erro e rodapé usam do [PRIZM] Design Tokens_Core. Extraído das ligações de Data Table, Data Table / Group Cell, Data Table / Detail Row e Data Table / Selection Bar no Figma em 18/11/2026 (nenhuma ligação fora do Core depois de religar o traço do ícone Columns3, ver divergences). Cabeçalho, célula e ordenação seguem a Table (table.tokens.json). Conferido contra data-table.styles.ts e data-table.tsx por data-table.tokens.test.ts. Nomes no formato do Figma (color/muted); no código viram classes Tailwind (bg-muted).",
   "sources": {
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118",
-    "figmaGroupRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3932",
+    "figmaGroupCell": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27645-6005",
     "figmaDetailRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3933",
     "figmaSelectionBar": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27558-6098",
     "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27560-4747",
@@ -79,7 +79,7 @@
       "text": "color/foreground, font-weight/medium",
       "count": "Badge secondary sm, number (decisão de 18/11/2026, P1; antes, texto em color/muted-foreground)",
       "toggle": "collapsibleGroups: ChevronRight ou ChevronDown (width/4) e o conteúdo da linha num botão; hover color/accent, foco com o anel do Prizm",
-      "figma": "Data Table / Group Row: Expanded Yes, No (collapsibleGroups) e None (só groupBy); Label, Show Count, Show Badge"
+      "figma": "Data Table / Group Cell, um tipo de célula no slot Cells de cada Table / Column (Position First na primeira coluna, Other nas demais): Expanded Yes, No (collapsibleGroups) e None (só groupBy); State Default e Hover (hover em color/accent só com Expanded Yes ou No); Label, Show Count, Show Badge"
     },
     "summaryRow": {
       "background": "color/muted a 50%",
@@ -195,6 +195,12 @@
       "figma": "o traço do ícone, trocado no Button Columns, estava ligado a stroke-width/stroke-[1-33], variável local da coleção 1. TailwindCSS, nas 7 variantes do Data Table",
       "code": "ícone do lucide-react",
       "status": "decidida em 18/11/2026: religado a stroke-width/1-33 do Core; o componente Icon / Columns3 já estava certo"
+    },
+    {
+      "where": "linha de grupo (groupBy)",
+      "figma": "Data Table / Group Cell: uma célula por coluna no slot Cells, com a faixa de color/muted e a borda; o rótulo e a contagem ficam na primeira coluna e são cortados na largura dela",
+      "code": "uma linha com th scope=rowgroup e colSpan de todas as colunas: o rótulo ocupa a largura toda",
+      "status": "representação: o Figma não tem colSpan; decidida em 18/11/2026 (o set Data Table / Group Row e a variante Content=Groups saíram do uso)"
     }
   ]
 }
