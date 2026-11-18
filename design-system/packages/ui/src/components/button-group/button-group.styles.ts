@@ -30,8 +30,10 @@ export const buttonGroupTextClass =
   "bg-muted shadow-xs flex items-center gap-2 rounded-md border px-4 text-sm font-medium [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none";
 
 /**
- * Classes para o separador dentro do grupo (ButtonGroupSeparator).
- * Usa primary-foreground/20 para ficar visível sobre fundos sólidos (primary, destructive, etc.).
+ * Classes para o separador dentro do grupo (ButtonGroupSeparator). A cor segue a variante do
+ * botão anterior, pelo `data-variant` que o Button põe (B3, 17/11/2026): `primary-foreground` a
+ * 20% sobre os fundos cheios (default e destructive) e `border` nos outros (secondary). No
+ * Outline, o grupo não usa separador: a borda já separa.
  */
 export const buttonGroupSeparatorClass =
-  "bg-primary-foreground/20 relative !m-0 self-stretch min-w-px min-h-px";
+  "bg-border [[data-variant=default]+&]:bg-primary-foreground/20 [[data-variant=destructive]+&]:bg-primary-foreground/20 relative !m-0 self-stretch min-w-px min-h-px";

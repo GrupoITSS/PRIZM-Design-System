@@ -20,6 +20,11 @@ export interface ButtonGroupButtonItem {
   disabled?: boolean;
   /** Tipo do botão. @default "button" */
   type?: "button" | "submit" | "reset";
+  /**
+   * Nome acessível do botão. Obrigatório quando o botão é só de ícone (o Button avisa no console
+   * se faltar).
+   */
+  "aria-label"?: string;
 }
 
 export interface ButtonGroupProps
@@ -31,10 +36,11 @@ export interface ButtonGroupProps
   buttons?: ButtonGroupButtonItem[];
 
   /**
-   * Exibe um separador visual entre cada par de botões (recomendado para variantes que não sejam outline).
-   * @default false
+   * Separador visual entre cada par de botões. Em `"auto"`, aparece quando nenhum botão é
+   * `outline` (no Outline, a borda já separa). Usado apenas quando `buttons` está definido.
+   * @default "auto"
    */
-  separatorBetween?: boolean;
+  separatorBetween?: boolean | "auto";
 
   /**
    * Texto ou elemento exibido no início do grupo (estilo de label).
@@ -43,8 +49,8 @@ export interface ButtonGroupProps
   text?: React.ReactNode;
 
   /**
-   * Label para acessibilidade (role="group").
-   * Recomendado para a11y.
+   * Nome do grupo para o leitor de tela (role="group"). Passe `aria-label` ou `aria-labelledby`:
+   * sem nenhum dos dois, o grupo avisa no console em desenvolvimento.
    */
   "aria-label"?: string;
 
