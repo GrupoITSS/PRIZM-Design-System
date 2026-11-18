@@ -1,5 +1,73 @@
 # @grupoitss/prizm-ui
 
+## 0.4.0
+
+### Minor Changes
+
+- c88aad1: ButtonGroup: acessibilidade e separador, com as decisões de 17 e 18/11/2026.
+
+  - **Nome do grupo:** sem `aria-label` nem `aria-labelledby`, o grupo avisa no console em desenvolvimento.
+  - **Botão só de ícone na lista `buttons`:** cada item aceita `aria-label`, repassado ao Button.
+  - **Separador automático:** `separatorBetween` passa a ter o padrão `"auto"`, que põe o separador quando nenhum botão é `outline`. Antes, o padrão era `false`. Para manter o comportamento antigo, passe `separatorBetween={false}`.
+  - **Cor do separador:** segue a variante do botão anterior. Fica em `primary-foreground` a 20% depois de `default` e `destructive`, e em `border` nos outros. Antes, era sempre `primary-foreground` a 20%, e sumia sobre o `secondary`.
+
+- abe9349: DataTable: decisões de 18/11/2026 (documentação, etapas 1 a 4).
+
+  - Sub-linhas: `getSubRows` e `getExpandLabel`, um nível, com o botão, a coluna de 48px e o recuo da Table. A linha pai aberta fica em `accent`. Usa o mesmo estado de linhas abertas do detalhe (`defaultExpandedRows`, `expandedRows`, `onExpandedRowsChange`); com `renderRowDetail` junto, ficam as sub-linhas e sai um aviso no console.
+  - `filters` com `type`: `search` (com `columnId`, a tabela filtra; com `onChange`, o produto filtra, com espera entre teclas), `select` (o padrão) e `status`. Selects e status à esquerda, a busca depois deles.
+  - `pagination` com dois modos: sem `onPageChange`, a tabela pagina `data` (`perPage`, 10 por padrão); com `onPageChange`, o produto pagina. Contagem, `footer` e paginação na mesma faixa do rodapé.
+  - `@deprecated`, com aviso no console em desenvolvimento: `showFilter`, `filterColumn`, `filterPlaceholder`, `toolbarFilters`, `showPagination`, `showSelectedCount`, `getRowClassName`, `selectionBar.color` e o componente `DataTableWithFilters`.
+  - `selectionBar.entityName` aceita singular e plural: `{ one: "proposta selecionada", other: "propostas selecionadas" }`.
+  - Contagem da seleção e do rodapé em `role="status"`, para o leitor de tela anunciar.
+  - Contagem da linha de grupo num Badge secondary `sm` (número), como no Figma.
+  - Vazio e erro com `py-20`, como no Figma (antes `py-8`).
+  - Menu de colunas com o título "Colunas visíveis" (antes "Mostrar colunas").
+
+- 2b6b3fb: DataTable: decisões do teste de tela da Proposta (17/11/2026).
+
+  - Visual da Table: cabeçalho com 40px, 8px dos lados e em `foreground` (antes, a 40%); linha com 52px de altura mínima e célula com 8px (antes, 16px dos lados). Texto simples corta numa linha, com Tooltip quando corta; `meta.prizm.wrap` quebra. Coluna à direita com `tabular-nums`.
+  - Ordenação: `DataTableColumnHeader` no cabeçalho, `aria-sort` na célula, `sorting`, `defaultSorting`, `onSortingChange` e `manualSorting`.
+  - Linha clicável pelo teclado: com `onRowClick`, a linha recebe foco e abre com Enter ou Espaço.
+  - Textos padrão em português: "Nenhum resultado.", "Filtrar...", "Colunas", "Mostrar colunas". Quebra para quem dependia dos textos em inglês.
+  - `groupBy`, `renderGroupLabel` e grupos que recolhem (`collapsibleGroups`, `defaultCollapsedGroups`, `collapsedGroups`, `onCollapsedGroupsChange`), `toolbarActions`, `summaryRow`, `renderRowDetail` (com `defaultExpandedRows`, `expandedRows`, `onExpandedRowsChange` e `getDetailLabel`).
+  - `DataTableEditableCell`: Input `sm` na célula, com nome, estado inválido e mensagem.
+  - Carregando com linhas de Skeleton (`loadingRows`) no lugar do Spinner; `error`, `onRetry` e `retryLabel`.
+  - `stickyHeader`, `stickyFirstColumn` e `stickyLastColumn`.
+  - `aria-label` dá nome à tabela.
+
+- 1da80ca: Sonner (Toaster): tons no padrão do Alert (fundo `-weak`, borda e ícone no tom, texto `-strong`), pelas variáveis do Sonner, com `richColors` ligado por padrão; info com os tokens `info` (antes `primary`); texto em `text-sm` (14px); ação com o Button `outline` `sm`; anel de foco do Prizm no toast e na ação; botão fechar desligado por padrão e com 24px quando ligado. Story renomeada para Primários/Sonner. Quem passava `richColors={false}` ou dependia do fundo cheio dos tipos vê a mudança visual.
+- 7211a28: Table: decisões do teste de tela da Proposta (17/11/2026).
+
+  - Uma densidade só: linha de 52px (`h-13`), como altura mínima, com a borda da linha.
+  - Texto cortado numa linha por padrão, com Tooltip do texto inteiro só quando corta. `wrap: true` na coluna quebra a linha.
+  - Coluna com `align: "right"` usa `tabular-nums`.
+  - `isRowSelected` marca a linha com `data-state="selected"`.
+  - Exporta `tableCellMinHeight`, `tableCellTruncate`, `tableCellText` e `tableCellNumeric`.
+
+- 4c75773: Table: linhas que expandem. `getSubRows` dá sub-linhas (um nível) às linhas, com um botão de expandir (Button ghost icon-sm, `aria-expanded`, `aria-controls`) numa coluna à esquerda; as sub-linhas usam as mesmas colunas, com a primeira coluna de dados recuada (`pl-10`). Estado com `defaultExpanded` (lista de chaves ou `true`) ou controlado com `expanded` e `onExpandedChange`; nome do botão por `getExpandLabel` (padrão "Expandir"/"Recolher" + a primeira coluna). O `render` da coluna ganha um terceiro argumento, `{ depth, subRows, isExpanded }`, para a linha pai mostrar a soma das sub-linhas. No rodapé, a primeira célula ocupa a coluna de expandir. Sem `getSubRows`, nada muda. Novos exports: `TableRowMeta`, `tableExpandHead`, `tableExpandCell` e `tableSubRowIndent`.
+- de26ed9: Table: decisões de 17/11/2026 (etapa 1 da documentação).
+
+  - Ordenação: `sortable` e `sortValue` na coluna; `defaultSort`, `sort`, `onSortChange` e `manualSort` na Table. O cabeçalho vira botão, com `aria-sort`, como no DataTable.
+  - Vazio com o Empty, numa linha da largura toda, com "Nenhum resultado." por padrão. Antes, só o texto, e nada sem `emptyMessage`.
+  - Linha selecionada (checkbox, na primitiva `TableRow`) e linha pai aberta (`data-expanded`) em `accent`, também no hover (decisão de 18/11/2026). Sai a linha em destaque (`isRowSelected`, do PR #211, que não saiu).
+  - Exporta `TableSort` e `tableSortButton`, usados também pelo DataTable.
+  - O ícone de ordenar fica na cor do texto do cabeçalho (`foreground`), com ou sem ordem, na Table e no `DataTableColumnHeader` (decisão de 17/11/2026).
+
+- d55169a: Table e DataTable: saem as APIs `@deprecated`, já que nenhum produto usa a biblioteca ainda (decisão de 18/11/2026).
+
+  - Sai o `DataTableWithFilters`: use `<DataTable filters={…} showColumnVisibility />`. O tipo `DataTableSelectFilter` passa a sair do DataTable.
+  - Saem do DataTable `showFilter`, `filterColumn`, `filterPlaceholder` e `toolbarFilters` (use `filters` com `type`), `showPagination` (use `pagination={{ perPage: 10 }}`), `showSelectedCount` (a barra de seleção já mostra a contagem), `getRowClassName` e `selectionBar.color`. `selectionBar.entityName` aceita só `{ one, other }`.
+  - Saem os `table-parts`: `TableWrapper`, `TableElement` e os `*Part` (`TableHeadPart`, `TableCellPart`…). Use as primitivas (`TableRoot`, `TableHead`, `TableCell`…).
+
+- 0043454: Tabs (documentação de 17/11/2026): foco visível no `underline`, que não tinha nenhum (WCAG 2.4.7): as duas variantes usam o anel do Prizm (`ring` de 3px com `ring-offset` de 2px), também no painel. Novos exports `TabsList`, `TabsTrigger` e `TabsContent`, para compor como no shadcn; a API por `items` usa as mesmas partes. Novo `items[].badge` (e `badge` no `TabsTrigger`): número ou texto vira um Badge `shape="number"` depois do rótulo e entra no nome da aba ("Pendentes 3"). Hover em `foreground` também no `pills`. O `pills` segue o shadcn atual e o Figma: lista com 36px (`h-9`, `p-[3px]`, `rounded-lg`) e aba com `px-2 py-1 rounded-md` (antes `h-10`, `p-1`, `px-3 py-1.5` e `rounded-sm`).
+
+  **Quebra:** a prop `orientation` saiu: não tinha estilo vertical, e nenhum produto usa abas verticais. Quem passava `orientation="horizontal"` pode só apagar a prop.
+
+### Patch Changes
+
+- 235f967: DataTable: mapa de tokens aponta para a Data Table / Group Cell no Figma, que substitui a Data Table / Group Row (removida do Figma) e a variante Content=Groups. A linha de grupo vira um tipo de célula no slot Cells de cada coluna. Divergência registrada: o Figma não tem colSpan, e o rótulo fica na largura da primeira coluna. A variante Content=Selection também saiu do Data Table: a barra de seleção é a booleana Show Selection Bar, e a coluna de checkbox e as linhas marcadas vêm da Table. A propriedade Content saiu do Data Table (o Detail também): as variantes ficam só com State.
+- bf6bb01: DataTable: mapa de tokens extraído de novo do Figma em 18/11/2026, com contêiner, cartão, barra de ferramentas, barra de seleção, vazio e rodapé, conferido por `data-table.tokens.test.tsx`. Story com os links do componente e da documentação no Figma e do artigo, e a tag `documentado`.
+
 ## 0.3.0
 
 ### Minor Changes
