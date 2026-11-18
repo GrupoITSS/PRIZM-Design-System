@@ -335,14 +335,6 @@ export interface DataTableProps<TData, TValue> {
   className?: string;
   /** Mensagem sem dados. @default "Nenhum resultado." */
   emptyMessage?: React.ReactNode;
-  /** @deprecated Use `pagination={{ perPage: 10 }}` (decisão de 18/11/2026). */
-  showPagination?: boolean;
-  /** @deprecated Use `filters={[{ type: "search", columnId, placeholder }]}` (decisão de 18/11/2026). */
-  showFilter?: boolean;
-  /** @deprecated Use `filters={[{ type: "search", columnId }]}`. */
-  filterColumn?: string;
-  /** @deprecated Use `filters={[{ type: "search", placeholder }]}`. */
-  filterPlaceholder?: string;
   /**
    * Campos da toolbar, na ordem: selects e status à esquerda, a busca depois deles. `type`:
    * `search` (com `columnId`, a tabela filtra; com `onChange`, o produto filtra), `select` (o padrão)
@@ -379,14 +371,10 @@ export interface DataTableProps<TData, TValue> {
    * Receives selected rows and a clear helper.
    */
   selectionToolbar?: (ctx: DataTableSelectionToolbarContext<TData>) => React.ReactNode;
-  /** @deprecated A barra de seleção já mostra a contagem (decisão de 18/11/2026). */
-  showSelectedCount?: boolean;
   /** Optional labels mapping for STATUS render type. */
   statusLabels?: Record<string, string>;
   /** Called when a data row is clicked, or activated with Enter or Space (the row takes focus). */
   onRowClick?: (row: TData) => void;
-  /** @deprecated Classe solta, fora dos tokens. Para aviso na linha, use um Badge na célula (18/11/2026). */
-  getRowClassName?: (row: TData) => string | undefined;
   /** Horizontal overflow of the table body. @default "auto" */
   overflowX?: "auto" | "hidden";
   /** Shows skeleton rows in place of the data. @default false */
@@ -464,30 +452,6 @@ export interface DataTableProps<TData, TValue> {
    * (`{ perPage }`). Com `onPageChange`, o produto pagina: `data` é só a página atual.
    */
   pagination?: DataTableClientPagination | DataTableServerPagination;
-  /** @deprecated Use `filters` com `type: "search"` e `type: "status"` (decisão de 18/11/2026). */
-  toolbarFilters?: Array<
-    | {
-        type: "search";
-        placeholder?: string;
-        value: string;
-        onChange: (value: string) => void;
-        /** Evita uma requisição a cada tecla. @default 350 */
-        debounceMs?: number;
-      }
-    | {
-        type: "status";
-        value: DataTableStatusFilterValue;
-        onChange: (value: DataTableStatusFilterValue) => void;
-        /** Nome acessível do select (não renderiza rótulo visível). @default "Status" */
-        label?: string;
-        /** @default "Ativos" */
-        activeLabel?: string;
-        /** @default "Inativos" */
-        inactiveLabel?: string;
-        /** @default "Todos" */
-        allLabel?: string;
-      }
-  >;
   /**
    * Barra abaixo dos filtros quando há linhas selecionadas.
    * Sem `selectionToolbar` custom, usa o texto "X itens selecionados".
@@ -495,30 +459,20 @@ export interface DataTableProps<TData, TValue> {
   selectionBar?: {
     /**
      * Nome do item, no singular e no plural: `{ one: "proposta selecionada", other: "propostas
-     * selecionadas" }`. Um texto só (`"proposta"`) ainda funciona, mas o plural sai errado.
+     * selecionadas" }`.
      */
-    entityName?: string | DataTableEntityName;
-    /** @deprecated Cor fora dos tokens e sem contraste medido (decisão de 18/11/2026). */
-    color?: string;
+    entityName?: DataTableEntityName;
     actions?: React.ReactNode;
   };
 }
 
+/** Avisos que saem uma vez por sessão, em desenvolvimento. */
 const warned = new Set<string>();
-/** Avisa uma vez, em desenvolvimento, que uma prop saiu (decisões de 18/11/2026). */
-function warnDeprecated(name: string, replacement: string) {
-  if (process.env.NODE_ENV === "production" || warned.has(name)) return;
-  warned.add(name);
-  console.warn(`[Prizm DataTable] ${name} está @deprecated. Use ${replacement}.`);
-}
 
 /** Texto da barra de seleção: "3 itens selecionados", "1 proposta selecionada". */
-export function selectionLabel(count: number, entityName?: string | DataTableEntityName) {
+export function selectionLabel(count: number, entityName?: DataTableEntityName) {
   const n = count.toLocaleString("pt-BR");
-  if (entityName && typeof entityName === "object")
-    return `${n} ${count === 1 ? entityName.one : entityName.other}`;
-  if (entityName)
-    return `${n} ${entityName}${count === 1 ? "" : "s"} selecionado${count === 1 ? "" : "s"}`;
+  if (entityName) return `${n} ${count === 1 ? entityName.one : entityName.other}`;
   return `${n} ${count === 1 ? "item selecionado" : "itens selecionados"}`;
 }
 
@@ -575,12 +529,10 @@ function DebouncedSearchInput({
 export function DataTableSelectionBar({
   count,
   entityName,
-  color,
   actions,
 }: {
   count: number;
-  entityName?: string | DataTableEntityName;
-  color?: string;
+  entityName?: DataTableEntityName;
   actions?: React.ReactNode;
 }) {
   const label = selectionLabel(count, entityName);
@@ -589,12 +541,7 @@ export function DataTableSelectionBar({
   return (
     <fieldset
       aria-label={label}
-      className="flex items-center gap-3 rounded-xl border px-4 py-2.5"
-      style={{
-        borderColor: color ?? "var(--prizm-color-border)",
-        background: color ? `${color}14` : "var(--prizm-color-muted)",
-        color: color ?? "inherit",
-      }}
+      className="flex items-center gap-3 rounded-xl border border-border bg-muted px-4 py-2.5 text-foreground"
     >
       <p className="text-sm">
         <strong>{count.toLocaleString("pt-BR")}</strong> {rest}
@@ -612,10 +559,6 @@ export function DataTable<TData, TValue>({
   data,
   className,
   emptyMessage = "Nenhum resultado.",
-  showPagination = false,
-  showFilter = false,
-  filterColumn,
-  filterPlaceholder = "Filtrar...",
   filters,
   showColumnVisibility = false,
   columnVisibilityLabel = "Colunas",
@@ -629,10 +572,8 @@ export function DataTable<TData, TValue>({
   onSelectedRowsChange,
   getRowId,
   selectionToolbar,
-  showSelectedCount = false,
   statusLabels,
   onRowClick,
-  getRowClassName,
   overflowX = "auto",
   isLoading = false,
   loadingRows = 5,
@@ -664,16 +605,8 @@ export function DataTable<TData, TValue>({
   stickyLastColumn = false,
   footer,
   pagination,
-  toolbarFilters,
   selectionBar,
 }: DataTableProps<TData, TValue>) {
-  if (showFilter || filterColumn)
-    warnDeprecated("showFilter", 'filters com type "search" e columnId');
-  if (toolbarFilters) warnDeprecated("toolbarFilters", 'filters com type "search" e "status"');
-  if (showSelectedCount) warnDeprecated("showSelectedCount", "a barra de seleção");
-  if (showPagination) warnDeprecated("showPagination", "pagination={{ perPage: 10 }}");
-  if (getRowClassName) warnDeprecated("getRowClassName", "um Badge na célula");
-  if (selectionBar?.color) warnDeprecated("selectionBar.color", "a barra em color/muted");
   if (
     getSubRows &&
     renderRowDetailProp &&
@@ -687,14 +620,7 @@ export function DataTable<TData, TValue>({
   }
   const renderRowDetail = getSubRows ? undefined : renderRowDetailProp;
 
-  // Filtros: as APIs antigas viram campos de `filters` (decisão de 18/11/2026).
-  const allFilters: DataTableFilter[] = [
-    ...(filters ?? []),
-    ...(showFilter && filterColumn
-      ? [{ type: "search", columnId: filterColumn, placeholder: filterPlaceholder } as const]
-      : []),
-    ...((toolbarFilters ?? []) as DataTableFilter[]),
-  ];
+  const allFilters: DataTableFilter[] = filters ?? [];
   const selectFilters = allFilters.filter(
     (f): f is DataTableSelectFilter => f.type === undefined || f.type === "select",
   );
@@ -704,7 +630,7 @@ export function DataTable<TData, TValue>({
   // Paginação: na tela (sem onPageChange) ou no servidor (decisão de 18/11/2026).
   const serverPagination =
     pagination && "onPageChange" in pagination && pagination.onPageChange ? pagination : null;
-  const clientPagination = !serverPagination && (pagination != null || showPagination);
+  const clientPagination = !serverPagination && pagination != null;
   const perPage = pagination?.perPage ?? 10;
 
   const [uncontrolledSorting, setUncontrolledSorting] =
@@ -1020,11 +946,7 @@ export function DataTable<TData, TValue>({
             hasSubRows ? (expandedRows.includes(row.id) ? "true" : "false") : undefined
           }
           tabIndex={activate ? 0 : undefined}
-          className={cn(
-            "border-border transition-colors",
-            activate && dataTableRowClickable,
-            getRowClassName?.(row.original),
-          )}
+          className={cn("border-border transition-colors", activate && dataTableRowClickable)}
           onClick={
             activate
               ? (event) => {
@@ -1236,7 +1158,6 @@ export function DataTable<TData, TValue>({
             <DataTableSelectionBar
               count={selectedCount}
               entityName={selectionBar?.entityName}
-              color={selectionBar?.color}
               actions={selectionBar?.actions}
             />
           )}
@@ -1444,7 +1365,7 @@ export function DataTable<TData, TValue>({
 
           {(() => {
             const paged = serverPagination != null || clientPagination;
-            if (!paged && !showSelectedCount && footer == null) return null;
+            if (!paged && footer == null) return null;
             let countText: string | null = null;
             let page = 1;
             let totalPages = 1;
@@ -1460,16 +1381,12 @@ export function DataTable<TData, TValue>({
               totalPages = serverPagination.totalPages || 1;
               goTo = serverPagination.onPageChange;
               blocked = isLoading || totalRows === 0;
-            } else if (clientPagination || showSelectedCount) {
+            } else if (clientPagination) {
               const total = table.getFilteredRowModel().rows.length;
-              if (showSelectedCount) {
-                countText = `${selectedCount} de ${total} selecionada(s)`;
-              } else {
-                const { pageIndex, pageSize } = table.getState().pagination;
-                const start = total === 0 ? 0 : pageIndex * pageSize + 1;
-                const end = Math.min((pageIndex + 1) * pageSize, total);
-                countText = `Mostrando ${start}-${end} de ${total} itens`;
-              }
+              const { pageIndex, pageSize } = table.getState().pagination;
+              const start = total === 0 ? 0 : pageIndex * pageSize + 1;
+              const end = Math.min((pageIndex + 1) * pageSize, total);
+              countText = `Mostrando ${start}-${end} de ${total} itens`;
               page = table.getState().pagination.pageIndex + 1;
               totalPages = Math.max(1, table.getPageCount());
               goTo = (p) => table.setPageIndex(p - 1);
