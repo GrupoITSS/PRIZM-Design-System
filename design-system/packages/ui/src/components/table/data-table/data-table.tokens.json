@@ -1,6 +1,6 @@
 {
   "component": "DataTable",
-  "description": "Mapa de tokens do DataTable: o que contêiner, barra de ferramentas, barra de seleção, tabela, linha de grupo, detalhe, sub-linhas, vazio, carregando, erro e rodapé usam do [PRIZM] Design Tokens_Core. Extraído das ligações de Data Table, Data Table / Group Row, Data Table / Detail Row e Data Table / Selection Bar no Figma em 18/11/2026 (nenhuma ligação do Data Table fora do Core; a única variável local vem do ícone Columns3, ver divergences). Cabeçalho, célula e ordenação seguem a Table (table.tokens.json). Conferido contra data-table.styles.ts e data-table.tsx por data-table.tokens.test.ts. Nomes no formato do Figma (color/muted); no código viram classes Tailwind (bg-muted).",
+  "description": "Mapa de tokens do DataTable: o que contêiner, barra de ferramentas, barra de seleção, tabela, linha de grupo, detalhe, sub-linhas, vazio, carregando, erro e rodapé usam do [PRIZM] Design Tokens_Core. Extraído das ligações de Data Table, Data Table / Group Row, Data Table / Detail Row e Data Table / Selection Bar no Figma em 18/11/2026 (nenhuma ligação fora do Core depois de religar o traço do ícone Columns3, ver divergences). Cabeçalho, célula e ordenação seguem a Table (table.tokens.json). Conferido contra data-table.styles.ts e data-table.tsx por data-table.tokens.test.ts. Nomes no formato do Figma (color/muted); no código viram classes Tailwind (bg-muted).",
   "sources": {
     "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27334-3118",
     "figmaGroupRow": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27374-3932",
@@ -192,9 +192,9 @@
     },
     {
       "where": "ícone Columns3 do botão Columns",
-      "figma": "traço ligado a stroke-width/stroke-[1-33], variável local da coleção 1. TailwindCSS, no componente Icon / Columns3",
+      "figma": "o traço do ícone, trocado no Button Columns, estava ligado a stroke-width/stroke-[1-33], variável local da coleção 1. TailwindCSS, nas 7 variantes do Data Table",
       "code": "ícone do lucide-react",
-      "status": "aberta: fora do Data Table; corrigir no componente do ícone"
+      "status": "decidida em 18/11/2026: religado a stroke-width/1-33 do Core; o componente Icon / Columns3 já estava certo"
     }
   ]
 }
