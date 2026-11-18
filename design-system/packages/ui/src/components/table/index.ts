@@ -60,6 +60,7 @@ export type {
   DataTableFilter,
   DataTableProps,
   DataTableSearchFilter,
+  DataTableSelectFilter,
   DataTableServerPagination,
   DataTableStatusFilter,
   DataTableStatusFilterValue,
@@ -89,19 +90,3 @@ export {
   tableRow,
   tableWrapper,
 } from "./table.styles";
-
-// Table parts (for TanStack Table composition)
-export {
-  TableBody as TableBodyPart,
-  TableCaption as TableCaptionPart,
-  TableCell as TableCellPart,
-  TableElement,
-  TableFooter as TableFooterPart,
-  TableHead as TableHeadPart,
-  TableHeader as TableHeaderPart,
-  TableRow as TableRowPart,
-  TableWrapper,
-} from "./table-parts";
-
-// DataTable com filtros (busca, status, selects)
-export * from "./data-table-with-filters";

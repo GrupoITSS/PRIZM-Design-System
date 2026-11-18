@@ -92,7 +92,7 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
             perPage: 10,
             onPageChange: () => undefined,
           }}
-          toolbarFilters={[
+          filters={[
             {
               type: "search",
               placeholder: "Buscar",
@@ -131,8 +131,8 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
   });
 
   describe("Pagination", () => {
-    it("mostra controles de paginação quando showPagination=true", () => {
-      render(<DataTable columns={basicColumns} data={mockData} showPagination />);
+    it("mostra controles de paginação com pagination", () => {
+      render(<DataTable columns={basicColumns} data={mockData} pagination={{ perPage: 10 }} />);
       expect(screen.getByRole("button", { name: /página anterior/i })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /próxima página/i })).toBeInTheDocument();
     });
@@ -144,14 +144,12 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
   });
 
   describe("Filtering", () => {
-    it("mostra input de filtro quando showFilter=true", () => {
+    it("mostra input de filtro com filters de type search", () => {
       render(
         <DataTable
           columns={basicColumns}
           data={mockData}
-          showFilter
-          filterColumn="email"
-          filterPlaceholder="Filter emails..."
+          filters={[{ type: "search", columnId: "email", placeholder: "Filter emails..." }]}
         />,
       );
       expect(screen.getByPlaceholderText(/filter emails/i)).toBeInTheDocument();
@@ -218,7 +216,7 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
           data={mockData}
           showColumnVisibility
           columnVisibilityLabel="Colunas"
-          toolbarFilters={[
+          filters={[
             {
               type: "search",
               placeholder: "Buscar",
@@ -245,7 +243,7 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
           data={mockData}
           showColumnVisibility
           columnVisibilityLabel="Colunas"
-          toolbarFilters={[
+          filters={[
             {
               type: "search",
               placeholder: "Buscar",
@@ -277,8 +275,6 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
               onChange: () => undefined,
               options: [{ value: "active", label: "Ativo" }],
             },
-          ]}
-          toolbarFilters={[
             {
               type: "search",
               placeholder: "Buscar",
@@ -302,7 +298,7 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
         <DataTable
           columns={basicColumns}
           data={mockData}
-          toolbarFilters={[
+          filters={[
             {
               type: "status",
               value: "active",
@@ -333,13 +329,6 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
       });
       expect(checkboxes[0]).toBeDisabled();
       expect(checkboxes[1]).not.toBeDisabled();
-    });
-
-    it("mostra contagem de seleção quando showSelectedCount=true", () => {
-      render(
-        <DataTable columns={basicColumns} data={mockData} enableRowSelection showSelectedCount />,
-      );
-      expect(screen.getByText(/0 de 3 selecionada\(s\)/i)).toBeInTheDocument();
     });
 
     it("não mostra contagem por padrão", () => {
@@ -793,12 +782,11 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
           columns={basicColumns}
           data={mockData}
           showColumnVisibility
-          showFilter
-          filterColumn="email"
+          filters={[{ type: "search", columnId: "email" }]}
         />,
       );
       expect(screen.getByRole("button", { name: /colunas/i })).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Filtrar...")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Buscar")).toBeInTheDocument();
     });
 
     it("linha selecionada em accent (decisão de 18/11)", () => {
@@ -945,7 +933,7 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
     });
 
     it("paginação com o Button outline icon, quadrado como no Figma", () => {
-      render(<DataTable columns={basicColumns} data={mockData} showPagination />);
+      render(<DataTable columns={basicColumns} data={mockData} pagination={{ perPage: 10 }} />);
       const prev = screen.getByRole("button", { name: "Página anterior" });
       expect(prev).not.toHaveClass("rounded-full");
       expect(prev).toBeDisabled();
@@ -1047,24 +1035,6 @@ describe("DataTable (PRIZM / TanStack Table)", () => {
         (e) => e.getAttribute("aria-label") ?? e.getAttribute("placeholder"),
       );
       expect(order.indexOf("Buscar")).toBe(order.length - 1);
-    });
-
-    it("APIs antigas de filtro ainda funcionam e avisam no console", () => {
-      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-      render(
-        <DataTable
-          columns={basicColumns}
-          data={mockData}
-          showFilter
-          filterColumn="email"
-          filterPlaceholder="Filtrar e-mail"
-          getRowClassName={() => undefined}
-        />,
-      );
-      expect(screen.getByRole("textbox", { name: "Filtrar e-mail" })).toBeInTheDocument();
-      // Cada aviso sai uma vez por sessão; getRowClassName não aparece nos outros testes.
-      expect(warn.mock.calls.flat().join(" ")).toMatch(/getRowClassName está @deprecated/);
-      warn.mockRestore();
     });
 
     it("pagination sem onPageChange: a tabela pagina, com perPage", () => {

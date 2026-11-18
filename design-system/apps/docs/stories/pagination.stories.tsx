@@ -223,8 +223,7 @@ export const SizeSm: Story = {
 };
 
 /**
- * Pagination integrado ao DataTable (modo iconsOnly).
- * O DataTable usa este componente quando `showPagination` está ativo.
+ * Paginação no rodapé do DataTable, com `pagination`.
  */
 export const InDataTable: Story = {
   render: function PaginationInDataTable() {
@@ -235,7 +234,7 @@ export const InDataTable: Story = {
     ];
     return (
       <div className="container mx-auto max-w-2xl py-6">
-        <DataTable columns={columns} data={minimalTableData} showPagination />
+        <DataTable columns={columns} data={minimalTableData} pagination={{ perPage: 10 }} />
       </div>
     );
   },
@@ -243,7 +242,7 @@ export const InDataTable: Story = {
     docs: {
       description: {
         story:
-          "O **DataTable** usa o componente Pagination em modo `iconsOnly` quando `showPagination={true}`. Ver [Table/DataTable](?path=/story/prizm-components-table-datatable--with-pagination) para a story completa.",
+          'O **DataTable** pagina no rodapé com `pagination`: a contagem, "Página X de Y" e os botões anterior e próxima. Ver [DataTable · Paginação](?path=/story/primários-datatable--with-pagination).',
       },
     },
   },

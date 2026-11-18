@@ -109,8 +109,9 @@ describe("DataTable × mapa de tokens (data-table.tokens.json)", () => {
         `gap-${step(sb.gap)}`,
       ]),
     );
-    expect(bar.style.background).toBe(`var(--prizm-${sb.background.replace("/", "-")})`);
-    expect(bar.style.borderColor).toBe(`var(--prizm-${sb.border.replace("/", "-")})`);
+    expect(cls(bar.className)).toEqual(
+      expect.arrayContaining([`bg-${color(sb.background)}`, `border-${color(sb.border)}`]),
+    );
   });
 
   it("contêiner, cartão, vazio e rodapé com paginação", () => {

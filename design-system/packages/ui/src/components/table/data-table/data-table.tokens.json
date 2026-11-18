@@ -188,7 +188,7 @@
       "where": "cor da barra de seleção (selectionBar.color)",
       "figma": "color/muted e color/border",
       "code": "cor livre, fora de token",
-      "status": "decidida: selectionBar.color @deprecated (18/11/2026, P2)"
+      "status": "decidida: selectionBar.color removida (18/11/2026, P2); a barra usa bg-muted e border-border"
     },
     {
       "where": "ícone Columns3 do botão Columns",

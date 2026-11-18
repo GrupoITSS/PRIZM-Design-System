@@ -432,7 +432,7 @@ export const ServerSorting: Story = {
 export const WithFiltering: Story = {
   name: "Busca por coluna",
   parameters: story(
-    '`filters` com `type: "search"` e `columnId`: a tabela filtra a coluna, na hora, nos dados que tem. Use quando todos os dados estão na tela. Antes, `showFilter` e `filterColumn` (`@deprecated` desde 18/11/2026).',
+    '`filters` com `type: "search"` e `columnId`: a tabela filtra a coluna, na hora, nos dados que tem. Use quando todos os dados estão na tela.',
   ),
   render: () => (
     <DataTable
@@ -447,7 +447,7 @@ export const WithFiltering: Story = {
 export const ToolbarFilters: Story = {
   name: "Filtros na toolbar",
   parameters: story(
-    "`filters` com `type`: `select` (Responsável), `status` (Ativos, Inativos e Todos) e `search` com `onChange` (espera de 350 ms entre teclas). O filtro é do produto: a tabela mostra os campos e avisa as mudanças. Selects e status à esquerda, a busca depois deles. Antes, `toolbarFilters` (`@deprecated` desde 18/11/2026).",
+    "`filters` com `type`: `select` (Responsável), `status` (Ativos, Inativos e Todos) e `search` com `onChange` (espera de 350 ms entre teclas). O filtro é do produto: a tabela mostra os campos e avisa as mudanças. Selects e status à esquerda, a busca depois deles.",
   ),
   render: function FiltrosStory() {
     const [busca, setBusca] = React.useState("");
@@ -488,7 +488,7 @@ export const ToolbarFilters: Story = {
 export const WithPagination: Story = {
   name: "Paginação",
   parameters: story(
-    '`pagination` sem `onPageChange`: a tabela pagina os dados que tem, de `perPage` em `perPage` (10 por padrão), com a contagem e "Página X de Y" no rodapé. Os botões são o Button outline `icon`, como no Figma. Antes, `showPagination` (`@deprecated` desde 18/11/2026).',
+    '`pagination` sem `onPageChange`: a tabela pagina os dados que tem, de `perPage` em `perPage` (10 por padrão), com a contagem e "Página X de Y" no rodapé. Os botões são o Button outline `icon`, como no Figma.',
   ),
   render: () => (
     <DataTable
