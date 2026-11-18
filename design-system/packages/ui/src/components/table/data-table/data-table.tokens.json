@@ -148,7 +148,7 @@
       "background": "color/accent",
       "attribute": "data-state=selected",
       "checkbox": "Checkbox marcado: color/primary",
-      "note": "Também no hover. Decisão de 18/11/2026 (antes, color/muted). No Figma, Table / Cell State=Selected, na variante Content=Selection."
+      "note": "Também no hover. Decisão de 18/11/2026 (antes, color/muted). No Figma, Table / Cell State=Selected, na coluna de checkbox (Table / Cell Variant=Checkbox) e nas demais colunas, com a Data Table / Selection Bar ligada por Show Selection Bar."
     },
     "focus": {
       "outline": "color/ring",
