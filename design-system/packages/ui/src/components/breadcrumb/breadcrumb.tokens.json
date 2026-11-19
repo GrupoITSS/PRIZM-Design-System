@@ -25,7 +25,9 @@
       "text": "color/muted-foreground",
       "gap": "spacing/1-5",
       "radius": "radius/xs",
-      "hover": { "text": "color/foreground" }
+      "hover": {
+        "text": "color/foreground"
+      }
     },
     "page": {
       "text": "color/foreground",
@@ -35,17 +37,23 @@
     "dropdown": {
       "text": "color/muted-foreground",
       "icon": "color/muted-foreground",
-      "gap": "spacing/1",
+      "gap": "spacing/1-5",
       "radius": "radius/xs",
-      "hover": { "text": "color/muted-foreground" },
-      "note": "No código, o gatilho usa breadcrumbLinkStyles: espaço e hover do link (ver divergences)."
+      "hover": {
+        "text": "color/foreground",
+        "icon": "color/foreground"
+      },
+      "note": "No código, o gatilho usa breadcrumbLinkStyles: o mesmo espaço e o mesmo hover do link."
     },
     "ellipsis": {
       "icon": "color/muted-foreground",
       "width": "width/9",
       "height": "height/9",
       "radius": "radius/xs",
-      "hover": { "background": "color/accent", "icon": "color/accent-foreground" }
+      "hover": {
+        "background": "color/accent",
+        "icon": "color/accent-foreground"
+      }
     },
     "separator": {
       "icon": "color/muted-foreground",
@@ -59,7 +67,11 @@
       "ringOffset": "color/ring-offset",
       "ringOffsetWidth": 2,
       "radius": "radius/xs",
-      "parts": ["link", "dropdown", "ellipsis"],
+      "parts": [
+        "link",
+        "dropdown",
+        "ellipsis"
+      ],
       "note": "No Figma, o anel é um par de DROP_SHADOW (spread 5 em color/ring e spread 2 em color/ring-offset), com um fill quase transparente para a sombra aparecer."
     }
   },
@@ -68,26 +80,20 @@
     "rule": "O ícone do item segue a cor do texto (Show Icon e Icon no Figma, prop icon no código)."
   },
   "sizes": {
-    "sm": { "gap": "spacing/1-5", "note": "No código, o espaço da lista no celular." },
-    "md": { "gap": "spacing/2-5", "note": "No código, o espaço da lista a partir de 640px (sm:)." }
+    "sm": {
+      "gap": "spacing/1-5",
+      "note": "No código, o espaço da lista no celular."
+    },
+    "md": {
+      "gap": "spacing/2-5",
+      "note": "No código, o espaço da lista a partir de 640px (sm:)."
+    }
   },
   "divergences": [
     {
       "where": "Size",
       "figma": "Size=sm · md é uma propriedade do set Breadcrumb.",
       "code": "Não é prop: a lista usa gap-1.5 e, a partir de 640px, sm:gap-2.5 (BC1).",
-      "status": "aberta"
-    },
-    {
-      "where": "Espaço do item com menu",
-      "figma": "Variant=Dropdown usa spacing/1 entre o texto e a seta.",
-      "code": "O gatilho usa breadcrumbLinkStyles, com gap-1.5 (spacing/1-5).",
-      "status": "aberta"
-    },
-    {
-      "where": "Hover do item com menu",
-      "figma": "Variant=Dropdown, State=Hover fica em color/muted-foreground, igual ao Default.",
-      "code": "O gatilho usa breadcrumbLinkStyles, com hover:text-foreground (color/foreground), como o link.",
       "status": "aberta"
     }
   ]

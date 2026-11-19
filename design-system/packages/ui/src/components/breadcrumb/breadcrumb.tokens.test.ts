@@ -31,6 +31,15 @@ describe("Breadcrumb × mapa de tokens (breadcrumb.tokens.json)", () => {
     expect(classes).toContain(`hover:text-${color(p.hover.text)}`);
   });
 
+  it("item com menu: o gatilho usa o espaço e o hover do link", () => {
+    const d = map.parts.dropdown;
+    const classes = split(breadcrumbLinkStyles);
+    expect(classes).toContain(`gap-${step(d.gap)}`);
+    expect(classes).toContain(`hover:text-${color(d.hover.text)}`);
+    expect(d.gap).toBe(map.parts.link.gap);
+    expect(d.hover.text).toBe(map.parts.link.hover.text);
+  });
+
   it("página atual: cor, espaço e peso do mapa", () => {
     const p = map.parts.page;
     const classes = split(breadcrumbPageStyles);
