@@ -9,7 +9,8 @@ export interface BreadcrumbItemData {
   label: React.ReactNode;
   /**
    * URL de navegação. Quando presente e o item não for o atual,
-   * o componente renderiza um link (`<a href="..." />`).
+   * o componente renderiza um link (`<a href="..." />`). Um item do meio
+   * sem `href` vira texto simples.
    */
   href?: string;
   /**
@@ -18,7 +19,8 @@ export interface BreadcrumbItemData {
   icon?: React.ReactNode;
   /**
    * Indica se este item representa a página atual.
-   * Quando omitido, o último item da lista é considerado atual.
+   * Quando nenhum item é marcado, o último é o atual. Só um item recebe
+   * `aria-current`: o primeiro marcado.
    *
    * @default false
    */
@@ -61,4 +63,5 @@ export type BreadcrumbPageProps = React.ComponentPropsWithoutRef<"span">;
 
 export type BreadcrumbSeparatorProps = React.ComponentPropsWithoutRef<"li">;
 
-export type BreadcrumbEllipsisProps = React.ComponentPropsWithoutRef<"span">;
+/** Botão das reticências. O nome padrão é "Mais páginas". */
+export type BreadcrumbEllipsisProps = React.ComponentPropsWithoutRef<"button">;

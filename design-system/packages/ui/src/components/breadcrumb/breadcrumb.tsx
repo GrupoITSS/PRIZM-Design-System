@@ -9,6 +9,7 @@ import {
   breadcrumbListStyles,
   breadcrumbPageStyles,
   breadcrumbSeparatorStyles,
+  breadcrumbTextStyles,
 } from "./breadcrumb.styles";
 import type {
   BreadcrumbEllipsisProps,
@@ -21,6 +22,9 @@ import type {
   BreadcrumbSeparatorProps,
 } from "./breadcrumb.types";
 import { toText } from "../../lib/to-text";
+
+/** Nome padrão da navegação (decisão BC5, 18/11/2026). */
+const NAV_LABEL = "Trilha de navegação";
 
 /**
  * Breadcrumb root.
@@ -46,7 +50,7 @@ const Breadcrumb = ({
     return (
       <nav
         ref={ref}
-        aria-label="breadcrumb"
+        aria-label={NAV_LABEL}
         data-slot="breadcrumb"
         className={className}
         {...props}
@@ -57,33 +61,50 @@ const Breadcrumb = ({
   }
 
   const resolvedItems = items;
+  // Só um item é a página atual: o primeiro com isCurrent ou, sem nenhum, o último.
+  // Antes, um item marcado e o último ganhavam aria-current juntos.
+  const explicitCurrent = resolvedItems.findIndex((item) => item.isCurrent);
+  const currentIndex = explicitCurrent === -1 ? resolvedItems.length - 1 : explicitCurrent;
 
   return (
-    <nav ref={ref} aria-label="breadcrumb" data-slot="breadcrumb" className={className} {...props}>
+    <nav ref={ref} aria-label={NAV_LABEL} data-slot="breadcrumb" className={className} {...props}>
       <BreadcrumbList>
         {resolvedItems.map((item, index) => {
           const isLast = index === resolvedItems.length - 1;
-          const isCurrent = item.isCurrent ?? isLast;
+          const isCurrent = index === currentIndex;
           const separatorNode = !isLast ? (
             <BreadcrumbSeparator>{separator}</BreadcrumbSeparator>
           ) : null;
 
+          let content: React.ReactNode;
+          if (isCurrent) {
+            content = (
+              <BreadcrumbPage>
+                {item.icon}
+                {item.label}
+              </BreadcrumbPage>
+            );
+          } else if (item.href) {
+            content = (
+              <BreadcrumbLink href={item.href}>
+                {item.icon}
+                {item.label}
+              </BreadcrumbLink>
+            );
+          } else {
+            // Item do meio sem link: texto simples, para não anunciar duas páginas atuais.
+            content = (
+              <span data-slot="breadcrumb-text" className={breadcrumbTextStyles}>
+                {item.icon}
+                {item.label}
+              </span>
+            );
+          }
+
           return (
             // eslint-disable-next-line @eslint-react/no-array-index-key -- positional list, items have no stable id
             <React.Fragment key={`${index}-${item.href ?? toText(item.label)}`}>
-              <BreadcrumbItem>
-                {item.href && !isCurrent ? (
-                  <BreadcrumbLink href={item.href}>
-                    {item.icon}
-                    {item.label}
-                  </BreadcrumbLink>
-                ) : (
-                  <BreadcrumbPage>
-                    {item.icon}
-                    {item.label}
-                  </BreadcrumbPage>
-                )}
-              </BreadcrumbItem>
+              <BreadcrumbItem>{content}</BreadcrumbItem>
               {separatorNode}
             </React.Fragment>
           );
@@ -146,10 +167,10 @@ const BreadcrumbPage = ({
   ref,
   ...props
 }: BreadcrumbPageProps & { ref?: React.Ref<HTMLSpanElement> }) => (
+  // Só aria-current: role="link" com aria-disabled fazia o leitor de tela
+  // anunciar "link, indisponível" (pendência 2 de acessibilidade, 18/11/2026).
   <span
     ref={ref}
-    role="link"
-    aria-disabled="true"
     aria-current="page"
     data-slot="breadcrumb-page"
     className={cn(breadcrumbPageStyles, className)}
@@ -171,17 +192,36 @@ const BreadcrumbSeparator = ({ children, className, ...props }: BreadcrumbSepara
 );
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
 
-const BreadcrumbEllipsis = ({ className, ...props }: BreadcrumbEllipsisProps) => (
-  <span
-    role="presentation"
-    aria-hidden="true"
+/**
+ * Reticências de um caminho recolhido (decisão BC2, 18/11/2026).
+ *
+ * É um botão com nome, para abrir as páginas escondidas num DropdownMenu:
+ *
+ * @example
+ * <DropdownMenu>
+ *   <DropdownMenuTrigger asChild>
+ *     <BreadcrumbEllipsis />
+ *   </DropdownMenuTrigger>
+ *   <DropdownMenuContent align="start">…</DropdownMenuContent>
+ * </DropdownMenu>
+ */
+const BreadcrumbEllipsis = ({
+  className,
+  type = "button",
+  "aria-label": ariaLabel = "Mais páginas",
+  ref,
+  ...props
+}: BreadcrumbEllipsisProps & { ref?: React.Ref<HTMLButtonElement> }) => (
+  <button
+    ref={ref}
+    type={type}
+    aria-label={ariaLabel}
     data-slot="breadcrumb-ellipsis"
     className={cn(breadcrumbEllipsisStyles, className)}
     {...props}
   >
-    <Ellipsis className="h-4 w-4" />
-    <span className="sr-only">More</span>
-  </span>
+    <Ellipsis aria-hidden="true" />
+  </button>
 );
 BreadcrumbEllipsis.displayName = "BreadcrumbEllipsis";
 
