@@ -17,10 +17,16 @@ import {
   DropdownMenuTrigger,
 } from "@grupoitss/prizm-ui/dropdown-menu";
 
+// Traceability: the Breadcrumb set in [PRIZM] Componentes, the documentation frame and the article.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=109-947";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27809-5764";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=17e499ef-ce1d-463f-8895-ac3857802050&version=v1";
+
 const meta: Meta<typeof Breadcrumb> = {
   title: "Primários/Breadcrumb",
   component: Breadcrumb,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
@@ -30,7 +36,8 @@ const meta: Meta<typeof Breadcrumb> = {
           "Use a prop `items` nos casos comuns. Para recolher o caminho ou pôr um menu num item, " +
           "monte com as peças (`BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbLink`, `BreadcrumbPage`, " +
           "`BreadcrumbSeparator`, `BreadcrumbEllipsis`).\n\n" +
-          '**Base:** <a href="https://ui.shadcn.com/docs/components/breadcrumb" target="_blank" rel="noopener noreferrer">Breadcrumb — shadcn/ui</a>',
+          '**Base:** <a href="https://ui.shadcn.com/docs/components/breadcrumb" target="_blank" rel="noopener noreferrer">Breadcrumb — shadcn/ui</a>\n\n' +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
