@@ -7,7 +7,7 @@
     "code": "design-system/packages/ui/src/components/tooltip/tooltip.tsx",
     "story": "design-system/apps/docs/stories/tooltip.stories.tsx",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=a9d24bea-20a1-43b9-ba39-30f49f7fbd02&version=v1",
-    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/184"]
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/184", "https://github.com/GrupoITSS/PRIZM-Design-System/pull/222"]
   },
   "parts": {
     "bubble": {
