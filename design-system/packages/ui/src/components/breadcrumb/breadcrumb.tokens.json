@@ -1,0 +1,100 @@
+{
+  "component": "Breadcrumb",
+  "description": "Mapa de tokens do Breadcrumb: o que a lista e as peças do item usam do [PRIZM] Design Tokens_Core. Extraído das ligações dos sets Breadcrumb e Breadcrumb / BreadcrumbItem no Figma em 19/11/2026 (nenhuma ligação fora do Core) e conferido contra breadcrumb.styles.ts pelo teste breadcrumb.tokens.test.ts. Nomes no formato do Figma (color/muted-foreground); no código viram classes Tailwind (text-muted-foreground).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=109-947",
+    "figmaItem": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=195-1993",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27809-5764",
+    "code": "design-system/packages/ui/src/components/breadcrumb/breadcrumb.tsx",
+    "story": "design-system/apps/docs/stories/breadcrumb.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=17e499ef-ce1d-463f-8895-ac3857802050&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/221"
+    ],
+    "jira": [
+      "GIES-1728"
+    ]
+  },
+  "list": {
+    "text": "color/muted-foreground",
+    "fontSize": "text/sm",
+    "fontWeight": "font-weight/normal"
+  },
+  "parts": {
+    "link": {
+      "text": "color/muted-foreground",
+      "gap": "spacing/1-5",
+      "radius": "radius/xs",
+      "hover": {
+        "text": "color/foreground"
+      }
+    },
+    "page": {
+      "text": "color/foreground",
+      "gap": "spacing/1-5",
+      "fontWeight": "font-weight/normal"
+    },
+    "dropdown": {
+      "text": "color/muted-foreground",
+      "icon": "color/muted-foreground",
+      "gap": "spacing/1-5",
+      "radius": "radius/xs",
+      "hover": {
+        "text": "color/foreground",
+        "icon": "color/foreground"
+      },
+      "note": "No código, o gatilho usa breadcrumbLinkStyles: o mesmo espaço e o mesmo hover do link."
+    },
+    "ellipsis": {
+      "icon": "color/muted-foreground",
+      "width": "width/9",
+      "height": "height/9",
+      "radius": "radius/xs",
+      "hover": {
+        "background": "color/accent",
+        "icon": "color/accent-foreground"
+      }
+    },
+    "separator": {
+      "icon": "color/muted-foreground",
+      "size": 14
+    }
+  },
+  "states": {
+    "focus": {
+      "ring": "color/ring",
+      "ringWidth": 3,
+      "ringOffset": "color/ring-offset",
+      "ringOffsetWidth": 2,
+      "radius": "radius/xs",
+      "parts": [
+        "link",
+        "dropdown",
+        "ellipsis"
+      ],
+      "note": "No Figma, o anel é um par de DROP_SHADOW (spread 5 em color/ring e spread 2 em color/ring-offset), com um fill quase transparente para a sombra aparecer."
+    }
+  },
+  "icon": {
+    "size": 16,
+    "rule": "O ícone do item segue a cor do texto (Show Icon e Icon no Figma, prop icon no código)."
+  },
+  "sizes": {
+    "sm": {
+      "gap": "spacing/1-5",
+      "note": "No código, o espaço da lista no celular."
+    },
+    "md": {
+      "gap": "spacing/2-5",
+      "note": "No código, o espaço da lista a partir de 640px (sm:)."
+    }
+  },
+  "divergences": [
+    {
+      "where": "Size",
+      "figma": "Size=sm · md é uma propriedade do set Breadcrumb.",
+      "code": "Não é prop: a lista usa gap-1.5 e, a partir de 640px, sm:gap-2.5 (BC1).",
+      "status": "aberta"
+    }
+  ]
+}
