@@ -9,6 +9,7 @@ import {
   sheetDefaultSize,
   sheetDescriptionStyles,
   sheetEyebrowStyles,
+  sheetFooterActionsStyles,
   sheetFooterLeadingStyles,
   sheetFooterStyles,
   sheetHeaderActionsStyles,
@@ -171,7 +172,14 @@ function SheetRoot({
                   {footerLeading}
                 </div>
               ) : null}
-              {footer}
+              {footer ? (
+                <div
+                  data-slot="sheet-footer-actions"
+                  className={sheetFooterActionsStyles}
+                >
+                  {footer}
+                </div>
+              ) : null}
             </div>
           ) : null}
 
