@@ -28,7 +28,7 @@
     },
     "overlay": {
       "background": "color/overlay",
-      "note": "Só no código, com desfoque de 2px (backdrop-blur-[0.125rem]). No Figma, o set não tem overlay."
+      "note": "Só o token, sem desfoque (decisão de 21/11/2026; antes, backdrop-blur de 2px). No Figma, o set não tem overlay."
     },
     "header": {
       "gap": "spacing/1-5",
@@ -132,7 +132,7 @@
     {
       "where": "overlay",
       "figma": "—",
-      "code": "color/overlay com desfoque de 2px",
+      "code": "color/overlay, sem desfoque",
       "status": "representação"
     },
     {

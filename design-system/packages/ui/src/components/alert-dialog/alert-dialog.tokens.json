@@ -17,8 +17,7 @@
   "parts": {
     "overlay": {
       "background": "color/overlay",
-      "blur": "backdrop-blur-[0.125rem]",
-      "note": "Igual ao Dialog. Só no código: o Figma não desenha o fundo atrás do modal."
+      "note": "Igual ao Dialog e ao Sheet: só o token, sem desfoque (decisão de 21/11/2026). Só no código: o Figma não desenha o fundo atrás do modal."
     },
     "content": {
       "background": "color/background",
@@ -84,7 +83,7 @@
     {
       "where": "fundo atrás do modal",
       "figma": "não existe no Figma",
-      "code": "bg-overlay com backdrop-blur, igual ao Dialog",
+      "code": "bg-overlay, sem desfoque, igual ao Dialog e ao Sheet",
       "status": "representação"
     },
     {
