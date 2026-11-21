@@ -43,8 +43,10 @@ describe("Dialog × mapa de tokens (dialog.tokens.json)", () => {
     expect(cls(dialogContentVariants())).toContain(`max-w-${step(p.content.maxWidth)}`);
   });
 
-  it("overlay: color/overlay", () => {
-    expect(cls(dialogOverlayStyles)).toContain(`bg-${step(p.overlay.background)}`);
+  it("overlay: color/overlay, sem desfoque", () => {
+    const c = cls(dialogOverlayStyles);
+    expect(c).toContain(`bg-${step(p.overlay.background)}`);
+    expect(c.some((k) => k.includes("backdrop-blur"))).toBe(false);
   });
 
   it("cabeçalho: espaço entre título e descrição, centro no celular e esquerda a partir de 640px", () => {

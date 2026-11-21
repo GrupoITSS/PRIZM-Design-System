@@ -6,11 +6,11 @@
  */
 
 /**
- * Overlay: color/overlay com leve blur, igual ao Dialog.
+ * Overlay: color/overlay, sem desfoque, igual ao Dialog e ao Sheet.
  * Quase preto a 80% no claro e no escuro, para escurecer a tela atrás.
  */
 export const alertDialogOverlayStyles =
-  "fixed inset-0 z-50 bg-overlay backdrop-blur-[0.125rem] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0";
+  "fixed inset-0 z-50 bg-overlay data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0";
 
 /**
  * Content: apenas zoom (scale) + fade, sem slide — igual ao padrão shadcn.
