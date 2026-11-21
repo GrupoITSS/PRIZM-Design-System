@@ -37,7 +37,7 @@ describe("Sheet · teclado e nomes (etapa 4, 21/11/2026)", () => {
   it("botão fechar: Button ghost com o anel do Prizm (pendências 1 e 3)", async () => {
     render(<Sheet defaultOpen title="T" body={<p>Corpo</p>} />);
     await screen.findByRole("dialog");
-    const close = screen.getByRole("button", { name: "Close" });
+    const close = screen.getByRole("button", { name: "Fechar" });
     expect(close.className).toContain("size-control-height-sm");
     expect(close.className).toContain("focus-visible:ring-[3px]");
     expect(close.className).toContain("focus-visible:ring-ring");

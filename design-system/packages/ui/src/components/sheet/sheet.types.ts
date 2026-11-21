@@ -119,7 +119,7 @@ export interface SheetProps extends React.ComponentPropsWithoutRef<typeof RadixD
   /**
    * Nome acessível do botão de fechar (`aria-label`).
    *
-   * @default "Close"
+   * @default "Fechar"
    */
   closeLabel?: string;
 

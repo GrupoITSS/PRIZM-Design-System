@@ -113,12 +113,6 @@
       "status": "decisão do código: o tipo SheetSize é um só"
     },
     {
-      "where": "nome padrão do botão fechar",
-      "figma": "—",
-      "code": "closeLabel \"Close\" (o Dialog usa \"Fechar\")",
-      "status": "aberta"
-    },
-    {
       "where": "sombra",
       "figma": "style/shadow/lg do Core (preto a 3,9%)",
       "code": "shadow-lg do Tailwind, que o preset do PRIZM liga a shadow/lg",

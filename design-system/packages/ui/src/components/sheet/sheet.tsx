@@ -64,7 +64,7 @@ function SheetRoot({
   footer,
   footerLeading,
   showCloseButton = true,
-  closeLabel = "Close",
+  closeLabel = "Fechar",
   contentClassName,
   bodyClassName,
   children,
