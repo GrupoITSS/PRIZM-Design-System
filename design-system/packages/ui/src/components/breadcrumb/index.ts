@@ -24,4 +24,5 @@ export {
   breadcrumbListStyles,
   breadcrumbPageStyles,
   breadcrumbSeparatorStyles,
+  breadcrumbTextStyles,
 } from "./breadcrumb.styles";
