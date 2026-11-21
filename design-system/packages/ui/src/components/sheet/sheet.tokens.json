@@ -6,7 +6,7 @@
     "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27943-3264",
     "code": "design-system/packages/ui/src/components/sheet/sheet.tsx",
     "story": "design-system/apps/docs/stories/sheet.stories.tsx",
-    "article": null,
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d07091e7-bb43-432f-b0fe-3a3213b521b3&version=v1",
     "pullRequests": [
       "https://github.com/GrupoITSS/PRIZM-Design-System/pull/224"
     ]

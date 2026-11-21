@@ -26,7 +26,7 @@ const meta: Meta<typeof Sheet> = {
           "API por props (sem subcomponentes): `trigger`, `eyebrow`, `title`, `titleAdornment`, `description`, `headerActions`, `body`, `footer`, `footerLeading`, `side` e `size`.\n\n" +
           'O cabeçalho e o rodapé ficam fixos; só o corpo rola. O botão fechar é o `Button` ghost `icon-sm` do Prizm, com o nome `closeLabel` (padrão "Close"). Todo botão só de ícone em `headerActions` precisa de `aria-label`.\n\n' +
           "`size` usa a escala `max-width/*` do Core, a mesma do Dialog: `sm` (padrão nas laterais), `md`, `lg`, `xl`, `2xl` e `full` (padrão em `top` e `bottom`). No celular, as laterais ocupam 75% da tela e `top` e `bottom` a largura toda.\n\n" +
-          `**Rastreabilidade:** <a href="${FIGMA_URL}" target="_blank" rel="noopener noreferrer">Componente no Figma</a> · <a href="${FIGMA_DOC_URL}" target="_blank" rel="noopener noreferrer">Documentação no Figma</a> · <a href="https://ui.shadcn.com/docs/components/radix/sheet" target="_blank" rel="noopener noreferrer">Sheet — shadcn/ui</a>`,
+          `**Rastreabilidade:** <a href="${FIGMA_URL}" target="_blank" rel="noopener noreferrer">Componente no Figma</a> · <a href="${FIGMA_DOC_URL}" target="_blank" rel="noopener noreferrer">Documentação no Figma</a> · <a href="${CMS_URL}" target="_blank" rel="noopener noreferrer">Artigo no CMS</a> · <a href="https://ui.shadcn.com/docs/components/radix/sheet" target="_blank" rel="noopener noreferrer">Sheet — shadcn/ui</a>`,
       },
     },
   },
