@@ -13,7 +13,7 @@ export const sheetOverlayStyles =
 
 /**
  * Conteúdo: coluna com cabeçalho e rodapé fixos e o corpo rolando (`min-h-0 flex-1` no corpo).
- * Sem padding próprio: cada parte tem o seu (`spacing/6` nas laterais, `spacing/4` entre elas), como
+ * Sem padding próprio: cada parte tem o seu (`spacing/4` nas laterais e entre elas), como
  * no Figma.
  */
 const sheetContentBase =
@@ -87,7 +87,7 @@ export const sheetDefaultSize = {
 
 /** Cabeçalho: eyebrow, linha do título e descrição, a `spacing/1-5`. Centro no celular. */
 export const sheetHeaderStyles =
-  "flex shrink-0 flex-col gap-1.5 pb-4 pl-6 pr-12 pt-6 text-center sm:text-left";
+  "flex shrink-0 flex-col gap-1.5 pb-4 pl-4 pr-12 pt-4 text-center sm:text-left";
 
 /** Eyebrow: acima do título. */
 export const sheetEyebrowStyles = "text-xs font-medium text-muted-foreground";
@@ -110,14 +110,14 @@ export const sheetHeaderActionsStyles = "flex items-center gap-2 sm:ml-auto";
 
 /** Corpo: a única parte que rola. */
 export const sheetBodyStyles =
-  "custom-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-6 pb-4";
+  "custom-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-4 pb-4";
 
 /**
  * Rodapé fixo, com linha em cima: botões à direita a partir de 640px; no celular, empilhados com a ação principal em
  * cima. O Leading (opcional) fica à esquerda.
  */
 export const sheetFooterStyles =
-  "flex shrink-0 flex-col-reverse gap-3 border-t border-border px-6 pb-6 pt-4 sm:flex-row sm:items-center sm:justify-end";
+  "flex shrink-0 flex-col-reverse gap-3 border-t border-border px-4 pb-4 pt-4 sm:flex-row sm:items-center sm:justify-end";
 
 /** Ações do rodapé: botões a `spacing/2`; no celular, empilhados com a principal em cima. */
 export const sheetFooterActionsStyles = "flex flex-col-reverse gap-2 sm:flex-row";
