@@ -1,9 +1,13 @@
-/** Largura padrão dos sheets laterais (PRIZM). */
+/**
+ * @deprecated O layout `panel` saiu (21/11/2026). Use `size` (`sm` a `2xl`).
+ * Largura padrão dos sheets laterais (PRIZM).
+ */
 export const SHEET_PANEL_WIDTH_PX = 550;
 
-/** Classes Tailwind para painel lateral — usar literal fixo (JIT). */
+/** @deprecated Use `size`. Classes Tailwind para painel lateral — usar literal fixo (JIT). */
 export const sheetPanelWidthClass = "w-[550px] max-w-[calc(100vw-3rem)]";
 
+/** @deprecated Use `size`. */
 export const sheetPanelWidthClasses = {
   root: sheetPanelWidthClass,
   left: `data-[vaul-drawer-direction=left]:w-[550px] data-[vaul-drawer-direction=left]:max-w-[calc(100vw-3rem)]`,
