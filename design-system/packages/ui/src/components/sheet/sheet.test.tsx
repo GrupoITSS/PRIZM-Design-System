@@ -122,7 +122,7 @@ describe("Sheet (PRIZM / Sheet)", () => {
       />,
     );
 
-    const close = screen.getByRole("button", { name: "Close" });
+    const close = screen.getByRole("button", { name: "Fechar" });
     expect(close).toHaveAttribute("data-variant", "ghost");
     expect(close.className).toContain("size-control-height-sm");
     fireEvent.click(close);
