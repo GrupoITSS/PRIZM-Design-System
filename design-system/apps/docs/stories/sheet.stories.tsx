@@ -13,6 +13,8 @@ const FIGMA_URL =
   "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=220-4633";
 const FIGMA_DOC_URL =
   "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27943-3264";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d07091e7-bb43-432f-b0fe-3a3213b521b3&version=v1";
 
 const meta: Meta<typeof Sheet> = {
   title: "Primários/Sheet",
