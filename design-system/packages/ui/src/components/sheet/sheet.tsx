@@ -1,59 +1,42 @@
+import { Button } from "../button";
 import { cn } from "../../lib/cn";
 import { X } from "../icons";
 import { Dialog as RadixDialog } from "radix-ui";
-import { dialogCloseButtonStyles } from "../dialog/dialog.styles";
-import { sheetPanelWidthClass } from "./sheet.constants";
-import type { SheetContentVariantProps } from "./sheet.styles";
-import { sheetContentVariants, sheetOverlayStyles, sheetPanelStyles } from "./sheet.styles";
+import {
+  sheetBodyStyles,
+  sheetCloseStyles,
+  sheetContentVariants,
+  sheetDefaultSize,
+  sheetDescriptionStyles,
+  sheetEyebrowStyles,
+  sheetFooterActionsStyles,
+  sheetFooterLeadingStyles,
+  sheetFooterStyles,
+  sheetHeaderActionsStyles,
+  sheetHeaderStyles,
+  sheetOverlayStyles,
+  sheetTitleRowStyles,
+  sheetTitleStyles,
+} from "./sheet.styles";
 import type { SheetProps } from "./sheet.types";
-
-interface InternalSheetContentProps
-  extends React.ComponentPropsWithoutRef<typeof RadixDialog.Content>, SheetContentVariantProps {
-  showCloseButton?: boolean;
-  closeLabel?: string;
-}
-
-function SheetContent({
-  side,
-  className,
-  children,
-  showCloseButton = true,
-  closeLabel = "Close",
-  ...props
-}: InternalSheetContentProps) {
-  return (
-    <RadixDialog.Portal>
-      <RadixDialog.Overlay data-slot="sheet-overlay" className={cn(sheetOverlayStyles)} />
-      <RadixDialog.Content
-        data-slot="sheet-content"
-        data-side={side ?? "right"}
-        className={cn(sheetContentVariants({ side }), className)}
-        {...props}
-      >
-        {children}
-        {showCloseButton && (
-          <RadixDialog.Close className={cn(dialogCloseButtonStyles)}>
-            <X className="h-4 w-4" aria-hidden="true" />
-            <span className="sr-only">{closeLabel}</span>
-          </RadixDialog.Close>
-        )}
-      </RadixDialog.Content>
-    </RadixDialog.Portal>
-  );
-}
 
 /**
  * Sheet (root). Painel deslizante a partir de uma borda da tela.
  *
- * **API principal baseada em props (recomendada):**
+ * API por props, sem subcomponentes públicos:
  *
  * ```tsx
  * <Sheet
  *   side="right"
+ *   size="md"
  *   trigger={<Button variant="outline">Open</Button>}
- *   title="Edit profile"
- *   description="Make changes to your profile here."
+ *   eyebrow="Order #1234"
+ *   title="Edit order"
+ *   titleAdornment={<Badge variant="default">Active</Badge>}
+ *   description="Make changes to the order here."
+ *   headerActions={<Button variant="ghost" size="icon-sm" aria-label="Edit">…</Button>}
  *   body={<div>…</div>}
+ *   footerLeading={<Button variant="link">Learn more</Button>}
  *   footer={
  *     <>
  *       <Button variant="outline">Cancel</Button>
@@ -63,24 +46,26 @@ function SheetContent({
  * />
  * ```
  *
- * Estilos alinhados ao shadcn/ui (new-york). Não expõe subcomponentes públicos.
+ * Cabeçalho e rodapé ficam fixos; só o corpo rola. O botão fechar é o `Button` ghost `icon-sm`
+ * do Prizm. Todo botão só de ícone em `headerActions` precisa de `aria-label`.
  *
  * @see https://ui.shadcn.com/docs/components/radix/sheet
  */
 function SheetRoot({
   side = "right",
+  size,
   trigger,
+  eyebrow,
   title,
+  titleAdornment,
   description,
+  headerActions,
   body,
   footer,
+  footerLeading,
   showCloseButton = true,
   closeLabel = "Close",
   contentClassName,
-  layout = "default",
-  icon,
-  eyebrow,
-  headerActions,
   bodyClassName,
   children,
   ...rootProps
@@ -88,145 +73,113 @@ function SheetRoot({
   const useSimplifiedAPI =
     trigger !== undefined ||
     title !== undefined ||
+    titleAdornment !== undefined ||
+    eyebrow !== undefined ||
     description !== undefined ||
     body !== undefined ||
     footer !== undefined;
 
-  if (useSimplifiedAPI && layout === "panel") {
-    return (
-      <RadixDialog.Root {...rootProps}>
-        {Boolean(trigger) && <RadixDialog.Trigger asChild>{trigger}</RadixDialog.Trigger>}
-        <SheetContent
-          side={side}
-          showCloseButton={false}
-          data-layout="panel"
+  if (!useSimplifiedAPI) {
+    return <RadixDialog.Root {...rootProps}>{children}</RadixDialog.Root>;
+  }
+
+  const hasTitleRow = Boolean(title || titleAdornment || headerActions);
+
+  return (
+    <RadixDialog.Root {...rootProps}>
+      {Boolean(trigger) && <RadixDialog.Trigger asChild>{trigger}</RadixDialog.Trigger>}
+      <RadixDialog.Portal>
+        <RadixDialog.Overlay data-slot="sheet-overlay" className={sheetOverlayStyles} />
+        <RadixDialog.Content
+          data-slot="sheet-content"
+          data-side={side}
           className={cn(
-            sheetPanelWidthClass,
-            "sm:max-w-[calc(100vw-3rem)]",
-            sheetPanelStyles.content,
+            sheetContentVariants({
+              side,
+              size: size ?? sheetDefaultSize[side],
+            }),
             contentClassName,
           )}
           {...(description ? {} : { "aria-describedby": undefined })}
         >
-          <div data-slot="sheet-header" className={sheetPanelStyles.header}>
-            <div className={sheetPanelStyles.headerMain}>
-              {icon ? (
-                <div data-slot="sheet-icon" className={sheetPanelStyles.headerIcon}>
-                  {icon}
-                </div>
-              ) : null}
-              <div className={sheetPanelStyles.headerText}>
-                {eyebrow ? (
-                  <div data-slot="sheet-eyebrow" className={sheetPanelStyles.eyebrow}>
-                    {eyebrow}
-                  </div>
-                ) : null}
+          <div data-slot="sheet-header" className={sheetHeaderStyles}>
+            {eyebrow ? (
+              <div data-slot="sheet-eyebrow" className={sheetEyebrowStyles}>
+                {eyebrow}
+              </div>
+            ) : null}
+            {hasTitleRow ? (
+              <div data-slot="sheet-title-row" className={sheetTitleRowStyles}>
                 <RadixDialog.Title
                   data-slot="sheet-title"
-                  className={cn(sheetPanelStyles.title, !title && "sr-only")}
+                  className={cn(sheetTitleStyles, !title && "sr-only")}
                 >
-                  {title || "Sheet"}
+                  {title || "Painel"}
                 </RadixDialog.Title>
-                {description ? (
-                  <RadixDialog.Description
-                    data-slot="sheet-description"
-                    className={sheetPanelStyles.description}
-                  >
-                    {description}
-                  </RadixDialog.Description>
+                {titleAdornment ? (
+                  <div data-slot="sheet-title-adornment" className="flex items-center gap-2">
+                    {titleAdornment}
+                  </div>
+                ) : null}
+                {headerActions ? (
+                  <div data-slot="sheet-header-actions" className={sheetHeaderActionsStyles}>
+                    {headerActions}
+                  </div>
                 ) : null}
               </div>
-            </div>
-            {headerActions || showCloseButton ? (
-              <div data-slot="sheet-header-actions" className={sheetPanelStyles.headerActions}>
-                {headerActions}
-                {showCloseButton ? (
-                  <RadixDialog.Close type="button" className={sheetPanelStyles.close}>
-                    <X className="size-4" aria-hidden="true" />
-                    <span className="sr-only">{closeLabel}</span>
-                  </RadixDialog.Close>
-                ) : null}
-              </div>
+            ) : (
+              <RadixDialog.Title className="sr-only">Painel</RadixDialog.Title>
+            )}
+            {description ? (
+              <RadixDialog.Description
+                data-slot="sheet-description"
+                className={sheetDescriptionStyles}
+              >
+                {description}
+              </RadixDialog.Description>
             ) : null}
           </div>
 
-          <div data-slot="sheet-body" className={cn(sheetPanelStyles.body, bodyClassName)}>
-            {body}
-          </div>
-
-          {footer ? (
-            <div data-slot="sheet-footer" className={sheetPanelStyles.footer}>
-              {footer}
-            </div>
-          ) : null}
-        </SheetContent>
-      </RadixDialog.Root>
-    );
-  }
-
-  if (useSimplifiedAPI) {
-    return (
-      <RadixDialog.Root {...rootProps}>
-        {Boolean(trigger) && <RadixDialog.Trigger asChild>{trigger}</RadixDialog.Trigger>}
-        <SheetContent
-          side={side}
-          showCloseButton={showCloseButton}
-          closeLabel={closeLabel}
-          className={contentClassName}
-          {...(description ? {} : { "aria-describedby": undefined })}
-        >
-          {Boolean(title || description) && (
-            <div
-              data-slot="sheet-header"
-              className="flex flex-col space-y-2 pr-8 text-center sm:text-left"
-            >
-              {title ? (
-                <RadixDialog.Title
-                  data-slot="sheet-title"
-                  className="text-lg font-semibold text-foreground"
-                >
-                  {title}
-                </RadixDialog.Title>
-              ) : (
-                <RadixDialog.Title className="sr-only">Sheet</RadixDialog.Title>
-              )}
-              {description ? (
-                <RadixDialog.Description
-                  data-slot="sheet-description"
-                  className="text-sm text-muted-foreground"
-                >
-                  {description}
-                </RadixDialog.Description>
-              ) : null}
-            </div>
-          )}
-
           {body ? (
-            <div
-              data-slot="sheet-body"
-              className={cn(
-                "custom-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-1.5 py-1",
-                bodyClassName,
-              )}
-            >
+            <div data-slot="sheet-body" className={cn(sheetBodyStyles, bodyClassName)}>
               {body}
             </div>
-          ) : null}
+          ) : (
+            <div className="min-h-0 flex-1" aria-hidden="true" />
+          )}
 
-          {footer ? (
-            <div
-              data-slot="sheet-footer"
-              className="mt-auto flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:space-x-2"
-            >
-              {footer}
+          {footer || footerLeading ? (
+            <div data-slot="sheet-footer" className={sheetFooterStyles}>
+              {footerLeading ? (
+                <div data-slot="sheet-footer-leading" className={sheetFooterLeadingStyles}>
+                  {footerLeading}
+                </div>
+              ) : null}
+              {footer ? (
+                <div data-slot="sheet-footer-actions" className={sheetFooterActionsStyles}>
+                  {footer}
+                </div>
+              ) : null}
             </div>
           ) : null}
-        </SheetContent>
-      </RadixDialog.Root>
-    );
-  }
 
-  return <RadixDialog.Root {...rootProps}>{children}</RadixDialog.Root>;
+          {showCloseButton && (
+            <RadixDialog.Close asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label={closeLabel}
+                data-slot="sheet-close-button"
+                className={sheetCloseStyles}
+              >
+                <X aria-hidden="true" />
+              </Button>
+            </RadixDialog.Close>
+          )}
+        </RadixDialog.Content>
+      </RadixDialog.Portal>
+    </RadixDialog.Root>
+  );
 }
 
 const Sheet = SheetRoot;

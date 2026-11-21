@@ -1,0 +1,128 @@
+{
+  "component": "Sheet",
+  "description": "Mapa de tokens do Sheet: o que cada parte usa do [PRIZM] Design Tokens_Core. Extraído das ligações do set Sheet no Figma em 21/11/2026 (26 variantes: Breakpoint, Position e Size). Conferido contra sheet.styles.ts pelo teste sheet.tokens.test.ts. Nomes no formato do Figma (color/background, spacing/6); no código viram classes Tailwind (bg-background, px-6).",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=220-4633",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27943-3264",
+    "code": "design-system/packages/ui/src/components/sheet/sheet.tsx",
+    "story": "design-system/apps/docs/stories/sheet.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d07091e7-bb43-432f-b0fe-3a3213b521b3&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/224"]
+  },
+  "parts": {
+    "overlay": {
+      "background": "color/overlay",
+      "note": "Só o token, sem desfoque."
+    },
+    "content": {
+      "background": "color/background",
+      "text": "color/foreground",
+      "border": "color/border",
+      "borderWidth": "border-width/1",
+      "borderSide": "a borda da lateral oposta ao lado de onde abre (left: direita; right: esquerda; top: embaixo; bottom: em cima)",
+      "shadow": "shadow/lg",
+      "width": "75% da tela nas laterais; limitada pelo size a partir de 640px"
+    },
+    "header": {
+      "paddingTop": "spacing/6",
+      "paddingLeft": "spacing/6",
+      "paddingRight": "spacing/12",
+      "paddingBottom": "spacing/4",
+      "gap": "spacing/1-5",
+      "align": { "aPartirDe640": "esquerda", "celular": "centro" }
+    },
+    "eyebrow": {
+      "color": "color/muted-foreground",
+      "fontSize": "text/xs",
+      "fontWeight": "font-weight/medium",
+      "fontFamily": "font/sans"
+    },
+    "titleRow": {
+      "gap": "spacing/3",
+      "adornment": "slot Title Adornment (Figma), titleAdornment (código); vazio e oculto por padrão (Show Title Adornment)",
+      "headerActions": "slot Header Actions (Figma), headerActions (código); até 2 botões ghost icon-sm"
+    },
+    "title": {
+      "color": "color/foreground",
+      "fontSize": "text/lg",
+      "fontWeight": "font-weight/semibold",
+      "fontFamily": "font/sans"
+    },
+    "description": {
+      "color": "color/muted-foreground",
+      "fontSize": "text/sm",
+      "fontWeight": "font-weight/normal",
+      "fontFamily": "font/sans"
+    },
+    "body": {
+      "paddingX": "spacing/6",
+      "paddingBottom": "spacing/4",
+      "note": "A única parte que rola."
+    },
+    "footer": {
+      "paddingX": "spacing/6",
+      "paddingTop": "spacing/4",
+      "paddingBottom": "spacing/6",
+      "gap": "spacing/3",
+      "actionsGap": "spacing/2",
+      "border": "color/border",
+      "borderWidth": "border-width/1",
+      "leading": "slot Leading (Figma), footerLeading (código); à esquerda das ações",
+      "layout": {
+        "aPartirDe640": "linha, ações à direita, ação principal por último",
+        "celular": "coluna, ação principal em cima"
+      },
+      "actions": "Button do Prizm (Outline e Default)"
+    },
+    "close": {
+      "component": "Button ghost icon-sm",
+      "size": "control-height/sm",
+      "offset": "spacing/2",
+      "note": "A 8px do canto, para o X de 16px ficar a 16px do canto."
+    }
+  },
+  "sizes": {
+    "sm": { "maxWidth": "max-width/sm", "px": 384, "default": true },
+    "md": { "maxWidth": "max-width/md", "px": 448 },
+    "lg": { "maxWidth": "max-width/lg", "px": 512 },
+    "xl": { "maxWidth": "max-width/xl", "px": 576 },
+    "2xl": { "maxWidth": "max-width/2xl", "px": 672 },
+    "full": {
+      "maxWidth": null,
+      "px": null,
+      "note": "Só em top e bottom: a largura da tela. Padrão de top e bottom. Nas laterais, vale como 2xl."
+    }
+  },
+  "divergences": [
+    {
+      "where": "largura no celular",
+      "figma": "Mobile: left e right a 257px (75% de 343px) em Size=sm; top e bottom a 343px em Size=full",
+      "code": "w-3/4 nas laterais, inset-x-0 em top e bottom, em qualquer size abaixo de 640px",
+      "status": "representação"
+    },
+    {
+      "where": "altura",
+      "figma": "left e right a 867px; top e bottom a 596px",
+      "code": "left e right com h-full (a tela); top e bottom com a altura do conteúdo",
+      "status": "representação: no Figma o Sheet não tem tela em volta"
+    },
+    {
+      "where": "Size=full nas laterais",
+      "figma": "não existe (só em top e bottom)",
+      "code": "size=\"full\" em left e right vale como 2xl",
+      "status": "decisão do código: o tipo SheetSize é um só"
+    },
+    {
+      "where": "nome padrão do botão fechar",
+      "figma": "—",
+      "code": "closeLabel \"Close\" (o Dialog usa \"Fechar\")",
+      "status": "aberta"
+    },
+    {
+      "where": "sombra",
+      "figma": "style/shadow/lg do Core (preto a 3,9%)",
+      "code": "shadow-lg do Tailwind, que o preset do PRIZM liga a shadow/lg",
+      "status": "representação"
+    }
+  ]
+}
