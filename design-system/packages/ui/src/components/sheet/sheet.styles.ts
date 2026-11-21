@@ -67,9 +67,7 @@ export const sheetContentVariants = cva(sheetContentBase, {
   },
 });
 
-export type SheetContentVariantProps = VariantProps<
-  typeof sheetContentVariants
->;
+export type SheetContentVariantProps = VariantProps<typeof sheetContentVariants>;
 
 /** Os tamanhos do Sheet, na ordem da escala. */
 export const sheetSizes = ["sm", "md", "lg", "xl", "2xl", "full"] as const;
@@ -102,8 +100,7 @@ export const sheetTitleRowStyles =
   "flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:justify-start";
 
 /** Título do sheet. */
-export const sheetTitleStyles =
-  "text-lg font-semibold leading-none tracking-tight";
+export const sheetTitleStyles = "text-lg font-semibold leading-none tracking-tight";
 
 /** Descrição do sheet. */
 export const sheetDescriptionStyles = "text-sm text-muted-foreground";
@@ -123,8 +120,7 @@ export const sheetFooterStyles =
   "flex shrink-0 flex-col-reverse gap-3 border-t border-border px-6 pb-6 pt-4 sm:flex-row sm:items-center sm:justify-end";
 
 /** Ações do rodapé: botões a `spacing/2`; no celular, empilhados com a principal em cima. */
-export const sheetFooterActionsStyles =
-  "flex flex-col-reverse gap-2 sm:flex-row";
+export const sheetFooterActionsStyles = "flex flex-col-reverse gap-2 sm:flex-row";
 
 /** Leading do rodapé: à esquerda das ações a partir de 640px. */
 export const sheetFooterLeadingStyles = "flex items-center gap-2 sm:mr-auto";

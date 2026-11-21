@@ -15,9 +15,7 @@ export type SheetSide = "top" | "bottom" | "left" | "right";
  * **Importante:** este componente **não expõe subcomponentes públicos**
  * (`SheetContent`, `SheetHeader`, etc.). Toda a configuração é feita via props.
  */
-export interface SheetProps extends React.ComponentPropsWithoutRef<
-  typeof RadixDialog.Root
-> {
+export interface SheetProps extends React.ComponentPropsWithoutRef<typeof RadixDialog.Root> {
   /**
    * Lado da tela de onde o Sheet aparece.
    *

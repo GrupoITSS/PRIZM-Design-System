@@ -4,8 +4,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Sheet } from "./sheet";
 
-const content = () =>
-  document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
+const content = () => document.querySelector<HTMLElement>('[data-slot="sheet-content"]');
 
 describe("Sheet (PRIZM / Sheet)", () => {
   it("renderiza conteúdo via API baseada em props quando aberto por defaultOpen", () => {
@@ -46,51 +45,24 @@ describe("Sheet (PRIZM / Sheet)", () => {
   });
 
   it("aplica o lado correto no content via data-side", () => {
-    render(
-      <Sheet
-        defaultOpen
-        side="left"
-        title="Side test"
-        body={<div>Content</div>}
-      />,
-    );
+    render(<Sheet defaultOpen side="left" title="Side test" body={<div>Content</div>} />);
     expect(content()).toHaveAttribute("data-side", "left");
   });
 
   it("size: laterais com sm no padrão, limitadas por sm:max-w-*", () => {
-    const { unmount } = render(
-      <Sheet defaultOpen title="T" body={<div>B</div>} />,
-    );
+    const { unmount } = render(<Sheet defaultOpen title="T" body={<div>B</div>} />);
     expect(content()?.className).toContain("w-3/4");
     expect(content()?.className).toContain("sm:max-w-sm");
     unmount();
-    render(
-      <Sheet
-        defaultOpen
-        side="left"
-        size="2xl"
-        title="T"
-        body={<div>B</div>}
-      />,
-    );
+    render(<Sheet defaultOpen side="left" size="2xl" title="T" body={<div>B</div>} />);
     expect(content()?.className).toContain("sm:max-w-2xl");
   });
 
   it("size: topo e base são largura inteira no padrão e centralizam com size", () => {
-    const { unmount } = render(
-      <Sheet defaultOpen side="top" title="T" body={<div>B</div>} />,
-    );
+    const { unmount } = render(<Sheet defaultOpen side="top" title="T" body={<div>B</div>} />);
     expect(content()?.className).toContain("max-w-none");
     unmount();
-    render(
-      <Sheet
-        defaultOpen
-        side="bottom"
-        size="md"
-        title="T"
-        body={<div>B</div>}
-      />,
-    );
+    render(<Sheet defaultOpen side="bottom" size="md" title="T" body={<div>B</div>} />);
     expect(content()?.className).toEqual(expect.stringContaining("sm:mx-auto"));
     expect(content()?.className).toContain("sm:max-w-md");
   });
@@ -126,25 +98,14 @@ describe("Sheet (PRIZM / Sheet)", () => {
       />,
     );
 
-    const footer = document.querySelector<HTMLElement>(
-      '[data-slot="sheet-footer"]',
-    );
+    const footer = document.querySelector<HTMLElement>('[data-slot="sheet-footer"]');
     expect(footer?.firstElementChild).toHaveTextContent("Leading");
     expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
   });
 
   it("só o corpo rola: cabeçalho e rodapé não rolam", () => {
-    render(
-      <Sheet
-        defaultOpen
-        title="T"
-        body={<div>B</div>}
-        footer={<Button>Save</Button>}
-      />,
-    );
-    const body = document.querySelector<HTMLElement>(
-      '[data-slot="sheet-body"]',
-    );
+    render(<Sheet defaultOpen title="T" body={<div>B</div>} footer={<Button>Save</Button>} />);
+    const body = document.querySelector<HTMLElement>('[data-slot="sheet-body"]');
     expect(body?.className).toContain("overflow-y-auto");
     expect(body?.className).toContain("min-h-0");
     expect(content()?.className).toContain("overflow-hidden");
@@ -172,16 +133,9 @@ describe("Sheet (PRIZM / Sheet)", () => {
 
   it("permite esconder o botão de fechar com showCloseButton=false", () => {
     render(
-      <Sheet
-        defaultOpen
-        showCloseButton={false}
-        title="No close button"
-        body={<div>Body</div>}
-      />,
+      <Sheet defaultOpen showCloseButton={false} title="No close button" body={<div>Body</div>} />,
     );
 
-    expect(
-      screen.queryByRole("button", { name: /close/i }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /close/i })).not.toBeInTheDocument();
   });
 });

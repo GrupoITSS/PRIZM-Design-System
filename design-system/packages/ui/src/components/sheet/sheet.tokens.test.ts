@@ -61,14 +61,10 @@ describe("Sheet × mapa de tokens (sheet.tokens.json)", () => {
   it("tamanhos: cada size limita com o max-width/* do mapa, em todos os lados; sm é o padrão", () => {
     for (const [size, def] of Object.entries(map.sizes)) {
       for (const side of sides) {
-        const c = cls(
-          sheetContentVariants({ side, size: size as keyof typeof map.sizes }),
-        );
+        const c = cls(sheetContentVariants({ side, size: size as keyof typeof map.sizes }));
         if (def.maxWidth === null) {
           // full: só em top e bottom; nas laterais vale como 2xl.
-          expect(c).toContain(
-            side === "top" || side === "bottom" ? "max-w-none" : "sm:max-w-2xl",
-          );
+          expect(c).toContain(side === "top" || side === "bottom" ? "max-w-none" : "sm:max-w-2xl");
         } else {
           expect(c).toContain(`sm:max-w-${step(def.maxWidth)}`);
         }
@@ -82,9 +78,7 @@ describe("Sheet × mapa de tokens (sheet.tokens.json)", () => {
   it("largura: 75% da tela nas laterais; centralizado com size em top e bottom", () => {
     expect(cls(sheetContentVariants({ side: "left" }))).toContain("w-3/4");
     expect(cls(sheetContentVariants({ side: "right" }))).toContain("w-3/4");
-    expect(cls(sheetContentVariants({ side: "top", size: "md" }))).toContain(
-      "sm:mx-auto",
-    );
+    expect(cls(sheetContentVariants({ side: "top", size: "md" }))).toContain("sm:mx-auto");
   });
 
   it("cabeçalho: padding, espaço entre as linhas e alinhamento", () => {
@@ -112,9 +106,7 @@ describe("Sheet × mapa de tokens (sheet.tokens.json)", () => {
     const c = cls(sheetTitleStyles);
     expect(c).toContain(`text-${step(p.title.fontSize)}`);
     expect(c).toContain(`font-${step(p.title.fontWeight)}`);
-    expect(cls(sheetContentVariants())).toContain(
-      `text-${step(p.title.color)}`,
-    );
+    expect(cls(sheetContentVariants())).toContain(`text-${step(p.title.color)}`);
   });
 
   it("descrição: cor e tamanho", () => {
@@ -127,9 +119,7 @@ describe("Sheet × mapa de tokens (sheet.tokens.json)", () => {
     const c = cls(sheetBodyStyles);
     expect(c).toContain(`px-${step(p.body.paddingX)}`);
     expect(c).toContain(`pb-${step(p.body.paddingBottom)}`);
-    expect(c).toEqual(
-      expect.arrayContaining(["overflow-y-auto", "min-h-0", "flex-1"]),
-    );
+    expect(c).toEqual(expect.arrayContaining(["overflow-y-auto", "min-h-0", "flex-1"]));
   });
 
   it("rodapé: linha em cima, padding, espaço entre Leading e ações, coluna no celular", () => {
@@ -141,15 +131,9 @@ describe("Sheet × mapa de tokens (sheet.tokens.json)", () => {
     expect(c).toContain(`pb-${step(p.footer.paddingBottom)}`);
     expect(c).toContain(`gap-${step(p.footer.gap)}`);
     expect(c).toEqual(
-      expect.arrayContaining([
-        "flex-col-reverse",
-        "sm:flex-row",
-        "sm:justify-end",
-      ]),
+      expect.arrayContaining(["flex-col-reverse", "sm:flex-row", "sm:justify-end"]),
     );
-    expect(cls(sheetFooterActionsStyles)).toContain(
-      `gap-${step(p.footer.actionsGap)}`,
-    );
+    expect(cls(sheetFooterActionsStyles)).toContain(`gap-${step(p.footer.actionsGap)}`);
   });
 
   it("botão fechar: a spacing/2 do canto", () => {

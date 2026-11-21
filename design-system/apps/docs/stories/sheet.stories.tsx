@@ -9,10 +9,8 @@ import { Sheet, sheetSizes } from "@grupoitss/prizm-ui/sheet";
 // Traceability: the Sheet component set in [PRIZM] Componentes and the documentation frame. The
 // token map lives next to the component (sheet.tokens.json) and is checked against the classes in
 // a test.
-const FIGMA_URL =
-  "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=220-4633";
-const FIGMA_DOC_URL =
-  "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27943-3264";
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=220-4633";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27943-3264";
 const CMS_URL =
   "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d07091e7-bb43-432f-b0fe-3a3213b521b3&version=v1";
 
@@ -45,8 +43,7 @@ const meta: Meta<typeof Sheet> = {
     size: {
       control: "inline-radio",
       options: sheetSizes,
-      description:
-        "Largura máxima. Padrão: sm nas laterais, full em top e bottom.",
+      description: "Largura máxima. Padrão: sm nas laterais, full em top e bottom.",
     },
     showCloseButton: {
       control: "boolean",
@@ -174,8 +171,8 @@ export const Sides: Story = {
               {Array.from({ length: 6 }).map((_, index) => (
                 // eslint-disable-next-line @eslint-react/no-array-index-key -- static placeholder list
                 <p key={index}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua.
                 </p>
               ))}
             </div>

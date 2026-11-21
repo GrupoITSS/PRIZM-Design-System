@@ -1,11 +1,5 @@
 import "@testing-library/jest-dom/vitest";
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Button } from "../button";
 import { Sheet } from "./sheet";
@@ -34,13 +28,9 @@ describe("Sheet · teclado e nomes (etapa 4, 21/11/2026)", () => {
     act(() => trigger.focus());
     fireEvent.click(trigger);
     const dialog = await screen.findByRole("dialog");
-    await waitFor(() =>
-      expect(dialog.contains(document.activeElement)).toBe(true),
-    );
+    await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
     fireEvent.keyDown(document.activeElement ?? dialog, { key: "Escape" });
-    await waitFor(() =>
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
-    );
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
     expect(trigger).toHaveFocus();
   });
 
@@ -54,14 +44,7 @@ describe("Sheet · teclado e nomes (etapa 4, 21/11/2026)", () => {
   });
 
   it("closeLabel troca o nome do botão fechar", async () => {
-    render(
-      <Sheet
-        defaultOpen
-        title="Editar"
-        closeLabel="Fechar"
-        body={<p>Corpo</p>}
-      />,
-    );
+    render(<Sheet defaultOpen title="Editar" closeLabel="Fechar" body={<p>Corpo</p>} />);
     await screen.findByRole("dialog");
     expect(screen.getByRole("button", { name: "Fechar" })).toBeInTheDocument();
   });
@@ -76,9 +59,7 @@ describe("Sheet · teclado e nomes (etapa 4, 21/11/2026)", () => {
       <Sheet
         defaultOpen
         title="T"
-        headerActions={
-          <Button size="icon-sm" variant="ghost" aria-label="Edit" />
-        }
+        headerActions={<Button size="icon-sm" variant="ghost" aria-label="Edit" />}
         body={<p>Corpo</p>}
       />,
     );

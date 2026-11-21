@@ -87,14 +87,9 @@ function SheetRoot({
 
   return (
     <RadixDialog.Root {...rootProps}>
-      {Boolean(trigger) && (
-        <RadixDialog.Trigger asChild>{trigger}</RadixDialog.Trigger>
-      )}
+      {Boolean(trigger) && <RadixDialog.Trigger asChild>{trigger}</RadixDialog.Trigger>}
       <RadixDialog.Portal>
-        <RadixDialog.Overlay
-          data-slot="sheet-overlay"
-          className={sheetOverlayStyles}
-        />
+        <RadixDialog.Overlay data-slot="sheet-overlay" className={sheetOverlayStyles} />
         <RadixDialog.Content
           data-slot="sheet-content"
           data-side={side}
@@ -122,18 +117,12 @@ function SheetRoot({
                   {title || "Painel"}
                 </RadixDialog.Title>
                 {titleAdornment ? (
-                  <div
-                    data-slot="sheet-title-adornment"
-                    className="flex items-center gap-2"
-                  >
+                  <div data-slot="sheet-title-adornment" className="flex items-center gap-2">
                     {titleAdornment}
                   </div>
                 ) : null}
                 {headerActions ? (
-                  <div
-                    data-slot="sheet-header-actions"
-                    className={sheetHeaderActionsStyles}
-                  >
+                  <div data-slot="sheet-header-actions" className={sheetHeaderActionsStyles}>
                     {headerActions}
                   </div>
                 ) : null}
@@ -152,10 +141,7 @@ function SheetRoot({
           </div>
 
           {body ? (
-            <div
-              data-slot="sheet-body"
-              className={cn(sheetBodyStyles, bodyClassName)}
-            >
+            <div data-slot="sheet-body" className={cn(sheetBodyStyles, bodyClassName)}>
               {body}
             </div>
           ) : (
@@ -165,18 +151,12 @@ function SheetRoot({
           {footer || footerLeading ? (
             <div data-slot="sheet-footer" className={sheetFooterStyles}>
               {footerLeading ? (
-                <div
-                  data-slot="sheet-footer-leading"
-                  className={sheetFooterLeadingStyles}
-                >
+                <div data-slot="sheet-footer-leading" className={sheetFooterLeadingStyles}>
                   {footerLeading}
                 </div>
               ) : null}
               {footer ? (
-                <div
-                  data-slot="sheet-footer-actions"
-                  className={sheetFooterActionsStyles}
-                >
+                <div data-slot="sheet-footer-actions" className={sheetFooterActionsStyles}>
                   {footer}
                 </div>
               ) : null}

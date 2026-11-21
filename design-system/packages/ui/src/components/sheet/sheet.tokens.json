@@ -7,9 +7,7 @@
     "code": "design-system/packages/ui/src/components/sheet/sheet.tsx",
     "story": "design-system/apps/docs/stories/sheet.stories.tsx",
     "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d07091e7-bb43-432f-b0fe-3a3213b521b3&version=v1",
-    "pullRequests": [
-      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/224"
-    ]
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/224"]
   },
   "parts": {
     "overlay": {
