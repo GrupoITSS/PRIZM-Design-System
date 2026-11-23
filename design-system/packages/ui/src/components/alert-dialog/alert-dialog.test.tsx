@@ -59,7 +59,7 @@ describe("AlertDialog (PRIZM / shadcn)", () => {
       </AlertDialog>,
     );
     const content = screen.getByTestId("content");
-    expect(content).toHaveClass("bg-background");
+    expect(content).toHaveClass("bg-card");
     expect(content).toHaveClass("border-border");
   });
 

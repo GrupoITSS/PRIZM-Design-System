@@ -15,8 +15,8 @@
       "note": "Só o token, sem desfoque."
     },
     "content": {
-      "background": "color/background",
-      "text": "color/foreground",
+      "background": "color/card",
+      "text": "color/card-foreground",
       "border": "color/border",
       "borderWidth": "border-width/1",
       "borderSide": "a borda da lateral oposta ao lado de onde abre (left: direita; right: esquerda; top: embaixo; bottom: em cima)",
@@ -43,7 +43,7 @@
       "headerActions": "slot Header Actions (Figma), headerActions (código); até 2 botões ghost icon-sm"
     },
     "title": {
-      "color": "color/foreground",
+      "color": "color/card-foreground",
       "fontSize": "text/lg",
       "fontWeight": "font-weight/semibold",
       "fontFamily": "font/sans"

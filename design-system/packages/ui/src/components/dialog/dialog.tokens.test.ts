@@ -75,7 +75,7 @@ describe("Dialog × mapa de tokens (dialog.tokens.json)", () => {
     expect(c).toContain(`text-${step(p.title.fontSize)}`);
     expect(c).toContain(`font-${step(p.title.fontWeight)}`);
     expect(c).toContain("leading-none");
-    // A cor do título vem do conteúdo (text-foreground), sem classe própria.
+    // A cor do título vem do conteúdo (text-card-foreground), sem classe própria.
     expect(cls(dialogContentStyles)).toContain(`text-${step(p.title.color)}`);
   });
 

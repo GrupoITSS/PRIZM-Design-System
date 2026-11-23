@@ -16,15 +16,16 @@ export const dialogOverlayStyles =
 /**
  * Content: modal centralizado com animação de zoom + fade.
  *
- * Decisões de 06/11/2026, alinhadas ao AlertDialog: fundo `background` (antes `sidebar`, que no Docnix
- * e no Digitrol era escuro), raio `rounded-lg` sempre, altura máxima da tela menos 32px com rolagem
- * por dentro.
+ * Decisões de 06/11/2026, alinhadas ao AlertDialog: raio `rounded-lg` sempre e altura máxima da tela
+ * menos 32px. Fundo `card` (DS-77, 23/11/2026; antes `background`, cinza no Digitrol claro), o mesmo do
+ * AlertDialog e do Sheet. Coluna com cabeçalho e rodapé fixos: quem rola é o `DialogBody`. Sem ele
+ * (composição antiga), o conteúdo inteiro continua rolando.
  *
  * Largura (09/11/2026): a tela menos 32px (16px de folga de cada lado), limitada pelo `size` em
  * `dialogContentVariants`. Sem `max-width` aqui: quem usa só esta string define a largura máxima.
  */
 export const dialogContentStyles =
-  "fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-2rem)] max-h-[calc(100dvh-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto custom-scroll rounded-lg border border-border bg-background text-foreground p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95";
+  "fixed left-[50%] top-[50%] z-50 flex flex-col w-[calc(100%-2rem)] max-h-[calc(100dvh-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto custom-scroll rounded-lg border border-border bg-card text-card-foreground p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95";
 
 /**
  * Largura máxima do conteúdo, na escala `max-width/*` do Core (a de `max-w-*` do Tailwind).
@@ -57,7 +58,14 @@ export const dialogSizes = ["sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "full"]
 export type DialogSize = (typeof dialogSizes)[number];
 
 /** Header: título e descrição alinhados como no AlertDialog. */
-export const dialogHeaderStyles = "flex flex-col space-y-1.5 text-center sm:text-left";
+export const dialogHeaderStyles = "flex shrink-0 flex-col space-y-1.5 text-center sm:text-left";
+
+/**
+ * Corpo: a única parte que rola quando o conteúdo passa da altura máxima (DS-77). As margens negativas
+ * levam a rolagem até a borda do Dialog e dão espaço ao anel de foco dos campos (`px-6 py-1`).
+ */
+export const dialogBodyStyles =
+  "custom-scroll -mx-6 -my-1 min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-6 py-1";
 
 /**
  * Linha do título: o título e um elemento ao lado (status ou ação, como um Switch "Ativo"),
@@ -68,7 +76,17 @@ export const dialogTitleRowStyles =
   "flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:justify-start";
 
 /** Footer: botões à direita a partir de 640px; no celular, empilhados com a ação principal em cima. */
-export const dialogFooterStyles = "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end";
+export const dialogFooterStyles =
+  "flex shrink-0 flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end";
+
+/** Ações do rodapé, quando há `footerLeading`: o grupo da direita. */
+export const dialogFooterActionsStyles = "flex flex-col-reverse gap-2 sm:flex-row";
+
+/**
+ * Leading do rodapé (DS-77): à esquerda das ações, como no Sheet. Lugar da ação destrutiva, um Button
+ * `ghost` isolado ("Excluir"), que abre um AlertDialog para confirmar. No celular, fica embaixo.
+ */
+export const dialogFooterLeadingStyles = "flex items-center gap-2 sm:mr-auto";
 
 /** Título do dialog. */
 export const dialogTitleStyles = "text-lg font-semibold leading-none tracking-tight";

@@ -15,8 +15,8 @@
   },
   "parts": {
     "content": {
-      "background": "color/background",
-      "text": "color/foreground",
+      "background": "color/card",
+      "text": "color/card-foreground",
       "border": "color/border",
       "borderWidth": "border-width/1",
       "radius": "radius/lg",
@@ -47,7 +47,7 @@
       "adornment": "slot Title Adornment (Figma), titleAdornment ou DialogTitleRow (código); vazio e oculto por padrão (Show Title Adornment)"
     },
     "title": {
-      "color": "color/foreground",
+      "color": "color/card-foreground",
       "fontSize": "text/lg",
       "fontWeight": "font-weight/semibold",
       "fontFamily": "font/sans",
