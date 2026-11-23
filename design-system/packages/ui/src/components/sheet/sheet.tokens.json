@@ -24,8 +24,8 @@
       "width": "75% da tela nas laterais; limitada pelo size a partir de 640px"
     },
     "header": {
-      "paddingTop": "spacing/6",
-      "paddingLeft": "spacing/6",
+      "paddingTop": "spacing/4",
+      "paddingLeft": "spacing/4",
       "paddingRight": "spacing/12",
       "paddingBottom": "spacing/4",
       "gap": "spacing/1-5",
@@ -55,14 +55,14 @@
       "fontFamily": "font/sans"
     },
     "body": {
-      "paddingX": "spacing/6",
+      "paddingX": "spacing/4",
       "paddingBottom": "spacing/4",
       "note": "A única parte que rola."
     },
     "footer": {
-      "paddingX": "spacing/6",
+      "paddingX": "spacing/4",
       "paddingTop": "spacing/4",
-      "paddingBottom": "spacing/6",
+      "paddingBottom": "spacing/4",
       "gap": "spacing/3",
       "actionsGap": "spacing/2",
       "border": "color/border",
