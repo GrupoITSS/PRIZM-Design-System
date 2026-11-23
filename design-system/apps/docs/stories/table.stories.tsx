@@ -11,7 +11,10 @@ import { Input } from "@grupoitss/prizm-ui/input";
 import { Popover } from "@grupoitss/prizm-ui/popover";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { ContentFormatType, ContentRenderType } from "@grupoitss/prizm-ui/table";
+import {
+  ContentFormatType,
+  ContentRenderType,
+} from "@grupoitss/prizm-ui/table";
 import type { TableColumn, TableFooterRow } from "@grupoitss/prizm-ui/table";
 import { Table } from "@grupoitss/prizm-ui/table";
 
@@ -107,7 +110,9 @@ const organizations: OrgRow[] = [
     plans: "1",
     // Nome longo de propósito (DS-81): em coluna estreita o badge corta com reticências, e o grupo
     // vira um botão que abre a lista com o nome inteiro.
-    tags: [{ id: "t4", name: "Trial estendido até a renovação do contrato anual" }],
+    tags: [
+      { id: "t4", name: "Trial estendido até a renovação do contrato anual" },
+    ],
   },
   {
     id: "3",
@@ -127,8 +132,10 @@ const organizations: OrgRow[] = [
 
 // Traceability: the Table components in [PRIZM] Componentes, the documentation frame and the CMS
 // article. The token map lives next to the component (table.tokens.json) and is checked in a test.
-const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27023-3613";
-const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26381-2461";
+const FIGMA_URL =
+  "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=27023-3613";
+const FIGMA_DOC_URL =
+  "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=26381-2461";
 const CMS_URL =
   "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=47362d42-e44e-4171-87f3-d91b3525e0e2&version=v1";
 
@@ -363,7 +370,13 @@ export const WithRowActions: Story = {
       },
     ];
 
-    return <Table<ProductRow> columns={columns} rows={products} getRowKey={(row) => row.product} />;
+    return (
+      <Table<ProductRow>
+        columns={columns}
+        rows={products}
+        getRowKey={(row) => row.product}
+      />
+    );
   },
 };
 
@@ -438,7 +451,9 @@ export const WithPrizmCellRenderers: Story = {
           content: ({ row }) => (
             <div className="space-y-1">
               <div className="text-sm font-medium">Empresa</div>
-              <div className="text-sm text-muted-foreground">{row?.company?.text ?? "—"}</div>
+              <div className="text-sm text-muted-foreground">
+                {row?.company?.text ?? "—"}
+              </div>
             </div>
           ),
         },
@@ -454,7 +469,11 @@ export const WithPrizmCellRenderers: Story = {
       {
         key: "summary",
         header: "Resumo",
-        statusSummaryColumnHeaders: { type: "Tipo", item: "Item", status: "Status" },
+        statusSummaryColumnHeaders: {
+          type: "Tipo",
+          item: "Item",
+          status: "Status",
+        },
         contentRenderType: ContentRenderType.STATUS_SUMMARY_WITH_POPOVER,
         width: "120px",
       },
@@ -529,7 +548,12 @@ export const WithFormatters: Story = {
   },
 };
 
-type OrderItem = { id: string; nome: string; preco: number; planos?: OrderItem[] };
+type OrderItem = {
+  id: string;
+  nome: string;
+  preco: number;
+  planos?: OrderItem[];
+};
 
 const orderItems: OrderItem[] = [
   {
@@ -553,7 +577,8 @@ const orderItems: OrderItem[] = [
   { id: "produto-c", nome: "Produto C", preco: 80 },
 ];
 
-const brl = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const brl = (n: number) =>
+  n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 function OrderItemsTable() {
   const [qtd, setQtd] = useState<Record<string, number>>({
@@ -565,7 +590,9 @@ function OrderItemsTable() {
   });
   const leafTotal = (item: OrderItem) => item.preco * (qtd[item.id] ?? 0);
   const rowTotal = (item: OrderItem) =>
-    item.planos ? item.planos.reduce((s, p) => s + leafTotal(p), 0) : leafTotal(item);
+    item.planos
+      ? item.planos.reduce((s, p) => s + leafTotal(p), 0)
+      : leafTotal(item);
   const total = orderItems.reduce((s, i) => s + rowTotal(i), 0);
 
   const columns: TableColumn<OrderItem>[] = [
@@ -587,7 +614,9 @@ function OrderItemsTable() {
             min={0}
             aria-label={`Quantidade de ${item.nome}`}
             value={qtd[item.id] ?? 0}
-            onChange={(e) => setQtd({ ...qtd, [item.id]: Number(e.target.value) })}
+            onChange={(e) =>
+              setQtd({ ...qtd, [item.id]: Number(e.target.value) })
+            }
           />
         ),
     },
@@ -611,7 +640,10 @@ function OrderItemsTable() {
       footerRows={[
         [
           { content: "Total", colSpan: 3 },
-          { content: <span aria-live="polite">{brl(total)}</span>, align: "right" },
+          {
+            content: <span aria-live="polite">{brl(total)}</span>,
+            align: "right",
+          },
         ],
       ]}
     />
@@ -627,17 +659,33 @@ export const WithExpandableRows: Story = {
   render: () => <OrderItemsTable />,
 };
 
-type ProductRow = { id: string; produto: string; descricao: string; valor: number };
+type ProductRow = {
+  id: string;
+  produto: string;
+  descricao: string;
+  valor: number;
+};
 
 const productRows: ProductRow[] = [
   {
     id: "1",
     produto: "Plano Empresarial com suporte dedicado e integrações ilimitadas",
-    descricao: "Inclui implantação, treinamento da equipe e suporte em horário estendido.",
+    descricao:
+      "Inclui implantação, treinamento da equipe e suporte em horário estendido.",
     valor: 1290,
   },
-  { id: "2", produto: "Plano Básico", descricao: "Para equipes pequenas.", valor: 100 },
-  { id: "3", produto: "Plano Pro", descricao: "Relatórios e automações.", valor: 250 },
+  {
+    id: "2",
+    produto: "Plano Básico",
+    descricao: "Para equipes pequenas.",
+    valor: 100,
+  },
+  {
+    id: "3",
+    produto: "Plano Pro",
+    descricao: "Relatórios e automações.",
+    valor: 250,
+  },
 ];
 
 const productColumns: TableColumn<ProductRow>[] = [
@@ -660,7 +708,11 @@ const productColumns: TableColumn<ProductRow>[] = [
 export const TruncatedText: Story = {
   name: "Texto cortado e quebra",
   render: () => (
-    <Table<ProductRow> columns={productColumns} rows={productRows} getRowKey={(r) => r.id} />
+    <Table<ProductRow>
+      columns={productColumns}
+      rows={productRows}
+      getRowKey={(r) => r.id}
+    />
   ),
 };
 
@@ -671,7 +723,7 @@ export const Sorting: Story = {
     docs: {
       description: {
         story:
-          "`sortable: true` na coluna põe um botão no cabeçalho: o primeiro clique ordena em ordem crescente, o segundo em decrescente. `defaultSort` começa ordenado (aqui, Valor decrescente); `sort` e `onSortChange` controlam; com `manualSort`, a tabela não reordena (ordenação no servidor). No Figma, Table / Head com Show Sort.",
+          "`sortable: true` na coluna põe um botão no cabeçalho: o primeiro clique ordena em ordem crescente, o segundo em decrescente. `defaultSort` começa ordenado (aqui, Valor decrescente); `sort` e `onSortChange` controlam; com `manualSort`, a tabela não reordena (ordenação no servidor). `sortType` na coluna escolhe o ícone: `text` (A–Z), `number` (0–1) ou `default` (setas). No Figma, Table / Head com Show Sort.",
       },
     },
   },
@@ -679,7 +731,13 @@ export const Sorting: Story = {
     <Table<ProductRow>
       aria-label="Produtos"
       columns={[
-        { key: "produto", header: "Produto", width: "220px", sortable: true },
+        {
+          key: "produto",
+          header: "Produto",
+          width: "220px",
+          sortable: true,
+          sortType: "text",
+        },
         { key: "descricao", header: "Descrição", wrap: true },
         {
           key: "valor",
@@ -688,6 +746,7 @@ export const Sorting: Story = {
           width: "140px",
           contentFormatType: ContentFormatType.CURRENCY,
           sortable: true,
+          sortType: "number",
         },
       ]}
       rows={productRows}
@@ -704,7 +763,7 @@ export const Alignment: Story = {
     docs: {
       description: {
         story:
-          "`align` alinha o cabeçalho e as células da coluna: `left` (padrão), `center` e `right`. À direita, os números usam algarismos de largura fixa. No Figma, Table / Head com Align e Table / Cell com Variant=Center ou Number.",
+          "`align` alinha o cabeçalho e as células da coluna: `left` (padrão) e `right`. À direita, os números usam algarismos de largura fixa. No Figma, `Align=Left | Right` na Table / Head e na Table / Cell — para alinhar uma coluna, selecione as células dela. `center` está obsoleto (DS-81) e saiu do Figma.",
       },
     },
   },
@@ -713,7 +772,7 @@ export const Alignment: Story = {
       aria-label="Itens"
       columns={[
         { key: "produto", header: "Produto" },
-        { key: "qtd", header: "Quantidade", align: "center", width: "140px" },
+        { key: "qtd", header: "Quantidade", align: "right", width: "140px" },
         {
           key: "valor",
           header: "Valor",

@@ -1,7 +1,7 @@
 import type { Column } from "@tanstack/react-table";
 import * as React from "react";
 import { cn } from "../../../lib/cn";
-import { ArrowDown, ArrowUp, ArrowUpDown } from "../../icons";
+import { SortIcon, type SortType } from "../sort-icon";
 import { dataTableSortButton } from "./data-table.styles";
 
 export interface DataTableColumnHeaderProps<TData, TValue> {
@@ -9,6 +9,8 @@ export interface DataTableColumnHeaderProps<TData, TValue> {
   column: Column<TData, TValue>;
   /** Texto do cabeçalho. */
   title: React.ReactNode;
+  /** Tipo de dado da coluna, que escolhe o ícone: `text` (A–Z), `number` (0–1) ou `default` (setas). @default 'default' */
+  sortType?: SortType;
   className?: string;
 }
 
@@ -23,11 +25,11 @@ export interface DataTableColumnHeaderProps<TData, TValue> {
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
+  sortType,
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) return <span className={className}>{title}</span>;
   const sorted = column.getIsSorted();
-  const Icon = sorted === "asc" ? ArrowUp : sorted === "desc" ? ArrowDown : ArrowUpDown;
   return (
     <button
       type="button"
@@ -36,7 +38,7 @@ export function DataTableColumnHeader<TData, TValue>({
       onClick={() => column.toggleSorting(sorted === "asc")}
     >
       {title}
-      <Icon aria-hidden />
+      <SortIcon sortType={sortType} direction={sorted} />
     </button>
   );
 }

@@ -32,7 +32,7 @@
       "border": "color/border",
       "wrap": false,
       "sort": {
-        "figma": "Table / Head com Show Sort e Sort Icon (ArrowUpDown, ArrowUp, ArrowDown); texto e ícone num frame Label com spacing/1",
+        "figma": "Table / Head com Show Sort e Sort Icon (ArrowUpDown, ArrowUp, ArrowDown, ArrowDownAZ, ArrowDownZA, ArrowDown0_1, ArrowDown1_0); texto e ícone num frame Label com spacing/1",
         "button": "height/8 (32px), ocupa o padding da célula (-mx-2 px-2)",
         "gap": "spacing/1",
         "icon": "16px",
@@ -44,9 +44,9 @@
         "iconColor": "color/foreground, a cor do texto do cabeçalho, com ou sem ordem (decisão de 17/11/2026)"
       },
       "align": {
-        "left": "Align=Left",
-        "right": "Align=Right, com Table / Cell Variant=Number",
-        "center": "Align=Center, com Table / Cell Variant=Center"
+        "left": "Align=Left (padrão)",
+        "right": "Align=Right",
+        "center": "obsoleto: saiu do Figma em 23/11/2026 (DS-81); segue no código para não quebrar usos"
       }
     },
     "cell": {
@@ -125,7 +125,7 @@
     "Number": "text com align right (tabular-nums)",
     "Wrap": "text com wrap: true",
     "Badges": "badge, com badgeMaxVisible",
-    "Center": "text com align center"
+    "Center": "removido em 23/11/2026 (DS-81): era text com align center; use Align=Left ou Align=Right"
   },
   "divergences": [
     {
@@ -160,14 +160,14 @@
     },
     {
       "where": "Alinhamento da coluna",
-      "figma": "Align na Table / Head e Variant=Number ou Center na Table / Cell, escolhidos separados",
-      "code": "align na coluna",
-      "status": "decidida (17/11): representação"
+      "figma": "Align=Left | Right na Table / Head e na Table / Cell (a coluna se alinha selecionando as células dela); as variantes Center saíram, e o Variant=Center da célula também",
+      "code": "align na coluna: left (padrão), right e center obsoleto",
+      "status": "decidida (23/11, DS-81): padrão left; Center removido do Figma e marcado obsoleto no código, para sair numa major"
     },
     {
       "where": "Ícone de ordenar",
-      "figma": "Sort Icon escolhido à mão",
-      "code": "o ícone segue o estado da ordem",
+      "figma": "Sort Icon escolhido à mão (setas, A–Z e 0–1 nas opções preferidas)",
+      "code": "o ícone segue o estado da ordem e o `sortType` da coluna (default: setas, text: A–Z, number: 0–1)",
       "status": "representação"
     },
     {

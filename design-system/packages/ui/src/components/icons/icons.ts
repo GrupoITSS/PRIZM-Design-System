@@ -17,6 +17,10 @@
  */
 export {
   ArrowDown,
+  ArrowDown01,
+  ArrowDown10,
+  ArrowDownAZ,
+  ArrowDownZA,
   ArrowLeft,
   ArrowRight,
   ArrowUp,

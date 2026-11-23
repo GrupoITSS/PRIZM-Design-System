@@ -6,6 +6,7 @@ import type {
   PrizmCellMeta,
   RenderPopoverConfig,
 } from "./table-cell-renderers.types";
+import type { SortType } from "./sort-icon";
 
 /** Callback de célula no formato usado pelas colunas do DataTable. */
 export type TableCellRender = (props: {
@@ -19,13 +20,23 @@ export interface TableColumn<T = Record<string, unknown>> {
   key: string;
   /** Header content (string or ReactNode). */
   header: React.ReactNode;
-  /** Cell alignment. @default 'left' */
+  /**
+   * Cell alignment. @default 'left'
+   * @remarks `center` está obsoleto (decisão de 23/11/2026, DS-81): o Figma tem só
+   * `Align=Left | Right`. Use `left` (o padrão) ou `right`. Segue funcionando para
+   * não quebrar os usos que já existem.
+   */
   align?: "left" | "right" | "center";
   /**
    * The header becomes a button that sorts the rows by this column (ascending, then descending),
    * with `aria-sort` on the header cell. @default false
    */
   sortable?: boolean;
+  /**
+   * Tipo de dado da coluna, que escolhe o ícone de ordenação: `text` (A–Z), `number` (0–1) ou
+   * `default` (setas). Só vale com `sortable`. @default 'default'
+   */
+  sortType?: SortType;
   /** Value used to sort, when the cell value is not a string or number (e.g. a date in an object). */
   sortValue?: (row: T) => string | number | null | undefined;
   /** Optional width (e.g. "100px", "w-[100px]"). */
@@ -74,7 +85,7 @@ export interface TableRowMeta<T = Record<string, unknown>> {
 export interface TableFooterCell {
   content: React.ReactNode;
   colSpan?: number;
-  /** @default 'left' */
+  /** @default 'left' — `center` obsoleto (DS-81); use `left` ou `right`. */
   align?: "left" | "right" | "center";
   className?: string;
 }
