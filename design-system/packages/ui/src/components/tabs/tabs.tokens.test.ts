@@ -55,7 +55,7 @@ describe("Tabs × mapa de tokens (tabs.tokens.json)", () => {
     expect(t).toContain(`after:h-${step(u.active.indicatorHeight)}`);
   });
 
-  it("pills: lista em muted com 36px e raio lg; aba ativa em background com sombra", () => {
+  it("pills: lista em muted com 36px e raio lg; aba ativa em primary com sombra e badge invertido", () => {
     const p = map.variants.pills, l = list("pills"), t = trigger("pills");
     expect(l).toContain(`bg-${color(p.list.background)}`);
     expect(l).toContain(`h-${step(p.list.height)}`);
@@ -64,5 +64,8 @@ describe("Tabs × mapa de tokens (tabs.tokens.json)", () => {
     expect(t).toContain(`py-${step(p.trigger.paddingY)}`);
     expect(t).toContain(`data-[state=active]:bg-${color(p.active.background)}`);
     expect(t).toContain(`data-[state=active]:shadow-${p.active.shadow.split("/").pop() ?? ""}`);
+    expect(t).toContain(`data-[state=active]:hover:text-${color(p.active.text)}`);
+    expect(t).toContain(`data-[state=active]:[&_[data-slot=tabs-trigger-badge]>*]:bg-${color(p.active.badge.background)}`);
+    expect(t).toContain(`data-[state=active]:[&_[data-slot=tabs-trigger-badge]>*]:text-${color(p.active.badge.text)}`);
   });
 });

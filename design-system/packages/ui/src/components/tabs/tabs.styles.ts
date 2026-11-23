@@ -51,8 +51,12 @@ export const tabsTriggerVariants = cva(
          */
         underline:
           "relative overflow-visible rounded-none px-2.5 pt-3 pb-3.5 font-normal leading-5 text-muted-foreground data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none after:pointer-events-none after:absolute after:inset-x-0 after:bottom-[-1px] after:z-[1] after:h-0.5 after:bg-transparent data-[state=active]:after:bg-primary",
+        /**
+         * Aba ativa na primária (DS-92, 23/11/2026; antes background sobre muted, 1,09 a 1,37:1).
+         * O hover não escurece o texto da ativa, e o badge numérico inverte, como o "Sobre primary" do Figma.
+         */
         pills:
-          "h-[calc(100%-1px)] flex-1 rounded-md px-2 py-1 font-medium data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+          "h-[calc(100%-1px)] flex-1 rounded-md px-2 py-1 font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:text-primary-foreground data-[state=active]:shadow-sm data-[state=active]:[&_[data-slot=tabs-trigger-badge]>*]:bg-primary-foreground data-[state=active]:[&_[data-slot=tabs-trigger-badge]>*]:text-primary",
       },
     },
     defaultVariants: {
