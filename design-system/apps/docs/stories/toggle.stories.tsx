@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Bookmark, Bold, Italic } from "@grupoitss/prizm-ui/icons";
+import * as React from "react";
+import { Bold, Italic, Pin } from "@grupoitss/prizm-ui/icons";
 import { Toggle } from "@grupoitss/prizm-ui/toggle";
 
 const meta: Meta<typeof Toggle> = {
@@ -10,11 +11,11 @@ const meta: Meta<typeof Toggle> = {
     docs: {
       description: {
         component:
-          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          "Toggle do design system PRIZM, baseado em Radix Toggle.\n\n" +
-          "**API por props (recomendada):** use `pressed`, `defaultPressed` e `onPressedChange` para controlar o estado. Não há subcomponentes; o uso é sempre direto via `<Toggle>`.\n\n" +
-          "Exemplo: `<Toggle defaultPressed>Negrito</Toggle>`\n\n" +
-          '**Documentação:** <a href="https://ui.shadcn.com/docs/components/toggle" target="_blank" rel="noopener noreferrer">Toggle — shadcn/ui</a>',
+          "Botão que liga e desliga um estado, como negrito ou fixar. Fica ligado até o próximo clique (`aria-pressed`). Para várias opções de um mesmo assunto, use o ToggleGroup.\n\n" +
+          "- Estado por props: `pressed`, `defaultPressed` e `onPressedChange`.\n" +
+          "- Ligado em `primary`; hover em `accent`; anel de foco do Prizm.\n" +
+          "- Toggle só de ícone precisa de `aria-label`. Com texto visível, não passe `aria-label`: o nome tem de conter o texto que a pessoa vê.\n\n" +
+          '**Base:** <a href="https://ui.shadcn.com/docs/components/toggle" target="_blank" rel="noopener noreferrer">Toggle — shadcn/ui</a>',
       },
     },
   },
@@ -23,8 +24,8 @@ const meta: Meta<typeof Toggle> = {
     size: "default",
   },
   argTypes: {
-    variant: { control: "select", options: ["default", "outline"] },
-    size: { control: "select", options: ["sm", "default", "lg"] },
+    variant: { control: "inline-radio", options: ["default", "outline"] },
+    size: { control: "inline-radio", options: ["sm", "default", "lg"] },
   },
 };
 
@@ -32,74 +33,105 @@ export default meta;
 
 type Story = StoryObj<typeof Toggle>;
 
-// 1. Demo — toggle simples com ícone e texto (bookmark)
-export const Demo: Story = {
+export const Default: Story = {
+  name: "Padrão",
   render: (args) => (
-    <Toggle
-      {...args}
-      className="group/toggle"
-      aria-label="Toggle bookmark"
-      size="sm"
-      variant="outline"
-    >
-      <Bookmark className="size-4 group-data-[state=on]/toggle:fill-foreground" />
-      Bookmark
+    <Toggle {...args}>
+      <Bold />
+      Negrito
     </Toggle>
   ),
 };
 
-// 2. Outline — grupo de toggles em outline (italic / bold)
-export const OutlineGroup: Story = {
+/** Desligado e ligado, nas duas variantes. */
+export const Variantes: Story = {
   render: (args) => (
     <div className="flex flex-wrap items-center gap-2">
-      <Toggle {...args} variant="outline" aria-label="Toggle italic">
-        <Italic className="size-4" />
-        Italic
+      <Toggle {...args} variant="default">
+        <Bold />
+        Negrito
       </Toggle>
-      <Toggle {...args} variant="outline" aria-label="Toggle bold">
-        <Bold className="size-4" />
-        Bold
+      <Toggle {...args} variant="default" defaultPressed>
+        <Bold />
+        Negrito
+      </Toggle>
+      <Toggle {...args} variant="outline">
+        <Bold />
+        Negrito
+      </Toggle>
+      <Toggle {...args} variant="outline" defaultPressed>
+        <Bold />
+        Negrito
       </Toggle>
     </div>
   ),
 };
 
-// 3. WithText — toggle com ícone + texto
-export const WithText: Story = {
-  render: (args) => (
-    <Toggle {...args} aria-label="Toggle italic">
-      <Italic className="size-4" />
-      Italic
-    </Toggle>
-  ),
-};
-
-// 4. Sizes — variação de tamanhos via prop `size`
-export const Sizes: Story = {
+/** Só de ícone: quadrado, com `aria-label`. */
+export const SoIcone: Story = {
+  name: "Só ícone",
   render: (args) => (
     <div className="flex flex-wrap items-center gap-2">
-      <Toggle {...args} variant="outline" size="sm" aria-label="Toggle small">
-        Small
+      <Toggle {...args} variant="outline" aria-label="Negrito">
+        <Bold />
       </Toggle>
-      <Toggle {...args} variant="outline" size="default" aria-label="Toggle default">
-        Default
-      </Toggle>
-      <Toggle {...args} variant="outline" size="lg" aria-label="Toggle large">
-        Large
+      <Toggle {...args} variant="outline" aria-label="Itálico" defaultPressed>
+        <Italic />
       </Toggle>
     </div>
   ),
 };
 
-// 5. Disabled — estados desabilitados com e sem outline
-export const Disabled: Story = {
+/** Altura e largura mínima em `control-height`, como o Button. */
+export const Tamanhos: Story = {
   render: (args) => (
     <div className="flex flex-wrap items-center gap-2">
-      <Toggle {...args} disabled aria-label="Toggle disabled">
-        Disabled
+      <Toggle {...args} variant="outline" size="sm">
+        Pequeno
       </Toggle>
-      <Toggle {...args} disabled variant="outline" aria-label="Toggle disabled outline">
-        Disabled
+      <Toggle {...args} variant="outline" size="default">
+        Padrão
+      </Toggle>
+      <Toggle {...args} variant="outline" size="lg">
+        Grande
+      </Toggle>
+      <Toggle {...args} variant="outline" size="sm" aria-label="Fixar">
+        <Pin />
+      </Toggle>
+      <Toggle {...args} variant="outline" size="default" aria-label="Fixar">
+        <Pin />
+      </Toggle>
+      <Toggle {...args} variant="outline" size="lg" aria-label="Fixar">
+        <Pin />
+      </Toggle>
+    </div>
+  ),
+};
+
+/** Controlado: o rótulo não muda; o estado aparece no fundo e em `aria-pressed`. */
+export const Controlado: Story = {
+  render: function Render(args) {
+    const [fixado, setFixado] = React.useState(false);
+    return (
+      <div className="flex items-center gap-3">
+        <Toggle {...args} variant="outline" pressed={fixado} onPressedChange={setFixado}>
+          <Pin />
+          Fixar
+        </Toggle>
+        <span className="text-sm text-muted-foreground">{fixado ? "Fixado no topo" : "Fora do topo"}</span>
+      </div>
+    );
+  },
+};
+
+export const Desabilitado: Story = {
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-2">
+      <Toggle {...args} disabled>
+        Negrito
+      </Toggle>
+      <Toggle {...args} disabled variant="outline">
+        Negrito
       </Toggle>
     </div>
   ),

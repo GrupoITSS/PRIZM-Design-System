@@ -35,12 +35,11 @@ export interface ToggleGroupItemOption {
    */
   value: string;
   /**
-   * Conteúdo textual/visual do item.
-   * Quando não definido, `value` é usado como label.
+   * Texto visível do item. Sem `label` e sem `icon`, o `value` aparece no lugar.
    */
   label?: React.ReactNode;
   /**
-   * Ícone opcional exibido antes do label.
+   * Ícone exibido antes do label. Item só de ícone precisa de `aria-label`.
    */
   icon?: React.ReactNode;
   /**
@@ -52,7 +51,12 @@ export interface ToggleGroupItemOption {
    */
   className?: string;
   /**
-   * Rótulo para acessibilidade quando o conteúdo visual não é suficiente.
+   * Nome do item para o leitor de tela. Use só no item sem texto visível (só de ícone):
+   * com texto visível, o nome tem de conter esse texto (WCAG 2.5.3).
+   */
+  "aria-label"?: string;
+  /**
+   * @deprecated Use `aria-label`, como nos itens do ButtonGroup.
    */
   ariaLabel?: string;
 }
@@ -65,7 +69,7 @@ export interface ToggleGroupProps
     >,
     ToggleVariantProps {
   /**
-   * Tipo do grupo: seleção única ou múltipla.
+   * Tipo do grupo: seleção única (`radiogroup`) ou múltipla (`toolbar`).
    * @default "single"
    */
   type?: ToggleGroupType;
@@ -92,16 +96,10 @@ export interface ToggleGroupProps
    */
   items?: ToggleGroupItemOption[];
   /**
-   * Espaçamento entre os itens do grupo (gap utilitário).
+   * Espaçamento entre os itens. Com 0, os itens ficam colados, com a borda compartilhada
+   * e os cantos só nas pontas; com mais, ficam separados (`gap-*`).
    *
-   * Usa internamente classes utilitárias (`gap-*`). Valores que não estiverem
-   * mapeados caem no padrão `gap-1`.
-   *
-   * Exemplos:
-   * - `spacing={1}` → `gap-1`
-   * - `spacing={2}` → `gap-2`
-   *
-   * @default 1
+   * @default 0
    */
   spacing?: ToggleGroupSpacing;
   /**
@@ -110,8 +108,24 @@ export interface ToggleGroupProps
    */
   orientation?: "horizontal" | "vertical";
   /**
-   * **Composição (escape hatch):** conteúdo customizado usando `RadixToggleGroup.Item`.
-   * Quando `items` é fornecido, tem precedência sobre `children`.
+   * Com `type="single"`, impede que o item ligado seja desligado: o grupo nunca fica
+   * sem valor. Use em filtro (Todos, Ativos, Inativos).
+   *
+   * @default false
+   */
+  required?: boolean;
+  /**
+   * O grupo ocupa a largura toda, e os itens dividem o espaço.
+   *
+   * @default false
+   */
+  fullWidth?: boolean;
+  /**
+   * Composição: itens com `ToggleGroupItem`. Quando `items` é fornecido, tem precedência
+   * sobre `children`.
    */
   children?: React.ReactNode;
 }
+
+export type ToggleGroupItemProps = React.ComponentPropsWithoutRef<typeof RadixToggleGroup.Item> &
+  ToggleVariantProps;
