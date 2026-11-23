@@ -1,0 +1,57 @@
+{
+  "component": "ToggleGroup",
+  "description": "Mapa de tokens do ToggleGroup: o que o grupo faz com os itens além do Toggle (os tokens de cada item estão em toggle.tokens.json). Extraído das ligações do set Toggle Group no Figma em 23/11/2026 (nenhuma ligação fora do Core) e conferido contra toggle-group.styles.ts pelo teste toggle-group.tokens.test.ts.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18707-214048",
+    "figmaItem": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=124-27",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=28044-2324",
+    "code": "design-system/packages/ui/src/components/toggle-group/toggle-group.tsx",
+    "story": "design-system/apps/docs/stories/toggle-group.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d738f96b-1587-416a-9c51-8b69e82e34e9&version=v1",
+    "pullRequests": [
+      "https://github.com/GrupoITSS/PRIZM-Design-System/pull/233"
+    ],
+    "jira": [
+      "GIES-2117"
+    ]
+  },
+  "defaults": {
+    "variant": "outline",
+    "spacing": 0,
+    "orientation": "horizontal"
+  },
+  "item": "Toggle (toggle.tokens.json), Variant=Outline no Figma",
+  "joined": {
+    "gap": 0,
+    "radius": "radius/md",
+    "radiusRule": "Só nas pontas: o primeiro item tem os cantos de fora, o último também; os do meio são retos.",
+    "border": "color/input",
+    "borderWidth": "border-width/1",
+    "borderRule": "Uma borda só entre dois itens: o item sem a borda da esquerda, menos o primeiro.",
+    "focus": "O item focado vem para a frente (z-10), para o anel não ficar embaixo do vizinho."
+  },
+  "widths": {
+    "hug": "w-fit (Width=Hug)",
+    "fill": "w-full, itens flex-1 (Width=Fill, prop fullWidth)"
+  },
+  "divergences": [
+    {
+      "where": "Espaçamento",
+      "figma": "Só o grupo colado (itemSpacing 0).",
+      "code": "spacing de 0 a 8; acima de 0, os itens se separam e ganham os cantos todos.",
+      "status": "só no código"
+    },
+    {
+      "where": "Orientação",
+      "figma": "Só horizontal.",
+      "code": "orientation=\"vertical\", com os cantos em cima e embaixo.",
+      "status": "só no código"
+    },
+    {
+      "where": "Variante",
+      "figma": "Itens sempre Outline.",
+      "code": "variant=\"outline\" por padrão (P2); default continua disponível.",
+      "status": "só no código"
+    }
+  ]
+}
