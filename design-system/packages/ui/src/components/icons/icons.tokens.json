@@ -66,6 +66,30 @@
       "origin": "lucide"
     },
     {
+      "name": "ArrowDown01",
+      "figma": "Icon / ArrowDown0_1",
+      "figmaNode": "5197:4263",
+      "origin": "lucide"
+    },
+    {
+      "name": "ArrowDown10",
+      "figma": "Icon / ArrowDown1_0",
+      "figmaNode": "5197:4277",
+      "origin": "lucide"
+    },
+    {
+      "name": "ArrowDownAZ",
+      "figma": "Icon / ArrowDownAZ",
+      "figmaNode": "5197:4275",
+      "origin": "lucide"
+    },
+    {
+      "name": "ArrowDownZA",
+      "figma": "Icon / ArrowDownZA",
+      "figmaNode": "5197:4241",
+      "origin": "lucide"
+    },
+    {
       "name": "ArrowLeft",
       "figma": "Icon / ArrowLeft",
       "figmaNode": "5197:4231",

@@ -1,5 +1,6 @@
 // Table com API por props (recomendado para casos simples)
 export { Table } from "./table";
+export type { SortType } from "./sort-icon";
 export {
   tableCellMinHeight,
   tableCellNumeric,

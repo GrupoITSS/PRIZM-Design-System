@@ -6,6 +6,7 @@ import type {
   PrizmCellMeta,
   RenderPopoverConfig,
 } from "./table-cell-renderers.types";
+import type { SortType } from "./sort-icon";
 
 /** Callback de célula no formato usado pelas colunas do DataTable. */
 export type TableCellRender = (props: {
@@ -26,6 +27,11 @@ export interface TableColumn<T = Record<string, unknown>> {
    * with `aria-sort` on the header cell. @default false
    */
   sortable?: boolean;
+  /**
+   * Tipo de dado da coluna, que escolhe o ícone de ordenação: `text` (A–Z), `number` (0–1) ou
+   * `default` (setas). Só vale com `sortable`. @default 'default'
+   */
+  sortType?: SortType;
   /** Value used to sort, when the cell value is not a string or number (e.g. a date in an object). */
   sortValue?: (row: T) => string | number | null | undefined;
   /** Optional width (e.g. "100px", "w-[100px]"). */

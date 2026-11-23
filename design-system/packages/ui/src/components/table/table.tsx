@@ -3,7 +3,8 @@ import * as React from "react";
 import { TruncatedText } from "./table-truncated-text";
 import { Button } from "../button";
 import { Empty } from "../empty";
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, ChevronRight, FolderOpen } from "../icons";
+import { ChevronDown, ChevronRight, FolderOpen } from "../icons";
+import { SortIcon } from "./sort-icon";
 import {
   alignCenter,
   alignLeft,
@@ -261,8 +262,6 @@ function Table<T extends Record<string, unknown>>({
             {columns.map((col) => {
               const widthIsClass = typeof col.width === "string" && col.width.startsWith("w-");
               const direction = sort?.key === col.key ? sort.direction : undefined;
-              const SortIcon =
-                direction === "asc" ? ArrowUp : direction === "desc" ? ArrowDown : ArrowUpDown;
               return (
                 <th
                   data-slot="table-head"
@@ -290,7 +289,7 @@ function Table<T extends Record<string, unknown>>({
                       onClick={() => toggleSort(col.key)}
                     >
                       {col.header}
-                      <SortIcon aria-hidden />
+                      <SortIcon sortType={col.sortType} direction={direction} />
                     </button>
                   ) : (
                     col.header

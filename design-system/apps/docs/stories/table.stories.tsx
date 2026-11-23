@@ -671,7 +671,7 @@ export const Sorting: Story = {
     docs: {
       description: {
         story:
-          "`sortable: true` na coluna põe um botão no cabeçalho: o primeiro clique ordena em ordem crescente, o segundo em decrescente. `defaultSort` começa ordenado (aqui, Valor decrescente); `sort` e `onSortChange` controlam; com `manualSort`, a tabela não reordena (ordenação no servidor). No Figma, Table / Head com Show Sort.",
+          "`sortable: true` na coluna põe um botão no cabeçalho: o primeiro clique ordena em ordem crescente, o segundo em decrescente. `defaultSort` começa ordenado (aqui, Valor decrescente); `sort` e `onSortChange` controlam; com `manualSort`, a tabela não reordena (ordenação no servidor). `sortType` na coluna escolhe o ícone: `text` (A–Z), `number` (0–1) ou `default` (setas). No Figma, Table / Head com Show Sort.",
       },
     },
   },
@@ -679,7 +679,7 @@ export const Sorting: Story = {
     <Table<ProductRow>
       aria-label="Produtos"
       columns={[
-        { key: "produto", header: "Produto", width: "220px", sortable: true },
+        { key: "produto", header: "Produto", width: "220px", sortable: true, sortType: "text" },
         { key: "descricao", header: "Descrição", wrap: true },
         {
           key: "valor",
@@ -688,6 +688,7 @@ export const Sorting: Story = {
           width: "140px",
           contentFormatType: ContentFormatType.CURRENCY,
           sortable: true,
+          sortType: "number",
         },
       ]}
       rows={productRows}
@@ -704,7 +705,7 @@ export const Alignment: Story = {
     docs: {
       description: {
         story:
-          "`align` alinha o cabeçalho e as células da coluna: `left` (padrão), `center` e `right`. À direita, os números usam algarismos de largura fixa. No Figma, Table / Head com Align e Table / Cell com Variant=Center ou Number.",
+          "`align` alinha o cabeçalho e as células da coluna: `left` (padrão), `center` e `right`. No Figma só há Left e Right (Align na Table / Head e na Table / Cell). À direita, os números usam algarismos de largura fixa. No Figma, Table / Head e Table / Cell com Align.",
       },
     },
   },

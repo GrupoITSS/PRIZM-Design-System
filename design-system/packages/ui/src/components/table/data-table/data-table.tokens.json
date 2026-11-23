@@ -64,11 +64,11 @@
       "figma": "Table / Cell, como na Table"
     },
     "sort": {
-      "button": "texto + ArrowUpDown, ArrowUp ou ArrowDown (width/4)",
+      "button": "texto + ArrowUpDown, ArrowUp ou ArrowDown (width/4); com sortType text, ArrowDownAZ e ArrowDownZA; com number, ArrowDown01 e ArrowDown10",
       "height": "control-height/sm",
       "hover": "color/accent",
       "a11y": "aria-sort na célula do cabeçalho",
-      "figma": "Table / Head: Show Sort e Sort Icon (ArrowUpDown, ArrowUp, ArrowDown)"
+      "figma": "Table / Head: Show Sort e Sort Icon (ArrowUpDown, ArrowUp, ArrowDown, A–Z, 0–1)"
     },
     "groupRow": {
       "background": "color/muted",
