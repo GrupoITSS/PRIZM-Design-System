@@ -33,6 +33,7 @@ const meta: Meta<typeof Field> = {
           "Field do design system PRIZM: monta um campo de formulário com rótulo, controle, descrição e erro.\n\n" +
           "- **Peças:** `FieldSet`, `FieldLegend`, `FieldGroup`, `Field`, `FieldContent`, `FieldLabel`, `FieldTitle`, `FieldDescription`, `FieldSeparator` e `FieldError`.\n" +
           '- **Orientação:** `orientation="vertical"` (padrão), `"horizontal"` (controle ao lado, como Checkbox e Switch) e `"responsive"` (lado a lado a partir de @md do `FieldGroup`).\n' +
+          "- **Obrigatório:** `required` no `Field` mostra o asterisco no `FieldLabel` e põe `aria-required` no controle (Input, Textarea, Select, Checkbox, RadioGroup e Switch). Não liga a validação nativa do navegador.\n" +
           "- **Erro:** `data-invalid` no `Field` e `aria-invalid` no controle. O `FieldError` tem `role=alert`.\n" +
           "- **Ligação:** o Field não liga a descrição e o erro ao controle. Dê `id` ao `FieldDescription` e ao `FieldError` e passe os dois em `aria-describedby` no controle.\n\n" +
           '**Documentação base:** <a href="https://ui.shadcn.com/docs/components/radix/field" target="_blank" rel="noopener noreferrer">Field — shadcn/ui</a>',
@@ -136,14 +137,20 @@ export const CompositionWithSeparator: Story = {
 
 export const CompositionRequiredFields: Story = {
   name: "Campos obrigatórios",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`required` no `Field` repassa ao `FieldLabel` (asterisco) e ao controle (`aria-required`): Input, Textarea, Select, Checkbox, RadioGroup e Switch. Não liga a validação nativa do navegador: para isso, passe `required` também no controle, como no e-mail abaixo. O `required` do `FieldLabel` e o `aria-required` do controle, quando passados, ganham do Field (DS-89).",
+      },
+    },
+  },
   render: (args) => (
     <FieldSet>
       <FieldLegend>Dados da conta</FieldLegend>
       <FieldGroup>
-        <Field {...args}>
-          <FieldLabel htmlFor="email" required>
-            E-mail
-          </FieldLabel>
+        <Field {...args} required>
+          <FieldLabel htmlFor="email">E-mail</FieldLabel>
           <Input
             id="email"
             type="email"
@@ -155,18 +162,14 @@ export const CompositionRequiredFields: Story = {
             Usamos este e-mail para falar com você.
           </FieldDescription>
         </Field>
-        <Field {...args} data-invalid="true">
-          <FieldLabel htmlFor="senha" required>
-            Senha
-          </FieldLabel>
-          <Input
-            id="senha"
-            type="password"
-            required
-            aria-invalid="true"
-            aria-describedby="senha-erro"
-          />
+        <Field {...args} required data-invalid="true">
+          <FieldLabel htmlFor="senha">Senha</FieldLabel>
+          <Input id="senha" type="password" aria-invalid="true" aria-describedby="senha-erro" />
           <FieldError id="senha-erro">Preencha a senha.</FieldError>
+        </Field>
+        <Field {...args}>
+          <FieldLabel htmlFor="apelido">Apelido</FieldLabel>
+          <Input id="apelido" placeholder="Opcional" />
         </Field>
       </FieldGroup>
     </FieldSet>

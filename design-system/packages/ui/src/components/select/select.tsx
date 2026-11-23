@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronUp, Check } from "../icons";
 import { cn } from "../../lib/cn";
 import { Field, FieldLabel } from "../field";
+import { useFieldControlProps } from "../field/field-context";
 import { Select as RadixSelect } from "radix-ui";
 import * as React from "react";
 import { Skeleton } from "../skeleton";
@@ -109,6 +110,7 @@ function SelectImpl({
   const selectLabel = resolvedLabel ? undefined : (ariaLabel ?? placeholder)?.trim() || undefined;
   const triggerAriaLabel = ariaLabel ?? (!resolvedLabel ? placeholder : undefined);
   const generatedId = React.useId();
+  const fieldControlProps = useFieldControlProps();
   const triggerId = id ?? (resolvedLabel ? generatedId : undefined);
   const handleChange = React.useCallback(
     (newValue: string) => {
@@ -153,10 +155,8 @@ function SelectImpl({
   const withFieldLabel = (control: React.ReactNode) => {
     if (!resolvedLabel) return control;
     return (
-      <Field className={cn("w-auto min-w-0 gap-1.5", className)}>
-        <FieldLabel htmlFor={loading ? undefined : triggerId} required={required}>
-          {resolvedLabel}
-        </FieldLabel>
+      <Field className={cn("w-auto min-w-0 gap-1.5", className)} required={required}>
+        <FieldLabel htmlFor={loading ? undefined : triggerId}>{resolvedLabel}</FieldLabel>
         {control}
       </Field>
     );
@@ -188,6 +188,7 @@ function SelectImpl({
         aria-label={triggerAriaLabel}
         aria-invalid={ariaInvalid}
         aria-describedby={ariaDescribedBy}
+        {...fieldControlProps}
         data-slot="select-trigger"
         data-size={size}
         className={triggerClassName}

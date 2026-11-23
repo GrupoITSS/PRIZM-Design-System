@@ -2,6 +2,7 @@ import { Label } from "../label";
 import { Separator } from "../separator";
 import { cn } from "../../lib/cn";
 import { useMemo } from "react";
+import { FieldContext, useFieldRequired } from "./field-context";
 import { fieldVariants } from "./field.styles";
 import type {
   FieldContentProps,
@@ -65,15 +66,20 @@ function FieldGroup({ className, ...props }: FieldGroupProps) {
   );
 }
 
-function Field({ className, orientation = "vertical", ...props }: FieldProps) {
+function Field({ className, orientation = "vertical", required = false, ...props }: FieldProps) {
+  const context = useMemo(() => ({ required }), [required]);
+
   return (
-    <div
-      role="group"
-      data-slot="field"
-      data-orientation={orientation}
-      className={cn(fieldVariants({ orientation }), className)}
-      {...props}
-    />
+    <FieldContext value={context}>
+      <div
+        role="group"
+        data-slot="field"
+        data-orientation={orientation}
+        data-required={required ? "true" : undefined}
+        className={cn(fieldVariants({ orientation }), className)}
+        {...props}
+      />
+    </FieldContext>
   );
 }
 
@@ -87,10 +93,13 @@ function FieldContent({ className, ...props }: FieldContentProps) {
   );
 }
 
-function FieldLabel({ className, ...props }: FieldLabelProps) {
+function FieldLabel({ className, required, ...props }: FieldLabelProps) {
+  const fieldRequired = useFieldRequired();
+
   return (
     <Label
       data-slot="field-label"
+      required={required ?? fieldRequired}
       className={cn(
         "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50",
         // The asterisk is a flex item: pull it back so it sits spacing/0-5 from the text, not gap-2.

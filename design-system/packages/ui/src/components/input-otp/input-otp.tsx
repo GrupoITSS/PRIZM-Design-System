@@ -2,6 +2,7 @@ import { cn } from "../../lib/cn";
 import { OTPInput, type SlotProps } from "input-otp";
 import { Minus } from "../icons";
 import * as React from "react";
+import { useFieldControlProps } from "../field/field-context";
 import {
   inputOTPCaret,
   inputOTPCaretLine,
@@ -83,6 +84,7 @@ function InputOTP({
   ref,
   ...rest
 }: InputOTPProps & { ref?: React.Ref<HTMLInputElement> }) {
+  const fieldControlProps = useFieldControlProps();
   const patternProp = typeof pattern === "string" ? pattern : (pattern?.source ?? undefined);
   // `invalid` continua como apelido de aria-invalid (D3).
   const isInvalid = invalid || ariaInvalid === true || ariaInvalid === "true";
@@ -140,6 +142,7 @@ function InputOTP({
       pasteTransformer={pasteTransformer}
       containerClassName={cn(inputOTPContainerVariants({ size }), containerClassName)}
       className={cn("disabled:cursor-not-allowed", className)}
+      {...fieldControlProps}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
       aria-describedby={ariaDescribedBy}

@@ -10,6 +10,7 @@ export {
   FieldSet,
   FieldTitle,
 } from "./field";
+export { useFieldRequired } from "./field-context";
 export { fieldVariants } from "./field.styles";
 export type { FieldVariantProps } from "./field.styles";
 export type {

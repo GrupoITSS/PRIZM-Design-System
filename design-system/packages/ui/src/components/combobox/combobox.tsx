@@ -1,5 +1,6 @@
 import { Button } from "../button";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../input-group";
+import { useFieldControlProps } from "../field/field-context";
 import { useInputGroupWrapper } from "../input-group/input-group.hooks";
 import { cn } from "../../lib/cn";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react";
@@ -207,6 +208,8 @@ function ComboboxInput({
   showClear?: boolean;
   size?: ComboboxSize;
 }) {
+  // A base-ui injeta `aria-required={undefined}` no input e apagaria o do contexto do Field (DS-89).
+  const fieldControlProps = useFieldControlProps();
   const isInvalid = isAriaInvalid(props["aria-invalid"]);
   const { wrapperClassName, handleFocus, handleBlur } = useInputGroupWrapper({
     className: cn("w-auto", className),
@@ -222,7 +225,7 @@ function ComboboxInput({
       data-disabled={disabled ? "true" : undefined}
       aria-disabled={disabled || undefined}
     >
-      <ComboboxPrimitive.Input render={<InputGroupInput disabled={disabled} size={size} />} {...props} />
+      <ComboboxPrimitive.Input render={<InputGroupInput disabled={disabled} size={size} />} {...fieldControlProps} {...props} />
       <InputGroupAddon align="inline-end">
         {showTrigger && (
           <ComboboxPrimitive.Trigger
@@ -431,10 +434,12 @@ function ComboboxChip({
 
 function ComboboxChipsInput(props: ComboboxPrimitive.Input.Props) {
   const { className, ...rest } = props;
+  const fieldControlProps = useFieldControlProps();
   return (
     <ComboboxPrimitive.Input
       data-slot="combobox-chip-input"
       className={cn("min-w-16 flex-1 outline-none disabled:opacity-100", className)}
+      {...fieldControlProps}
       {...rest}
     />
   );

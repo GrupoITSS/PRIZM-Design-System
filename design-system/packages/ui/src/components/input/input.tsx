@@ -1,5 +1,6 @@
 import { cn } from "../../lib/cn";
 import { Eye, EyeOff } from "../icons";
+import { useFieldControlProps } from "../field/field-context";
 import * as React from "react";
 import { inputVariants } from "./input.styles";
 import type { InputProps } from "./input.types";
@@ -32,6 +33,7 @@ function Input({
   ...props
 }: InputProps & { ref?: React.Ref<HTMLInputElement> }) {
   const isInvalid = ariaInvalidProp === true || ariaInvalidProp === "true" ? true : false;
+  const fieldControlProps = useFieldControlProps();
   const isPassword = type === "password";
 
   const [showPassword, setShowPassword] = React.useState(false);
@@ -52,6 +54,7 @@ function Input({
       data-invalid={isInvalid ? "true" : undefined}
       aria-invalid={isInvalid ? "true" : undefined}
       className={inputClassName}
+      {...fieldControlProps}
       {...props}
     />
   );
