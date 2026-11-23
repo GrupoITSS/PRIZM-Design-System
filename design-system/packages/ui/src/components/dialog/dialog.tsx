@@ -5,11 +5,14 @@ import { X } from "../icons";
 import { Dialog as RadixDialog } from "radix-ui";
 import * as React from "react";
 import {
+  dialogBodyStyles,
   dialogCloseStyles,
   dialogConfirmLabelStyles,
   dialogConfirmSectionStyles,
   dialogContentVariants,
   dialogDescriptionStyles,
+  dialogFooterActionsStyles,
+  dialogFooterLeadingStyles,
   dialogFooterStyles,
   dialogHeaderStyles,
   dialogOverlayStyles,
@@ -17,6 +20,7 @@ import {
   dialogTitleStyles,
 } from "./dialog.styles";
 import type {
+  DialogBodyProps,
   DialogCloseProps,
   DialogContentProps,
   DialogDescriptionProps,
@@ -73,6 +77,7 @@ function DialogRoot({
   description,
   body,
   footer,
+  footerLeading,
   showCloseButton,
   closeLabel,
   size,
@@ -94,6 +99,7 @@ function DialogRoot({
     description !== undefined ||
     body !== undefined ||
     footer !== undefined ||
+    footerLeading !== undefined ||
     confirmInput !== undefined;
 
   const isConfirmValid = confirmInput
@@ -143,29 +149,46 @@ function DialogRoot({
               {Boolean(description) && <DialogDescription>{description}</DialogDescription>}
             </DialogHeader>
           )}
-          {body}
-          {confirmInput && (
-            <div className={dialogConfirmSectionStyles}>
-              <p
-                id={`${confirmInputId}-label`}
-                className={dialogConfirmLabelStyles}
-                onCopy={(event) => event.preventDefault()}
-                onCut={(event) => event.preventDefault()}
-              >
-                {confirmInput.label}
-              </p>
-              <Input
-                id={confirmInputId}
-                value={confirmValue}
-                onChange={(event) => setConfirmValue(event.target.value)}
-                placeholder={confirmInput.placeholder ?? confirmInput.expectedValue}
-                aria-labelledby={`${confirmInputId}-label`}
-                autoComplete="off"
-                size="sm"
-              />
-            </div>
+          {Boolean(body || confirmInput) && (
+            <DialogBody>
+              {body}
+              {confirmInput && (
+                <div className={dialogConfirmSectionStyles}>
+                  <p
+                    id={`${confirmInputId}-label`}
+                    className={dialogConfirmLabelStyles}
+                    onCopy={(event) => event.preventDefault()}
+                    onCut={(event) => event.preventDefault()}
+                  >
+                    {confirmInput.label}
+                  </p>
+                  <Input
+                    id={confirmInputId}
+                    value={confirmValue}
+                    onChange={(event) => setConfirmValue(event.target.value)}
+                    placeholder={confirmInput.placeholder ?? confirmInput.expectedValue}
+                    aria-labelledby={`${confirmInputId}-label`}
+                    autoComplete="off"
+                    size="sm"
+                  />
+                </div>
+              )}
+            </DialogBody>
           )}
-          {Boolean(footer) && <DialogFooter>{footer}</DialogFooter>}
+          {footerLeading ? (
+            <DialogFooter>
+              <div data-slot="dialog-footer-leading" className={dialogFooterLeadingStyles}>
+                {footerLeading}
+              </div>
+              {Boolean(footer) && (
+                <div data-slot="dialog-footer-actions" className={dialogFooterActionsStyles}>
+                  {footer}
+                </div>
+              )}
+            </DialogFooter>
+          ) : (
+            Boolean(footer) && <DialogFooter>{footer}</DialogFooter>
+          )}
         </DialogContent>
       </RadixDialog.Root>
     );
@@ -268,6 +291,15 @@ const DialogTitleRow = ({ className, ...props }: DialogTitleRowProps) => (
 );
 DialogTitleRow.displayName = "DialogTitleRow";
 
+/**
+ * Corpo do Dialog: a única parte que rola quando o conteúdo passa da altura máxima. Cabeçalho e
+ * rodapé ficam fixos. Na API por props, o `body` (e o `confirmInput`) já vêm dentro dele.
+ */
+const DialogBody = ({ className, ...props }: DialogBodyProps) => (
+  <div data-slot="dialog-body" className={cn(dialogBodyStyles, className)} {...props} />
+);
+DialogBody.displayName = "DialogBody";
+
 const DialogFooter = ({ className, ...props }: DialogFooterProps) => (
   <div data-slot="dialog-footer" className={cn(dialogFooterStyles, className)} {...props} />
 );
@@ -305,6 +337,7 @@ DialogDescription.displayName = RadixDialog.Description.displayName ?? "DialogDe
 
 export {
   Dialog,
+  DialogBody,
   DialogClose,
   DialogContent,
   DialogDescription,

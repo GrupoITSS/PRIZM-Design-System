@@ -3,6 +3,7 @@ import { Field, FieldGroup, FieldLabel } from "@grupoitss/prizm-ui/field";
 import { Input } from "@grupoitss/prizm-ui/input";
 import { Label } from "@grupoitss/prizm-ui/label";
 import { Switch } from "@grupoitss/prizm-ui/switch";
+import { Trash2 } from "@grupoitss/prizm-ui/icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import * as React from "react";
 import { Dialog, dialogSizes } from "@grupoitss/prizm-ui/dialog";
@@ -192,30 +193,54 @@ export const NoCloseButton: Story = {
   ),
 };
 
+const LICENSE_TYPES = [
+  ["Concurrent", "R$ 150,00"],
+  ["Named", "R$ 250,00"],
+  ["Read-only", "R$ 10,00"],
+  ["Full", "R$ 10.000,00"],
+  ["Mobile", "R$ 90,00"],
+  ["Integration", "R$ 400,00"],
+  ["Auditor", "R$ 60,00"],
+  ["Guest", "R$ 0,00"],
+] as const;
+
 export const StickyFooter: Story = {
+  name: "Scrollable body",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Altura máxima: a tela menos 32px. Cabeçalho e rodapé ficam fixos e só o corpo (`DialogBody`) rola. Na API por props, o `body` já vai dentro dele (DS-77).",
+      },
+    },
+  },
   render: () => (
     <Dialog
-      trigger={<Button variant="outline">Sticky Footer</Button>}
-      title="Sticky Footer"
-      description="This dialog has a sticky footer that stays visible while the content scrolls."
+      trigger={<Button variant="outline">Edit category</Button>}
+      title="Edit category"
+      description="License types and their unit prices apply to every product in this category."
       body={
-        <div className="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            // eslint-disable-next-line @eslint-react/no-array-index-key -- static placeholder list
-            <p key={index} className="mb-4 leading-normal">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
+        <FieldGroup>
+          {LICENSE_TYPES.map(([name, price]) => (
+            <div key={name} className="grid grid-cols-[1fr_140px] gap-3">
+              <Field>
+                <FieldLabel htmlFor={`type-${name}`}>License type</FieldLabel>
+                <Input id={`type-${name}`} defaultValue={name} />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor={`price-${name}`}>Unit price</FieldLabel>
+                <Input id={`price-${name}`} defaultValue={price} />
+              </Field>
+            </div>
           ))}
-        </div>
+        </FieldGroup>
       }
       footer={
         <>
           <Button type="button" variant="outline">
-            Close
+            Cancel
           </Button>
-          <Button type="submit">Confirm</Button>
+          <Button type="submit">Save changes</Button>
         </>
       }
     />
@@ -257,21 +282,40 @@ export const WithConfirmInput: Story = {
 };
 
 export const WithDestructiveAction: Story = {
+  name: "Destructive action (footerLeading)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A ação destrutiva fica isolada à esquerda do rodapé, em `footerLeading`, como um Button `ghost`. Ela não apaga direto: abre um AlertDialog para confirmar. No máximo três botões no rodapé (DS-77).",
+      },
+    },
+  },
   render: () => (
     <Dialog
-      trigger={<Button variant="outline">Delete item</Button>}
-      title="Dialog title"
-      description="This is a dialog description."
+      trigger={<Button variant="outline">Edit product</Button>}
+      title="Edit product"
+      description="Change the product name and code. Click save when you're done."
       body={
-        <div className="rounded-md border border-dashed border-purple-200 bg-purple-50 p-6 text-center text-sm text-purple-800">
-          Slot (swap it with your content)
-        </div>
+        <FieldGroup>
+          <Field>
+            <FieldLabel htmlFor="product-name">Product name</FieldLabel>
+            <Input id="product-name" defaultValue="Documents" />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="product-code">Product code</FieldLabel>
+            <Input id="product-code" defaultValue="P-1.01" />
+          </Field>
+        </FieldGroup>
+      }
+      footerLeading={
+        <Button type="button" variant="ghost">
+          <Trash2 aria-hidden="true" />
+          Delete product
+        </Button>
       }
       footer={
         <>
-          <Button type="button" variant="destructive">
-            Delete
-          </Button>
           <Button type="button" variant="outline">
             Cancel
           </Button>

@@ -20,7 +20,8 @@
       "note": "Igual ao Dialog e ao Sheet: só o token, sem desfoque (decisão de 21/11/2026). Só no código: o Figma não desenha o fundo atrás do modal."
     },
     "content": {
-      "background": "color/background",
+      "background": "color/card",
+      "text": "color/card-foreground",
       "border": "color/border",
       "borderWidth": "border-width/1",
       "radius": "radius/lg",

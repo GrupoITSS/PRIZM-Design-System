@@ -17,7 +17,7 @@ export const sheetOverlayStyles =
  * no Figma.
  */
 const sheetContentBase =
-  "fixed z-50 flex flex-col overflow-hidden border-border bg-background text-foreground shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500";
+  "fixed z-50 flex flex-col overflow-hidden border-border bg-card text-card-foreground shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500";
 
 /**
  * Lado e largura máxima (escala `max-width/*` do Core, a mesma do Dialog).

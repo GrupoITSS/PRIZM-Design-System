@@ -58,7 +58,7 @@ describe("Dialog (PRIZM / shadcn)", () => {
     );
 
     const content = screen.getByTestId("content");
-    expect(content).toHaveClass("bg-background");
+    expect(content).toHaveClass("bg-card");
   });
 
   it("permite esconder o botão de fechar com showCloseButton=false", () => {
@@ -128,13 +128,77 @@ describe("Dialog (PRIZM / shadcn)", () => {
   });
 });
 
+describe("Dialog · DS-77 (23/11/2026): corpo rolável e Leading no rodapé", () => {
+  it("o body vai num DialogBody que rola; cabeçalho e rodapé não encolhem", async () => {
+    render(
+      <Dialog
+        defaultOpen
+        title="Edit category"
+        body={<p>Body</p>}
+        footer={<button type="button">Save</button>}
+      />,
+    );
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveClass("flex", "flex-col");
+    const body = dialog.querySelector('[data-slot="dialog-body"]');
+    expect(body).toHaveTextContent("Body");
+    expect(body).toHaveClass("min-h-0", "flex-1", "overflow-y-auto");
+    expect(dialog.querySelector('[data-slot="dialog-header"]')).toHaveClass("shrink-0");
+    expect(dialog.querySelector('[data-slot="dialog-footer"]')).toHaveClass("shrink-0");
+  });
+
+  it("o campo de confirmação fica dentro do corpo, que rola", async () => {
+    render(
+      <Dialog
+        defaultOpen
+        title="Delete?"
+        confirmInput={{ expectedValue: "Leo", label: "Type Leo" }}
+      />,
+    );
+    const dialog = await screen.findByRole("dialog");
+    const body = dialog.querySelector('[data-slot="dialog-body"]');
+    expect(body?.querySelector("input")).not.toBeNull();
+  });
+
+  it("footerLeading fica à esquerda das ações, num grupo próprio", async () => {
+    render(
+      <Dialog
+        defaultOpen
+        title="Edit category"
+        footerLeading={<button type="button">Delete</button>}
+        footer={
+          <>
+            <button type="button">Cancel</button>
+            <button type="button">Save</button>
+          </>
+        }
+      />,
+    );
+    const dialog = await screen.findByRole("dialog");
+    const footer = dialog.querySelector('[data-slot="dialog-footer"]');
+    const leading = footer?.querySelector('[data-slot="dialog-footer-leading"]');
+    const actions = footer?.querySelector('[data-slot="dialog-footer-actions"]');
+    expect(leading).toHaveTextContent("Delete");
+    expect(leading).toHaveClass("sm:mr-auto");
+    expect(actions).toHaveTextContent("CancelSave");
+    expect(footer?.firstElementChild).toBe(leading);
+  });
+
+  it("sem footerLeading, o rodapé continua igual (botões direto no footer)", async () => {
+    render(<Dialog defaultOpen title="T" footer={<button type="button">Save</button>} />);
+    const dialog = await screen.findByRole("dialog");
+    const footer = dialog.querySelector('[data-slot="dialog-footer"]');
+    expect(footer?.querySelector('[data-slot="dialog-footer-actions"]')).toBeNull();
+  });
+});
+
 describe("Dialog · decisões de 06/11/2026", () => {
-  it("conteúdo: fundo background, raio lg, folga de 16px, 512px e altura máxima", async () => {
+  it("conteúdo: fundo card, raio lg, folga de 16px, 512px e altura máxima", async () => {
     render(<Dialog defaultOpen title="Edit profile" body={<p>Body</p>} />);
     const dialog = await screen.findByRole("dialog");
     expect(dialog).toHaveClass(
-      "bg-background",
-      "text-foreground",
+      "bg-card",
+      "text-card-foreground",
       "rounded-lg",
       "w-[calc(100%-2rem)]",
       "max-w-lg",

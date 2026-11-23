@@ -1,5 +1,6 @@
 export {
   Dialog,
+  DialogBody,
   DialogClose,
   DialogContent,
   DialogDescription,
@@ -13,6 +14,7 @@ export {
 } from "./dialog";
 
 export {
+  dialogBodyStyles,
   dialogCloseButtonStyles,
   dialogCloseStyles,
   dialogConfirmLabelStyles,
@@ -20,6 +22,8 @@ export {
   dialogContentStyles,
   dialogContentVariants,
   dialogDescriptionStyles,
+  dialogFooterActionsStyles,
+  dialogFooterLeadingStyles,
   dialogFooterStyles,
   dialogHeaderStyles,
   dialogOverlayStyles,
@@ -33,6 +37,7 @@ export { matchesConfirmText, normalizeConfirmText } from "./dialog.utils";
 export type { DialogContentVariantProps, DialogSize } from "./dialog.styles";
 
 export type {
+  DialogBodyProps,
   DialogCloseProps,
   DialogConfirmInputConfig,
   DialogContentProps,

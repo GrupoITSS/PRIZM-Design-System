@@ -95,6 +95,15 @@ export interface DialogProps extends React.ComponentPropsWithoutRef<typeof Radix
   footer?: React.ReactNode;
 
   /**
+   * À esquerda das ações do rodapé (DS-77): o lugar da ação destrutiva, um Button `ghost` isolado
+   * ("Excluir"), que abre um AlertDialog para confirmar. No celular, fica embaixo das ações.
+   *
+   * @example
+   * footerLeading={<Button variant="ghost"><Trash2 aria-hidden /> Excluir</Button>}
+   */
+  footerLeading?: React.ReactNode;
+
+  /**
    * Controla se o botão de fechar no canto superior direito é exibido
    * na API simplificada.
    *
@@ -194,6 +203,9 @@ export interface DialogContentProps extends Omit<
 export type DialogHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
 export type DialogFooterProps = React.HTMLAttributes<HTMLDivElement>;
+
+/** Corpo do Dialog: a parte que rola. */
+export type DialogBodyProps = React.HTMLAttributes<HTMLDivElement>;
 
 export type DialogTitleRowProps = React.HTMLAttributes<HTMLDivElement>;
 
