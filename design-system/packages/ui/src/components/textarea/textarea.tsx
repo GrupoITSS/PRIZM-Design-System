@@ -1,6 +1,7 @@
 import { Dialog } from "../dialog";
 import { Expand } from "../icons";
 import { cn } from "../../lib/cn";
+import { useFieldControlProps } from "../field/field-context";
 import * as React from "react";
 import { textareaVariants } from "./textarea.styles";
 import type { TextareaProps } from "./textarea.types";
@@ -37,6 +38,7 @@ function Textarea({
   ...props
 }: TextareaProps & { ref?: React.Ref<HTMLTextAreaElement> }) {
   const isInvalid = ariaInvalidProp === true || ariaInvalidProp === "true" ? true : false;
+  const fieldControlProps = useFieldControlProps();
 
   const resizeStyle: React.CSSProperties = {
     resize: resizable ? "vertical" : "none",
@@ -79,6 +81,7 @@ function Textarea({
     style: mergedStyle,
     value: currentValue,
     onChange: handleChange,
+    ...fieldControlProps,
     ...props,
     ...(inDialog ? { id: undefined, "aria-labelledby": expandTitleId } : {}),
   });

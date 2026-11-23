@@ -1,6 +1,7 @@
 import { cn } from "../../lib/cn";
 import { Checkbox as RadixCheckbox } from "radix-ui";
 import { Check, Minus } from "../icons";
+import { useFieldControlProps } from "../field/field-context";
 import * as React from "react";
 import { Label } from "../label";
 import {
@@ -40,6 +41,7 @@ const Checkbox = function Checkbox({
 }: CheckboxProps & { ref?: React.Ref<React.ComponentRef<typeof RadixCheckbox.Root>> }) {
   const generatedId = React.useId();
   const id = idProp ?? generatedId;
+  const fieldControlProps = useFieldControlProps();
 
   const root = (
     <RadixCheckbox.Root
@@ -48,6 +50,7 @@ const Checkbox = function Checkbox({
       data-slot="checkbox"
       data-size={size}
       className={cn(checkboxRootVariants({ size }), "group/checkbox-root", className)}
+      {...fieldControlProps}
       {...props}
     >
       <RadixCheckbox.Indicator className={cn(checkboxIndicatorStyles)}>

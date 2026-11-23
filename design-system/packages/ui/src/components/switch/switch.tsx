@@ -1,5 +1,6 @@
 import { cn } from "../../lib/cn";
 import { Switch as RadixSwitch } from "radix-ui";
+import { useFieldControlProps } from "../field/field-context";
 import * as React from "react";
 import { switchRootVariants, switchThumbVariants } from "./switch.styles";
 import type { SwitchProps } from "./switch.types";
@@ -38,6 +39,7 @@ function SwitchImpl({
   ...rootProps
 }: SwitchProps & { ref?: React.Ref<React.ElementRef<typeof RadixSwitch.Root>> }) {
   const buttonRef = React.useRef<HTMLButtonElement | null>(null);
+  const fieldControlProps = useFieldControlProps();
 
   const setRefs = React.useCallback(
     (node: HTMLButtonElement | null) => {
@@ -79,6 +81,7 @@ function SwitchImpl({
       checked={checked}
       defaultChecked={defaultChecked}
       onCheckedChange={handleChange}
+      {...fieldControlProps}
       {...rootProps}
     >
       <RadixSwitch.Thumb data-slot="switch-thumb" className={switchThumbVariants({ size })} />

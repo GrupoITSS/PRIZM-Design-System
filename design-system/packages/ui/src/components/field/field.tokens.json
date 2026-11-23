@@ -35,6 +35,11 @@
     "disabled": {
       "label": "opacity/50",
       "attribute": "data-disabled no Field; disabled no controle"
+    },
+    "required": {
+      "label": "color/destructive no asterisco do Label",
+      "attribute": "data-required no Field; aria-required no controle",
+      "note": "required no Field repassa ao FieldLabel e aos controles do Prizm. Não liga a validação nativa."
     }
   },
   "divergences": [

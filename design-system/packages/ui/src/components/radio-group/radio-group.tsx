@@ -1,4 +1,5 @@
 import { cn } from "../../lib/cn";
+import { useFieldControlProps } from "../field/field-context";
 import { Circle } from "../icons";
 import { RadioGroup as RadixRadioGroup } from "radix-ui";
 import * as React from "react";
@@ -94,6 +95,7 @@ function RadioGroup({
   ...props
 }: RadioGroupProps & { ref?: React.Ref<HTMLDivElement> }) {
   const reactId = React.useId();
+  const fieldControlProps = useFieldControlProps();
 
   const handleValueChange = React.useCallback(
     (nextValue: string) => {
@@ -126,6 +128,7 @@ function RadioGroup({
       onValueChange={handleValueChange}
       orientation={orientation}
       name={rootName}
+      {...fieldControlProps}
       {...props}
     >
       {items

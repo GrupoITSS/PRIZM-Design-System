@@ -10,7 +10,17 @@ export interface FieldLegendProps extends React.ComponentProps<"legend"> {
 
 export type FieldGroupProps = React.ComponentProps<"div">;
 
-export type FieldProps = React.ComponentProps<"div"> & FieldVariantProps;
+export type FieldProps = React.ComponentProps<"div"> &
+  FieldVariantProps & {
+    /**
+     * Marca o campo como obrigatório. O `FieldLabel` mostra o asterisco e os controles do Prizm
+     * dentro do Field (Input, Textarea, Select, Checkbox, RadioGroup e Switch) recebem
+     * `aria-required`. Não ativa a validação nativa do navegador: para isso, passe `required`
+     * no controle. O `required` do `FieldLabel` e o `aria-required` do controle, quando
+     * passados, ganham do Field.
+     */
+    required?: boolean;
+  };
 
 export type FieldContentProps = React.ComponentProps<"div">;
 
