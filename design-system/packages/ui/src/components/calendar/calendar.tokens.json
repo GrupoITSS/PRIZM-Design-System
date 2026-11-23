@@ -30,6 +30,12 @@
       "text": "color/foreground",
       "fontSize": "text/sm"
     },
+    "dayExtra": {
+      "layout": "coluna, número em cima e <span> embaixo, gap spacing/1",
+      "fontSize": "text/xs",
+      "opacity": "70%; 100% no dia escolhido (sobre primary, 70% fica entre 3,29 e 3,57:1)",
+      "cellSize": "48px ([--cell-size:--spacing(12)]), como o Size md"
+    },
     "weekday": {
       "color": "color/muted-foreground",
       "fontSize": "text/xs"
