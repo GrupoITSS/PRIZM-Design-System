@@ -3,10 +3,16 @@ import * as React from "react";
 import { Bold, Italic, Pin } from "@grupoitss/prizm-ui/icons";
 import { Toggle } from "@grupoitss/prizm-ui/toggle";
 
+// Traceability: the set in [PRIZM] Componentes, the documentation frame and the article.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=124-27";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=28049-3834";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=e5d38b9c-9501-48dc-8541-aecd0480a649&version=v1";
+
 const meta: Meta<typeof Toggle> = {
   title: "Primários/Toggle",
   component: Toggle,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
@@ -15,7 +21,8 @@ const meta: Meta<typeof Toggle> = {
           "- Estado por props: `pressed`, `defaultPressed` e `onPressedChange`.\n" +
           "- Ligado em `primary`; hover em `accent`; anel de foco do Prizm.\n" +
           "- Toggle só de ícone precisa de `aria-label`. Com texto visível, não passe `aria-label`: o nome tem de conter o texto que a pessoa vê.\n\n" +
-          '**Base:** <a href="https://ui.shadcn.com/docs/components/toggle" target="_blank" rel="noopener noreferrer">Toggle — shadcn/ui</a>',
+          '**Base:** <a href="https://ui.shadcn.com/docs/components/toggle" target="_blank" rel="noopener noreferrer">Toggle — shadcn/ui</a>\n\n' +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },

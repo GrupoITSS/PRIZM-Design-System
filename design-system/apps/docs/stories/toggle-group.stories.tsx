@@ -3,10 +3,16 @@ import { Bold, Italic, LayoutGrid, List, Underline } from "@grupoitss/prizm-ui/i
 import { ToggleGroup, ToggleGroupItem } from "@grupoitss/prizm-ui/toggle-group";
 import type { ToggleGroupItemOption } from "@grupoitss/prizm-ui/toggle-group";
 
+// Traceability: the set in [PRIZM] Componentes, the documentation frame and the article.
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=18707-214048";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=28044-2324";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=d738f96b-1587-416a-9c51-8b69e82e34e9&version=v1";
+
 const meta: Meta<typeof ToggleGroup> = {
   title: "Primários/ToggleGroup",
   component: ToggleGroup,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
@@ -16,7 +22,8 @@ const meta: Meta<typeof ToggleGroup> = {
           '- `type="multiple"`: cada item liga e desliga sozinho, como numa barra de formatação.\n' +
           '- O grupo precisa de nome: `aria-label` ou `aria-labelledby`. Item só de ícone leva `"aria-label"`; com texto visível, não.\n' +
           "- Para trocar painéis, use Tabs; para ações, ButtonGroup.\n\n" +
-          '**Base:** <a href="https://ui.shadcn.com/docs/components/toggle-group" target="_blank" rel="noopener noreferrer">Toggle Group — shadcn/ui</a>',
+          '**Base:** <a href="https://ui.shadcn.com/docs/components/toggle-group" target="_blank" rel="noopener noreferrer">Toggle Group — shadcn/ui</a>\n\n' +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
