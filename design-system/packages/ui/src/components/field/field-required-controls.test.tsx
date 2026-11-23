@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Combobox } from "../combobox";
+import { Combobox, ComboboxContent, ComboboxInput, ComboboxList } from "../combobox";
 import { DatePicker } from "../date-picker";
 import { InputGroup, InputGroupInput, InputGroupTextarea } from "../input-group";
 import { InputOTP } from "../input-otp";
@@ -49,6 +49,20 @@ describe("Field required (DS-89): controles compostos", () => {
       </Field>,
     );
     expect(screen.getByPlaceholderText("m")).toHaveAttribute("aria-required", "true");
+  });
+
+  it("Combobox por composição (ComboboxInput) herda aria-required", () => {
+    render(
+      <Field required>
+        <Combobox items={["a", "b"]}>
+          <ComboboxInput placeholder="comp" />
+          <ComboboxContent>
+            <ComboboxList>{(item: string) => <div key={item}>{item}</div>}</ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+      </Field>,
+    );
+    expect(screen.getByPlaceholderText("comp")).toHaveAttribute("aria-required", "true");
   });
 
   it("InputOTP herda aria-required", () => {
