@@ -18,8 +18,18 @@ describe("Calendar × mapa de tokens (calendar.tokens.json)", () => {
   });
 
   it("dia: tamanho da célula e raio do mapa", () => {
-    expect(cls(calendarDayButtonStyles)).toContain("size-(--cell-size)");
+    expect(cls(calendarDayButtonStyles)).toContain("min-w-(--cell-size)");
+    expect(cls(calendarDayButtonStyles)).toContain("aspect-square");
     expect(cls(calendarDayButtonStyles)).toContain(`rounded-${suffix(map.parts.day.radius)}`);
+  });
+
+  it("dia com conteúdo extra: coluna, span em text-xs a 70% e 100% no dia escolhido", () => {
+    const c = cls(calendarDayButtonStyles);
+    expect(c).toEqual(expect.arrayContaining(["flex-col", "gap-1", "[&>span]:text-xs", "[&>span]:opacity-70"]));
+    for (const attr of ["selected-single", "range-start", "range-end"]) {
+      expect(c).toContain(`data-[${attr}=true]:[&>span]:opacity-100`);
+    }
+    expect(map.parts.dayExtra.fontSize).toBe("text/xs");
   });
 
   it("dias da semana e número da semana em text-xs e muted-foreground", () => {

@@ -67,8 +67,12 @@ export const calendarClassNames = {
 } as const;
 
 export const calendarDayButtonStyles = [
-  // Base size & shape (Figma: 32x32, rounded-md)
-  "flex size-(--cell-size) items-center justify-center rounded-md p-0 font-normal leading-none",
+  // Base size & shape (Figma: 32x32, rounded-md). Coluna, para o dia com conteúdo extra
+  // (Custom Day Button no Figma): o número em cima e o <span> embaixo, em text-xs a 70%.
+  "flex aspect-square size-auto w-full min-w-(--cell-size) flex-col items-center justify-center gap-1 rounded-md p-0 font-normal leading-none",
+  "[&>span]:text-xs [&>span]:opacity-70",
+  // Sobre primary, o texto extra a 70% fica abaixo de 4,5:1 (3,29 a 3,57:1): 100% no dia selecionado.
+  "data-[selected-single=true]:[&>span]:opacity-100 data-[range-start=true]:[&>span]:opacity-100 data-[range-end=true]:[&>span]:opacity-100",
 
   // Ensure our selected styles override react-day-picker default border.
   "aria-selected:border-0!",

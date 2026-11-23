@@ -197,7 +197,7 @@ export const CustomCellSize: Story = {
     docs: {
       description: {
         story:
-          "Custom Day Button no Figma: um `DayButton` próprio, com o preço abaixo do número, e a célula maior com `--cell-size`.",
+          "Custom Day Button no Figma: um `DayButton` próprio, com o preço num `<span>` abaixo do número (`text-xs` a 70%), e a célula de 48px com `[--cell-size:--spacing(12)]`, o Size md. Abaixo de 48px, \"R$ 120\" não cabe.",
       },
     },
   },
@@ -216,7 +216,7 @@ export const CustomCellSize: Story = {
           onSelect={setRange}
           numberOfMonths={1}
           captionLayout="dropdown"
-          className="[--cell-size:--spacing(9)] md:[--cell-size:--spacing(10)]"
+          className="rounded-lg border [--cell-size:--spacing(12)]"
           formatters={{
             formatMonthDropdown: (date) => {
               return date.toLocaleString("pt-BR", { month: "long" });
