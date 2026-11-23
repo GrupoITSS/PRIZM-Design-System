@@ -1,5 +1,6 @@
 import { Button } from "../button";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../input-group";
+import { useFieldControlProps } from "../field/field-context";
 import { useInputGroupWrapper } from "../input-group/input-group.hooks";
 import { cn } from "../../lib/cn";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react";
@@ -66,6 +67,7 @@ function ComboboxRoot<T = string>({
   "aria-describedby": ariaDescribedBy,
   ...restRoot
 }: ComboboxSimplifiedProps<T>) {
+  const fieldControlProps = useFieldControlProps();
   const useSimplifiedAPI = Array.isArray(items) && items.length > 0 && children === undefined;
 
   if (!useSimplifiedAPI) {
@@ -90,7 +92,9 @@ function ComboboxRoot<T = string>({
       : String(itemToStringValue ? itemToStringValue(item) : item);
   const getLabel = (item: T) => (itemToStringValue ? itemToStringValue(item) : String(item));
 
+  // A base-ui injeta `aria-required={undefined}` no input e apagaria o do contexto do Field (DS-89).
   const fieldA11y = {
+    ...fieldControlProps,
     disabled,
     "aria-invalid": ariaInvalid,
     "aria-describedby": ariaDescribedBy,
