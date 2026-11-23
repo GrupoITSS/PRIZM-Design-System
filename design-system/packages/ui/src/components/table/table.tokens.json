@@ -44,9 +44,9 @@
         "iconColor": "color/foreground, a cor do texto do cabeçalho, com ou sem ordem (decisão de 17/11/2026)"
       },
       "align": {
-        "left": "Align=Left",
-        "right": "Align=Right (Table / Head e Table / Cell)",
-        "center": "só no código; no Figma o Center saiu (decisão de 23/11: Align=Left | Right)"
+        "left": "Align=Left (padrão)",
+        "right": "Align=Right",
+        "center": "obsoleto: saiu do Figma em 23/11/2026 (DS-81); segue no código para não quebrar usos"
       }
     },
     "cell": {
@@ -125,7 +125,7 @@
     "Number": "text com align right (tabular-nums)",
     "Wrap": "text com wrap: true",
     "Badges": "badge, com badgeMaxVisible",
-    "Center": "text com align center"
+    "Center": "removido em 23/11/2026 (DS-81): era text com align center; use Align=Left ou Align=Right"
   },
   "divergences": [
     {
@@ -160,9 +160,9 @@
     },
     {
       "where": "Alinhamento da coluna",
-      "figma": "Align=Left | Right na Table / Head e na Table / Cell (a coluna se alinha selecionando as células); o Center não existe mais no Figma",
-      "code": "align na coluna: left, right e center (center mantido para não quebrar usos)",
-      "status": "decidida (23/11, DS-81): Figma só Left | Right; center segue no código, sem uso novo"
+      "figma": "Align=Left | Right na Table / Head e na Table / Cell (a coluna se alinha selecionando as células dela); as variantes Center saíram, e o Variant=Center da célula também",
+      "code": "align na coluna: left (padrão), right e center obsoleto",
+      "status": "decidida (23/11, DS-81): padrão left; Center removido do Figma e marcado obsoleto no código, para sair numa major"
     },
     {
       "where": "Ícone de ordenar",

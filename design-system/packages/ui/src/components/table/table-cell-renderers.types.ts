@@ -23,7 +23,13 @@ export enum ContentFormatType {
 }
 
 export type ColumnStatus =
-  "PENDING" | "IN_PROGRESS" | "COMPLETED" | "ERROR" | "ACTIVE" | "INACTIVE" | (string & {});
+  | "PENDING"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "ERROR"
+  | "ACTIVE"
+  | "INACTIVE"
+  | (string & {});
 
 export type ImageWithText = {
   imageUrl?: string;
@@ -93,7 +99,10 @@ export interface PrizmCellMeta<TRow = unknown> {
   };
   /** Max visible tags for BADGE. @default 2 */
   badgeMaxVisible?: number;
-  /** Horizontal alignment for table cells when using DataTable (`td` / `th`). */
+  /**
+   * Horizontal alignment for table cells when using DataTable (`td` / `th`).
+   * `center` está obsoleto (DS-81): o Figma tem só `Align=Left | Right`. Use `left` ou `right`.
+   */
   cellAlign?: "left" | "right" | "center";
   /**
    * DataTable: quebra o texto da célula em vez de cortar numa linha com Tooltip. @default false

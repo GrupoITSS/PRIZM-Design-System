@@ -20,7 +20,12 @@ export interface TableColumn<T = Record<string, unknown>> {
   key: string;
   /** Header content (string or ReactNode). */
   header: React.ReactNode;
-  /** Cell alignment. @default 'left' */
+  /**
+   * Cell alignment. @default 'left'
+   * @remarks `center` está obsoleto (decisão de 23/11/2026, DS-81): o Figma tem só
+   * `Align=Left | Right`. Use `left` (o padrão) ou `right`. Segue funcionando para
+   * não quebrar os usos que já existem.
+   */
   align?: "left" | "right" | "center";
   /**
    * The header becomes a button that sorts the rows by this column (ascending, then descending),
@@ -80,7 +85,7 @@ export interface TableRowMeta<T = Record<string, unknown>> {
 export interface TableFooterCell {
   content: React.ReactNode;
   colSpan?: number;
-  /** @default 'left' */
+  /** @default 'left' — `center` obsoleto (DS-81); use `left` ou `right`. */
   align?: "left" | "right" | "center";
   className?: string;
 }
