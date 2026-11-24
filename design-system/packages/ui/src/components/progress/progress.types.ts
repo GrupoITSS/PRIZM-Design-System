@@ -5,18 +5,21 @@ import type { ProgressStatus, ProgressVariantProps } from "./progress.styles";
 export interface ProgressProps
   extends
     Omit<React.ComponentPropsWithoutRef<typeof RadixProgress.Root>, "className">,
-    ProgressVariantProps {
+    Omit<ProgressVariantProps, "status"> {
   className?: string;
   /**
-   * Current progress value between 0 and 100.
-   * Values outside this range are clamped.
+   * Valor atual, de 0 a 100. Fora disso, vai para a ponta mais próxima.
    * @default 0
    */
   value?: number;
   /**
-   * Visual status of the progress indicator.
-   * When not provided, status is inferred: value === 100 => "success".
-   * @default "info"
+   * Status da barra. Quem decide é o produto: chegar a 100% não vira `success` sozinho.
+   * `info` é apelido obsoleto de `default`.
+   * @default "default"
    */
-  status?: ProgressStatus;
+  status?: ProgressStatus | "info";
+  /** Nome da barra. Sem ele (ou sem `aria-labelledby`), há aviso no console em desenvolvimento. */
+  "aria-label"?: string;
+  /** Id do rótulo que nomeia a barra (ex.: o `FieldLabel` ao lado). */
+  "aria-labelledby"?: string;
 }

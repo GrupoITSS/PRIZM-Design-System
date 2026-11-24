@@ -11,28 +11,31 @@ const meta: Meta<typeof Progress> = {
     docs: {
       description: {
         component:
-          "API preferencial **por props** (sem subcomponentes). Base: [shadcn/ui](https://ui.shadcn.com) + Radix, com tokens PRIZM.\n\n" +
-          "Barra de progresso linear do design system PRIZM. Uso recomendado via API simplificada: `<Progress value={50} />`.\n\n" +
-          "**Documentação e API de referência:** " +
-          '<a href="https://ui.shadcn.com/docs/components/radix/progress" target="_blank" rel="noopener noreferrer">' +
-          "Progress — shadcn/ui (Radix)" +
-          "</a>",
+          "Barra que mostra quanto de uma tarefa já foi feito, de 0 a 100%. API por props, sem subcomponentes. Base: [shadcn/ui](https://ui.shadcn.com/docs/components/radix/progress) + Radix, com tokens PRIZM.\n\n" +
+          "Dê nome à barra com `aria-label` ou `aria-labelledby`. O status é o que o produto disser: chegar a 100% não vira `success` sozinho. Quando o valor importa, mostre o número em texto ao lado. Sem valor conhecido, use o Spinner.",
       },
     },
   },
   args: {
     value: 50,
     size: "md",
+    status: "default",
+    "aria-label": "Envio de relatorio.pdf",
   },
   argTypes: {
     value: {
       control: { type: "number", min: 0, max: 100 },
-      description: "Valor atual de progresso (0–100). Valores fora do range são clampados.",
+      description: "Valor atual, de 0 a 100. Fora disso, vai para a ponta mais próxima.",
     },
     size: {
       control: "select",
       options: ["sm", "md", "lg"],
-      description: "Tamanho da barra de progresso.",
+      description: "Altura da barra: 4, 8 ou 12px.",
+    },
+    status: {
+      control: "select",
+      options: ["default", "success", "warning", "error"],
+      description: "Status da barra, decidido pelo produto. `info` é apelido obsoleto de `default`.",
     },
   },
 };
@@ -40,156 +43,63 @@ const meta: Meta<typeof Progress> = {
 export default meta;
 type Story = StoryObj<typeof Progress>;
 
-export const Basic: Story = {};
+export const Basic: Story = { name: "Básico" };
 
 export const Sizes: Story = {
+  name: "Tamanhos",
   render: (args) => (
     <div className="flex w-64 flex-col gap-4">
-      <Progress {...args} size="sm" value={25} aria-label="Progress small" />
-      <Progress {...args} size="md" value={50} aria-label="Progress medium" />
-      <Progress {...args} size="lg" value={75} aria-label="Progress large" />
+      <Progress {...args} size="sm" value={25} aria-label="Barra sm" />
+      <Progress {...args} size="md" value={50} aria-label="Barra md" />
+      <Progress {...args} size="lg" value={75} aria-label="Barra lg" />
     </div>
   ),
 };
 
-export const DynamicValue: Story = {
-  args: {
-    value: 70,
-  },
+export const StatusVariants: Story = {
+  name: "Status",
+  render: () => (
+    <div className="flex w-full max-w-sm flex-col gap-4">
+      {(
+        [
+          ["default", 60, "Default"],
+          ["success", 100, "Success"],
+          ["warning", 80, "Warning"],
+          ["error", 40, "Error"],
+        ] as const
+      ).map(([status, value, label]) => (
+        <div key={status} className="space-y-1">
+          <span id={`status-${status}`} className="text-xs text-muted-foreground">
+            {label}
+          </span>
+          <Progress value={value} status={status} aria-labelledby={`status-${status}`} />
+        </div>
+      ))}
+    </div>
+  ),
 };
 
 /**
- * Exemplo controlado com efeito: começa em 13% e vai para 66% após 500ms.
- * Equivalente ao `ProgressDemo` do arquivo de referência.
- */
-export const WithEffectDemo: Story = {
-  render: function Render() {
-    const [progress, setProgress] = React.useState(13);
-
-    React.useEffect(() => {
-      const timer = setTimeout(() => setProgress(66), 500);
-      return () => clearTimeout(timer);
-    }, []);
-
-    return (
-      <div className="flex w-full max-w-xs flex-col gap-4">
-        <Progress value={progress} className="w-[60%]" />
-        <span className="text-xs text-muted-foreground">Progresso: {progress}%</span>
-      </div>
-    );
-  },
-};
-
-/**
- * Progress com label e valor ao lado, usando o componente `Field` do design system.
- * Equivalente ao `ProgressWithLabel` do arquivo de referência.
+ * Rótulo e valor com o Field. O texto do rótulo nomeia a barra por `aria-labelledby` (o valor
+ * fica fora do nome, porque o leitor de tela já lê o valor da barra). `htmlFor` só funciona com
+ * campos de formulário e não dá nome a uma barra.
  */
 export const WithLabelField: Story = {
+  name: "Com rótulo e valor",
   render: () => (
     <Field className="w-full max-w-sm">
-      <FieldLabel htmlFor="progress-upload">
-        <span>Upload progress</span>
+      <FieldLabel>
+        <span id="rotulo-envio">Envio de relatorio.pdf</span>
         <span className="ml-auto text-xs text-muted-foreground">66%</span>
       </FieldLabel>
-      <Progress value={66} id="progress-upload" />
+      <Progress value={66} aria-labelledby="rotulo-envio" />
     </Field>
   ),
 };
 
-/**
- * Progress controlado por um input range nativo (slider simples).
- * Equivalente ao `ProgressControlled` do arquivo de referência, mas sem depender
- * de um componente `Slider` ainda não exposto no design system.
- */
-export const ControlledWithRange: Story = {
-  render: function Render() {
-    const [value, setValue] = React.useState(50);
-
-    return (
-      <div className="flex w-full max-w-sm flex-col gap-4">
-        <Progress value={value} />
-        <div className="flex items-center gap-3">
-          <input
-            type="range"
-            min={0}
-            max={100}
-            step={1}
-            value={value}
-            onChange={(event) => setValue(Number(event.target.value))}
-            className="flex-1"
-          />
-          <span className="w-10 text-right text-xs text-muted-foreground">{value}%</span>
-        </div>
-      </div>
-    );
-  },
-};
-
-/**
- * Demonstração com animação contínua de 0 até 100%, mudando a cor para "success"
- * quando chega em 100%. Mostra bem o comportamento de status automático.
- */
-export const AnimatedFromZeroToHundred: Story = {
-  render: function Render() {
-    const [value, setValue] = React.useState(0);
-
-    React.useEffect(() => {
-      const id = setInterval(() => {
-        setValue((prev) => {
-          if (prev >= 100) {
-            return 100;
-          }
-          return prev + 5;
-        });
-      }, 300);
-
-      return () => clearInterval(id);
-    }, []);
-
-    return (
-      <div className="flex w-full max-w-sm flex-col gap-3">
-        <Progress value={value} />
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>Valor atual: {value}%</span>
-          <span>Status: {value === 100 ? "success (barra verde)" : "info (barra padrão)"}</span>
-        </div>
-      </div>
-    );
-  },
-};
-
-/**
- * Exemplos explícitos de status para mostrar as cores:
- * info, success, warning, error.
- */
-export const StatusVariants: Story = {
-  render: () => (
-    <div className="flex w-full max-w-sm flex-col gap-4">
-      <div className="space-y-1">
-        <span className="text-xs text-muted-foreground">Info</span>
-        <Progress value={60} status="info" />
-      </div>
-      <div className="space-y-1">
-        <span className="text-xs text-muted-foreground">Success</span>
-        <Progress value={100} status="success" />
-      </div>
-      <div className="space-y-1">
-        <span className="text-xs text-muted-foreground">Warning</span>
-        <Progress value={80} status="warning" />
-      </div>
-      <div className="space-y-1">
-        <span className="text-xs text-muted-foreground">Error</span>
-        <Progress value={40} status="error" />
-      </div>
-    </div>
-  ),
-};
-
-/**
- * Layout com contador "x/y" à esquerda e porcentagem à direita,
- * conforme o design de "Processamento" no Figma.
- */
+/** Contador "x/y" à esquerda e porcentagem à direita, como no Processamento. */
 export const WithCountAndPercent: Story = {
+  name: "Com contador e porcentagem",
   render: function Render() {
     const current = 24;
     const total = 60;
@@ -201,9 +111,67 @@ export const WithCountAndPercent: Story = {
           {current}/{total}
         </span>
         <Progress value={percent} aria-label="Processamento" className="flex-1" />
-        <span className="shrink-0 w-10 text-right text-xs font-medium text-foreground">
-          {percent}%
-        </span>
+        <span className="w-10 shrink-0 text-right text-xs font-medium text-foreground">{percent}%</span>
+      </div>
+    );
+  },
+};
+
+/**
+ * O valor sobe até 100% e a barra continua em `default`. Só depois que o produto confirma
+ * (aqui, meio segundo depois), o status passa a `success`.
+ */
+export const ProductConfirmsSuccess: Story = {
+  name: "Produto confirma o sucesso",
+  render: function Render() {
+    const [value, setValue] = React.useState(0);
+    const [confirmed, setConfirmed] = React.useState(false);
+
+    React.useEffect(() => {
+      const id = setInterval(() => setValue((prev) => Math.min(100, prev + 5)), 200);
+      return () => clearInterval(id);
+    }, []);
+
+    React.useEffect(() => {
+      if (value < 100) return;
+      const id = setTimeout(() => setConfirmed(true), 500);
+      return () => clearTimeout(id);
+    }, [value]);
+
+    return (
+      <div className="flex w-full max-w-sm flex-col gap-2">
+        <Progress value={value} status={confirmed ? "success" : "default"} aria-label="Envio" />
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <span>{value}%</span>
+          <span>{confirmed ? "Envio confirmado" : "Enviando…"}</span>
+        </div>
+      </div>
+    );
+  },
+};
+
+/** Valor controlado por um range nativo. */
+export const ControlledWithRange: Story = {
+  name: "Controlado",
+  render: function Render() {
+    const [value, setValue] = React.useState(50);
+
+    return (
+      <div className="flex w-full max-w-sm flex-col gap-4">
+        <Progress value={value} aria-label="Valor controlado" />
+        <div className="flex items-center gap-3">
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={1}
+            value={value}
+            aria-label="Valor"
+            onChange={(event) => setValue(Number(event.target.value))}
+            className="flex-1"
+          />
+          <span className="w-10 text-right text-xs text-muted-foreground">{value}%</span>
+        </div>
       </div>
     );
   },
