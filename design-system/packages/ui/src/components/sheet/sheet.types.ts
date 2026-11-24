@@ -25,7 +25,7 @@ export interface SheetProps extends React.ComponentPropsWithoutRef<typeof RadixD
 
   /**
    * Largura máxima, na escala `max-width/*` do Core (a mesma do Dialog): `sm` 384px, `md` 448px,
-   * `lg` 512px, `xl` 576px, `2xl` 672px e `full` (a largura da tela, só em `top` e `bottom`).
+   * `lg` 512px, `xl` 576px, `2xl` 672px, `5xl` 1024px (painel largo, como o "Resumo da proposta" do Pricing) e `full` (a largura da tela, só em `top` e `bottom`).
    * Nas laterais, `full` vale como `2xl`. No celular, as laterais ocupam 75% da tela e
    * `top` e `bottom` a largura toda.
    *

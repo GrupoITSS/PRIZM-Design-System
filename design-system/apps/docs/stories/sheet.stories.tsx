@@ -124,11 +124,11 @@ export const HeaderCombinations: Story = {
   ),
 };
 
-/** `size`: sm a 2xl nas laterais; em top e bottom, também full. */
+/** `size`: sm a 5xl (1024px, painel largo como o Resumo da proposta do Pricing); em top e bottom, também full. */
 export const Sizes: Story = {
   render: (args) => (
     <div className="flex flex-wrap gap-2">
-      {(["sm", "md", "lg", "xl", "2xl"] as const).map((size) => (
+      {(["sm", "md", "lg", "xl", "2xl", "5xl"] as const).map((size) => (
         <Sheet
           key={size}
           {...args}

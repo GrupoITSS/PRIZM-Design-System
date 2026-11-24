@@ -45,6 +45,7 @@ export const sheetContentVariants = cva(sheetContentBase, {
       lg: "",
       xl: "",
       "2xl": "",
+      "5xl": "",
       full: "",
     },
   },
@@ -54,11 +55,13 @@ export const sheetContentVariants = cva(sheetContentBase, {
     { side: ["left", "right"], size: "lg", class: "sm:max-w-lg" },
     { side: ["left", "right"], size: "xl", class: "sm:max-w-xl" },
     { side: ["left", "right"], size: ["2xl", "full"], class: "sm:max-w-2xl" },
+    { side: ["left", "right"], size: "5xl", class: "sm:max-w-5xl" },
     { side: ["top", "bottom"], size: "sm", class: "sm:mx-auto sm:max-w-sm" },
     { side: ["top", "bottom"], size: "md", class: "sm:mx-auto sm:max-w-md" },
     { side: ["top", "bottom"], size: "lg", class: "sm:mx-auto sm:max-w-lg" },
     { side: ["top", "bottom"], size: "xl", class: "sm:mx-auto sm:max-w-xl" },
     { side: ["top", "bottom"], size: "2xl", class: "sm:mx-auto sm:max-w-2xl" },
+    { side: ["top", "bottom"], size: "5xl", class: "sm:mx-auto sm:max-w-5xl" },
     { side: ["top", "bottom"], size: "full", class: "max-w-none" },
   ],
   defaultVariants: {
@@ -70,7 +73,7 @@ export const sheetContentVariants = cva(sheetContentBase, {
 export type SheetContentVariantProps = VariantProps<typeof sheetContentVariants>;
 
 /** Os tamanhos do Sheet, na ordem da escala. */
-export const sheetSizes = ["sm", "md", "lg", "xl", "2xl", "full"] as const;
+export const sheetSizes = ["sm", "md", "lg", "xl", "2xl", "5xl", "full"] as const;
 
 export type SheetSize = (typeof sheetSizes)[number];
 
