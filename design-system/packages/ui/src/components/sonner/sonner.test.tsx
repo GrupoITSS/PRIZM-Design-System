@@ -3,7 +3,12 @@ import { act, render, screen } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { toast } from "sonner";
 import { Toaster } from "./sonner";
-import { toastActionButtonClassName, toastBaseClassName, toasterStyle } from "./sonner.styles";
+import {
+  toastActionButtonClassName,
+  toastBaseClassName,
+  toastCloseButtonClassName,
+  toasterStyle,
+} from "./sonner.styles";
 
 const toastOf = (text: string) => screen.getByText(text).closest("[data-sonner-toast]");
 
@@ -70,13 +75,15 @@ describe("Toaster (Sonner)", () => {
       expect(toastOf("Evento criado")?.querySelector("[data-close-button]")).toBeNull();
     });
 
-    it("botão fechar, quando ligado, com 24px (WCAG 2.5.8)", async () => {
+    it("botão fechar, quando ligado: Button ghost icon-sm no fim da linha", async () => {
       render(<Toaster closeButton />);
       act(() => {
-        toast("Evento criado");
+        toast("Evento criado", { action: { label: "Desfazer", onClick: () => {} } });
       });
       await screen.findByText("Evento criado");
-      expect(toastOf("Evento criado")?.querySelector("[data-close-button]")).toHaveClass("!size-6");
+      const close = toastOf("Evento criado")?.querySelector("[data-close-button]");
+      expect(close).toHaveClass("!static", "!order-last", "!size-control-height-sm", "!bg-transparent");
+      for (const c of toastCloseButtonClassName.split(" ")) expect(close).toHaveClass(c);
     });
 
     it("ação com o Button outline sm do Prizm", async () => {

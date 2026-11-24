@@ -112,6 +112,36 @@ export const WithDescription: Story = {
   ),
 };
 
+export const WithCloseButton: Story = {
+  name: "Com botão fechar",
+  args: { closeButton: true },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Com `closeButton`, o X fica no fim da linha, depois da ação: o Button ghost icon-sm do Prizm. Com o X, a ação é a que faz algo (Desfazer), nunca \"Fechar\".",
+      },
+    },
+  },
+  render: (args) => (
+    <>
+      <Toaster {...args} />
+      <Button
+        className="w-fit"
+        onClick={() =>
+          toast("Item excluído", {
+            description: "O item foi para a lixeira.",
+            duration: 10000,
+            action: { label: "Desfazer", onClick: () => {} },
+          })
+        }
+      >
+        Mostrar toast
+      </Button>
+    </>
+  ),
+};
+
 export const Positions: Story = {
   name: "Posições",
   render: (args) => (

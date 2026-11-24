@@ -84,7 +84,10 @@
       "figma": "Button Outline sm fixo, instância exposta no painel, visível com Action (desligado)"
     },
     "closeButton": {
-      "size": "24px",
+      "button": "Button ghost icon-sm",
+      "height": "control-height/sm",
+      "icon": "Icon / X, width/4",
+      "position": "fim da linha, depois da ação",
       "default": "desligado"
     }
   },

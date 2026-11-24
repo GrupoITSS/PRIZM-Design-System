@@ -61,6 +61,8 @@ const focusRingClassName =
  */
 export const toastBaseClassName = [
   "group prizm-toast !gap-2 !text-sm !shadow-lg",
+  // O texto ocupa o espaço que sobra: ação e botão fechar ficam juntos no fim da linha.
+  "[&_[data-content]]:flex-1",
   focusRingClassName,
 ].join(" ");
 
@@ -89,10 +91,18 @@ export const toastCancelButtonClassName =
   "group-[.prizm-toast]:bg-muted group-[.prizm-toast]:text-muted-foreground";
 
 /**
- * Botão fechar: 24px, o alvo mínimo da WCAG 2.2 (2.5.8). O do Sonner tem 20px.
+ * Botão fechar: o Button `ghost` `icon-sm` do Prizm, no fim da linha, depois da ação, centralizado
+ * na altura (decisão de 24/11/2026, DS-69). O Sonner o põe fora do fluxo, no canto superior
+ * esquerdo (`position: absolute` e `translate(-35%, -35%)`), redondo, com borda e 20px; aqui ele
+ * volta ao fluxo da linha (`static`) e vai para o fim (`order-last`).
  * Desligado por padrão (`closeButton={false}`).
  */
-export const toastCloseButtonClassName = "!size-6";
+export const toastCloseButtonClassName = [
+  buttonVariants({ variant: "ghost", size: "icon-sm" }),
+  "!static !order-last !transform-none !size-control-height-sm !shrink-0 !rounded-md !border-0 !bg-transparent !text-foreground",
+  "hover:!bg-accent hover:!text-accent-foreground [&_svg]:!size-4",
+  focusRingClassName,
+].join(" ");
 
 /** Ícone de cada tom no tom base, como no Alert; o texto fica no `-strong`. */
 export const toastSuccessClassName = "[&_[data-icon]]:text-success";

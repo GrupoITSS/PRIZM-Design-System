@@ -78,8 +78,12 @@ describe("Sonner × mapa de tokens (sonner.tokens.json)", () => {
     );
   });
 
-  it("botão fechar: 24px", () => {
-    expect(map.layout.closeButton.size).toBe("24px");
-    expect(cls(toastCloseButtonClassName)).toContain("!size-6");
+  it("botão fechar: Button ghost icon-sm, no fim da linha", () => {
+    expect(map.layout.closeButton.height).toBe("control-height/sm");
+    expect(cls(toastCloseButtonClassName)).toContain(
+      `!size-${map.layout.closeButton.height.replace("/", "-")}`,
+    );
+    expect(map.layout.closeButton.position).toBe("fim da linha, depois da ação");
+    expect(cls(toastCloseButtonClassName)).toContain("!order-last");
   });
 });
