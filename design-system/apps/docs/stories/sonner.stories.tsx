@@ -15,6 +15,9 @@ const meta: Meta<typeof Toaster> = {
   tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
+      // O toast aparece por cima da área da story: um iframe mais alto deixa os botões livres
+      // e mostra a pilha inteira.
+      story: { inline: false, height: "360px" },
       description: {
         component:
           "Notificação passageira (toast), sobre a biblioteca <code>sonner</code>. Base: [shadcn/ui](https://ui.shadcn.com/docs/components/sonner), com tokens PRIZM.\n\n" +
