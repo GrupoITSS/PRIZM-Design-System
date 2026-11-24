@@ -1,20 +1,19 @@
 import { cn } from "../../lib/cn";
 import { Progress as RadixProgress } from "radix-ui";
 import * as React from "react";
-import { progressIndicatorVariants, progressRootVariants } from "./progress.styles";
+import { progressIndicatorVariants, progressRootVariants, type ProgressStatus } from "./progress.styles";
 import type { ProgressProps } from "./progress.types";
 
 /**
- * Linear progress bar for representing completion between 0% and 100%.
+ * Barra que mostra quanto de uma tarefa já foi feito, de 0 a 100%.
  *
- * **API simplificada (preferida):**
  * ```tsx
- * <Progress value={40} />
- * <Progress value={75} size="lg" aria-label="Upload progress" />
+ * <Progress value={75} aria-label="Envio de relatorio.pdf" />
+ * <Progress value={50} status="error" aria-labelledby="rotulo-envio" />
  * ```
  *
- * Baseado no Progress do shadcn/ui (Radix), mas exposto apenas como
- * componente único baseado em props (sem subcomponentes públicos).
+ * API por props, sem subcomponentes. O status é o que o produto disser: chegar a 100% não troca
+ * para `success`. Sem valor conhecido, use o Spinner.
  *
  * @see [Progress — shadcn/ui (Radix)](https://ui.shadcn.com/docs/components/radix/progress)
  */
@@ -22,28 +21,37 @@ const Progress = ({
   className,
   value = 0,
   size = "md",
-  status,
+  status = "default",
   ref,
   ...props
 }: ProgressProps & { ref?: React.Ref<React.ComponentRef<typeof RadixProgress.Root>> }) => {
   const numericValue = Number(value);
   const clampedValue = Number.isFinite(numericValue) ? Math.min(100, Math.max(0, numericValue)) : 0;
+  const resolvedStatus: ProgressStatus = status === "info" ? "default" : status;
+  const named = Boolean(props["aria-label"] || props["aria-labelledby"]);
 
-  const derivedStatus = status ?? (clampedValue === 100 ? "success" : "info");
+  React.useEffect(() => {
+    if (process.env.NODE_ENV !== "production" && !named) {
+      console.warn(
+        'Progress: barra sem nome acessível. Passe aria-label ou aria-labelledby (ex.: aria-labelledby="id-do-rótulo").',
+      );
+    }
+  }, [named]);
 
   return (
     <RadixProgress.Root
       ref={ref}
       data-slot="progress"
       data-size={size}
-      data-status={derivedStatus}
-      className={cn(progressRootVariants({ size, status: derivedStatus }), className)}
+      data-status={resolvedStatus}
+      className={cn(progressRootVariants({ size, status: resolvedStatus }), className)}
       value={clampedValue}
       {...props}
     >
       <RadixProgress.Indicator
-        data-status={derivedStatus}
-        className={cn(progressIndicatorVariants({ size, status: derivedStatus }))}
+        data-slot="progress-indicator"
+        data-status={resolvedStatus}
+        className={progressIndicatorVariants({ size, status: resolvedStatus })}
         style={{ transform: `translateX(-${100 - clampedValue}%)` }}
       />
     </RadixProgress.Root>

@@ -1,0 +1,53 @@
+{
+  "component": "Progress",
+  "description": "Mapa de tokens do Progress: o que cada status e cada tamanho usam do [PRIZM] Design Tokens_Core. Extraído das ligações do component set Progress no Figma em 24/11/2026 (60 variantes: Size × Status × Percent, todas no Core) e conferido contra progress.styles.ts pelo teste progress.tokens.test.ts. Nomes no formato do Figma (color/primary). No Figma, o trilho é a camada Track fill, com o tom a 100% e a camada a 20% de opacidade; no código, bg-<tom>/20.",
+  "sources": {
+    "figmaComponent": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=28105-1950",
+    "figmaDocumentation": "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=28116-2372",
+    "code": "design-system/packages/ui/src/components/progress/progress.tsx",
+    "story": "design-system/apps/docs/stories/progress.stories.tsx",
+    "article": "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=3dfaefd7-e84f-437d-8d93-74f6cae77876&version=v1",
+    "pullRequests": ["https://github.com/GrupoITSS/PRIZM-Design-System/pull/236"]
+  },
+  "statuses": {
+    "default": { "track": "color/primary", "trackOpacity": 0.2, "indicator": "color/primary" },
+    "success": { "track": "color/success", "trackOpacity": 0.2, "indicator": "color/success" },
+    "warning": { "track": "color/warning", "trackOpacity": 0.2, "indicator": "color/warning-strong" },
+    "error": { "track": "color/destructive", "trackOpacity": 0.2, "indicator": "color/destructive" }
+  },
+  "sizes": {
+    "sm": { "height": "height/1" },
+    "md": { "height": "height/2" },
+    "lg": { "height": "height/3" }
+  },
+  "layout": {
+    "radius": "radius/full",
+    "width": "100% do contêiner",
+    "indicatorWidth": "o valor, de 0 a 100% (Percent no Figma: 0, 25, 50, 75, 100)"
+  },
+  "states": {
+    "hover": null,
+    "focus": null,
+    "note": "Não é interativo: muda o valor e o status, que o produto escolhe."
+  },
+  "divergences": [
+    {
+      "item": "Percent",
+      "figma": "Variante com 0, 25, 50, 75 e 100%",
+      "code": "value: qualquer número de 0 a 100",
+      "kind": "representação"
+    },
+    {
+      "item": "Trilho",
+      "figma": "Camada Track fill com o tom a 100% e opacidade de camada 0,2",
+      "code": "bg-<tom>/20 no root",
+      "kind": "representação"
+    },
+    {
+      "item": "status info",
+      "figma": "Não existe",
+      "code": "Apelido obsoleto de default",
+      "kind": "só no código, obsoleto"
+    }
+  ]
+}

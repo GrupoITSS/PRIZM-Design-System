@@ -2,17 +2,13 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 /**
  * PRIZM Progress — styles use design tokens from @grupoitss/prizm-tokens.
- * Compatible com light/dark mode via :root e .dark CSS variables.
  *
- * A faixa NÃO preenchida do progress (track) deve usar uma cor derivada do
- * status atual, porém com opacidade, seguindo o layout do Figma
- * (overlay esbranquiçado sobre a cor base).
- *
- * Exemplo visual aproximado:
- * - status=info    → fundo `primary` com opacidade
- * - status=success → fundo `success` com opacidade
- * - status=warning → fundo `warning` com opacidade
- * - status=error   → fundo `destructive` com opacidade
+ * Decisões de 24/11/2026 (DS, documentação do Progress):
+ * - Trilho: o tom do status a 20% (`bg-<tom>/20`). O `-weak` foi medido e, no escuro, o primary
+ *   contra o primary-weak fica em 2,50–2,84:1; com o tom a 20%, todos os pares passam de 3:1.
+ * - Indicador: o tom do status; no warning, `warning-strong`, porque `warning` fica em
+ *   1,72–2,15:1 no claro, contra o trilho e contra a página.
+ * - `default` usa a primária. `info` é apelido obsoleto de `default`.
  *
  * @see [Progress — shadcn/ui (Radix)](https://ui.shadcn.com/docs/components/radix/progress)
  */
@@ -26,7 +22,7 @@ export const progressRootVariants = cva(progressRootBase, {
       lg: "h-3",
     },
     status: {
-      info: "bg-primary/20",
+      default: "bg-primary/20",
       success: "bg-success/20",
       warning: "bg-warning/20",
       error: "bg-destructive/20",
@@ -34,12 +30,11 @@ export const progressRootVariants = cva(progressRootBase, {
   },
   defaultVariants: {
     size: "md",
-    status: "info",
+    status: "default",
   },
 });
 
-const progressIndicatorBase =
-  "h-full w-full flex-1 bg-primary transition-all data-[status=complete]:bg-success data-[status=error]:bg-destructive data-[status=warning]:bg-warning";
+const progressIndicatorBase = "h-full w-full flex-1 transition-all";
 
 export const progressIndicatorVariants = cva(progressIndicatorBase, {
   variants: {
@@ -49,18 +44,21 @@ export const progressIndicatorVariants = cva(progressIndicatorBase, {
       lg: "h-3",
     },
     status: {
-      info: "",
+      default: "bg-primary",
       success: "bg-success",
-      warning: "bg-warning",
+      warning: "bg-warning-strong",
       error: "bg-destructive",
     },
   },
   defaultVariants: {
     size: "md",
-    status: "info",
+    status: "default",
   },
 });
 
-export type ProgressStatus = "info" | "success" | "warning" | "error";
-export type ProgressVariantProps = VariantProps<typeof progressRootVariants> &
-  Pick<VariantProps<typeof progressIndicatorVariants>, "status">;
+/** Os status, na ordem do Figma (Status). */
+export const progressStatuses = ["default", "success", "warning", "error"] as const;
+
+export type ProgressStatus = (typeof progressStatuses)[number];
+
+export type ProgressVariantProps = VariantProps<typeof progressRootVariants>;
