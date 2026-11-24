@@ -3,16 +3,22 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Field, FieldLabel } from "@grupoitss/prizm-ui/field";
 import { Progress } from "@grupoitss/prizm-ui/progress";
 
+const FIGMA_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=28105-1950";
+const FIGMA_DOC_URL = "https://www.figma.com/design/7NPb3iuxjitMdpudp4yHTl?node-id=28116-2372";
+const CMS_URL =
+  "https://sgq.pas.app.br/cms/prizm_design_system/articles?articleId=3dfaefd7-e84f-437d-8d93-74f6cae77876&version=v1";
+
 const meta: Meta<typeof Progress> = {
   title: "Primários/Progress",
   component: Progress,
-  tags: ["autodocs"],
+  tags: ["autodocs", "documentado"],
   parameters: {
     docs: {
       description: {
         component:
           "Barra que mostra quanto de uma tarefa já foi feito, de 0 a 100%. API por props, sem subcomponentes. Base: [shadcn/ui](https://ui.shadcn.com/docs/components/radix/progress) + Radix, com tokens PRIZM.\n\n" +
-          "Dê nome à barra com `aria-label` ou `aria-labelledby`. O status é o que o produto disser: chegar a 100% não vira `success` sozinho. Quando o valor importa, mostre o número em texto ao lado. Sem valor conhecido, use o Spinner.",
+          "Dê nome à barra com `aria-label` ou `aria-labelledby`. O status é o que o produto disser: chegar a 100% não vira `success` sozinho. Quando o valor importa, mostre o número em texto ao lado. Sem valor conhecido, use o Spinner.\n\n" +
+          `[Componente no Figma](${FIGMA_URL}) · [Documentação no Figma](${FIGMA_DOC_URL}) · [Artigo no CMS](${CMS_URL}).`,
       },
     },
   },
