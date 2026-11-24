@@ -58,6 +58,17 @@ describe("Sheet (PRIZM / Sheet)", () => {
     expect(content()?.className).toContain("sm:max-w-2xl");
   });
 
+  it("size: 5xl limita a 1024px nas laterais e centraliza em top e bottom", () => {
+    const { unmount } = render(
+      <Sheet defaultOpen side="right" size="5xl" title="T" body={<div>B</div>} />,
+    );
+    expect(content()?.className).toContain("sm:max-w-5xl");
+    unmount();
+    render(<Sheet defaultOpen side="top" size="5xl" title="T" body={<div>B</div>} />);
+    expect(content()?.className).toContain("sm:mx-auto");
+    expect(content()?.className).toContain("sm:max-w-5xl");
+  });
+
   it("size: topo e base são largura inteira no padrão e centralizam com size", () => {
     const { unmount } = render(<Sheet defaultOpen side="top" title="T" body={<div>B</div>} />);
     expect(content()?.className).toContain("max-w-none");
