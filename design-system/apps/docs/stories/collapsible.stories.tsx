@@ -192,7 +192,8 @@ export const Disabled: Story = {
 
 /**
  * **Category header** — Cabeçalho com outras ações ao lado (alça, nome, badge, Editar, Inativar,
- * Excluir) e só o `CollapsibleToggle` abre e fecha. Caso do Catálogo do Pricing.
+ * Excluir) e só o `CollapsibleToggle` abre e fecha. Caso do Catálogo do Pricing. É uma composição
+ * (Item + Collapsible, em Composições no CMS), não parte do Collapsible (GIES-2084).
  */
 export const CategoryHeader: Story = {
   parameters: {
