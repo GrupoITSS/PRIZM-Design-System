@@ -9,7 +9,7 @@ export const comboboxListStyles =
   "max-h-[min(18rem,calc(var(--available-height)-2.25rem))] overflow-y-auto scroll-py-1 overscroll-contain p-1 data-empty:p-0";
 
 export const comboboxItemStyles =
-  "relative flex w-full cursor-default select-none items-center gap-2 rounded-md py-1 pl-1.5 pr-8 text-sm text-foreground outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-accent data-highlighted:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
+  "relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1 pl-1.5 pr-8 text-sm text-foreground outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-accent data-highlighted:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
 
 // Foco, erro e disabled seguem o InputGroup (decisões de 27/10/2026): anel de 2px
 // em `ring` com a borda transparente; no erro a borda fica `destructive` e o anel

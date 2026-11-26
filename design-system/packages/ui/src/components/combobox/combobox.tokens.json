@@ -92,7 +92,7 @@
     },
     "item": {
       "text": "color/foreground",
-      "radius": "radius/md",
+      "radius": "radius/sm",
       "fontSize": "text/sm",
       "highlighted": {
         "background": "color/accent",
