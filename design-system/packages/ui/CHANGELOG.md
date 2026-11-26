@@ -1,5 +1,145 @@
 # @grupoitss/prizm-ui
 
+## 0.4.0
+
+### Minor Changes
+
+- af5ae49: Breadcrumb: foco, nomes e página atual, com as decisões de 18/11/2026.
+
+  - **Foco:** o link, o gatilho de item com menu e as reticências ganham o anel do Prizm (3px em `ring`, com 2px de espaço em `ring-offset`), como o Button. Antes, o link só tinha o contorno do navegador.
+  - **Nomes em pt-BR:** a navegação passa a se chamar "Trilha de navegação" (antes, "breadcrumb"). O `aria-label` continua aceitando outro nome.
+  - **Reticências:** `BreadcrumbEllipsis` passa a ser um botão com o nome "Mais páginas", para abrir as páginas escondidas num `DropdownMenu` (`<DropdownMenuTrigger asChild><BreadcrumbEllipsis /></DropdownMenuTrigger>`). Antes, era um `span` decorativo, e o "More" nunca era lido. O hover fica em `accent`, como o Button ghost. Quem usava as reticências só como enfeite, sem menu, deve montar o menu ou tirar as reticências.
+  - **Página atual:** `BreadcrumbPage` fica só com `aria-current="page"`, sem `role="link"` e `aria-disabled`. O leitor de tela deixa de anunciar "link, indisponível".
+  - **Uma página atual só:** na prop `items`, só um item recebe `aria-current`, o primeiro com `isCurrent` ou, sem nenhum, o último. Um item do meio sem `href` vira texto simples (`data-slot="breadcrumb-text"`). Antes, os dois casos anunciavam duas páginas atuais.
+  - **Ícone do item:** os ícones dentro do link, da página atual e do texto ficam com 16px.
+  - **Novo export:** `breadcrumbTextStyles`.
+
+- c88aad1: ButtonGroup: acessibilidade e separador, com as decisões de 17 e 18/11/2026.
+
+  - **Nome do grupo:** sem `aria-label` nem `aria-labelledby`, o grupo avisa no console em desenvolvimento.
+  - **Botão só de ícone na lista `buttons`:** cada item aceita `aria-label`, repassado ao Button.
+  - **Separador automático:** `separatorBetween` passa a ter o padrão `"auto"`, que põe o separador quando nenhum botão é `outline`. Antes, o padrão era `false`. Para manter o comportamento antigo, passe `separatorBetween={false}`.
+  - **Cor do separador:** segue a variante do botão anterior. Fica em `primary-foreground` a 20% depois de `default` e `destructive`, e em `border` nos outros. Antes, era sempre `primary-foreground` a 20%, e sumia sobre o `secondary`.
+
+- abe9349: DataTable: decisões de 18/11/2026 (documentação, etapas 1 a 4).
+
+  - Sub-linhas: `getSubRows` e `getExpandLabel`, um nível, com o botão, a coluna de 48px e o recuo da Table. A linha pai aberta fica em `accent`. Usa o mesmo estado de linhas abertas do detalhe (`defaultExpandedRows`, `expandedRows`, `onExpandedRowsChange`); com `renderRowDetail` junto, ficam as sub-linhas e sai um aviso no console.
+  - `filters` com `type`: `search` (com `columnId`, a tabela filtra; com `onChange`, o produto filtra, com espera entre teclas), `select` (o padrão) e `status`. Selects e status à esquerda, a busca depois deles.
+  - `pagination` com dois modos: sem `onPageChange`, a tabela pagina `data` (`perPage`, 10 por padrão); com `onPageChange`, o produto pagina. Contagem, `footer` e paginação na mesma faixa do rodapé.
+  - `@deprecated`, com aviso no console em desenvolvimento: `showFilter`, `filterColumn`, `filterPlaceholder`, `toolbarFilters`, `showPagination`, `showSelectedCount`, `getRowClassName`, `selectionBar.color` e o componente `DataTableWithFilters`.
+  - `selectionBar.entityName` aceita singular e plural: `{ one: "proposta selecionada", other: "propostas selecionadas" }`.
+  - Contagem da seleção e do rodapé em `role="status"`, para o leitor de tela anunciar.
+  - Contagem da linha de grupo num Badge secondary `sm` (número), como no Figma.
+  - Vazio e erro com `py-20`, como no Figma (antes `py-8`).
+  - Menu de colunas com o título "Colunas visíveis" (antes "Mostrar colunas").
+
+- 2b6b3fb: DataTable: decisões do teste de tela da Proposta (17/11/2026).
+
+  - Visual da Table: cabeçalho com 40px, 8px dos lados e em `foreground` (antes, a 40%); linha com 52px de altura mínima e célula com 8px (antes, 16px dos lados). Texto simples corta numa linha, com Tooltip quando corta; `meta.prizm.wrap` quebra. Coluna à direita com `tabular-nums`.
+  - Ordenação: `DataTableColumnHeader` no cabeçalho, `aria-sort` na célula, `sorting`, `defaultSorting`, `onSortingChange` e `manualSorting`.
+  - Linha clicável pelo teclado: com `onRowClick`, a linha recebe foco e abre com Enter ou Espaço.
+  - Textos padrão em português: "Nenhum resultado.", "Filtrar...", "Colunas", "Mostrar colunas". Quebra para quem dependia dos textos em inglês.
+  - `groupBy`, `renderGroupLabel` e grupos que recolhem (`collapsibleGroups`, `defaultCollapsedGroups`, `collapsedGroups`, `onCollapsedGroupsChange`), `toolbarActions`, `summaryRow`, `renderRowDetail` (com `defaultExpandedRows`, `expandedRows`, `onExpandedRowsChange` e `getDetailLabel`).
+  - `DataTableEditableCell`: Input `sm` na célula, com nome, estado inválido e mensagem.
+  - Carregando com linhas de Skeleton (`loadingRows`) no lugar do Spinner; `error`, `onRetry` e `retryLabel`.
+  - `stickyHeader`, `stickyFirstColumn` e `stickyLastColumn`.
+  - `aria-label` dá nome à tabela.
+
+- ec04091: Dialog (DS-77): cabeçalho e rodapé fixos, e só o corpo rola. Novo `DialogBody` (na API por props, o `body` e o `confirmInput` já vão dentro dele). Nova prop `footerLeading`, para a ação destrutiva à esquerda do rodapé. Dialog, AlertDialog e Sheet passam a usar o fundo `color/card` (branco no claro), com o texto em `color/card-foreground`.
+- e08d1e3: Field (DS-89): nova prop `required`. O `FieldLabel` mostra o asterisco sozinho e os controles dentro do Field (Input, Textarea, Select, Checkbox, RadioGroup, Switch, InputOTP, Combobox, InputGroup e MaskedInput) recebem `aria-required`. Não liga a validação nativa do navegador: para isso, o controle segue com o próprio `required`. O `required` do `FieldLabel` e o `aria-required` do controle, quando passados, ganham do Field. O DatePicker fica de fora: o gatilho é um `button`, onde `aria-required` não é válido. Novo hook `useFieldRequired`. O Field ganha `data-required`.
+- a5926d0: Progress: documentação (decisões de 24/11/2026).
+
+  - `status` ganha `default` (padrão, na primária). `info` continua aceito como apelido obsoleto de `default`.
+  - Chegar a 100% não troca mais o status para `success`: o status é o que o produto passar.
+  - O indicador de `warning` passa a `warning-strong` (o `warning` ficava abaixo de 3:1 no claro). O trilho segue no tom a 20%.
+  - Aviso no console, em desenvolvimento, quando a barra não tem `aria-label` nem `aria-labelledby`.
+  - Exporta `progressStatuses` e o tipo `ProgressStatus`. Sai a classe sem uso `data-[status=complete]`.
+  - Stories em pt-BR; o rótulo do Field nomeia a barra por `aria-labelledby`.
+
+- 01d6a9d: Sheet: `size` ganha `5xl` (`max-width/5xl`, 1024px), o painel largo do "Resumo da proposta" do Pricing. Vale em todos os lados; em `top` e `bottom` fica centralizado. O Figma só desenha a variante em Desktop, `left` e `right`. O mapa de tokens passa a refletir o Figma de 24/11/2026: no Figma, o Title Adornment é uma troca de instância e o Header Actions são duas trocas (Action 1 e Action 2, cada uma com seu Show). A API do código não muda: `titleAdornment` e `headerActions` (até 2 botões `ghost` `icon-sm`).
+- 52c9356: Sheet: `size`, cabeçalho completo, rodapé fixo e botão fechar do Prizm, com as decisões de 21/11/2026.
+
+  - **`size`:** `sm` (384px, padrão nas laterais), `md`, `lg`, `xl`, `2xl` e `full`, na escala `max-width/*` do Core, a mesma do Dialog. `full` é o padrão em `top` e `bottom` (a largura da tela, como antes); com `size` menor, o painel de topo e de base fica centralizado. Nas laterais, `full` vale como `2xl`. No celular, as laterais ocupam 75% da tela.
+  - **Cabeçalho:** a prop `titleAdornment` (status ao lado do título) e a `eyebrow` e a `headerActions`, que deixam de ser exclusivas do `layout="panel"`.
+  - **Rodapé:** fixo embaixo, com a nova prop `footerLeading` à esquerda das ações. No celular, a ação principal fica em cima. Só o corpo rola.
+  - **Botão fechar:** passa a ser o `Button` ghost `icon-sm` do Prizm, com o anel de foco do Button e alvo de 32px (antes, 16px, com `focus:ring-2`). O nome padrão continua "Close". Sem `title`, o painel se chama "Painel" (`sr-only`; antes, "Sheet").
+  - **Removidos:** as props `layout` e `icon`. O layout `panel` vira o único: fundo `bg-background`, cabeçalho e rodapé fixos, rodapé com linha em cima. Quem usava `layout="panel"` passa `size` no lugar da largura de 550px. As constantes `SHEET_PANEL_WIDTH_PX`, `sheetPanelWidthClass` e `sheetPanelWidthClasses` ficam marcadas como `@deprecated`.
+  - **Overlay:** já usa só `color/overlay`, sem desfoque.
+  - Teste de teclado e nomes em `sheet.a11y.test.tsx`. Story movida para `Primários/Sheet`, com a tag `documentado`.
+
+- 1da80ca: Sonner (Toaster): tons no padrão do Alert (fundo `-weak`, borda e ícone no tom, texto `-strong`), pelas variáveis do Sonner, com `richColors` ligado por padrão; info com os tokens `info` (antes `primary`); texto em `text-sm` (14px); ação com o Button `outline` `sm`; anel de foco do Prizm no toast e na ação; botão fechar desligado por padrão e com 24px quando ligado. Story renomeada para Primários/Sonner. Quem passava `richColors={false}` ou dependia do fundo cheio dos tipos vê a mudança visual.
+- f93cda3: Sonner: o botão fechar (`closeButton`) passa a ser o Button `ghost` `icon-sm` do Prizm, no fim da linha, depois da ação, centralizado na altura (DS-69, decisão de 24/11/2026). Antes, ele ficava no canto superior esquerdo, fora do fluxo, redondo e com 24px. Continua desligado por padrão. Nova story "Com botão fechar".
+- 7211a28: Table: decisões do teste de tela da Proposta (17/11/2026).
+
+  - Uma densidade só: linha de 52px (`h-13`), como altura mínima, com a borda da linha.
+  - Texto cortado numa linha por padrão, com Tooltip do texto inteiro só quando corta. `wrap: true` na coluna quebra a linha.
+  - Coluna com `align: "right"` usa `tabular-nums`.
+  - `isRowSelected` marca a linha com `data-state="selected"`.
+  - Exporta `tableCellMinHeight`, `tableCellTruncate`, `tableCellText` e `tableCellNumeric`.
+
+- 4c75773: Table: linhas que expandem. `getSubRows` dá sub-linhas (um nível) às linhas, com um botão de expandir (Button ghost icon-sm, `aria-expanded`, `aria-controls`) numa coluna à esquerda; as sub-linhas usam as mesmas colunas, com a primeira coluna de dados recuada (`pl-10`). Estado com `defaultExpanded` (lista de chaves ou `true`) ou controlado com `expanded` e `onExpandedChange`; nome do botão por `getExpandLabel` (padrão "Expandir"/"Recolher" + a primeira coluna). O `render` da coluna ganha um terceiro argumento, `{ depth, subRows, isExpanded }`, para a linha pai mostrar a soma das sub-linhas. No rodapé, a primeira célula ocupa a coluna de expandir. Sem `getSubRows`, nada muda. Novos exports: `TableRowMeta`, `tableExpandHead`, `tableExpandCell` e `tableSubRowIndent`.
+- de26ed9: Table: decisões de 17/11/2026 (etapa 1 da documentação).
+
+  - Ordenação: `sortable` e `sortValue` na coluna; `defaultSort`, `sort`, `onSortChange` e `manualSort` na Table. O cabeçalho vira botão, com `aria-sort`, como no DataTable.
+  - Vazio com o Empty, numa linha da largura toda, com "Nenhum resultado." por padrão. Antes, só o texto, e nada sem `emptyMessage`.
+  - Linha selecionada (checkbox, na primitiva `TableRow`) e linha pai aberta (`data-expanded`) em `accent`, também no hover (decisão de 18/11/2026). Sai a linha em destaque (`isRowSelected`, do PR #211, que não saiu).
+  - Exporta `TableSort` e `tableSortButton`, usados também pelo DataTable.
+  - O ícone de ordenar fica na cor do texto do cabeçalho (`foreground`), com ou sem ordem, na Table e no `DataTableColumnHeader` (decisão de 17/11/2026).
+
+- d55169a: Table e DataTable: saem as APIs `@deprecated`, já que nenhum produto usa a biblioteca ainda (decisão de 18/11/2026).
+
+  - Sai o `DataTableWithFilters`: use `<DataTable filters={…} showColumnVisibility />`. O tipo `DataTableSelectFilter` passa a sair do DataTable.
+  - Saem do DataTable `showFilter`, `filterColumn`, `filterPlaceholder` e `toolbarFilters` (use `filters` com `type`), `showPagination` (use `pagination={{ perPage: 10 }}`), `showSelectedCount` (a barra de seleção já mostra a contagem), `getRowClassName` e `selectionBar.color`. `selectionBar.entityName` aceita só `{ one, other }`.
+  - Saem os `table-parts`: `TableWrapper`, `TableElement` e os `*Part` (`TableHeadPart`, `TableCellPart`…). Use as primitivas (`TableRoot`, `TableHead`, `TableCell`…).
+
+- 752890e: Table e DataTable (DS-81): nova prop `sortType` (`default`, `text`, `number`) na coluna (`TableColumn`) e no `DataTableColumnHeader`. Ela escolhe o ícone de ordenação: setas, A–Z/Z–A ou 0–1/1–0. Novos ícones exportados: `ArrowDownAZ`, `ArrowDownZA`, `ArrowDown01`, `ArrowDown10`. O `align="center"` (e o `cellAlign: "center"` do DataTable) fica obsoleto: o padrão é `left` e o Figma passa a ter só `Align=Left | Right`. Segue funcionando para não quebrar usos, e sai numa major.
+- 0043454: Tabs (documentação de 17/11/2026): foco visível no `underline`, que não tinha nenhum (WCAG 2.4.7): as duas variantes usam o anel do Prizm (`ring` de 3px com `ring-offset` de 2px), também no painel. Novos exports `TabsList`, `TabsTrigger` e `TabsContent`, para compor como no shadcn; a API por `items` usa as mesmas partes. Novo `items[].badge` (e `badge` no `TabsTrigger`): número ou texto vira um Badge `shape="number"` depois do rótulo e entra no nome da aba ("Pendentes 3"). Hover em `foreground` também no `pills`. O `pills` segue o shadcn atual e o Figma: lista com 36px (`h-9`, `p-[3px]`, `rounded-lg`) e aba com `px-2 py-1 rounded-md` (antes `h-10`, `p-1`, `px-3 py-1.5` e `rounded-sm`).
+
+  **Quebra:** a prop `orientation` saiu: não tinha estilo vertical, e nenhum produto usa abas verticais. Quem passava `orientation="horizontal"` pode só apagar a prop.
+
+- 2dd267a: Tabs: aba ativa do `pills` na cor primária (DS-92, decisão de 23/11/2026).
+
+  - **Aba ativa:** fundo `primary` e texto `primary-foreground`, com a sombra de antes. Antes, era `background` sobre o `muted` da lista, quase invisível (1,09 a 1,37:1). Agora o fundo passa 3:1 em 8 dos 12 temas, e o texto passa 4,5:1 em todos.
+  - **Hover:** o texto da aba ativa continua em `primary-foreground`. Só a inativa escurece.
+  - **Badge numérico:** na aba ativa, inverte para fundo `primary-foreground` e texto `primary`, como o "Sobre primary" do Figma.
+  - O `underline` não muda.
+
+- c9ae032: Toggle e ToggleGroup: decisões da documentação de 23/11/2026 (DS-91).
+
+  **Toggle**
+
+  - **Tamanhos:** altura e largura mínima em `control-height` sm, md e lg, como o Button (antes, `h-9`, `h-10` e `h-11`). O texto fica em `text-sm` nos três; o Toggle só de ícone fica quadrado.
+  - **Ligado:** fundo `primary` e texto `primary-foreground` (antes, `accent`, quase igual ao fundo). No hover, o véu preto de 10% do Button.
+  - **Foco:** anel do Prizm (3px em `ring`, com 2px de espaço em `ring-offset`).
+  - **Outline:** fundo `input-background` e `shadow-xs`, como o Button Outline; borda `primary` quando ligado.
+  - **Nome:** Toggle só de ícone sem `aria-label` avisa no console em desenvolvimento.
+
+  **ToggleGroup**
+
+  - **Itens colados por padrão:** `spacing` passa a ter padrão 0, com a borda compartilhada e os cantos só nas pontas. Antes, o padrão era 1 (`gap-1`). Para os itens separados, passe `spacing={1}` ou mais.
+  - **Variante padrão `outline`:** antes, `default`, sem borda.
+  - **Largura:** a raiz deixa de ocupar a largura toda com os itens centralizados; fica do tamanho dos itens. Nova prop `fullWidth` para ocupar a largura, com os itens dividindo o espaço.
+  - **`required`:** com `type="single"`, o item ligado não desliga, e o grupo nunca fica sem valor. Use em filtro.
+  - **Nome:** os itens aceitam `"aria-label"`, como os do ButtonGroup (`ariaLabel` continua como alias). Item com ícone e sem `label` deixa de mostrar o `value` ao lado do ícone. Grupo sem nome e item só de ícone sem nome avisam no console em desenvolvimento.
+  - **Composição:** novo `ToggleGroupItem`, que recebe a variante, o tamanho e o espaçamento do grupo.
+  - **Novos exports:** `ToggleGroupItem`, `getToggleGroupItemClasses` e o tipo `ToggleGroupItemProps`.
+
+### Patch Changes
+
+- ef95ef6: Calendar: o dia com conteúdo extra (um `<span>` dentro do `CalendarDayButton`, como o preço) fica em coluna, com o número em cima e o texto em `text-xs` a 70% embaixo; no dia escolhido, o texto fica a 100%, para passar de 4,5:1 sobre `primary`. O dia comum continua com 32px. Story "Dia com conteúdo extra" com a célula de 48px (DS-72).
+- c51dafb: Collapsible: anatomia igual ao shadcn (Root, Trigger e Content). O mapa de tokens deixa de citar o slot Leading, que não existe no código, e a story Category Header aponta para a composição Item + Collapsible. Sem mudança de API (GIES-2084).
+- 235f967: DataTable: mapa de tokens aponta para a Data Table / Group Cell no Figma, que substitui a Data Table / Group Row (removida do Figma) e a variante Content=Groups. A linha de grupo vira um tipo de célula no slot Cells de cada coluna. Divergência registrada: o Figma não tem colSpan, e o rótulo fica na largura da primeira coluna. A variante Content=Selection também saiu do Data Table: a barra de seleção é a booleana Show Selection Bar, e a coluna de checkbox e as linhas marcadas vêm da Table. A propriedade Content saiu do Data Table (o Detail também): as variantes ficam só com State.
+- bf6bb01: DataTable: mapa de tokens extraído de novo do Figma em 18/11/2026, com contêiner, cartão, barra de ferramentas, barra de seleção, vazio e rodapé, conferido por `data-table.tokens.test.tsx`. Story com os links do componente e da documentação no Figma e do artigo, e a tag `documentado`.
+- 9156329: Dialog e AlertDialog: o fundo atrás do modal usa só `color/overlay`, sem desfoque.
+
+  - **Antes:** `bg-overlay` com `backdrop-blur-[0.125rem]` (2px). O desfoque veio em 03/11/2026, antes do token de overlay (04/11); com o token, já não faz falta.
+  - **Agora:** `bg-overlay` puro, igual ao Sheet, ao Drawer e ao Figma. O `dialogOverlayStyles` e o `alertDialogOverlayStyles` perdem a classe `backdrop-blur-[0.125rem]`. Quem sobrescrevia o overlay por `className` não é afetado.
+  - Mapas de tokens e testes do Dialog e do AlertDialog atualizados: agora conferem que não há desfoque.
+
+- 059f9e4: Itens de lista flutuante com `rounded-sm` (`radius/sm`), como o Select, o DropdownMenu, o ContextMenu, o Menubar e o Command: o item do Combobox (era `rounded-md`, agora igual ao Figma) e o item de ação do `footer` do Select (era `rounded-md`). Sem mudança de API.
+- f858ec0: Sheet: o nome padrão do botão fechar (`closeLabel`) passa de "Close" para "Fechar", como no Dialog. Testes que buscam o botão por "Close" precisam mudar.
+- 1d5c6dc: Sheet: espaço interno de 16px (`spacing/4`) em todas as partes. O cabeçalho passa de 24px para 16px em cima e nas laterais (a direita segue com 48px, para o botão fechar), o corpo de 24px para 16px nas laterais e o rodapé de 24px para 16px nas laterais e embaixo.
+
 ## 0.3.0
 
 ### Minor Changes
