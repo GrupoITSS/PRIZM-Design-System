@@ -61,4 +61,4 @@ export const selectFooterSeparatorStyles = "mx-1 mb-1 h-px shrink-0 bg-border";
 
 /** Estilos do item de ação no footer do Select. */
 export const selectFooterItemStyles =
-  "relative flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm text-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground";
+  "relative flex w-full cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground";

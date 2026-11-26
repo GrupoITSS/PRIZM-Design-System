@@ -2,7 +2,12 @@ import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Select } from "./select";
-import { selectContentStyles, selectItemStyles, selectTriggerVariants } from "./select.styles";
+import {
+  selectContentStyles,
+  selectFooterItemStyles,
+  selectItemStyles,
+  selectTriggerVariants,
+} from "./select.styles";
 
 const options = [
   { value: "apple", label: "Apple" },
@@ -142,6 +147,11 @@ describe("Select: decisões de 26/10/2026", () => {
     const { container } = render(<Select placeholder="Escolha" options={options} />);
     expect(container.querySelector("svg.lucide-chevron-down")).toBeInTheDocument();
     expect(container.querySelector("svg.lucide-chevrons-up-down")).not.toBeInTheDocument();
+  });
+
+  it("item de ação do footer com rounded-sm, igual ao item da lista", () => {
+    expect(selectFooterItemStyles.split(" ")).toContain("rounded-sm");
+    expect(selectFooterItemStyles.split(" ")).not.toContain("rounded-md");
   });
 
   it("P5 e P6: lista com border-border e item com rounded-sm", () => {
