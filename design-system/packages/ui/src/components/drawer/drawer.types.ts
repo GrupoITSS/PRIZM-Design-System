@@ -83,6 +83,14 @@ export interface DrawerProps extends Omit<
   contentClassName?: string;
 
   /**
+   * Leva o foco para dentro do painel ao abrir (WCAG 2.4.3), como no Dialog e no Sheet.
+   * No vaul o padrão é `false`; no Prizm, `true`.
+   *
+   * @default true
+   */
+  autoFocus?: boolean;
+
+  /**
    * Se o drawer é modal (bloqueia interação com o fundo).
    *
    * @default true
@@ -90,7 +98,8 @@ export interface DrawerProps extends Omit<
   modal?: boolean;
 
   /**
-   * Se pode fechar ao clicar fora, tecla Escape ou arrastar.
+   * Se pode fechar ao clicar fora, tecla Escape ou arrastar. Com `false`, fecha só
+   * pelo `DrawerClose` (ou por `open` controlado).
    *
    * @default true
    */

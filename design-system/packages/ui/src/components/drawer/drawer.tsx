@@ -11,6 +11,7 @@ import {
   drawerTitleStyles,
 } from "./drawer.styles";
 import type {
+  DrawerCloseProps,
   DrawerContentProps,
   DrawerDescriptionProps,
   DrawerFooterProps,
@@ -19,6 +20,9 @@ import type {
   DrawerProps,
   DrawerTitleProps,
 } from "./drawer.types";
+
+/** Fecha o Drawer pelo estado guardado no root (usado pelo DrawerClose). */
+const DrawerCloseContext = React.createContext<(() => void) | null>(null);
 
 /**
  * Drawer (root). Painel deslizante (bottom/top/left/right) para conteúdo.
@@ -62,6 +66,10 @@ function DrawerRoot({
   repositionInputs = true,
   shouldScaleBackground = true,
   container,
+  autoFocus = true,
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
   children,
   ...props
 }: DrawerProps) {
@@ -74,10 +82,19 @@ function DrawerRoot({
 
   const resolvedDirection = side ?? direction ?? "bottom";
 
-  const defaultMaxSizeStyle: React.CSSProperties =
-    resolvedDirection === "top" || resolvedDirection === "bottom"
-      ? { maxHeight: "85vh" }
-      : { maxWidth: "85vw" };
+  // O Prizm guarda o estado de aberto: com dismissible={false}, o vaul ignora o
+  // fechamento vindo do DrawerClose; o contexto abaixo fecha por fora dele (P2).
+  const [innerOpen, setInnerOpen] = React.useState(defaultOpen);
+  const isControlled = openProp !== undefined;
+  const open = isControlled ? openProp : innerOpen;
+  const handleOpenChange = React.useCallback(
+    (next: boolean) => {
+      if (!isControlled) setInnerOpen(next);
+      onOpenChange?.(next);
+    },
+    [isControlled, onOpenChange],
+  );
+  const requestClose = React.useCallback(() => handleOpenChange(false), [handleOpenChange]);
 
   const rootProps = {
     direction: resolvedDirection,
@@ -87,32 +104,40 @@ function DrawerRoot({
     repositionInputs,
     shouldScaleBackground,
     container,
+    // Foco vai para dentro do painel ao abrir, como no Dialog e no Sheet (P1).
+    autoFocus,
     ...props,
+    open,
+    onOpenChange: handleOpenChange,
   } as React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Root>;
 
   if (useSimplifiedAPI) {
     return (
-      <DrawerPrimitive.Root {...rootProps}>
-        {Boolean(trigger) && <DrawerPrimitive.Trigger asChild>{trigger}</DrawerPrimitive.Trigger>}
-        <DrawerContent
-          className={contentClassName}
-          style={defaultMaxSizeStyle}
-          showHandle={showHandle}
-        >
-          {Boolean(title || description) && (
-            <DrawerHeader>
-              {Boolean(title) && <DrawerTitle>{title}</DrawerTitle>}
-              {Boolean(description) && <DrawerDescription>{description}</DrawerDescription>}
-            </DrawerHeader>
+      <DrawerCloseContext value={requestClose}>
+        <DrawerPrimitive.Root {...rootProps}>
+          {Boolean(trigger) && (
+            <DrawerPrimitive.Trigger asChild>{trigger}</DrawerPrimitive.Trigger>
           )}
-          {body}
-          {Boolean(footer) && <DrawerFooter>{footer}</DrawerFooter>}
-        </DrawerContent>
-      </DrawerPrimitive.Root>
+          <DrawerContent className={contentClassName} showHandle={showHandle}>
+            {Boolean(title || description) && (
+              <DrawerHeader>
+                {Boolean(title) && <DrawerTitle>{title}</DrawerTitle>}
+                {Boolean(description) && <DrawerDescription>{description}</DrawerDescription>}
+              </DrawerHeader>
+            )}
+            {body}
+            {Boolean(footer) && <DrawerFooter>{footer}</DrawerFooter>}
+          </DrawerContent>
+        </DrawerPrimitive.Root>
+      </DrawerCloseContext>
     );
   }
 
-  return <DrawerPrimitive.Root {...rootProps}>{children}</DrawerPrimitive.Root>;
+  return (
+    <DrawerCloseContext value={requestClose}>
+      <DrawerPrimitive.Root {...rootProps}>{children}</DrawerPrimitive.Root>
+    </DrawerCloseContext>
+  );
 }
 
 const Drawer = DrawerRoot as React.FC<DrawerProps> & { displayName?: string };
@@ -128,8 +153,26 @@ const DrawerPortal = DrawerPrimitive.Portal as typeof DrawerPrimitive.Portal & {
 };
 DrawerPortal.displayName = "DrawerPortal";
 
-const DrawerClose = DrawerPrimitive.Close as typeof DrawerPrimitive.Close & {
-  displayName?: string;
+/**
+ * Fecha o Drawer. Funciona também com `dismissible={false}`, caso em que o vaul
+ * ignora o fechamento do Radix: o clique fecha pelo estado guardado no Drawer (P2).
+ */
+const DrawerClose = ({
+  onClick,
+  ref,
+  ...props
+}: DrawerCloseProps & { ref?: React.Ref<React.ComponentRef<typeof DrawerPrimitive.Close>> }) => {
+  const requestClose = React.use(DrawerCloseContext);
+  return (
+    <DrawerPrimitive.Close
+      ref={ref}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) requestClose?.();
+      }}
+      {...props}
+    />
+  );
 };
 DrawerClose.displayName = "DrawerClose";
 
@@ -156,7 +199,9 @@ const DrawerContent = ({
   <DrawerPortal>
     <DrawerOverlay />
     <DrawerPrimitive.Content ref={ref} className={cn(drawerContentStyles, className)} {...props}>
-      {showHandle && <div className={drawerHandleStyles} />}
+      {showHandle && (
+        <div aria-hidden="true" data-slot="drawer-handle" className={drawerHandleStyles} />
+      )}
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
